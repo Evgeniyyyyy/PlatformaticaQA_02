@@ -13,9 +13,8 @@ public class EntityTagTest extends BaseTest{
 
         ProjectUtils.start(getDriver());
 
-        WebElement navItemTag = getDriver().findElement(By.xpath("//p[contains(text(),'Tag')]"));
-        TestUtils.scroll(getDriver(), navItemTag);
-        navItemTag.click();
+        WebElement menuTag = getDriver().findElement(By.xpath("//p[contains(text(),'Tag')]"));
+        TestUtils.scrollClick(getDriver(), menuTag);
 
         getDriver().findElement(By.xpath("//i[contains(text(),'create_new_folder')]")).click();
         getDriver().findElement(By.xpath("//input[@id='string']")).sendKeys("String");
