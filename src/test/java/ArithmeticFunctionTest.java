@@ -8,7 +8,7 @@ import utils.ProjectUtils;
 public class ArithmeticFunctionTest extends BaseTest {
 
     @Test
-    public void testSaveDraft(){
+    public void SaveDraftTest(){
 
         ProjectUtils.start(getDriver());
 
