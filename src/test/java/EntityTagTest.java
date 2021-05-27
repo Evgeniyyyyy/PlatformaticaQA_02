@@ -29,4 +29,28 @@ public class EntityTagTest extends BaseTest{
         WebElement checkCreatedRecord = getDriver().findElement(By.xpath("//i[@class='fa fa-check-square-o']"));
         Assert.assertTrue(checkCreatedRecord.isDisplayed());
     }
+
+    @Test
+    public void testCreateNewDraftRecord() {
+
+        ProjectUtils.start(getDriver());
+
+        TestUtils.tagButtonSideMenu(getDriver());
+        TestUtils.createNewFolder(getDriver());
+        TestUtils.stringField(getDriver());
+        TestUtils.textField(getDriver());
+        TestUtils.intField(getDriver());
+        TestUtils.decimalField(getDriver());
+        TestUtils.dateField(getDriver());
+        TestUtils.datetimeField(getDriver());
+
+        getDriver().findElement(By.xpath("//div[text()='apptester1@tester.test']")).click();
+        WebElement apptester = getDriver().findElement(By.xpath("//span[text()='tester26@tester.test']"));
+        TestUtils.jsClick(getDriver(), apptester);
+
+        TestUtils.draftButton(getDriver());
+
+        WebElement pencil = getDriver().findElement(By.xpath("//i[@class='fa fa-pencil']"));
+        Assert.assertTrue(pencil.isDisplayed());
+    }
 }
