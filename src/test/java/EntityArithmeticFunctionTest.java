@@ -5,10 +5,10 @@ import org.testng.Assert;
 import org.testng.annotations.Test;
 import utils.ProjectUtils;
 
-public class ArithmeticFunctionTest extends BaseTest {
+public class EntityArithmeticFunctionTest extends BaseTest {
 
     @Test
-    public void SaveDraftTest(){
+    public void testRecordSaveDraft(){
 
         ProjectUtils.start(getDriver());
 
