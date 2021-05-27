@@ -32,6 +32,7 @@ public class EntityArithmeticFunctionTest extends BaseTest {
         WebElement createdRecord = getDriver().findElement(By.xpath("//tbody/tr[1]"));
         Assert.assertTrue(createdRecord.isDisplayed());
     }
+
     public void setNewData (WebDriver driver, String inputField1, String inputField2) {
         WebElement f1 = getDriver().findElement(By.xpath("//input[@data-field_name='f1']"));
         WebElement f2 = getDriver().findElement(By.xpath("//input[@data-field_name='f2']"));
