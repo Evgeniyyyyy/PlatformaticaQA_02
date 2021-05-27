@@ -5,7 +5,7 @@ import org.testng.Assert;
 import org.testng.annotations.Test;
 import utils.ProjectUtils;
 
-public class ArithmeticFunctionSaveDraftTest extends BaseTest {
+public class ArithmeticFunctionTest extends BaseTest {
 
     @Test
     public void testSaveDraft(){
