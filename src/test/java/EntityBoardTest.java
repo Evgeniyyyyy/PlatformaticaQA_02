@@ -19,42 +19,42 @@ public class EntityBoardTest extends BaseTest {
 
     public void moveToElementAction(WebDriver driver) {
         Actions builder = new Actions(driver);
-        WebElement searchField = driver.findElement(By.xpath(EntityBoardConstants.LINK_BOARD_ICON));
+        WebElement searchField = driver.findElement(EntityBoardConstants.LINK_BOARD_ICON);
         TestUtils.scroll(driver, searchField);
         builder.moveToElement(searchField);
-        builder.click(driver.findElement(By.xpath(EntityBoardConstants.LINK_BOARD_ENTITY)));
+        builder.click(driver.findElement(EntityBoardConstants.LINK_BOARD_ENTITY));
         Action mouseoverAndClick = builder.build();
         mouseoverAndClick.perform();
     }
 
     public void addEmptyCardToList(WebDriver driver) {
-        WebElement searchFieldAddCard = driver.findElement(By.xpath(EntityBoardConstants.BOARD_ADD_CARD_BY_XPATH));
+        WebElement searchFieldAddCard = driver.findElement(EntityBoardConstants.BOARD_ADD_CARD);
         searchFieldAddCard.click();
-        WebElement buttonSave = driver.findElement(By.id(EntityBoardConstants.BOARD_BUTTON_SAVE_BY_ID));
+        WebElement buttonSave = driver.findElement(EntityBoardConstants.BOARD_BUTTON_SAVE);
         TestUtils.scroll(driver, buttonSave);
         buttonSave.click();
     }
 
     public void toggleActionToList (WebDriver driver) {
-        WebElement toggleActionToList = driver.findElement(By.xpath(EntityBoardConstants.BOARD_TOGGLE_LIST_ACTION_BY_XPATH));
+        WebElement toggleActionToList = driver.findElement(EntityBoardConstants.BOARD_TOGGLE_LIST_ACTION);
         toggleActionToList.click();
     }
 
     public void deleteAction(WebDriver driver) throws InterruptedException {
-        WebElement buttonAction = driver.findElement(By.cssSelector(EntityBoardConstants.BOARD_ACTION_BUTTON_BY_CSS));
+        WebElement buttonAction = driver.findElement(EntityBoardConstants.BOARD_ACTION_BUTTON);
         buttonAction.click();
-        WebElement deleteAction = driver.findElement(By.xpath(EntityBoardConstants.BOARD_ACTION_DELETE_BY_XPATH));
+        WebElement deleteAction = driver.findElement(EntityBoardConstants.BOARD_ACTION_DELETE);
         Thread.sleep(500);
         deleteAction.click();
     }
 
     public void goToRecyclingBin(WebDriver driver) {
-        WebElement recyclingBin = driver.findElement(By.xpath(EntityBoardConstants.BOARD_RECYCLING_BIN_ICON_BY_XPATH));
+        WebElement recyclingBin = driver.findElement(EntityBoardConstants.BOARD_RECYCLING_BIN_ICON);
         recyclingBin.click();
     }
 
     public void recyclingBinDeletePermanently(WebDriver driver) {
-        WebElement deletePermanently = driver.findElement(By.xpath(EntityBoardConstants.RECYCLING_BIN_DELETE_PERMANENTLY_BY_XPATH));
+        WebElement deletePermanently = driver.findElement(EntityBoardConstants.RECYCLING_BIN_DELETE_PERMANENTLY);
         deletePermanently.click();
     }
 
@@ -103,7 +103,6 @@ public class EntityBoardTest extends BaseTest {
         moveToElementAction(getDriver());
 
         addEmptyCardToList(getDriver());
-        getDriver().manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
         addEmptyCardToList(getDriver());
         toggleActionToList(getDriver());
 
