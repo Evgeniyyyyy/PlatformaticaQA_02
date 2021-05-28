@@ -1,8 +1,11 @@
 package utils;
+
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 import java.util.Random;
 import java.util.UUID;
 
@@ -24,6 +27,12 @@ public class TestUtils {
     }
 
     public static void scrollClick(WebDriver driver, WebElement element) {
+        scroll(driver, element);
+        element.click();
+    }
+
+    public static void scrollClick(WebDriver driver, By by) {
+        WebElement element = driver.findElement(by);
         scroll(driver, element);
         element.click();
     }

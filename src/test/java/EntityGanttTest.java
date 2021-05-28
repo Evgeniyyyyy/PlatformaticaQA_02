@@ -1,6 +1,7 @@
 import base.BaseTest;
 import org.openqa.selenium.By;
 import org.testng.Assert;
+import org.testng.annotations.Ignore;
 import org.testng.annotations.Test;
 import static utils.ProjectUtils.start;
 import static utils.TestUtils.scrollClick;
@@ -44,6 +45,7 @@ public class EntityGanttTest extends BaseTest {
         getDriver().findElement(listButton).click();
     }
 
+    @Ignore
     @Test
     public void testCreateNewRecordAndSave() {
 
@@ -53,6 +55,7 @@ public class EntityGanttTest extends BaseTest {
         Assert.assertTrue(getDriver().findElement(checkSquare).isDisplayed());
     }
 
+    @Ignore
     @Test
     public void testCreateNewRecordAndSaveAsDraft(){
 
