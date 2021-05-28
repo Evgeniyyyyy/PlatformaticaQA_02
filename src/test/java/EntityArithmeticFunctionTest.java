@@ -12,10 +12,6 @@ import java.util.List;
 
 public class EntityArithmeticFunctionTest extends BaseTest {
 
-    private WebElement findElement(By by) {
-        return getDriver().findElement(by);
-    }
-
     private List<WebElement> findElements(By by) {
         return getDriver().findElements(by);
     }

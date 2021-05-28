@@ -80,4 +80,8 @@ public abstract class BaseTest {
 
         return wait;
     }
+
+    protected WebElement findElement(By by) {
+        return getDriver().findElement(by);
+    }
 }
