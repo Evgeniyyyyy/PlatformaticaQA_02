@@ -65,14 +65,6 @@ public class EntityBoardTest extends BaseTest {
         return Integer.parseInt(element.getText());
     }
 
-    private WebElement findElement(By by) {
-        return getDriver().findElement(by);
-    }
-
-    private List<WebElement> findElements(By by) {
-        return getDriver().findElements(by);
-    }
-
     @Test
     public void testDeleteRecord() throws InterruptedException {
 
