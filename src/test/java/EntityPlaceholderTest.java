@@ -26,7 +26,7 @@ public class EntityPlaceholderTest extends BaseTest {
         getDriver().findElement(By.xpath("//div[@class = \"filter-option-inner-inner\"]")).click();
         TestUtils.scrollClick(getDriver(), getDriver()
                 .findElement(By.xpath("//span[contains (text(),  \"tester99@tester.test\")]")));
-        TestUtils.scrollClick(getDriver(), getDriver().findElement(By.id("pa-entity-form-save-btn")));
+        TestUtils.jsClick(getDriver(), getDriver().findElement(By.id("pa-entity-form-save-btn")));
 
         String placeholder = "//table[@id = \"pa-all-entities-table\"]/tbody/tr/td/a[contains (text (), \"Test 01\")]";
         WebElement result = getDriver().findElement(By.xpath(placeholder));
