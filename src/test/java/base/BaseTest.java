@@ -1,10 +1,14 @@
 package base;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.remote.RemoteWebDriver;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.annotations.*;
 
 import java.io.IOException;
@@ -65,5 +69,10 @@ public abstract class BaseTest {
 
     protected WebDriver getDriver() {
         return driver;
+    }
+
+    protected WebDriverWait getWait() {
+        WebDriverWait wait = new WebDriverWait(driver, 10);
+        return wait;
     }
 }
