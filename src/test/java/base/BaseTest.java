@@ -45,6 +45,7 @@ public abstract class BaseTest {
     }
 
     private WebDriver driver;
+    private WebDriverWait wait;
 
     @BeforeMethod
     protected void beforeMethod() {
@@ -65,6 +66,7 @@ public abstract class BaseTest {
     @AfterMethod
     protected void afterMethod() {
         driver.quit();
+        wait = null;
     }
 
     protected WebDriver getDriver() {
@@ -72,7 +74,10 @@ public abstract class BaseTest {
     }
 
     protected WebDriverWait getWait() {
-        WebDriverWait wait = new WebDriverWait(driver, 10);
+        if (wait == null) {
+            wait = new WebDriverWait(driver, 10);
+        }
+
         return wait;
     }
 }

@@ -31,6 +31,12 @@ public class TestUtils {
         element.click();
     }
 
+    public static void scrollClick(WebDriver driver, By by) {
+        WebElement element = driver.findElement(by);
+        scroll(driver, element);
+        element.click();
+    }
+
     public static void createNewFolder(WebDriver driver) {
         driver.findElement(By.xpath("//i[text()='create_new_folder']")).click();
     }

@@ -14,7 +14,9 @@ import static utils.ProjectUtils.*;
 import static utils.TestUtils.scrollClick;
 
 public class EntityEventsChain1Test extends BaseTest {
-    By eventsChain1Menu = By.xpath("//p[contains(.,'Events Chain 1')]");
+
+    private static final By EVENTS_CHAIN1_MENU = By.xpath("//p[contains(.,'Events Chain 1')]");
+
     By createNewFolderButton = By.xpath("//i[text() = 'create_new_folder']");
     By f1Field = By.id("f1");
     By f10Field = By.id("f10");
@@ -23,7 +25,7 @@ public class EntityEventsChain1Test extends BaseTest {
     By cells = By.xpath("//table[@id = 'pa-all-entities-table']/tbody/tr/td/a");
     By checkBox = By.xpath("//i[@class = 'fa fa-check-square-o']");
 
-    public List<String> getRowValues(List<WebElement> cellsActual) {
+    private List<String> getRowValues(List<WebElement> cellsActual) {
         List<String> actualValues = new ArrayList<>();
 
         for(WebElement cell : cellsActual) {
@@ -36,11 +38,11 @@ public class EntityEventsChain1Test extends BaseTest {
     public void testCreateNewRecord() {
         WebDriverWait wait = new WebDriverWait(getDriver(), 10);
 
-        String f1InputValue = "1";
-        List<String> expectedValues = Arrays.asList("1", "2", "4", "8", "16", "32", "64", "128", "256", "512");
+        final String f1InputValue = "1";
+        final List<String> expectedValues = Arrays.asList("1", "2", "4", "8", "16", "32", "64", "128", "256", "512");
 
         start(getDriver());
-        scrollClick(getDriver(), getDriver().findElement(eventsChain1Menu));
+        scrollClick(getDriver(), getDriver().findElement(EVENTS_CHAIN1_MENU));
         wait.until(ExpectedConditions.elementToBeClickable(getDriver()
                 .findElement(createNewFolderButton)))
                 .click();

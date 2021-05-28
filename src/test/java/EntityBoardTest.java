@@ -70,7 +70,7 @@ public class EntityBoardTest extends BaseTest {
     }
 
     @Test
-    public void testEntityBoardDeleteRecordAt002_01() throws InterruptedException {
+    public void testDeleteRecord() throws InterruptedException {
 
         ProjectUtils.start(getDriver());
 
@@ -96,7 +96,7 @@ public class EntityBoardTest extends BaseTest {
     }
 
     @Test
-    public void testEntityBoardDeleteRecordFromRecyclingBinAt002_02() throws InterruptedException {
+    public void testDeleteRecordFromRecyclingBin() throws InterruptedException {
 
         ProjectUtils.start(getDriver());
 
