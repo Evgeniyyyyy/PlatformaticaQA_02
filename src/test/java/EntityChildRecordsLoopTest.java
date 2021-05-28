@@ -14,7 +14,7 @@ import static utils.TestUtils.scrollClick;
  public class EntityChildRecordsLoopTest extends BaseTest {
 
     @Test
-    public void TestCreateChildRecordsLoopCard()  {
+    public void testCreateChildRecordsLoopCard()  {
         final double startBalanceValue = 100;
         final double cardAmountValue = 200;
         final double expectedEndBalance = startBalanceValue + cardAmountValue;
