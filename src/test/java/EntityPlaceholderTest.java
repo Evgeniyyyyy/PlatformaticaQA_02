@@ -12,8 +12,9 @@ public class EntityPlaceholderTest extends BaseTest {
     public void testCreateNewRecord() {
 
         ProjectUtils.start(getDriver());
-        WebElement openDash = getDriver().findElement(By.xpath("//p[contains (text(), 'Placeholder')]"));
-        TestUtils.scrollClick(getDriver(), openDash);
+
+        WebElement menuPlaceholder = getDriver().findElement(By.xpath("//p[contains (text(), 'Placeholder')]"));
+        TestUtils.scrollClick(getDriver(), menuPlaceholder);
 
         getDriver().findElement(By.xpath("//div/i[text()='create_new_folder']")).click();
         getDriver().findElement(By.id("string")).sendKeys("Test 01");
@@ -23,13 +24,13 @@ public class EntityPlaceholderTest extends BaseTest {
         getDriver().findElement(By.id("date")).click();
         getDriver().findElement(By.id("datetime")).click();
         getDriver().findElement(By.xpath("//div[@class = \"filter-option-inner-inner\"]")).click();
-        WebElement user = getDriver().findElement(By.xpath("//span[contains (text(),  \"tester99@tester.test\")]"));
-        TestUtils.scrollClick(getDriver(), user);
-        TestUtils.jsClick(getDriver(), getDriver().findElement(By.id("pa-entity-form-save-btn")));
+        TestUtils.scrollClick(getDriver(), getDriver()
+                .findElement(By.xpath("//span[contains (text(),  \"tester99@tester.test\")]")));
+        TestUtils.scrollClick(getDriver(), getDriver().findElement(By.id("pa-entity-form-save-btn")));
 
         String placeholder = "//table[@id = \"pa-all-entities-table\"]/tbody/tr/td/a[contains (text (), \"Test 01\")]";
         WebElement result = getDriver().findElement(By.xpath(placeholder));
-        Assert.assertTrue(result.isDisplayed());
 
+        Assert.assertTrue(result.isDisplayed());
     }
 }
