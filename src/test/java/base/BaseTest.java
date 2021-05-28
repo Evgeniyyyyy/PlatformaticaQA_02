@@ -77,7 +77,6 @@ public abstract class BaseTest {
         if (wait == null) {
             wait = new WebDriverWait(driver, 10);
         }
-
         return wait;
     }
 
