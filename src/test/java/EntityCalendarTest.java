@@ -14,7 +14,24 @@ import static utils.TestUtils.scroll;
 
 public class EntityCalendarTest extends BaseTest {
 
+    private void enterToCalendarPage() {
+        TestUtils.scrollClick(getDriver(), findElement(By.xpath("//p[contains (text(), 'Calendar')]")));
+    }
+
     private void createCalendarRecord(String str, String text, String in, String decimal){
+        findElement(By.xpath("//*[@class='card-icon']")).click();
+
+        findElement(By.id("string")).sendKeys(str);
+        findElement(By.id("text")).sendKeys(text);
+        findElement(By.id("date")).click();
+        findElement(By.id("datetime")).click();
+        findElement(By.id("int")).sendKeys(in);
+        findElement(By.id("decimal")).sendKeys(decimal);
+
+        TestUtils.scrollClick(getDriver(), findElement(By.id("pa-entity-form-save-btn")));
+    }
+
+    private void enterToCalendarPageAndCreateRecord(String str, String text, String in, String decimal){
         TestUtils.scrollClick(getDriver(), findElement(By.xpath("//p[contains (text(), 'Calendar')]")));
         findElement(By.xpath("//*[@class='card-icon']")).click();
 
@@ -28,10 +45,13 @@ public class EntityCalendarTest extends BaseTest {
         TestUtils.scrollClick(getDriver(), findElement(By.id("pa-entity-form-save-btn")));
     }
 
+
+
     @Test
     public void testDeletedRecordFromBin(){
         ProjectUtils.start(getDriver());
 
+        enterToCalendarPage();
         createCalendarRecord("StringExample", "TextExample", "12345", "0.1");
 
         findElement(By.xpath("//*[contains(@href,'table&entity_id=32')]")).click();
@@ -62,7 +82,7 @@ public class EntityCalendarTest extends BaseTest {
         
         ProjectUtils.start(getDriver());
 
-        createCalendarRecord("StringExampleCreateRecord", "TextExample", "1111", "0.20");
+        enterToCalendarPageAndCreateRecord("StringExampleCreateRecord", "TextExample", "1111", "0.20");
 
         findElement(By.xpath("//*[contains(@href,'table&entity_id=32')]")).click();
         
