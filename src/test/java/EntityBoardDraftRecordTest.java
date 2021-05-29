@@ -72,9 +72,10 @@ public class EntityBoardDraftRecordTest extends BaseTest {
         createDraftRecord();
         deleteDraftRecord();
 
-        findElement(By.xpath("//a/i[text()='delete_outline']")).click();
+        findElement(By.xpath("//a[@href='index.php?action=recycle_bin']")).click();
 
-        WebElement getDeletePermanentlyLink = findElement(By.xpath("//a[text()='delete permanently']"));
+        WebElement getDeletePermanentlyLink = findElement(
+                By.xpath("//tr[@data-index='0']/td/a[contains(text(), 'delete permanently')]"));
         getWait().until(ExpectedConditions.visibilityOf(getDeletePermanentlyLink));
         getDeletePermanentlyLink.click();
 
