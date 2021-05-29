@@ -14,41 +14,18 @@ import static utils.TestUtils.scrollClick;
 
      final static String URL = "https://ref2.eteam.work/";
 
+     final double startBalanceValue = 100;
+     final double cardAmountValue = 200;
+     final double expectedEndBalance = startBalanceValue + cardAmountValue;
+     final String cardItemValue = "book";
+
      @Test
     public void testCreateChildRecordsLoopCard()  {
-        final double startBalanceValue = 100;
-        final double cardAmountValue = 200;
-        final double expectedEndBalance = startBalanceValue + cardAmountValue;
-        final String cardItemValue = "book";
-
         getDriver().get(URL);
 
         ProjectUtils.login(getDriver());
 
-        WebElement childRecordsLoop = getDriver().findElement(By.xpath("//p[contains(text(),'Child records loop')]"));
-        scrollClick(getDriver(), childRecordsLoop);
-
-        WebElement newChildRecLoopFolder = getDriver().findElement(By.xpath("//i[contains(text(),'create_new_folder')]"));
-        newChildRecLoopFolder.click();
-
-        WebElement startBalance = getDriver().findElement(By.xpath("//input[@id='start_balance']"));
-        startBalance.sendKeys(String.valueOf(startBalanceValue));
-
-        WebElement newChildRecLoopRecord = getDriver().findElement(By.xpath("//tbody/tr[@id='add-row-68']/td[1]/button[1]"));
-        newChildRecLoopRecord.click();
-
-        WebElement amount = getDriver().findElement(By.xpath("//textarea[@id='t-68-r-1-amount']"));
-        amount.clear();
-        amount.sendKeys(String.valueOf(cardAmountValue));
-
-        WebElement item = getDriver().findElement(By.xpath("//textarea[@id='t-68-r-1-item']"));
-        item.sendKeys(cardItemValue);
-
-        getWait().until(ExpectedConditions.attributeToBe(By.xpath("//input[@id='end_balance']"),
-                "value", String.valueOf((int) expectedEndBalance)));
-
-        WebElement saveButton = getDriver().findElement(By.xpath("//button[@id='pa-entity-form-save-btn']"));
-        saveButton.click();
+        createChildRecordsLoopCard();
 
         List<WebElement> columnList = getDriver().findElements(By.xpath("//tbody/tr/td[@class='pa-list-table-th']"));
         Assert.assertTrue(columnList.size() > 0);
@@ -63,14 +40,11 @@ import static utils.TestUtils.scrollClick;
 
     @Test
     public void testViewChildRecordsLoopCard() {
-        final double startBalanceValue = 100;
-        final double cardAmountValue = 200;
-        final double expectedEndBalance = startBalanceValue + cardAmountValue;
-        final String cardItemValue = "book";
-
         getDriver().get(URL);
 
         ProjectUtils.login(getDriver());
+
+        createChildRecordsLoopCard();
 
         WebElement childRecordsLoop = getDriver().findElement(By.xpath("//p[contains(text(),'Child records loop')]"));
         scrollClick(getDriver(), childRecordsLoop);
@@ -106,5 +80,34 @@ import static utils.TestUtils.scrollClick;
                 getDriver().findElement(By.xpath("//tbody/tr[1]/td[3]")).getText().trim(),
                 cardItemValue // "book"
         );
+    }
+
+    protected void createChildRecordsLoopCard() {
+
+        WebElement childRecordsLoop = getDriver().findElement(By.xpath("//p[contains(text(),'Child records loop')]"));
+        scrollClick(getDriver(), childRecordsLoop);
+
+        WebElement newChildRecLoopFolder = getDriver().findElement(By.xpath("//i[contains(text(),'create_new_folder')]"));
+        newChildRecLoopFolder.click();
+
+        WebElement startBalance = getDriver().findElement(By.xpath("//input[@id='start_balance']"));
+        startBalance.sendKeys(String.valueOf(startBalanceValue));
+
+        WebElement newChildRecLoopRecord = getDriver().findElement(By.xpath("//tbody/tr[@id='add-row-68']/td[1]/button[1]"));
+        newChildRecLoopRecord.click();
+
+        WebElement amount = getDriver().findElement(By.xpath("//textarea[@id='t-68-r-1-amount']"));
+        amount.clear();
+        amount.sendKeys(String.valueOf(cardAmountValue));
+
+        WebElement item = getDriver().findElement(By.xpath("//textarea[@id='t-68-r-1-item']"));
+        item.sendKeys(cardItemValue);
+
+        getWait().until(ExpectedConditions.attributeToBe(By.xpath("//input[@id='end_balance']"),
+                "value", String.valueOf((int) expectedEndBalance)));
+
+        WebElement saveButton = getDriver().findElement(By.xpath("//button[@id='pa-entity-form-save-btn']"));
+        saveButton.click();
+
     }
 }
