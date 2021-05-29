@@ -1,8 +1,8 @@
 import base.BaseTest;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.testng.Assert;
-import org.testng.annotations.Ignore;
 import org.testng.annotations.Test;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
@@ -25,7 +25,7 @@ public class EntityGanttTest extends BaseTest {
     private static final By TESTER_NAME = By.xpath("//span[text()='tester100@tester.test']");
     private static final By SAVE_BUTTON = By.id("pa-entity-form-save-btn");
     private static final By DRAFT_BUTTON = By.id("pa-entity-form-draft-btn");
-    private static final By LIST_BUTTON = By.xpath("//li//a[@class='nav-link ']/i[@class='material-icons']");
+    private static final By LIST_BUTTON = By.xpath("//div[@class='content']//ul//li[2]/a[1]");
     private static final By CHECK_ICON = By.xpath("//tbody/tr[1]/td[1]/i[1]");
     private static final By COLUMN_FIELD = By.xpath("//tbody/tr/td[@class = 'pa-list-table-th']");
 
@@ -44,7 +44,6 @@ public class EntityGanttTest extends BaseTest {
                     formatter.format(date), emptyField, emptyField, userName);
 
     private void createRecord(){
-        getWait();
         start(getDriver());
 
         scrollClick(getDriver(), getDriver().findElement(GANTT_TAB));
@@ -61,6 +60,8 @@ public class EntityGanttTest extends BaseTest {
     }
 
     private void clickListButton(){
+        getWait().until(ExpectedConditions
+                .attributeContains(getDriver().findElement(LIST_BUTTON), "class", "nav-link "));
         getDriver().findElement(LIST_BUTTON).click();
     }
 
@@ -73,7 +74,6 @@ public class EntityGanttTest extends BaseTest {
         }
     }
 
-    @Ignore
     @Test
     public void testCreateRecord() {
 
@@ -86,7 +86,6 @@ public class EntityGanttTest extends BaseTest {
         getAssertion();
     }
 
-    @Ignore
     @Test
     public void testCreateDraftRecord(){
 
