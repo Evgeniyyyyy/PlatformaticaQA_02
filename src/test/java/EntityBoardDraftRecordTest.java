@@ -56,25 +56,28 @@ public class EntityBoardDraftRecordTest extends BaseTest {
 
         findElement(By.xpath("//div[@class='dropdown pull-left']")).click();
 
-        getWait().until(ExpectedConditions.visibilityOf(findElement(By.xpath("//li/a[text()='delete']"))));
-        findElement(By.xpath("//li/a[text()='delete']")).click();
+        WebElement getDeleteLink = findElement(By.xpath("//li/a[text()='delete']"));
+        getWait().until(ExpectedConditions.visibilityOf(getDeleteLink));
+        getDeleteLink.click();
 
     }
 
     @Test
     public void deleteRecordFromRecycleBin() throws InterruptedException {
-        final String message = "Good job with housekeeping! Recycle bin is currently empty!";
+
+        final String getMessage = "Good job with housekeeping! Recycle bin is currently empty!";
 
         createDraftRecord();
         deleteDraftRecord();
 
         findElement(By.xpath("//a/i[text()='delete_outline']")).click();
 
-        getWait().until(ExpectedConditions.visibilityOf(getDriver().findElement(By.xpath("//a[text()='delete permanently']"))));
-        findElement(By.xpath("//a[text()='delete permanently']")).click();
+        WebElement getDeletePermanentlyLink = findElement(By.xpath("//a[text()='delete permanently']"));
+        getWait().until(ExpectedConditions.visibilityOf(getDeletePermanentlyLink));
+        getDeletePermanentlyLink.click();
 
-        WebElement expectedResult = getDriver().findElement(By.className("card-body"));
-        Assert.assertEquals(expectedResult.getText(), message);
+        WebElement getExpectedResult = findElement(By.className("card-body"));
+        Assert.assertEquals(getExpectedResult.getText(), getMessage);
 
     }
 }
