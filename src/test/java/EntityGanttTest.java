@@ -2,6 +2,7 @@ import base.BaseTest;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.testng.Assert;
+import org.testng.annotations.Ignore;
 import org.testng.annotations.Test;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
@@ -72,6 +73,7 @@ public class EntityGanttTest extends BaseTest {
         }
     }
 
+    @Ignore
     @Test
     public void testCreateRecord() {
 
@@ -84,6 +86,7 @@ public class EntityGanttTest extends BaseTest {
         getAssertion();
     }
 
+    @Ignore
     @Test
     public void testCreateDraftRecord(){
 

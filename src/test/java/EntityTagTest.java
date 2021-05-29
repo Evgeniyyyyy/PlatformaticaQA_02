@@ -2,7 +2,6 @@ import base.BaseTest;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.testng.Assert;
-import org.testng.annotations.Ignore;
 import org.testng.annotations.Test;
 import utils.ProjectUtils;
 import utils.TestUtils;
@@ -27,7 +26,9 @@ public class EntityTagTest extends BaseTest{
     private static final By DECIMAL_INPUT = By.id("decimal");
     private static final By DATE_INPUT = By.id("date");
     private static final By DATETIME_INPUT = By.id("datetime");
+
     private static final By PENCIL_BOX = By.xpath("//i[@class='fa fa-pencil']");
+    private static final By SQUARE_BOX = By.xpath("//i[@class='fa fa-check-square-o']");
     private static final By CHECK_ROW = By.xpath(
             "//table[@id='pa-all-entities-table']/tbody/tr[@data-index='0']");
 
@@ -53,27 +54,17 @@ public class EntityTagTest extends BaseTest{
         TestUtils.jsClick(getDriver(), apptester);
     }
 
-    @Ignore
     @Test
-    public void testCreateNewRecord() {
+    public void testCreateRecord() {
 
-        ProjectUtils.start(getDriver());
+        createRecord();
 
-        WebElement menuTag = getDriver().findElement(By.xpath("//p[contains(text(),'Tag')]"));
-        TestUtils.scrollClick(getDriver(), menuTag);
+        TestUtils.scrollClick(getDriver(), getDriver().findElement(SAVE_BUTTON));
 
-        getDriver().findElement(By.xpath("//i[contains(text(),'create_new_folder')]")).click();
-        getDriver().findElement(By.xpath("//input[@id='string']")).sendKeys("String");
-        getDriver().findElement(By.xpath("//textarea[@id='text']")).sendKeys("text");
-        getDriver().findElement(By.xpath("//input[@id='int']")).sendKeys("2");
-        getDriver().findElement(By.xpath("//input[@id='decimal']")).sendKeys("2.20");
-        getDriver().findElement(By.xpath("//input[@id='date']")).click();
-        getDriver().findElement(By.xpath("//input[@id='datetime']")).click();
-        getDriver().findElement(By.xpath("//div[contains(text(),'apptester1@tester.test')]")).isDisplayed();
-        getDriver().findElement(By.xpath("//button[@id='pa-entity-form-save-btn']")).click();
+        List<WebElement> records = getDriver().findElements(CHECK_ROW);
 
-        WebElement checkCreatedRecord = getDriver().findElement(By.xpath("//i[@class='fa fa-check-square-o']"));
-        Assert.assertTrue(checkCreatedRecord.isDisplayed());
+        Assert.assertEquals(records.size(), 1);
+        Assert.assertTrue(getDriver().findElement(SQUARE_BOX).isDisplayed());
     }
 
     @Test
