@@ -20,18 +20,18 @@ public class EntityChevronSentRecordViaListTest extends BaseTest {
     private static final By CHEVRON_MENU = By.xpath("//p[contains(text(),'Chevron')]");
 
     @Test
-    public void testCreateNewRecord() {
+    public void testCreateRecordVerifyThatExist() {
         WebDriverWait wait = getWait();
 
         final String enteredTextField = "firstExample";
 
         start(getDriver());
         scrollClick(getDriver(), getDriver().findElement(CHEVRON_MENU));
-        wait.until(ExpectedConditions.elementToBeClickable(getDriver().findElement(createNewRecord))).click();
+        getWait().until(ExpectedConditions.elementToBeClickable(getDriver().findElement(createNewRecord))).click();
         getDriver().findElement(textField).sendKeys(enteredTextField);
         getDriver().findElement(saveButton).click();
-        wait.until(ExpectedConditions.elementToBeClickable(getDriver().findElement(sentButton))).click();
-        wait.until(ExpectedConditions.elementToBeClickable(getDriver().findElement(verifySentButton))).click();
+        getWait().until(ExpectedConditions.elementToBeClickable(getDriver().findElement(sentButton))).click();
+        getWait().until(ExpectedConditions.elementToBeClickable(getDriver().findElement(verifySentButton))).click();
         getDriver().findElement(recordedData).isDisplayed();
 
         Assert.assertTrue(getDriver().findElement(recordedData).isDisplayed());
