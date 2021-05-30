@@ -33,3 +33,4 @@ public class EntityChevronSentRecordViaListTest extends BaseTest {
         Assert.assertEquals(getDriver().findElement(recordedData).getText(), ENTERED_TEXT_FIELD);
     }
 }
+
