@@ -66,6 +66,20 @@ public class EntityBoardDraftRecordTest extends BaseTest {
 
     }
 
+    private void assertsRecordInRecycleBin(){
+
+        WebElement checkHeader = findElement(By.xpath("//a[@class='navbar-brand']"));
+        Assert.assertEquals(checkHeader.getText(), "Recycle Bin");
+
+        getWait().until(ExpectedConditions.visibilityOf(findElement(By.xpath("//div[@class='card-body']"))));
+
+        List<WebElement> getRow = findElements(By.xpath("//tbody/tr[@data-index='0']"));
+        Assert.assertEquals(getRow.size(), 1);
+
+        WebElement checkNotification = findElement(By.xpath("//a/span[@class='notification']"));
+        Assert.assertEquals(checkNotification.getText(), "1");
+    }
+
     @Test
     public void deleteRecordFromRecycleBin() {
 
@@ -76,14 +90,7 @@ public class EntityBoardDraftRecordTest extends BaseTest {
 
         findElement(By.xpath("//a[@href='index.php?action=recycle_bin']")).click();
 
-        WebElement checkHeader = findElement(By.xpath("//a[@class='navbar-brand']"));
-        Assert.assertEquals(checkHeader.getText(), "Recycle Bin");
-
-        List<WebElement> getRow = findElements(By.xpath("//tbody/tr[@data-index='0']"));
-        Assert.assertEquals(getRow.size(), 1);
-
-        WebElement checkNotification = findElement(By.xpath("//a/span[@class='notification']"));
-        Assert.assertEquals(checkNotification.getText(), "1");
+        assertsRecordInRecycleBin();
 
         findElement(By.xpath("//tr[@data-index='0']/td/a[contains(text(), 'delete permanently')]")).click();
 
