@@ -50,9 +50,10 @@ public class EntityTagTest extends BaseTest{
         TestUtils.scrollClick(getDriver(),DATE_INPUT);
         TestUtils.scrollClick(getDriver(),DATETIME_INPUT);
 
-        getDriver().findElement(By.xpath("//div[text()='apptester1@tester.test']")).click();
-        WebElement apptester = getDriver().findElement(By.xpath("//span[text()='tester26@tester.test']"));
-        TestUtils.jsClick(getDriver(), apptester);
+        getDriver().findElement(By.xpath("//button[@data-id='user']")).click();
+
+        TestUtils.jsClick(getDriver(), getDriver().findElement(
+                        By.xpath("//span[text()='tester26@tester.test']")));
     }
 
     @Test
