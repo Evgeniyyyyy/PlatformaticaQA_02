@@ -2,18 +2,14 @@ import base.BaseTest;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.testng.Assert;
 import org.testng.annotations.Test;
 import utils.ProjectUtils;
+import utils.TestUtils;
 
 import java.util.List;
 
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertTrue;
-import static utils.TestUtils.scrollClick;
-
 public class EntityChildRecordsLoopTest extends BaseTest {
-
-    private static final String URL = "https://ref2.eteam.work/";
 
     private final double startBalanceValue = 100;
     private final double cardAmountValue = 200;
@@ -22,7 +18,7 @@ public class EntityChildRecordsLoopTest extends BaseTest {
 
     private void createChildRecordsLoopCard() {
         WebElement childRecordsLoop = findElement(By.xpath("//p[contains(text(),'Child records loop')]"));
-        scrollClick(getDriver(), childRecordsLoop);
+        TestUtils.scrollClick(getDriver(), childRecordsLoop);
 
         WebElement newChildRecLoopFolder = findElement(By.xpath("//i[contains(text(),'create_new_folder')]"));
         newChildRecLoopFolder.click();
@@ -49,36 +45,32 @@ public class EntityChildRecordsLoopTest extends BaseTest {
 
     @Test
     public void testCreateChildRecordsLoopCard() {
-        getDriver().get(URL);
-
-        ProjectUtils.login(getDriver());
+        ProjectUtils.start(getDriver());
 
         createChildRecordsLoopCard();
 
         List<WebElement> columnList = findElements(By.xpath("//tbody/tr/td[@class='pa-list-table-th']"));
-        assertTrue(columnList.size() > 0);
+        Assert.assertTrue(columnList.size() > 0);
 
         double startBalanceAmount = Double.parseDouble(columnList.get(0).findElement(By.tagName("a")).getText());
         double endBalanceAmount = Double.parseDouble(columnList.get(1).findElement(By.tagName("a")).getText());
 
-        assertEquals(startBalanceAmount, startBalanceValue);
-        assertEquals(endBalanceAmount, expectedEndBalance);
+        Assert.assertEquals(startBalanceAmount, startBalanceValue);
+        Assert.assertEquals(endBalanceAmount, expectedEndBalance);
 
     }
 
     @Test
     public void testViewChildRecordsLoopCard() {
-        getDriver().get(URL);
-
-        ProjectUtils.login(getDriver());
+        ProjectUtils.start(getDriver());
 
         createChildRecordsLoopCard();
 
         WebElement childRecordsLoop = findElement(By.xpath("//p[contains(text(),'Child records loop')]"));
-        scrollClick(getDriver(), childRecordsLoop);
+        TestUtils.scrollClick(getDriver(), childRecordsLoop);
 
         List<WebElement> columnList = findElements(By.xpath("//tbody/tr/td[@class='pa-list-table-th']"));
-        assertTrue(columnList.size() > 0);
+        Assert.assertTrue(columnList.size() > 0);
 
         int numberOfCards = columnList.size() / 2;
 
@@ -92,10 +84,10 @@ public class EntityChildRecordsLoopTest extends BaseTest {
         viewEntity.click();
 
         List<WebElement> balances = findElements(By.className("pa-view-field"));
-        assertEquals(balances.get(0).getText(), String.format("%.2f", startBalanceValue));
-        assertEquals(balances.get(1).getText(), String.format("%.2f", expectedEndBalance));
-        assertEquals(findElement(By.xpath("//tbody/tr[1]/td[2]")).getText().trim(),
+        Assert.assertEquals(balances.get(0).getText(), String.format("%.2f", startBalanceValue));
+        Assert.assertEquals(balances.get(1).getText(), String.format("%.2f", expectedEndBalance));
+        Assert.assertEquals(findElement(By.xpath("//tbody/tr[1]/td[2]")).getText().trim(),
                 String.format("%.2f", cardAmountValue));
-        assertEquals(findElement(By.xpath("//tbody/tr[1]/td[3]")).getText().trim(), cardItemValue);
+        Assert.assertEquals(findElement(By.xpath("//tbody/tr[1]/td[3]")).getText().trim(), cardItemValue);
     }
 }
