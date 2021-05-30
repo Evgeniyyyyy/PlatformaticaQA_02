@@ -34,6 +34,7 @@ public class EntityTagTest extends BaseTest{
 
     private static final By DRAFT_BUTTON = By.id("pa-entity-form-draft-btn");
     private static final By SAVE_BUTTON = By.id("pa-entity-form-save-btn");
+    private static final By CANCEL_BUTTON= By.xpath("//button[text()='Cancel']");
 
     private void createRecord() {
 
@@ -78,5 +79,17 @@ public class EntityTagTest extends BaseTest{
 
         Assert.assertEquals(records.size(), 1);
         Assert.assertTrue(getDriver().findElement(PENCIL_BOX).isDisplayed());
+    }
+
+    @Test
+    public void testCancelRecord() {
+
+        createRecord();
+
+        TestUtils.scrollClick(getDriver(), CANCEL_BUTTON);
+
+        List<WebElement> records = getDriver().findElements(CHECK_ROW);
+
+        Assert.assertEquals(records.size(), 0);
     }
 }
