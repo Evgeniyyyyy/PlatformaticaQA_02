@@ -15,6 +15,8 @@ public class EntityChildRecordsLoopTest extends BaseTest {
     private final double cardAmountValue = 200;
     private final double expectedEndBalance = startBalanceValue + cardAmountValue;
     private final String cardItemValue = "book";
+    private final double editCardAmountValue = 500;
+    private final double expectedEditEndBalanceValue = startBalanceValue + editCardAmountValue;
 
     private void createChildRecordsLoopCard() {
         WebElement childRecordsLoop = findElement(By.xpath("//p[contains(text(),'Child records loop')]"));
@@ -52,8 +54,8 @@ public class EntityChildRecordsLoopTest extends BaseTest {
         List<WebElement> columnList = findElements(By.xpath("//tbody/tr/td[@class='pa-list-table-th']"));
         Assert.assertTrue(columnList.size() > 0);
 
-        double startBalanceAmount = Double.parseDouble(columnList.get(0).findElement(By.tagName("a")).getText());
-        double endBalanceAmount = Double.parseDouble(columnList.get(1).findElement(By.tagName("a")).getText());
+        double startBalanceAmount = Double.parseDouble(columnList.get(columnList.size() - 2).findElement(By.tagName("a")).getText());
+        double endBalanceAmount = Double.parseDouble(columnList.get(columnList.size() - 1).findElement(By.tagName("a")).getText());
 
         Assert.assertEquals(startBalanceAmount, startBalanceValue);
         Assert.assertEquals(endBalanceAmount, expectedEndBalance);
@@ -70,7 +72,7 @@ public class EntityChildRecordsLoopTest extends BaseTest {
         TestUtils.scrollClick(getDriver(), childRecordsLoop);
 
         List<WebElement> columnList = findElements(By.xpath("//tbody/tr/td[@class='pa-list-table-th']"));
-        Assert.assertTrue(columnList.size() > 0);
+         Assert.assertTrue(columnList.size() > 0);
 
         int numberOfCards = columnList.size() / 2;
 
@@ -89,5 +91,49 @@ public class EntityChildRecordsLoopTest extends BaseTest {
         Assert.assertEquals(findElement(By.xpath("//tbody/tr[1]/td[2]")).getText().trim(),
                 String.format("%.2f", cardAmountValue));
         Assert.assertEquals(findElement(By.xpath("//tbody/tr[1]/td[3]")).getText().trim(), cardItemValue);
+    }
+
+    @Test
+    public void testEditChildRecordsLoopCard() {
+        ProjectUtils.start(getDriver());
+
+        createChildRecordsLoopCard();
+
+        WebElement childRecordsLoop = findElement(By.xpath("//p[contains(text(),'Child records loop')]"));
+        TestUtils.scrollClick(getDriver(), childRecordsLoop);
+
+        List<WebElement> columnList = findElements(By.xpath("//tbody/tr/td[@class='pa-list-table-th']"));
+        Assert.assertTrue(columnList.size() > 0);
+
+        int numberOfCards = columnList.size() / 2;
+
+        WebElement targetRowDiv = findElement(By.xpath("//tbody/tr[" + numberOfCards + "]/td[4]/div[1]"));
+
+        WebElement lastCardDropdownMenu = targetRowDiv.findElement(By.xpath("button[1]"));
+        lastCardDropdownMenu.click();
+
+        WebElement editEntity = targetRowDiv.findElement(By.xpath("ul/li/a[text() = 'edit']"));
+        getWait().until(ExpectedConditions.visibilityOf(editEntity));
+        editEntity.click();
+
+        WebElement amount = findElement(By.xpath("//textarea[@id='t-68-r-1-amount']"));
+        amount.clear();
+        amount.sendKeys(String.valueOf(editCardAmountValue));
+
+        getWait().until(ExpectedConditions.attributeToBe(By.xpath("//input[@id='end_balance']"),
+                "value", String.valueOf((int) expectedEditEndBalanceValue)));
+
+        WebElement saveButton = findElement(By.xpath("//button[@id='pa-entity-form-save-btn']"));
+        saveButton.click();
+
+        columnList = findElements(By.className("pa-list-table-th"));
+        getWait().until(ExpectedConditions.visibilityOf(columnList.get(columnList.size()-1)));
+        Assert.assertTrue(columnList.size() > 0);
+
+        double startBalanceAmount = Double.parseDouble(columnList.get(columnList.size() - 2).findElement(By.tagName("a")).getText());
+        double endBalanceAmount = Double.parseDouble(columnList.get(columnList.size() - 1).findElement(By.tagName("a")).getText());
+
+        Assert.assertEquals(startBalanceAmount, startBalanceValue);
+        Assert.assertEquals(endBalanceAmount, expectedEditEndBalanceValue);
     }
 }
