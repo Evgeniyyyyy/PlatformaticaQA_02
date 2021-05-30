@@ -32,6 +32,7 @@ public class EntityChildRecordsLoopTest extends BaseTest {
         newChildRecLoopRecord.click();
 
         WebElement amount = findElement(By.xpath("//textarea[@id='t-68-r-1-amount']"));
+        getWait().until(ExpectedConditions.visibilityOf(amount));
         amount.clear();
         amount.sendKeys(String.valueOf(cardAmountValue));
 
@@ -117,6 +118,7 @@ public class EntityChildRecordsLoopTest extends BaseTest {
         editEntity.click();
 
         WebElement amount = findElement(By.xpath("//textarea[@id='t-68-r-1-amount']"));
+        getWait().until(ExpectedConditions.visibilityOf(amount));
         amount.clear();
         amount.sendKeys(String.valueOf(editCardAmountValue));
 
