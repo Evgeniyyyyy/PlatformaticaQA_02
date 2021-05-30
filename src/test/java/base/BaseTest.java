@@ -15,6 +15,7 @@ import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 @Listeners(TestOrder.class)
@@ -77,7 +78,14 @@ public abstract class BaseTest {
         if (wait == null) {
             wait = new WebDriverWait(driver, 10);
         }
-
         return wait;
+    }
+
+    protected WebElement findElement(By by) {
+        return getDriver().findElement(by);
+    }
+
+    protected List<WebElement> findElements(By by) {
+        return getDriver().findElements(by);
     }
 }

@@ -5,7 +5,6 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Action;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Assert;
 import org.testng.annotations.*;
 import utils.ProjectUtils;
@@ -13,60 +12,57 @@ import utils.TestUtils;
 import constants.EntityBoardConstants;
 
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 public class EntityBoardTest extends BaseTest {
 
-    public void moveToElementAction(WebDriver driver) {
+    private void moveToElementAction(WebDriver driver) {
         Actions builder = new Actions(driver);
-        WebElement searchField = driver.findElement(EntityBoardConstants.LINK_BOARD_ICON);
+        WebElement searchField = findElement(EntityBoardConstants.LINK_BOARD_ICON);
         TestUtils.scroll(driver, searchField);
         builder.moveToElement(searchField);
-        builder.click(driver.findElement(EntityBoardConstants.LINK_BOARD_ENTITY));
+        builder.click(findElement(EntityBoardConstants.LINK_BOARD_ENTITY));
         Action mouseoverAndClick = builder.build();
         mouseoverAndClick.perform();
     }
 
-    public void addEmptyCardToList(WebDriver driver) {
-        WebElement searchFieldAddCard = driver.findElement(EntityBoardConstants.BOARD_ADD_CARD);
+    private void addEmptyCard(WebDriver driver) {
+        WebElement searchFieldAddCard = findElement(EntityBoardConstants.BOARD_ADD_CARD);
         searchFieldAddCard.click();
-        WebElement buttonSave = driver.findElement(EntityBoardConstants.BOARD_BUTTON_SAVE);
+        WebElement buttonSave = findElement(EntityBoardConstants.BOARD_BUTTON_SAVE);
         TestUtils.scroll(driver, buttonSave);
         buttonSave.click();
     }
 
-    public void toggleActionToList (WebDriver driver) {
-        WebElement toggleActionToList = driver.findElement(EntityBoardConstants.BOARD_TOGGLE_LIST_ACTION);
+    private void toggleActionToList () {
+        WebElement toggleActionToList = findElement(EntityBoardConstants.BOARD_TOGGLE_LIST_ACTION);
         toggleActionToList.click();
     }
 
-    public void deleteAction(WebDriver driver) throws InterruptedException {
-        WebElement buttonAction = driver.findElement(EntityBoardConstants.BOARD_ACTION_BUTTON);
+    private void deleteAction() {
+        WebElement buttonAction = findElement(EntityBoardConstants.BOARD_ACTION_BUTTON);
         buttonAction.click();
-        WebElement deleteAction = driver.findElement(EntityBoardConstants.BOARD_ACTION_DELETE);
-        Thread.sleep(500);
+        WebElement deleteAction = getWait().until(ExpectedConditions.elementToBeClickable(
+                EntityBoardConstants.BOARD_ACTION_DELETE));
         deleteAction.click();
     }
 
-    public void goToRecyclingBin(WebDriver driver) {
-        WebElement recyclingBin = driver.findElement(EntityBoardConstants.BOARD_RECYCLING_BIN_ICON);
+    private void goToRecyclingBin() {
+        WebElement recyclingBin = findElement(EntityBoardConstants.BOARD_RECYCLING_BIN_ICON);
         recyclingBin.click();
     }
 
-    public void recyclingBinDeletePermanently(WebDriver driver) {
-        WebElement deletePermanently = driver.findElement(EntityBoardConstants.RECYCLING_BIN_DELETE_PERMANENTLY);
+    private void deleteFromRecyclingBin() {
+        WebElement deletePermanently = findElement(EntityBoardConstants.RECYCLING_BIN_DELETE_PERMANENTLY);
         deletePermanently.click();
     }
 
-    public int checkCountOfRecords(WebDriver driver) {
-        List<WebElement> rows = driver.findElements(By.cssSelector("tbody tr"));
-        return rows.size();
+    private int checkCountOfRecords() {
+        return findElements(By.cssSelector("tbody tr")).size();
     }
 
-    public int countInRecyclingBin(WebDriver driver) {
-        WebElement element = driver.findElement(By.cssSelector("span.notification"));
-        int count = Integer.parseInt(element.getText());
-        return count;
+    private int countInRecyclingBin() {
+        WebElement element = findElement(By.cssSelector("span.notification"));
+        return Integer.parseInt(element.getText());
     }
 
     @Test
@@ -76,21 +72,21 @@ public class EntityBoardTest extends BaseTest {
 
         moveToElementAction(getDriver());
 
-        addEmptyCardToList(getDriver());
-        addEmptyCardToList(getDriver());
-        toggleActionToList(getDriver());
+        addEmptyCard(getDriver());
+        addEmptyCard(getDriver());
+        toggleActionToList();
 
-        int countOfRecordsBeforeDelete = checkCountOfRecords(getDriver());
+        int countOfRecordsBeforeDelete = checkCountOfRecords();
 
-        deleteAction(getDriver());
+        deleteAction();
 
-        int countOfRecordsAfterDelete = checkCountOfRecords(getDriver());
+        int countOfRecordsAfterDelete = checkCountOfRecords();
         int count = countOfRecordsBeforeDelete - countOfRecordsAfterDelete;
         Assert.assertEquals(count, 1);
 
-        int countInRecyclingBinBefore = countInRecyclingBin(getDriver());
-        deleteAction(getDriver());
-        int countInRecyclingBinAfter = countInRecyclingBin(getDriver());
+        int countInRecyclingBinBefore = countInRecyclingBin();
+        deleteAction();
+        int countInRecyclingBinAfter = countInRecyclingBin();
         int countInRB = countInRecyclingBinBefore - countInRecyclingBinAfter;
         Assert.assertEquals(countInRB, -1);
     }
@@ -102,25 +98,25 @@ public class EntityBoardTest extends BaseTest {
 
         moveToElementAction(getDriver());
 
-        addEmptyCardToList(getDriver());
-        addEmptyCardToList(getDriver());
-        toggleActionToList(getDriver());
+        addEmptyCard(getDriver());
+        addEmptyCard(getDriver());
+        toggleActionToList();
 
-        deleteAction(getDriver());
-        deleteAction(getDriver());
+        deleteAction();
+        deleteAction();
 
-        goToRecyclingBin(getDriver());
+        goToRecyclingBin();
 
-        int countInRecyclingBinBefore = countInRecyclingBin(getDriver());
-        int countOfRecordsInRBBeforeDelete = checkCountOfRecords(getDriver());
+        int countInRecyclingBinBefore = countInRecyclingBin();
+        int countOfRecordsInRBBeforeDelete = checkCountOfRecords();
 
-        recyclingBinDeletePermanently(getDriver());
+        deleteFromRecyclingBin();
 
-        int countInRecyclingBinAfter = countInRecyclingBin(getDriver());
+        int countInRecyclingBinAfter = countInRecyclingBin();
         int countInRB = countInRecyclingBinBefore - countInRecyclingBinAfter;
         Assert.assertEquals(countInRB, 1);
 
-        int countOfRecordsInRBAfterDelete = checkCountOfRecords(getDriver());
+        int countOfRecordsInRBAfterDelete = checkCountOfRecords();
         int count = countOfRecordsInRBBeforeDelete - countOfRecordsInRBAfterDelete;
         Assert.assertEquals(count, 1);
     }

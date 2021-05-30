@@ -3,6 +3,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.WebDriver;
 import org.testng.Assert;
+import org.testng.annotations.Ignore;
 import org.testng.annotations.Test;
 import utils.ProjectUtils;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -11,14 +12,6 @@ import utils.TestUtils;
 import java.util.List;
 
 public class EntityArithmeticFunctionTest extends BaseTest {
-
-    private WebElement findElement(By by) {
-        return getDriver().findElement(by);
-    }
-
-    private List<WebElement> findElements(By by) {
-        return getDriver().findElements(by);
-    }
 
     @Test
     public void testRecordSaveDraft(){
@@ -75,7 +68,7 @@ public class EntityArithmeticFunctionTest extends BaseTest {
 
         fillForm("20", "10");
     }
-
+    @Ignore
     @Test
     public void testEditRecord() {
         final Integer F1 = 40;
