@@ -21,7 +21,6 @@ public class EntityChevronSentRecordViaListTest extends BaseTest {
 
     @Test
     public void testCreateRecordVerifyThatExist() {
-        WebDriverWait wait = getWait();
 
         final String enteredTextField = "firstExample";
 
