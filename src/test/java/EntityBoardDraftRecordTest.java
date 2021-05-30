@@ -16,11 +16,11 @@ public class EntityBoardDraftRecordTest extends BaseTest {
 
         TestUtils.jsClick(getDriver(), findElement(By.xpath("//p[contains (text(), 'Board')]")));
 
-        findElement(By.className("card-icon")).click();
+        findElement(By.xpath("//div[@class='card-icon']")).click();
 
         findElement(By.xpath("//button[@data-id='string']")).click();
 
-        TestUtils.jsClick(getDriver(), findElement(By.xpath("//a/span[text() = 'Pending']")));
+        TestUtils.jsClick(getDriver(), findElement(By.xpath("//select/option[text()='Pending']")));
 
         findElement(By.id("text")).sendKeys("qwerty");
         Thread.sleep(1000);
@@ -57,13 +57,13 @@ public class EntityBoardDraftRecordTest extends BaseTest {
 
         findElement(By.xpath("//div[@class='dropdown pull-left']")).click();
 
-        WebElement getDeleteLink = findElement(By.xpath("//li/a[text()='delete']"));
+        WebElement getDeleteLink = findElement(By.xpath("//div[@class='dropdown pull-left show']//a[text()='delete']"));
         getWait().until(ExpectedConditions.visibilityOf(getDeleteLink));
         getDeleteLink.click();
 
     }
 
-    @Ignore
+
     @Test
     public void deleteRecordFromRecycleBin() throws InterruptedException {
 
