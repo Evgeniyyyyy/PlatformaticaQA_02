@@ -5,7 +5,6 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import static utils.ProjectUtils.*;
 import static utils.ProjectUtils.start;
 import static utils.TestUtils.scrollClick;
 
@@ -22,7 +21,7 @@ public class EntityChevronSentRecordViaListTest extends BaseTest {
 
     @Test
     public void testCreateNewRecord() {
-        WebDriverWait wait = new WebDriverWait(getDriver(), 10);
+        WebDriverWait wait = getWait();
 
         final String enteredTextField = "firstExample";
 
