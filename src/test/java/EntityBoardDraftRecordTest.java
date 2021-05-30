@@ -3,14 +3,15 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.testng.Assert;
-import org.testng.annotations.Ignore;
 import org.testng.annotations.Test;
 import utils.ProjectUtils;
 import utils.TestUtils;
 
+import java.util.List;
+
 public class EntityBoardDraftRecordTest extends BaseTest {
 
-    private void createDraftRecord() throws InterruptedException {
+    private void createDraftRecord() {
 
         ProjectUtils.start(getDriver());
 
@@ -23,10 +24,12 @@ public class EntityBoardDraftRecordTest extends BaseTest {
         TestUtils.jsClick(getDriver(), findElement(By.xpath("//select/option[text()='Pending']")));
 
         findElement(By.id("text")).sendKeys("qwerty");
-        Thread.sleep(1000);
+        getWait().until(ExpectedConditions.attributeToBe(
+                By.id("text"), "value", "qwerty"));
 
-        findElement(By.name("entity_form_data[int]")).sendKeys("1");
-        Thread.sleep(1000);
+        findElement(By.id("int")).sendKeys("1");
+        getWait().until(ExpectedConditions.attributeToBe(
+                By.id("int"), "value", "1"));
 
         findElement(By.id("decimal")).sendKeys("0.12");
 
@@ -57,15 +60,14 @@ public class EntityBoardDraftRecordTest extends BaseTest {
 
         findElement(By.xpath("//div[@class='dropdown pull-left']")).click();
 
-        WebElement getDeleteLink = findElement(By.xpath("//div[@class='dropdown pull-left show']//a[text()='delete']"));
-        getWait().until(ExpectedConditions.visibilityOf(getDeleteLink));
-        getDeleteLink.click();
+        getWait().until(ExpectedConditions.elementToBeClickable(
+                By.xpath("//div[@class='dropdown pull-left show']//a[text()='delete']")))
+                .click();
 
     }
 
-    @Ignore
     @Test
-    public void deleteRecordFromRecycleBin() throws InterruptedException {
+    public void deleteRecordFromRecycleBin() {
 
         final String getMessage = "Good job with housekeeping! Recycle bin is currently empty!";
 
@@ -74,12 +76,19 @@ public class EntityBoardDraftRecordTest extends BaseTest {
 
         findElement(By.xpath("//a[@href='index.php?action=recycle_bin']")).click();
 
-        WebElement getDeletePermanentlyLink = findElement(
-                By.xpath("//tr[@data-index='0']/td/a[contains(text(), 'delete permanently')]"));
-        getWait().until(ExpectedConditions.visibilityOf(getDeletePermanentlyLink));
-        getDeletePermanentlyLink.click();
+        WebElement checkHeader = findElement(By.xpath("//a[@class='navbar-brand']"));
+        Assert.assertEquals(checkHeader.getText(), "Recycle Bin");
+
+        List<WebElement> getRow = findElements(By.xpath("//tbody/tr[@data-index='0']"));
+        Assert.assertEquals(getRow.size(), 1);
+
+        WebElement checkNotification = findElement(By.xpath("//a/span[@class='notification']"));
+        Assert.assertEquals(checkNotification.getText(), "1");
+
+        findElement(By.xpath("//tr[@data-index='0']/td/a[contains(text(), 'delete permanently')]")).click();
 
         WebElement getExpectedResult = findElement(By.className("card-body"));
+
         Assert.assertEquals(getExpectedResult.getText(), getMessage);
 
     }
