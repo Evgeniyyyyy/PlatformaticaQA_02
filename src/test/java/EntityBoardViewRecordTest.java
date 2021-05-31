@@ -78,7 +78,7 @@ public class EntityBoardViewRecordTest extends BaseTest {
             Assert.assertEquals(columnValues.get(i).getText(), excpectedRecordColumn.get(i));
         }
 
-        WebElement user = findElement(By.xpath("//p[contains(text(), 'tester10@tester.test')]"));
+        WebElement user = findElement(By.xpath("//div[@class='form-group']/p"));
         Assert.assertEquals(user.getText(), "tester10@tester.test");
 
         findElement(By.xpath("//i[text()='clear']")).click();
