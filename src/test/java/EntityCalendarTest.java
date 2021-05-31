@@ -1,8 +1,8 @@
 import base.BaseTest;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.testng.Assert;
-import org.testng.annotations.Ignore;
 import org.testng.annotations.Test;
 import utils.ProjectUtils;
 import utils.TestUtils;
@@ -53,7 +53,6 @@ public class EntityCalendarTest extends BaseTest {
         createCalendarRecord(list);
     }
 
-    @Ignore
     @Test
     public void testDeletedRecordFromBin(){
         final List<String> createRecordList = List.of("StringExampleCreateRecord", "TextExample", "1111", "0.20");
@@ -67,13 +66,13 @@ public class EntityCalendarTest extends BaseTest {
         findElement(By.xpath("//*[@class='dropdown-menu dropdown-menu-right show']/li[3]/a")).click();
         findElement(By.xpath("//*[contains (text(), 'delete_outline')]")).click();
         findElement(By.xpath("//*[contains (text(), 'delete permanently')]")).click();
-         
+        getWait().until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@class='card-body']")));
+
         Assert.assertEquals(
                 findElement(By.xpath("//*[@class='card-body']")).getText(),
                 "Good job with housekeeping! Recycle bin is currently empty!");
     }
 
-    @Ignore
     @Test
     public void testCalendarViewCreatedRecord() {
         final List<String> createRecordList = List.of("StringExampleCreateRecord", "TextExample", "1111", "0.20");
@@ -81,11 +80,12 @@ public class EntityCalendarTest extends BaseTest {
         ProjectUtils.start(getDriver());
         enterToCalendarPageAndCreateRecord(createRecordList);
         TestUtils.scrollClick(getDriver(), findElement(By.xpath("//*[@class='fc-title']")));
-        scroll(getDriver(), findElement(By.xpath("//*[@class='pa-view-field']")));
+        getWait().until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@class='pa-view-field']")));
 
         Assert.assertEquals(findElement(By.xpath("//*[@class='pa-view-field']")).getText(),
                 "StringExampleCreateRecord");
     }
+
     @Test
     public void testCreateRecord(){
         final List<String> createRecordList = List.of("StringExampleCreateRecord", "TextExample", "1111", "0.20");
