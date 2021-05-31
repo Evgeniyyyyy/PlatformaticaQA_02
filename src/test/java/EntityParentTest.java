@@ -2,6 +2,7 @@ import base.BaseTest;
 import constants.EntityParentConstants;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 import utils.ProjectUtils;
@@ -73,6 +74,9 @@ public class EntityParentTest extends BaseTest {
 
         createRecord(EntityParentConstants.PARENT_BUTTON_SAVE_DRAFT);
 
+        getWait().
+                until(ExpectedConditions.presenceOfElementLocated(
+                EntityParentConstants.GET_PARENT_TITLE));
         List<WebElement> records = findElements(EntityParentConstants.PARENT_GET_LIST_ROW);
 
         Assert.assertEquals(records.size(), 1);
