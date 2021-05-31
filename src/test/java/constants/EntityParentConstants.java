@@ -5,7 +5,7 @@ import org.openqa.selenium.By;
 public class EntityParentConstants {
 
     public static final By LINK_PARENT_ENTITY = By.xpath("//p[contains(text(),'Parent')]");
-    public static final By GET_PARENT_TITLE = By.tagName("h3");
+    public static final By GET_PARENT_TITLE = By.xpath("//h3[contains(text(), \"Parent\")]");
     public static final String URL = "https://ref2.eteam.work/index.php?action=login";
     public static final String URL_PARENT = "https://ref2.eteam.work/index.php?action=action_list&entity_id=31&mod=2";
 

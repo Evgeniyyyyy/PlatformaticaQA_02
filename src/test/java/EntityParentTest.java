@@ -4,7 +4,6 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.testng.Assert;
-import org.testng.annotations.Ignore;
 import org.testng.annotations.Test;
 import utils.ProjectUtils;
 import utils.TestUtils;
@@ -65,7 +64,6 @@ public class EntityParentTest extends BaseTest {
         view_action.click();
     }
 
-    @Ignore
     @Test
     public void testCreateNewDraftRecord() {
 
@@ -97,7 +95,6 @@ public class EntityParentTest extends BaseTest {
         Assert.assertNull(findElement(EntityParentConstants.PARENT_GET_CONTANER).getAttribute("value"));
     }
 
-    @Ignore
     @Test
     public void testDeleteRecord() {
         ProjectUtils.start(getDriver());
@@ -106,13 +103,18 @@ public class EntityParentTest extends BaseTest {
                 findElement(EntityParentConstants.LINK_PARENT_ENTITY));
 
         createRecord(EntityParentConstants.PARENT_BUTTON_SAVE);
+        createRecord(EntityParentConstants.PARENT_BUTTON_SAVE_DRAFT);
 
-        List<WebElement> records = findElements(EntityParentConstants.PARENT_GET_LIST_ROW);
-        Assert.assertEquals(records.size(), 1);
+        List<WebElement> records1 = findElements(EntityParentConstants.PARENT_GET_LIST_ROW);
+        Assert.assertEquals(records1.size(), 2);
 
         clickActionButton();
         deleteAction();
-        Assert.assertNull(findElement(EntityParentConstants.PARENT_GET_CONTANER).getAttribute("value"));
+        getWait().
+                until(ExpectedConditions.presenceOfElementLocated(
+                        EntityParentConstants.GET_PARENT_TITLE));
+        List<WebElement> records2 = findElements(EntityParentConstants.PARENT_GET_LIST_ROW);
+        Assert.assertEquals(records2.size(), 1);
         Assert.assertEquals(findElement(EntityParentConstants.PARENT_RECYCLING_BIN_ICON_NOTICE).getText(), "1");
     }
 }
