@@ -12,26 +12,15 @@ import java.util.List;
 public class EntityBoardDraftRecordTest extends BaseTest {
 
     private void createDraftRecord() {
-
         ProjectUtils.start(getDriver());
 
         TestUtils.jsClick(getDriver(), findElement(By.xpath("//p[contains (text(), 'Board')]")));
 
-        findElement(By.xpath("//div[@class='card-icon']")).click();
+        findElement(By.xpath("//div/i[text()='create_new_folder']")).click();
 
         findElement(By.xpath("//button[@data-id='string']")).click();
 
         TestUtils.jsClick(getDriver(), findElement(By.xpath("//select/option[text()='Pending']")));
-
-        findElement(By.id("text")).sendKeys("qwerty");
-        getWait().until(ExpectedConditions.attributeToBe(
-                By.id("text"), "value", "qwerty"));
-
-        findElement(By.id("int")).sendKeys("1");
-        getWait().until(ExpectedConditions.attributeToBe(
-                By.id("int"), "value", "1"));
-
-        findElement(By.id("decimal")).sendKeys("0.12");
 
         WebElement dateField = findElement(By.id("date"));
         dateField.click();
@@ -45,12 +34,20 @@ public class EntityBoardDraftRecordTest extends BaseTest {
 
         TestUtils.scroll(getDriver(), findElement(By.name("entity_form_data[user]")));
 
-        WebElement getUser = findElement(By.xpath("//select/option[text() ='apptester10@tester.test']"));
-        getUser.click();
-        getWait().until(ExpectedConditions.elementToBeSelected(getUser));
+        WebElement user = findElement(By.xpath("//select/option[text() ='apptester10@tester.test']"));
+        user.click();
 
-        TestUtils.jsClick(getDriver(), findElement(By.id("pa-entity-form-draft-btn")));
+        findElement(By.id("text")).sendKeys("qwerty");
+        getWait().until(ExpectedConditions.attributeToBe(
+                By.id("text"), "value", "qwerty"));
 
+        findElement(By.id("int")).sendKeys("1");
+        getWait().until(ExpectedConditions.attributeToBe(
+                By.id("int"), "value", "1"));
+
+        findElement(By.id("decimal")).sendKeys("0.12");
+
+        findElement(By.id("pa-entity-form-draft-btn")).click();
     }
 
     private void deleteDraftRecord() {
@@ -60,43 +57,31 @@ public class EntityBoardDraftRecordTest extends BaseTest {
 
         findElement(By.xpath("//div[@class='dropdown pull-left']")).click();
 
-        getWait().until(ExpectedConditions.elementToBeClickable(
-                By.xpath("//div[@class='dropdown pull-left show']//a[text()='delete']")))
-                .click();
-
-    }
-
-    private void assertsRecordInRecycleBin(){
-
-        WebElement checkHeader = findElement(By.xpath("//a[@class='navbar-brand']"));
-        Assert.assertEquals(checkHeader.getText(), "Recycle Bin");
-
-        getWait().until(ExpectedConditions.visibilityOf(findElement(By.xpath("//div[@class='card-body']"))));
-
-        List<WebElement> getRow = findElements(By.xpath("//tbody/tr[@data-index='0']"));
-        Assert.assertEquals(getRow.size(), 1);
-
-        WebElement checkNotification = findElement(By.xpath("//a/span[@class='notification']"));
-        Assert.assertEquals(checkNotification.getText(), "1");
+        getWait().until(ExpectedConditions.elementToBeClickable(By.linkText("delete"))).click();
     }
 
     @Test
     public void deleteRecordFromRecycleBin() {
-
-        final String getMessage = "Good job with housekeeping! Recycle bin is currently empty!";
 
         createDraftRecord();
         deleteDraftRecord();
 
         findElement(By.xpath("//a[@href='index.php?action=recycle_bin']")).click();
 
-        assertsRecordInRecycleBin();
+        WebElement header = findElement(By.xpath("//a[@class='navbar-brand']"));
+        Assert.assertEquals(header.getText(), "Recycle Bin");
 
-        findElement(By.xpath("//tr[@data-index='0']/td/a[contains(text(), 'delete permanently')]")).click();
+        getWait().until(ExpectedConditions.presenceOfAllElementsLocatedBy(By.xpath("//tbody/tr")));
 
-        WebElement getExpectedResult = findElement(By.className("card-body"));
+        List<WebElement> rows = findElements(By.xpath("//tbody/tr"));
+        Assert.assertEquals(rows.size(), 1);
 
-        Assert.assertEquals(getExpectedResult.getText(), getMessage);
+        WebElement checkNotification = findElement(By.xpath("//a/span[@class='notification']"));
+        Assert.assertEquals(checkNotification.getText(), "1");
 
+        getWait().until(ExpectedConditions.elementToBeClickable(By.linkText("delete permanently"))).click();
+
+        Assert.assertEquals(findElement(By.className("card-body")).getText(),
+                "Good job with housekeeping! Recycle bin is currently empty!");
     }
 }
