@@ -76,6 +76,7 @@ public class EntityGanttTest extends BaseTest {
         }
     }
 
+    @Ignore
     @Test
     public void testCreateRecord() {
 

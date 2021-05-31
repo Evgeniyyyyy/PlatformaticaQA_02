@@ -13,6 +13,7 @@ import java.util.List;
 
 public class EntityArithmeticFunctionTest extends BaseTest {
 
+    @Ignore
     @Test
     public void testRecordSaveDraft(){
 

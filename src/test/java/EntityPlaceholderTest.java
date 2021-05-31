@@ -2,6 +2,7 @@ import base.BaseTest;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.testng.Assert;
+import org.testng.annotations.Ignore;
 import org.testng.annotations.Test;
 import utils.ProjectUtils;
 import utils.TestUtils;
@@ -11,6 +12,7 @@ public class EntityPlaceholderTest extends BaseTest {
 
     private static final By PLACEHOLDER_MENU = By.xpath("//p[contains (text(), 'Placeholder')]");
 
+    @Ignore
     @Test
     public void testCreateNewRecord() {
 

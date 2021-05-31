@@ -4,6 +4,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.testng.Assert;
+import org.testng.annotations.Ignore;
 import org.testng.annotations.Test;
 import utils.ProjectUtils;
 import utils.TestUtils;
@@ -64,6 +65,7 @@ public class EntityParentTest extends BaseTest {
         view_action.click();
     }
 
+    @Ignore
     @Test
     public void testCreateNewDraftRecord() {
 
@@ -95,6 +97,7 @@ public class EntityParentTest extends BaseTest {
         Assert.assertNull(findElement(EntityParentConstants.PARENT_GET_CONTANER).getAttribute("value"));
     }
 
+    @Ignore
     @Test
     public void testDeleteRecord() {
         ProjectUtils.start(getDriver());

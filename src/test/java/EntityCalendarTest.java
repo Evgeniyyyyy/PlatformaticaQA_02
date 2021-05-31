@@ -3,6 +3,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.testng.Assert;
+import org.testng.annotations.Ignore;
 import org.testng.annotations.Test;
 import utils.ProjectUtils;
 import utils.TestUtils;
@@ -73,6 +74,7 @@ public class EntityCalendarTest extends BaseTest {
                 "Good job with housekeeping! Recycle bin is currently empty!");
     }
 
+    @Ignore
     @Test
     public void testCalendarViewCreatedRecord() {
         final List<String> createRecordList = List.of("StringExampleCreateRecord", "TextExample", "1111", "0.20");
