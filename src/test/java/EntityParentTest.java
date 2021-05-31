@@ -53,8 +53,18 @@ public class EntityParentTest extends BaseTest {
         return findElement(locator);
     }
 
+    private void clickActionButton() {
+        WebElement button_action = findElement(EntityParentConstants.PARENT_ACTION_BUTTON);
+        button_action.click();
+    }
+
+    private void deleteAction() {
+        WebElement view_action = findElement(EntityParentConstants.PARENT_ACTION_DELETE);
+        view_action.click();
+    }
+
     @Test
-    public void testViewRecord() {
+    public void testCreateNewDraftRecord() {
 
         ProjectUtils.start(getDriver());
 
@@ -78,8 +88,24 @@ public class EntityParentTest extends BaseTest {
 
         createRecord(EntityParentConstants.PARENT_BUTTON_CANCEL);
 
-        List<WebElement> records = findElements(EntityParentConstants.PARENT_GET_LIST_ROW);
+        Assert.assertNull(findElement(EntityParentConstants.PARENT_GET_CONTANER).getAttribute("value"));
+    }
 
-        Assert.assertEquals(records.size(), 0);
+    @Test
+    public void testDeleteRecord() {
+        ProjectUtils.start(getDriver());
+
+        TestUtils.scrollClick(getDriver(),
+                findElement(EntityParentConstants.LINK_PARENT_ENTITY));
+
+        createRecord(EntityParentConstants.PARENT_BUTTON_SAVE);
+
+        List<WebElement> records = findElements(EntityParentConstants.PARENT_GET_LIST_ROW);
+        Assert.assertEquals(records.size(), 1);
+
+        clickActionButton();
+        deleteAction();
+        Assert.assertNull(findElement(EntityParentConstants.PARENT_GET_CONTANER).getAttribute("value"));
+        Assert.assertEquals(findElement(EntityParentConstants.PARENT_RECYCLING_BIN_ICON_NOTICE).getText(), "1");
     }
 }
