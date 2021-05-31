@@ -73,7 +73,7 @@ public class EntityChildRecordsLoopTest extends BaseTest {
         TestUtils.scrollClick(getDriver(), childRecordsLoop);
 
         List<WebElement> columnList = findElements(By.xpath("//tbody/tr/td[@class='pa-list-table-th']"));
-         Assert.assertTrue(columnList.size() > 0);
+        Assert.assertTrue(columnList.size() > 0);
 
         int numberOfCards = columnList.size() / 2;
 
