@@ -59,6 +59,7 @@ public class EntityBoardViewDraftRecordTest extends BaseTest {
         return list;
     }
 
+
     @Test
     public void testViewDraftRecord() {
         final List<String> expectedValues = Arrays.asList(
