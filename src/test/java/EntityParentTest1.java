@@ -27,6 +27,9 @@ public class EntityParentTest1 extends BaseTest {
     private static final By DATE_INPUT = By.id("date");
     private static final By DATETIME_INPUT = By.id("datetime");
 
+    private static final By LIST_BUTTON = By.xpath(
+            "//a[@href='index.php?action=action_list&list_type=table&entity_id=57']");
+    private static final By MENU_LIST_BUTTON = By.xpath("//i[text()='menu']");
     private static final By CHECK_ROW = By.xpath(
             "//table[@id='pa-all-entities-table']/tbody/tr[@data-index='0']");
 
@@ -53,7 +56,7 @@ public class EntityParentTest1 extends BaseTest {
     }
 
     @Test
-    public void CreateRecord() {
+    public void testCreateRecord() {
 
         createRecord();
 
@@ -67,5 +70,23 @@ public class EntityParentTest1 extends BaseTest {
         Assert.assertEquals(records.size(), 1);
         Assert.assertEquals(row.getTagName(), "tbody");
         Assert.assertEquals(icon.getAttribute("class"), "fa fa-check-square-o");
+    }
+
+    @Test
+    public void testViewRecord() {
+
+        createRecord();
+
+        TestUtils.scrollClick(getDriver(), getDriver().findElement(SAVE_BUTTON));
+
+        findElement(LIST_BUTTON).click();
+
+        TestUtils.jsClick(getDriver(), getDriver().findElement(MENU_LIST_BUTTON));
+
+        TestUtils.jsClick(getDriver(), getDriver().findElement(By.xpath("//a[text()='view']")));
+
+        List<WebElement> row = findElements(By.xpath("//span[@class='pa-view-field']"));
+
+        Assert.assertEquals(row.size(), 6);
     }
 }
