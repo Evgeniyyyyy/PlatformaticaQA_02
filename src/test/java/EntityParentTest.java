@@ -2,7 +2,6 @@ import base.BaseTest;
 import constants.EntityParentConstants;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 import utils.ProjectUtils;
@@ -69,5 +68,18 @@ public class EntityParentTest extends BaseTest {
         Assert.assertEquals(records.size(), 1);
         Assert.assertEquals(getIcon(EntityParentConstants.PARENT_GET_ICON)
                 .getAttribute("class"), EntityParentConstants.CLASS_ITEM_SAVE_DRAFT);
+    }
+
+    @Test
+    public void testCancelRecord() {
+        ProjectUtils.start(getDriver());
+        TestUtils.scrollClick(getDriver(),
+                findElement(EntityParentConstants.LINK_PARENT_ENTITY));
+
+        createRecord(EntityParentConstants.PARENT_BUTTON_CANCEL);
+
+        List<WebElement> records = findElements(EntityParentConstants.PARENT_GET_LIST_ROW);
+
+        Assert.assertEquals(records.size(), 0);
     }
 }
