@@ -95,7 +95,6 @@ public class EntityChildRecordsLoopTest extends BaseTest {
         Assert.assertEquals(findElement(By.xpath("//tbody/tr[1]/td[3]")).getText().trim(), cardItemValue);
     }
 
-    @Ignore
     @Test
     public void testEditChildRecordsLoopCard() {
         ProjectUtils.start(getDriver());
@@ -119,7 +118,7 @@ public class EntityChildRecordsLoopTest extends BaseTest {
         getWait().until(ExpectedConditions.visibilityOf(editEntity));
         editEntity.click();
 
-        WebElement amount = findElement(By.xpath("//textarea[@id='t-68-r-1-amount']"));
+        WebElement amount = findElement(By.id("t-68-r-1-amount"));
         getWait().until(ExpectedConditions.visibilityOf(amount));
         amount.clear();
         amount.sendKeys(String.valueOf(editCardAmountValue));
@@ -131,7 +130,7 @@ public class EntityChildRecordsLoopTest extends BaseTest {
         saveButton.click();
 
         columnList = findElements(By.className("pa-list-table-th"));
-        getWait().until(ExpectedConditions.visibilityOf(columnList.get(columnList.size()-1)));
+        getWait().until(ExpectedConditions.visibilityOf(columnList.get(columnList.size() - 1)));
         Assert.assertTrue(columnList.size() > 0);
 
         double startBalanceAmount = Double.parseDouble(columnList.get(columnList.size() - 2).findElement(By.tagName("a")).getText());
