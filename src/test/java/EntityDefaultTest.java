@@ -1,12 +1,17 @@
 import base.BaseTest;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.testng.Assert;
 import org.testng.annotations.Test;
+
+import java.lang.reflect.Array;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+
+import static utils.ProjectUtils.login;
 import static utils.ProjectUtils.start;
 import static utils.TestUtils.jsClick;
 import static utils.TestUtils.scrollClick;
@@ -26,6 +31,11 @@ public class EntityDefaultTest extends BaseTest {
     private static final By SAVE_BUTTON = By.id("pa-entity-form-save-btn");
     private static final By CHECK_ICON = By.xpath("//tbody/tr[1]/td[1]/i[1]");
     private static final By COLUMN_FIELD = By.xpath("//tbody/tr/td[@class = 'pa-list-table-th']");
+    private static final By ACTIONS_BUTTON = By.xpath("//button[@class='btn btn-round btn-sm btn-primary dropdown-toggle']");
+    private static final By VIEW_OPTION = By.xpath("//a[@href] [contains(text(), 'view')]");
+    private static final By LIST_OF_RECORDS = By.xpath("//span [@class = 'pa-view-field']");
+    private static final By USER_FIELD = By.xpath("//div [@class = 'form-group']/p");
+    private static final By EXIT_BUTTON = By.xpath("//i[contains(text(),'clear')]");
 
     final String stringInputValue = "String";
     final String textInputValue = "Text";
@@ -81,5 +91,28 @@ public class EntityDefaultTest extends BaseTest {
         WebElement icon1 = findElement(CHECK_ICON);
         Assert.assertEquals(icon1.getAttribute("class"), "fa fa-check-square-o");
         getAssertion();
+    }
+
+    @Test()
+    public void testViewRecord() {
+
+        createRecord();
+        jsClick(getDriver(), findElement(SAVE_BUTTON));
+
+        List<Object> expectedRecords = Arrays.asList(stringInputValue, textInputValue, intInputValue, decimalInputValue,
+                formatter.format(date), emptyField);
+
+        findElement(ACTIONS_BUTTON).click();
+
+        getWait().until(ExpectedConditions.elementToBeClickable(getDriver().findElement(VIEW_OPTION))).click();
+
+        List<WebElement> actualRecords = findElements(LIST_OF_RECORDS);
+
+        for (int i = 0; i < expectedRecords.size() ; i++) {
+            Assert.assertEquals(actualRecords.get(i).getText(), expectedRecords.get(i).toString());
+        }
+        Assert.assertEquals(findElement(USER_FIELD).getText(), userName);
+
+        findElement(EXIT_BUTTON).click();
     }
 }

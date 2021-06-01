@@ -85,7 +85,7 @@ public class EntityParentTest extends BaseTest {
         Assert.assertEquals(getIcon(EntityParentConstants.PARENT_GET_ICON)
                 .getAttribute("class"), EntityParentConstants.CLASS_ITEM_SAVE_DRAFT);
     }
-
+    @Ignore
     @Test
     public void testCancelRecord() {
         ProjectUtils.start(getDriver());
