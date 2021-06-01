@@ -103,8 +103,11 @@ public class EntityParentTest extends BaseTest {
                 findElement(EntityParentConstants.LINK_PARENT_ENTITY));
 
         createRecord(EntityParentConstants.PARENT_BUTTON_SAVE);
+        getWait().until(ExpectedConditions.visibilityOf(findElement(EntityParentConstants.PARENT_ADD_CARD)));
         createRecord(EntityParentConstants.PARENT_BUTTON_SAVE_DRAFT);
 
+        getWait().until(ExpectedConditions.textToBePresentInElementLocated(EntityParentConstants.PARENT_GET_TEXT_MESSAGE,
+                EntityParentConstants.TEXT_MESSAGE_TWO));
         List<WebElement> records1 = findElements(EntityParentConstants.PARENT_GET_LIST_ROW);
         Assert.assertEquals(records1.size(), 2);
 

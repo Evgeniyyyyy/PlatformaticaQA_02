@@ -1,4 +1,5 @@
 import base.BaseTest;
+import constants.EntityAssignConstants;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -51,6 +52,7 @@ public class EntityArithmeticInlineTest extends BaseTest {
         createRecord();
         viewAction();
 
+        getWait().until(ExpectedConditions.presenceOfElementLocated(EntityArithmeticInlineConstants.ARITHMETIC_ACTION_VIEW_TITLE));
         List<WebElement> actualList = findElements(EntityArithmeticInlineConstants.ARITHMETIC_RESULT_LIST);
         List<Integer> expectedList = EntityArithmeticInlineConstants.expectedList;
 

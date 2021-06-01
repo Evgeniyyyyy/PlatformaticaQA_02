@@ -32,5 +32,8 @@ public class EntityParentConstants {
     public static final By PARENT_ACTION_DELETE = By.xpath("//ul[@class=\"dropdown-menu dropdown-menu-right show\"]/li/a[contains(text(),\"delete\")]");
     public static final By PARENT_RECYCLING_BIN_ICON = By.xpath("//a[@href=\"index.php?action=recycle_bin\"]");
     public static final By PARENT_RECYCLING_BIN_ICON_NOTICE = By.xpath("//span[@class=\"notification\"]");
+    public static final By PARENT_GET_TEXT_MESSAGE = By.xpath(("//span[@class=\"pagination-info\"]"));
 
+    public static final String TEXT_MESSAGE_ONE = "Showing 1 to 1 of 1 rows";
+    public static final String TEXT_MESSAGE_TWO = "Showing 1 to 2 of 2 rows";
 }

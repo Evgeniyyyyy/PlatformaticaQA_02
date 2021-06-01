@@ -24,6 +24,7 @@ public class EntityArithmeticInlineConstants {
 
     public static final By ARITHMETIC_ACTION_BUTTON = By.className("btn-primary");
     public static final By ARITHMETIC_ACTION_VIEW = By.xpath("//div[@class=\"dropdown pull-left show\"]/ul/li[1]/a");
+    public static final By ARITHMETIC_ACTION_VIEW_TITLE = By.xpath("//h4[contains(text(), \"Arithmetic Inline\")]");
     public static final By ARITHMETIC_RESULT_LIST = By.xpath("//div[@style=\"background-color:white\"]");
     public static final By ARITHMETIC_VIEW_WINDOW_CLOSE = By.cssSelector("button.pa-btn-close-form");
 }
