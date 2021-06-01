@@ -2,6 +2,7 @@ import base.BaseTest;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.Select;
 import org.testng.Assert;
 import org.testng.annotations.Ignore;
 import org.testng.annotations.Test;
@@ -22,7 +23,6 @@ public class EntityCalendar1Test extends BaseTest {
         return actualValues;
     }
 
-    @Ignore
     @Test
     public void testCreateDraftRecord(){
 
@@ -32,7 +32,7 @@ public class EntityCalendar1Test extends BaseTest {
         ProjectUtils.start(getDriver());
 
         TestUtils.scrollClick(getDriver(), getDriver().findElement(
-                By.xpath("//div[@ id = 'menu-list-parent']/ul/li/a/p[text() = ' Calendar ']")));
+                By.xpath("//div[@id = 'menu-list-parent']/ul/li/a/p[text() = ' Calendar ']")));
 
         By createNewRecord =By.xpath("//i[text() = 'create_new_folder']");
         getDriver().findElement(createNewRecord).click();
@@ -59,15 +59,10 @@ public class EntityCalendar1Test extends BaseTest {
         fieldDateTime.clear();
         fieldDateTime.sendKeys("27/05/2021 10:40:45");
 
-        By fieldUser = By.xpath("//button[@data-id = 'user']");
-        getDriver().findElement(fieldUser).click();
+        findElement(By.xpath("//button[@data-id = 'user']")).click();
 
-        TestUtils.scroll(getDriver(), getDriver().findElement(
-                By.xpath("//ul [@class = 'dropdown-menu inner show']/li/a/span[ text() = 'tester29@tester.test']")));
-
-        getWait().until(ExpectedConditions.elementToBeClickable(
-                By.xpath("//ul [@class = 'dropdown-menu inner show']/li/a/span[ text() = 'tester29@tester.test']")))
-                .click();
+        Select selectUser = new Select(findElement(By.id("user")));
+        selectUser.selectByVisibleText("tester29@tester.test");
 
         By buttonSaveDraft = By.id("pa-entity-form-draft-btn");
         getDriver().findElement(buttonSaveDraft).click();
@@ -83,5 +78,6 @@ public class EntityCalendar1Test extends BaseTest {
         Assert.assertEquals(trs.size(),1);
         Assert.assertTrue(iconDraft.isDisplayed());
         Assert.assertEquals(getTdsTexts(tds),expectedValues);
+
     }
 }
