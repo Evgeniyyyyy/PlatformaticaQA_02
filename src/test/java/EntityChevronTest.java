@@ -173,4 +173,43 @@ public class EntityChevronTest extends BaseTest {
         clickSaveButton(ENTITY_NAME);
         checkCreatedRecord(status, false, expectedData);
     }
+
+    @Test
+    public void testCreatePendingDraftRecord(){
+        String status = PENDING;
+
+        start(getDriver());
+        chooseSideBarItem(ENTITY_NAME);
+        clickAddButton();
+        List<String> expectedData = makeRandomData(status);
+        fillCreateNewFormFields(expectedData);
+        clickSaveDraftButton(ENTITY_NAME);
+        checkCreatedRecord(status, true, expectedData);
+    }
+
+    @Test
+    public void testCreateFulfillmentDraftRecord(){
+        String status = FULFILLMENT;
+
+        start(getDriver());
+        chooseSideBarItem(ENTITY_NAME);
+        clickAddButton();
+        List<String> expectedData = makeRandomData(status);
+        fillCreateNewFormFields(expectedData);
+        clickSaveDraftButton(ENTITY_NAME);
+        checkCreatedRecord(status, true, expectedData);
+    }
+
+    @Test
+    public void testCreateSentDraftRecord(){
+        String status = SENT;
+
+        start(getDriver());
+        chooseSideBarItem(ENTITY_NAME);
+        clickAddButton();
+        List<String> expectedData = makeRandomData(status);
+        fillCreateNewFormFields(expectedData);
+        clickSaveDraftButton(ENTITY_NAME);
+        checkCreatedRecord(status, true, expectedData);
+    }
 }

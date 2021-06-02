@@ -149,6 +149,7 @@ public class EntityChildRecordsLoopTest extends BaseTest {
         Assert.assertEquals(endBalanceAmount, expectedEditEndBalanceValue);
     }
 
+    @Ignore
     @Test
     public void testDeleteChildRecordsLoopCard() {
         ProjectUtils.start(getDriver());
