@@ -85,4 +85,24 @@ public class ProjectUtils {
         login(driver);
         reset(driver);
     }
+
+    public static void clickSave(WebDriver driver) {
+        TestUtils.jsClick(driver, driver.findElement(By.id("pa-entity-form-save-btn")));
+    }
+
+    public static void clickSaveDraft(WebDriver driver) {
+        TestUtils.jsClick(driver, driver.findElement(By.id("pa-entity-form-draft-btn")));
+    }
+
+    public static void clickCancel(WebDriver driver) {
+        TestUtils.jsClick(driver, driver.findElement(By.xpath("//button[text()='Cancel']")));
+    }
+
+    public static void clickCreateRecord(WebDriver driver) {
+        driver.findElement(By.xpath("//i[text()='create_new_folder']")).click();
+    }
+
+    public static void clickRecycleBin(WebDriver driver) {
+        driver.findElement(By.xpath("//i[text()='delete_outline']")).click();
+    }
 }
