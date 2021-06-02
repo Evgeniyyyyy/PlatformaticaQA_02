@@ -124,8 +124,8 @@ public class EntityChildRecordsLoopTest extends BaseTest {
         lastCardDropdownMenu.click();
 
         WebElement editEntity = targetRowDiv.findElement(By.xpath("ul/li/a[text() = 'edit']"));
-        getWait().until(ExpectedConditions.visibilityOf(editEntity));
-        editEntity.click();
+        getWait().until(ExpectedConditions.elementToBeClickable(editEntity));
+        TestUtils.jsClick(getDriver(), editEntity);
 
         WebElement amount = findElement(By.xpath("//textarea[@id='t-68-r-1-amount']"));
         getWait().until(ExpectedConditions.visibilityOf(amount));
