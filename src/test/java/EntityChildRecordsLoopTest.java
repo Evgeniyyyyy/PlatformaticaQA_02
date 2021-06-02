@@ -149,7 +149,6 @@ public class EntityChildRecordsLoopTest extends BaseTest {
         Assert.assertEquals(endBalanceAmount, expectedEditEndBalanceValue);
     }
 
-    @Ignore
     @Test
     public void testDeleteChildRecordsLoopCard() {
         ProjectUtils.start(getDriver());
@@ -176,8 +175,8 @@ public class EntityChildRecordsLoopTest extends BaseTest {
         lastCardDropdownMenu.click();
 
         WebElement deleteEntity = targetRowDiv.findElement(By.xpath("ul/li/a[text() = 'delete']"));
-        getWait().until(ExpectedConditions.visibilityOf(deleteEntity));
-        deleteEntity.click();
+        getWait().until(ExpectedConditions.elementToBeClickable(deleteEntity));
+        TestUtils.jsClick(getDriver(), deleteEntity);
 
         getWait().until(ExpectedConditions.visibilityOf(findElement(By.className("notification"))));
 
