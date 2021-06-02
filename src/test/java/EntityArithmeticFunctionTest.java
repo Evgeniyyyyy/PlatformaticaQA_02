@@ -102,8 +102,8 @@ public class EntityArithmeticFunctionTest extends BaseTest {
         createRecord();
 
         findElement(By.xpath("//div[@class='dropdown pull-left']")).click();
-        getWait().until(ExpectedConditions.elementToBeClickable(By.xpath("//a[text()='view']")));
-        findElement(By.xpath("//a[text()='edit']")).click();
+        getWait().until(ExpectedConditions.elementToBeClickable(By.xpath("//a[text()='edit']")));
+        TestUtils.jsClick(getDriver(), findElement(By.xpath("//a[text()='edit']")));
         fillForm(F1, F2);
 
         List<WebElement> columnList = findElements(By.xpath("//tbody/tr/td[@class = 'pa-list-table-th']"));
