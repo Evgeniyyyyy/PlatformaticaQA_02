@@ -3,13 +3,14 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.testng.Assert;
-import org.testng.annotations.Ignore;
 import org.testng.annotations.Test;
 import utils.ProjectUtils;
+import utils.TestUtils;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import static utils.ProjectUtils.*;
 import static utils.ProjectUtils.start;
 import static utils.TestUtils.jsClick;
 import static utils.TestUtils.scrollClick;
@@ -24,18 +25,21 @@ public class EntityDefaultTest extends BaseTest {
     private static final By DECIMAL_FIELD = By.id("decimal");
     private static final By DATE_FIELD = By.id("date");
     private static final By DATETIME_FIELD = By.id("datetime");
-    private static final By TESTER_NAME_FIELD = By.xpath("//div[contains(text(),'apptester1@tester.test')]");
+    private static final By TESTER_NAME_FIELD = By.xpath("//div[@class = 'filter-option-inner']");
     private static final By TESTER_NAME = By.xpath("//span[text()='tester100@tester.test']");
     private static final By TESTER_NAME2 = By.xpath("//span[text()='tester88@tester.test']");
     private static final By SAVE_BUTTON = By.id("pa-entity-form-save-btn");
     private static final By CHECK_ICON = By.xpath("//tbody/tr[1]/td[1]/i[1]");
     private static final By COLUMN_FIELD = By.xpath("//tbody/tr/td[@class = 'pa-list-table-th']");
-    private static final By ACTIONS_BUTTON = By.xpath("//button[@class='btn btn-round btn-sm btn-primary dropdown-toggle']");
+    private static final By ACTIONS_BUTTON = By.xpath("//i[text()='menu']");
     private static final By VIEW_OPTION = By.xpath("//a[@href] [contains(text(), 'view')]");
     private static final By LIST_OF_RECORDS = By.xpath("//span [@class = 'pa-view-field']");
     private static final By USER_FIELD = By.xpath("//div [@class = 'form-group']/p");
     private static final By EXIT_BUTTON = By.xpath("//i[contains(text(),'clear')]");
     private static final By EDIT_OPTION = By.xpath("//a[@href] [contains(text(), 'edit')]");
+    private static final By DELETE_BUTTON = By.xpath("//a[@href] [contains(text(), 'delete')]");
+    private static final By RECYCLE_BIN = By.xpath("//i[contains(text(),'delete_outline')]");
+    private static final By RECYCLE_INFO = By.xpath("//span[@class='pagination-info']");
 
     final String stringInputValue = "String";
     final String textInputValue = "Text";
@@ -56,29 +60,6 @@ public class EntityDefaultTest extends BaseTest {
     final List<Object> expectedValues = Arrays
             .asList(stringInputValue, textInputValue, intInputValue, decimalInputValue,
                     formatter.format(date), emptyField, emptyField, emptyField, userName);
-
-    private void editRecord() {
-
-        scrollClick(getDriver(), findElement(DEFAULT_TAB));
-
-        findElement(ACTIONS_BUTTON).click();
-        getWait().until(ExpectedConditions.elementToBeClickable(getDriver().findElement(EDIT_OPTION))).click();
-        findElement(STRING_FIELD).clear();
-        findElement(TEXT_FIELD).clear();
-        findElement(INT_FIELD).clear();
-        findElement(DECIMAL_FIELD).clear();
-        findElement(DATE_FIELD).clear();
-        findElement(DATETIME_FIELD).clear();
-        findElement(STRING_FIELD).sendKeys(stringInputValue2);
-        findElement(TEXT_FIELD).sendKeys(textInputValue2);
-        findElement(INT_FIELD).sendKeys(intInputValue2);
-        findElement(DECIMAL_FIELD).sendKeys(decimalInputValue2);
-        getWait().until(ExpectedConditions.elementToBeClickable(findElement(DATE_FIELD)));
-        findElement(DATE_FIELD).click();
-        findElement(TESTER_NAME_FIELD).click();
-
-        jsClick(getDriver(), findElement(TESTER_NAME2));
-    }
 
     private void createRecord() {
         start(getDriver());
@@ -102,7 +83,23 @@ public class EntityDefaultTest extends BaseTest {
         jsClick(getDriver(), findElement(TESTER_NAME));
     }
 
+    private void editRecord() {
+        findElement(STRING_FIELD).clear();
+        findElement(TEXT_FIELD).clear();
+        findElement(INT_FIELD).clear();
+        findElement(DECIMAL_FIELD).clear();
+        findElement(DATE_FIELD).clear();
+        findElement(DATETIME_FIELD).clear();
+        findElement(STRING_FIELD).sendKeys(stringInputValue2);
+        findElement(TEXT_FIELD).sendKeys(textInputValue2);
+        findElement(INT_FIELD).sendKeys(intInputValue2);
+        findElement(DECIMAL_FIELD).sendKeys(decimalInputValue2);
+        getWait().until(ExpectedConditions.elementToBeClickable(findElement(DATE_FIELD)));
+        findElement(DATE_FIELD).click();
+        findElement(TESTER_NAME_FIELD).click();
 
+        jsClick(getDriver(), findElement(TESTER_NAME2));
+    }
 
     private void getAssertion(){
         List<WebElement> columnList = findElements(COLUMN_FIELD);
@@ -124,7 +121,7 @@ public class EntityDefaultTest extends BaseTest {
         getAssertion();
     }
 
-    @Test()
+    @Test
     public void testViewRecord() {
 
         createRecord();
@@ -135,7 +132,7 @@ public class EntityDefaultTest extends BaseTest {
 
         findElement(ACTIONS_BUTTON).click();
 
-        getWait().until(ExpectedConditions.elementToBeClickable(getDriver().findElement(VIEW_OPTION))).click();
+        getWait().until(TestUtils.movingIsFinished(getDriver().findElement(VIEW_OPTION))).click();
 
         List<WebElement> actualRecords = findElements(LIST_OF_RECORDS);
 
@@ -147,14 +144,18 @@ public class EntityDefaultTest extends BaseTest {
         findElement(EXIT_BUTTON).click();
     }
 
-    @Ignore
     @Test
     public void testEditRecord() {
 
         createRecord();
         jsClick(getDriver(), findElement(SAVE_BUTTON));
 
+        findElement(ACTIONS_BUTTON).click();
+
+        getWait().until(TestUtils.movingIsFinished(getDriver().findElement(EDIT_OPTION))).click();
+
         editRecord();
+
         jsClick(getDriver(), findElement(SAVE_BUTTON));
 
         List<WebElement> columnList = findElements(COLUMN_FIELD);
@@ -167,6 +168,26 @@ public class EntityDefaultTest extends BaseTest {
             Assert.assertEquals(columnList.get(i).getText(), expectedRecords.get(i).toString());
         }
     }
+
+    @Test
+    public void testDeleteRecord(){
+
+        createRecord();
+        jsClick(getDriver(), findElement(SAVE_BUTTON));
+
+        findElement(ACTIONS_BUTTON).click();
+
+        getWait().until(TestUtils.movingIsFinished(getDriver().findElement(DELETE_BUTTON))).click();
+
+        findElement(RECYCLE_BIN).click();
+
+        WebElement recycleBinPage = findElement(RECYCLE_INFO);
+        String currentString = recycleBinPage.getText();
+        boolean checkBin = !currentString.equals("");
+
+        Assert.assertTrue(checkBin, "Showing 1 to 1 of 1 rows");
+    }
+
     @Test
     public void testCreateNewRecordAsDraft() {
         ProjectUtils.start(getDriver());
