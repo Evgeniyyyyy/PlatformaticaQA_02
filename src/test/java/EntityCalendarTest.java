@@ -88,6 +88,7 @@ public class EntityCalendarTest extends BaseTest {
                 "StringExampleCreateRecord");
     }
 
+    @Ignore
     @Test
     public void testCreateRecord(){
         final List<String> createRecordList = List.of("StringExampleCreateRecord", "TextExample", "1111", "0.20");

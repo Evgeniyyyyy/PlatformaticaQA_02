@@ -41,6 +41,7 @@ public class EntityArithmeticInlineTest extends BaseTest {
         button_close_window.click();
     }
 
+    @Ignore
     @Test
     public void testViewRecord() {
 
