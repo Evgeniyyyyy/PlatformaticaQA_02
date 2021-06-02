@@ -3,6 +3,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
 import org.testng.Assert;
+import org.testng.annotations.Ignore;
 import org.testng.annotations.Test;
 import utils.ProjectUtils;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -89,6 +90,7 @@ public class EntityArithmeticFunctionTest extends BaseTest {
         fillForm(20, 10);
     }
 
+    @Ignore
     @Test
     public void testEditRecord() {
         final Integer F1 = 40;
