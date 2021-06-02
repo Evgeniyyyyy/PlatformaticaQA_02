@@ -35,7 +35,7 @@ public class EntityChildRecordsLoopTest extends BaseTest {
         WebElement amount = findElement(By.xpath("//textarea[@id='t-68-r-1-amount']"));
         getWait().until(ExpectedConditions.visibilityOf(amount));
         amount.clear();
-        amount.sendKeys(String.valueOf(cardAmountValue));
+        sendKeysOneByOne(amount, String.valueOf(cardAmountValue));
 
         WebElement item = findElement(By.xpath("//textarea[@id='t-68-r-1-item']"));
         item.sendKeys(cardItemValue);
@@ -45,6 +45,13 @@ public class EntityChildRecordsLoopTest extends BaseTest {
 
         WebElement saveButton = findElement(By.xpath("//button[@id='pa-entity-form-save-btn']"));
         saveButton.click();
+    }
+
+    private void sendKeysOneByOne(WebElement element, String input) {
+        char[] editKeys = input.toCharArray();
+        for (char c : editKeys) {
+            element.sendKeys(String.valueOf(c));
+        }
     }
 
     @Test
@@ -81,6 +88,7 @@ public class EntityChildRecordsLoopTest extends BaseTest {
         WebElement targetRowDiv = findElement(By.xpath("//tbody/tr[" + numberOfCards + "]/td[4]/div[1]"));
 
         WebElement lastCardDropdownMenu = targetRowDiv.findElement(By.xpath("button[1]"));
+        getWait().until(ExpectedConditions.visibilityOf(lastCardDropdownMenu));
         lastCardDropdownMenu.click();
 
         WebElement viewEntity = targetRowDiv.findElement(By.xpath("ul/li/a[text() = 'view']"));
@@ -95,7 +103,6 @@ public class EntityChildRecordsLoopTest extends BaseTest {
         Assert.assertEquals(findElement(By.xpath("//tbody/tr[1]/td[3]")).getText().trim(), cardItemValue);
     }
 
-    @Ignore
     @Test
     public void testEditChildRecordsLoopCard() {
         ProjectUtils.start(getDriver());
@@ -113,16 +120,17 @@ public class EntityChildRecordsLoopTest extends BaseTest {
         WebElement targetRowDiv = findElement(By.xpath("//tbody/tr[" + numberOfCards + "]/td[4]/div[1]"));
 
         WebElement lastCardDropdownMenu = targetRowDiv.findElement(By.xpath("button[1]"));
+        getWait().until(ExpectedConditions.visibilityOf(lastCardDropdownMenu));
         lastCardDropdownMenu.click();
 
         WebElement editEntity = targetRowDiv.findElement(By.xpath("ul/li/a[text() = 'edit']"));
-        getWait().until(ExpectedConditions.visibilityOf(editEntity));
-        editEntity.click();
+        getWait().until(ExpectedConditions.elementToBeClickable(editEntity));
+        TestUtils.jsClick(getDriver(), editEntity);
 
         WebElement amount = findElement(By.xpath("//textarea[@id='t-68-r-1-amount']"));
         getWait().until(ExpectedConditions.visibilityOf(amount));
         amount.clear();
-        amount.sendKeys(String.valueOf(editCardAmountValue));
+        sendKeysOneByOne(amount, String.valueOf(editCardAmountValue));
 
         getWait().until(ExpectedConditions.attributeToBe(By.xpath("//input[@id='end_balance']"),
                 "value", String.valueOf((int) expectedEditEndBalanceValue)));
