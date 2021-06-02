@@ -68,10 +68,12 @@ public class ProjectUtils {
     }
 
     public static void reset(WebDriver driver) {
+        WebDriverWait wait = new WebDriverWait(driver, 10);
+
         driver.findElement(By.id("navbarDropdownProfile")).click();
-        WebDriverWait wait = new WebDriverWait(driver, 20);
-        wait.until(ExpectedConditions.elementToBeClickable(
-                By.xpath("//a[contains(text(),'!!! Reset all for my user !!!')]"))).click();
+        TestUtils.jsClick(driver,
+                wait.until(ExpectedConditions.elementToBeClickable(
+                        By.xpath("//a[contains(text(),'!!! Reset all for my user !!!')]"))));
     }
 
     public static void get(WebDriver driver) {
