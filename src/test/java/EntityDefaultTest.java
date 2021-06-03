@@ -10,7 +10,6 @@ import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
-import static utils.ProjectUtils.*;
 import static utils.ProjectUtils.start;
 import static utils.TestUtils.jsClick;
 import static utils.TestUtils.scrollClick;
@@ -216,5 +215,28 @@ public class EntityDefaultTest extends BaseTest {
         Assert.assertTrue(result.contains(intField),(decimal));
         Assert.assertTrue(result.contains(datetime),(text));
         Assert.assertEquals(icon.getAttribute("class"), pencilIconClass);
+    }
+
+    @Test
+    public void testRestoreRecord() {
+
+        createRecord();
+        jsClick(getDriver(), findElement(SAVE_BUTTON));
+        findElement(ACTIONS_BUTTON).click();
+
+        getWait().until(TestUtils.movingIsFinished(getDriver().findElement(DELETE_BUTTON))).click();
+        findElement(RECYCLE_BIN).click();
+
+        findElement(By.linkText("restore as draft")).click();
+
+        Assert.assertEquals(findElement(By.className("card-body")).getText(), "Good job with housekeeping! Recycle bin is currently empty!");
+        findElement(DEFAULT_TAB).click();
+
+        WebElement icon = findElement(By.xpath("//tbody/tr/td[1]/i"));
+        String pencilIconClass = "fa fa-pencil";
+        Assert.assertEquals(icon.getAttribute("class"), pencilIconClass);
+
+        String result = findElement(By.xpath("//table[@id='pa-all-entities-table']/tbody")).getText();
+        Assert.assertTrue(!result.isEmpty());
     }
 }
