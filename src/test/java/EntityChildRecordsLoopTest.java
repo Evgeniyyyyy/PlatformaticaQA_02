@@ -183,9 +183,9 @@ public class EntityChildRecordsLoopTest extends BaseTest {
         WebElement recycleBinIcon = findElement(By.xpath("//i[contains(text(),'delete_outline')]"));
         recycleBinIcon.click();
 
-        WebElement deletedRow = findElement(By.className("pa-recycle-col"));
-        getWait().until(ExpectedConditions.visibilityOf(deletedRow));
-        deletedRow.click();
+        WebElement deletedContentLink = findElement(By.className("pa-recycle-col")).findElement(By.tagName("a"));
+        getWait().until(ExpectedConditions.elementToBeClickable(deletedContentLink));
+        TestUtils.jsClick(getDriver(), deletedContentLink);
 
         try {
             String startBalanceXpath = String.format("//span[text() =  %.2f]", startBalanceValue);
