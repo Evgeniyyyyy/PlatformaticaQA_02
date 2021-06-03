@@ -74,7 +74,7 @@ public class EntityCalendarTest extends BaseTest {
                 findElement(By.xpath("//*[@class='card-body']")).getText(),
                 "Good job with housekeeping! Recycle bin is currently empty!");
     }
-
+    @Ignore
     @Test
     public void testCalendarViewCreatedRecord() {
         final List<String> createRecordList = List.of("StringExampleCreateRecord", "TextExample", "1111", "0.20");

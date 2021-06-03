@@ -3,6 +3,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.testng.Assert;
+import org.testng.annotations.Ignore;
 import org.testng.annotations.Test;
 import static utils.ProjectUtils.*;
 import utils.TestUtils;
@@ -38,7 +39,7 @@ public class EntityArithmeticInlineTest extends BaseTest {
         WebElement button_close_window = findElement(EntityArithmeticInlineConstants.VIEW_WINDOW_CLOSE);
         button_close_window.click();
     }
-
+    @Ignore
     @Test
     public void testViewRecord() {
 
