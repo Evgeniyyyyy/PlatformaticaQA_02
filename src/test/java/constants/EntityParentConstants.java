@@ -10,9 +10,6 @@ public class EntityParentConstants {
     public static final String URL_PARENT = "https://ref2.eteam.work/index.php?action=action_list&entity_id=31&mod=2";
 
     public static final By PARENT_ADD_CARD = By.xpath("//div[@class=\"card-icon\"]");
-    public static final By PARENT_BUTTON_SAVE = By.id("pa-entity-form-save-btn");
-    public static final By PARENT_BUTTON_SAVE_DRAFT = By.id("pa-entity-form-draft-btn");
-    public static final By PARENT_BUTTON_CANCEL = By.xpath("//button[contains(text(), \"Cancel\")]");
 
     public static final By STRING_FIELD = By.id("string");
     public static final By TEXT_FIELD = By.id("text");
