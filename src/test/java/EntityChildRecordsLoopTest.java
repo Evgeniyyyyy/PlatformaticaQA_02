@@ -187,13 +187,20 @@ public class EntityChildRecordsLoopTest extends BaseTest {
         getWait().until(ExpectedConditions.visibilityOf(deletedRow));
         deletedRow.click();
 
-        String startBalanceXpath = String.format("//span[text() = %.2f]", startBalanceValue);
-        WebElement deletedStartBalance = findElement(By.xpath(startBalanceXpath));
+        try {
+            String startBalanceXpath = String.format("//span[text() =  %.2f]", startBalanceValue);
+            WebElement deletedStartBalance = findElement(By.xpath(startBalanceXpath));
+            String endBalanceXpath = String.format("//span[text() = %.2f]", expectedEndBalance);
+            WebElement deletedEndBalance = findElement(By.xpath(endBalanceXpath));
 
-        String endBalanceXpath = String.format("//span[text() = %.2f]", expectedEndBalance);
-        WebElement deletedEndBalance = findElement(By.xpath(endBalanceXpath));
+            Assert.assertTrue(deletedStartBalance.isDisplayed());
+            Assert.assertTrue(deletedEndBalance.isDisplayed());
 
-        Assert.assertTrue(deletedStartBalance.isDisplayed());
-        Assert.assertTrue(deletedEndBalance.isDisplayed());
+        } catch (Exception e) {
+            System.out.println("title during failure: " + getDriver().getTitle());
+            System.out.println("current url during failure: " + getDriver().getCurrentUrl());
+            throw e;
+        }
+
     }
 }
