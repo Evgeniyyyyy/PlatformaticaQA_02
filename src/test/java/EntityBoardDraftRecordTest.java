@@ -3,7 +3,6 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.testng.Assert;
-import org.testng.annotations.Ignore;
 import org.testng.annotations.Test;
 import utils.ProjectUtils;
 import utils.TestUtils;
@@ -24,14 +23,11 @@ public class EntityBoardDraftRecordTest extends BaseTest {
         TestUtils.jsClick(getDriver(), findElement(By.xpath("//select/option[text()='Pending']")));
 
         WebElement dateField = findElement(By.id("date"));
-        dateField.click();
-        dateField.clear();
-        dateField.sendKeys("23/04/2021");
+        TestUtils.scrollClick(getDriver(), dateField);
+
 
         WebElement dateTimeField = findElement((By.id("datetime")));
-        dateTimeField.click();
-        dateTimeField.clear();
-        dateTimeField.sendKeys("20/05/2021 20:29:47");
+        TestUtils.scrollClick(getDriver(), dateTimeField);
 
         TestUtils.scroll(getDriver(), findElement(By.name("entity_form_data[user]")));
 
@@ -60,7 +56,7 @@ public class EntityBoardDraftRecordTest extends BaseTest {
 
         getWait().until(ExpectedConditions.elementToBeClickable(By.linkText("delete"))).click();
     }
-    @Ignore
+
     @Test
     public void deleteRecordFromRecycleBin() {
 
