@@ -7,10 +7,12 @@ import org.testng.annotations.Test;
 import utils.ProjectUtils;
 import utils.TestUtils;
 import java.util.List;
-import static utils.ProjectUtils.clickCreateRecord;
-import static utils.ProjectUtils.clickSaveDraft;
+import static utils.ProjectUtils.*;
 
 public class EntityBoardDraftRecordTest extends BaseTest {
+
+    private static final List<String> EXPECTED_CREATED_RECORD = List.of(
+            "Pending", "qw", "1", "0.12", "", "", "", "tester10@tester.test");
 
     private void createDraftRecord() {
         ProjectUtils.start(getDriver());
@@ -48,6 +50,7 @@ public class EntityBoardDraftRecordTest extends BaseTest {
 
     @Test
     public void testEditDraftRecord() {
+
         createDraftRecord();
 
         final List<String> excpectedEditedRecord = List.of(
@@ -77,12 +80,33 @@ public class EntityBoardDraftRecordTest extends BaseTest {
     }
 
     @Test
+    public void testDeleteDraftRecord() {
+
+        createDraftRecord();
+
+        deleteDraftRecord();
+
+        clickRecycleBin(getDriver());
+
+        WebElement checkNotification = findElement(By.xpath("//a/span[@class='notification']"));
+        Assert.assertEquals(checkNotification.getText(), "1");
+
+        getWait().until(ExpectedConditions.presenceOfAllElementsLocatedBy(By.xpath("//tbody/tr")));
+
+        List<WebElement> recordValues = findElements(By.xpath("//tbody/tr/td[@class='pa-list-table-th']"));
+        for (int i = 0; i < recordValues.size(); i++) {
+            Assert.assertEquals(recordValues.get(i).getText(), EXPECTED_CREATED_RECORD.get(i));
+        }
+    }
+
+    @Test
     public void testDeleteRecordFromRecycleBin() {
 
         createDraftRecord();
+
         deleteDraftRecord();
 
-        findElement(By.xpath("//a[@href='index.php?action=recycle_bin']")).click();
+        clickRecycleBin(getDriver());
 
         WebElement header = findElement(By.xpath("//a[@class='navbar-brand']"));
         Assert.assertEquals(header.getText(), "Recycle Bin");
@@ -91,9 +115,6 @@ public class EntityBoardDraftRecordTest extends BaseTest {
 
         List<WebElement> rows = findElements(By.xpath("//tbody/tr"));
         Assert.assertEquals(rows.size(), 1);
-
-        WebElement checkNotification = findElement(By.xpath("//a/span[@class='notification']"));
-        Assert.assertEquals(checkNotification.getText(), "1");
 
         getWait().until(ExpectedConditions.elementToBeClickable(By.linkText("delete permanently"))).click();
 
