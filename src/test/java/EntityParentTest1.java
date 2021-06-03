@@ -7,89 +7,90 @@ import utils.ProjectUtils;
 import utils.TestUtils;
 
 import java.util.List;
-import java.util.Random;
-import java.util.UUID;
 
 public class EntityParentTest1 extends BaseTest {
 
-    private static final Random random = new Random();
-    private static final String TEXT = UUID.randomUUID().toString();
-    private static final Integer INT = random.nextInt();
-    private static final Double DECIMAL = random.nextDouble();
-
-    private static final By PARENT_BUTTON = By.xpath("//p[text()=' Parent ']");
-
-    private static final By NEW_FOLDER = By.xpath("//i[text()='create_new_folder']");
-    private static final By STRING_INPUT = By.id("string");
-    private static final By TEXT_INPUT = By.id("text");
-    private static final By INT_INPUT = By.id("int");
-    private static final By DECIMAL_INPUT = By.id("decimal");
-    private static final By DATE_INPUT = By.id("date");
-    private static final By DATETIME_INPUT = By.id("datetime");
-
-    private static final By LIST_BUTTON = By.xpath(
-            "//a[@href='index.php?action=action_list&list_type=table&entity_id=57']");
-    private static final By MENU_ACTION_BUTTON = By.xpath("//i[text()='menu']");
-    private static final By CHECK_ROW = By.xpath(
-            "//table[@id='pa-all-entities-table']/tbody/tr[@data-index='0']");
-
-    private static final By SAVE_BUTTON = By.id("pa-entity-form-save-btn");
 
     private void createRecord() {
 
-        ProjectUtils.start(getDriver());
+        ProjectUtils.clickCreateRecord(getDriver());
+        findElement(By.id("string")).sendKeys("Hello world");
+        findElement(By.id("text")).sendKeys("Be healthy");
+        findElement(By.id("int")).sendKeys("123");
+        findElement(By.id("decimal")).sendKeys("456.98");
 
-        TestUtils.scrollClick(getDriver(), getDriver().findElement(PARENT_BUTTON));
-
-        getDriver().findElement(NEW_FOLDER).click();
-        getDriver().findElement(STRING_INPUT).sendKeys(TEXT);
-        getDriver().findElement(TEXT_INPUT).sendKeys(TEXT);
-        getDriver().findElement(INT_INPUT).sendKeys(INT.toString());
-        getDriver().findElement(DECIMAL_INPUT).sendKeys(DECIMAL.toString());
-        TestUtils.scrollClick(getDriver(),DATE_INPUT);
-        TestUtils.scrollClick(getDriver(),DATETIME_INPUT);
-
-        getDriver().findElement(By.xpath("//button[@data-id='user']")).click();
+        TestUtils.jsClick(getDriver(), getDriver().findElement(By.xpath("//button[@data-id='user']")));
 
         TestUtils.jsClick(getDriver(), getDriver().findElement(
                 By.xpath("//span[text()='tester26@tester.test']")));
     }
 
-    private void clickSaveButton() {
-        TestUtils.scrollClick(getDriver(), getDriver().findElement(SAVE_BUTTON));
+    private void createNewRecord() {
+
+        getDriver().findElement(By.id("string")).clear();
+        getDriver().findElement(By.id("string")).sendKeys("Hello for everyone");
+
+        getDriver().findElement(By.id("text")).clear();
+        getDriver().findElement(By.id("text")).sendKeys("Peace to all");
+
+        getDriver().findElement(By.id("int")).clear();
+        getDriver().findElement(By.id("int")).sendKeys("345");
+
+        getDriver().findElement(By.id("decimal")).clear();
+        getDriver().findElement(By.id("decimal")).sendKeys("345.67");
+
+        TestUtils.jsClick(getDriver(), getDriver().findElement(By.xpath("//button[@data-id='user']")));
+
+        TestUtils.jsClick(getDriver(), getDriver().findElement(
+                By.xpath("//span[text()='tester26@tester.test']")));
+    }
+
+    private void clickParentButton() {
+        TestUtils.jsClick(getDriver(), getDriver().findElement(By.xpath("//p[text()=' Parent ']")));
     }
 
     private void clickListButton() {
-        findElement(LIST_BUTTON).click();
+        findElement(By.xpath(
+                "//a[@href='index.php?action=action_list&list_type=table&entity_id=57']")).click();
     }
 
     private void clickMenuActionButton() {
-        TestUtils.jsClick(getDriver(), getDriver().findElement(MENU_ACTION_BUTTON));
+        TestUtils.jsClick(getDriver(), getDriver().findElement(By.xpath("//i[text()='menu']")));
     }
+
+    private final List<String> expect = List.of(
+            "Hello world", "Be healthy", "123", "456.98", "", "");
 
     @Test
     public void testCreateRecord() {
 
+        ProjectUtils.start(getDriver());
+        clickParentButton();
         createRecord();
 
-        clickSaveButton();
+        ProjectUtils.clickSave(getDriver());
 
-        WebElement row = findElement(By.tagName("tbody"));
         WebElement icon = findElement(By.xpath("//tbody/tr/td/i"));
 
-        List<WebElement> records = getDriver().findElements(CHECK_ROW);
+        List<WebElement> records = getDriver().findElements(By.xpath("//tbody/tr"));
+        List<WebElement> result = getDriver().findElements(By.xpath(
+                "//a[@href='index.php?action=action_view&entity_id=57&row_id=301']"));
 
         Assert.assertEquals(records.size(), 1);
-        Assert.assertEquals(row.getTagName(), "tbody");
         Assert.assertEquals(icon.getAttribute("class"), "fa fa-check-square-o");
+        for (int i = 0; i < result.size(); i++) {
+            Assert.assertEquals(result.get(i).getText(), expect.get(i));
+        }
     }
 
     @Test
     public void testViewRecord() {
 
-        createRecord();
+        ProjectUtils.start(getDriver());
 
-        clickSaveButton();
+        clickParentButton();
+        createRecord();
+        ProjectUtils.clickSave(getDriver());
 
         clickListButton();
 
@@ -100,53 +101,80 @@ public class EntityParentTest1 extends BaseTest {
         List<WebElement> row = findElements(By.xpath("//span[@class='pa-view-field']"));
 
         Assert.assertEquals(row.size(), 6);
+        for (int i = 0; i < row.size(); i++) {
+            Assert.assertEquals(row.get(i).getText(), expect.get(i));
+        }
     }
 
     @Test
     public void testEditRecord() {
 
-        createRecord();
+        List<String> expect1 = List.of(
+                "Hello for everyone", "Peace to all", "345", "345.67", "", "");
 
-        clickSaveButton();
+        ProjectUtils.start(getDriver());
+
+        clickParentButton();
+        createRecord();
+        ProjectUtils.clickSave(getDriver());
 
         WebElement record = findElement(By.tagName("tbody"));
         record.getText();
 
         clickListButton();
-
         clickMenuActionButton();
 
         TestUtils.jsClick(getDriver(), getDriver().findElement(By.xpath("//a[text()='edit']")));
 
-        WebElement string = findElement(STRING_INPUT);
-        string.clear();
-        string.sendKeys(TEXT);
+        createNewRecord();
+        ProjectUtils.clickSave(getDriver());
 
-        WebElement text = findElement(TEXT_INPUT);
-        text.clear();
-        text.sendKeys(TEXT);
-
-        WebElement Int = findElement(INT_INPUT);
-        Int.clear();
-        Int.sendKeys(INT.toString());
-
-        WebElement decimal = findElement(DECIMAL_INPUT);
-        decimal.clear();
-        decimal.sendKeys(DECIMAL.toString());
-
-        TestUtils.scrollClick(getDriver(),DATE_INPUT);
-        TestUtils.scrollClick(getDriver(),DATETIME_INPUT);
-
-        getDriver().findElement(By.xpath("//button[@data-id='user']")).click();
-
-        TestUtils.jsClick(getDriver(), getDriver().findElement(
-                By.xpath("//span[text()='tester26@tester.test']")));
-
-        clickSaveButton();
+        List<WebElement> result = getDriver().findElements(By.xpath(
+                "//a[@href='index.php?action=action_view&entity_id=57&row_id=301']"));
+        for (int i = 0; i < result.size(); i++) {
+            Assert.assertEquals(result.get(i).getText(), expect1.get(i));
+        }
 
         WebElement newRecord = findElement(By.tagName("tbody"));
         newRecord.getText();
-
         Assert.assertNotEquals(record, newRecord);
+    }
+
+    @Test
+    public void testSearchRecord() {
+
+        ProjectUtils.start(getDriver());
+
+        clickParentButton();
+        createRecord();
+
+        ProjectUtils.clickSave(getDriver());
+        ProjectUtils.clickCreateRecord(getDriver());
+
+        createNewRecord();
+
+        ProjectUtils.clickSave(getDriver());
+
+        WebElement record = findElement(By.xpath("//tr[@data-index='0']"));
+        record.getText();
+
+        WebElement record1 = findElement(By.xpath("//tr[@data-index='1']"));
+        record1.getText();
+
+        List <WebElement> fields = findElements(By.xpath("//tbody/tr"));
+        Assert.assertEquals(fields.size(), 2);
+        Assert.assertNotEquals(record, record1);
+
+        findElement(By.xpath("//input[@type='text']")).sendKeys("world");
+
+        List<WebElement> result = findElements(By.xpath(
+                "//a[@href='index.php?action=action_view&entity_id=57&row_id=301']"));
+
+        for (int i = 0; i < result.size(); i++) {
+            Assert.assertEquals(result.get(i).getText(), expect.get(i));
+        }
+
+        List <WebElement> field = findElements(By.xpath("//tbody/tr"));
+        Assert.assertEquals(field.size(), 1);
     }
 }
