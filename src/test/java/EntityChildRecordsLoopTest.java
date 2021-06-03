@@ -149,7 +149,6 @@ public class EntityChildRecordsLoopTest extends BaseTest {
         Assert.assertEquals(endBalanceAmount, expectedEditEndBalanceValue);
     }
 
-    @Ignore
     @Test
     public void testDeleteChildRecordsLoopCard() {
         ProjectUtils.start(getDriver());
@@ -176,21 +175,20 @@ public class EntityChildRecordsLoopTest extends BaseTest {
         lastCardDropdownMenu.click();
 
         WebElement deleteEntity = targetRowDiv.findElement(By.xpath("ul/li/a[text() = 'delete']"));
-        getWait().until(ExpectedConditions.visibilityOf(deleteEntity));
-        deleteEntity.click();
+        getWait().until(ExpectedConditions.elementToBeClickable(deleteEntity));
+        TestUtils.jsClick(getDriver(), deleteEntity);
 
         getWait().until(ExpectedConditions.visibilityOf(findElement(By.className("notification"))));
 
         WebElement recycleBinIcon = findElement(By.xpath("//i[contains(text(),'delete_outline')]"));
         recycleBinIcon.click();
 
-        WebElement deletedRow = findElement(By.className("pa-recycle-col"));
-        getWait().until(ExpectedConditions.visibilityOf(deletedRow));
-        deletedRow.click();
+        WebElement deletedContentLink = findElement(By.className("pa-recycle-col")).findElement(By.tagName("a"));
+        getWait().until(ExpectedConditions.elementToBeClickable(deletedContentLink));
+        TestUtils.jsClick(getDriver(), deletedContentLink);
 
-        String startBalanceXpath = String.format("//span[text() = %.2f]", startBalanceValue);
+        String startBalanceXpath = String.format("//span[text() =  %.2f]", startBalanceValue);
         WebElement deletedStartBalance = findElement(By.xpath(startBalanceXpath));
-
         String endBalanceXpath = String.format("//span[text() = %.2f]", expectedEndBalance);
         WebElement deletedEndBalance = findElement(By.xpath(endBalanceXpath));
 
