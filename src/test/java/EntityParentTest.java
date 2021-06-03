@@ -5,7 +5,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.testng.Assert;
 import org.testng.annotations.Test;
-import utils.ProjectUtils;
+import static utils.ProjectUtils.*;
 import utils.TestUtils;
 
 import java.text.SimpleDateFormat;
@@ -67,12 +67,14 @@ public class EntityParentTest extends BaseTest {
     @Test
     public void testCreateNewDraftRecord() {
 
-        ProjectUtils.start(getDriver());
+        start(getDriver());
 
         TestUtils.scrollClick(getDriver(),
                 findElement(EntityParentConstants.LINK_PARENT_ENTITY));
 
-        createRecord(EntityParentConstants.PARENT_BUTTON_SAVE_DRAFT);
+        clickCreateRecord(getDriver());
+        fillForm();
+        clickSaveDraft(getDriver());
 
         getWait().
                 until(ExpectedConditions.presenceOfElementLocated(
@@ -86,30 +88,44 @@ public class EntityParentTest extends BaseTest {
 
     @Test
     public void testCancelRecord() {
-        ProjectUtils.start(getDriver());
+        start(getDriver());
         TestUtils.scrollClick(getDriver(),
                 findElement(EntityParentConstants.LINK_PARENT_ENTITY));
 
-        createRecord(EntityParentConstants.PARENT_BUTTON_CANCEL);
+        clickCreateRecord(getDriver());
+        fillForm();
+        clickCancel(getDriver());
 
         Assert.assertNull(findElement(EntityParentConstants.PARENT_GET_CONTANER).getAttribute("value"));
     }
 
     @Test
     public void testDeleteRecord() {
-        ProjectUtils.start(getDriver());
+        start(getDriver());
 
         TestUtils.scrollClick(getDriver(),
                 findElement(EntityParentConstants.LINK_PARENT_ENTITY));
 
-        createRecord(EntityParentConstants.PARENT_BUTTON_SAVE);
+        clickCreateRecord(getDriver());
+        fillForm();
+        clickSave(getDriver());
+        getWait().until(ExpectedConditions.visibilityOf(findElement(EntityParentConstants.PARENT_ADD_CARD)));
+        clickCreateRecord(getDriver());
+        fillForm();
+        clickSaveDraft(getDriver());
 
-        List<WebElement> records = findElements(EntityParentConstants.PARENT_GET_LIST_ROW);
-        Assert.assertEquals(records.size(), 1);
+        getWait().until(ExpectedConditions.textToBePresentInElementLocated(EntityParentConstants.PARENT_GET_TEXT_MESSAGE,
+                EntityParentConstants.TEXT_MESSAGE_TWO));
+        List<WebElement> records1 = findElements(EntityParentConstants.PARENT_GET_LIST_ROW);
+        Assert.assertEquals(records1.size(), 2);
 
         clickActionButton();
         deleteAction();
-        Assert.assertNull(findElement(EntityParentConstants.PARENT_GET_CONTANER).getAttribute("value"));
+        getWait().
+                until(ExpectedConditions.presenceOfElementLocated(
+                        EntityParentConstants.GET_PARENT_TITLE));
+        List<WebElement> records2 = findElements(EntityParentConstants.PARENT_GET_LIST_ROW);
+        Assert.assertEquals(records2.size(), 1);
         Assert.assertEquals(findElement(EntityParentConstants.PARENT_RECYCLING_BIN_ICON_NOTICE).getText(), "1");
     }
 }

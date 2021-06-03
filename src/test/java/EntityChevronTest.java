@@ -7,6 +7,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Assert;
+import org.testng.annotations.Ignore;
 import org.testng.annotations.Test;
 
 import java.time.LocalDate;
@@ -26,11 +27,11 @@ public class EntityChevronTest extends BaseTest {
     final String FULFILLMENT = "Fulfillment";
     final String SENT = "Sent";
 
-    private void chooseSideBarItem(WebDriver driver, String name){
+    private void chooseSideBarItem(String name){
         scrollClick(getDriver(), By.xpath("//a[@class='nav-link'][contains(.,'"+name+"')]"));
     }
 
-    private void clickAddButton(WebDriver driver){
+    private void clickAddButton(){
         findElement(By.xpath("//i[contains(.,'create_new_folder')]")).click();
     }
 
@@ -76,6 +77,17 @@ public class EntityChevronTest extends BaseTest {
 
     private void fillCreateNewFormFields(List<String> data){
         chooseStringDropDownItem(data.get(0));
+
+        WebElement date = findElement(By.xpath("//input[@id='date']"));
+        date.click();
+        date.clear();
+        date.sendKeys(data.get(4));
+
+        WebElement datetime = findElement(By.xpath("//input[@id='datetime']"));
+        datetime.click();
+        datetime.clear();
+        datetime.sendKeys(data.get(5));
+
         WebElement text = findElement(By.xpath("//textarea[@id='text']"));
         text.click();
         text.sendKeys(data.get(1));
@@ -87,31 +99,17 @@ public class EntityChevronTest extends BaseTest {
         WebElement decimalData = findElement(By.xpath("//input[@id='decimal']"));
         decimalData.click();
         decimalData.sendKeys(data.get(3));
-
-        WebElement date = getDriver().findElement(By.xpath("//input[@id='date']"));
-        date.click();
-        date.clear();
-        date.sendKeys(data.get(4));
-
-        WebElement datetime = getDriver().findElement(By.xpath("//input[@id='datetime']"));
-        datetime.click();
-        datetime.clear();
-        datetime.sendKeys(data.get(5));
     }
 
     private void clickSaveButton(String entity) {
         findElement(By.xpath("//button[@id='pa-entity-form-save-btn']")).click();
-
-        WebDriverWait wait = new WebDriverWait(getDriver(), 40);
-        wait.until(ExpectedConditions.textToBePresentInElementLocated(By.xpath("//div[@class='main-panel']//a/b"),
+        getWait().until(ExpectedConditions.textToBePresentInElementLocated(By.xpath("//div[@class='main-panel']//a/b"),
                 entity));
     }
 
     private void clickSaveDraftButton(String entity) {
         findElement(By.xpath("//button[@type='submit'][text() ='Save draft']")).click();
-
-        WebDriverWait wait = new WebDriverWait(getDriver(), 40);
-        wait.until(ExpectedConditions.textToBePresentInElementLocated(By.xpath("//div[@class='main-panel']//a/b"),
+        getWait().until(ExpectedConditions.textToBePresentInElementLocated(By.xpath("//div[@class='main-panel']//a/b"),
                 entity));
     }
 
@@ -120,10 +118,17 @@ public class EntityChevronTest extends BaseTest {
             findElement(By.xpath("//a[text()='All']")).click();
         }
         List<WebElement> records = findElements(By.xpath("//tbody/tr"));
+        getWait().until(ExpectedConditions.presenceOfElementLocated(By.xpath("//tbody/tr")));
         List<WebElement> cells = findElements(By.xpath("//tbody/tr/td[@class = 'pa-list-table-th']"));
 
-        WebElement icon = findElement(By.xpath("//i[contains(@class,'check-square')]"));
-        Assert.assertEquals(icon.getAttribute("class"), "fa fa-check-square-o");
+        if(isDraft){
+            WebElement icon = findElement(By.xpath("//i[contains(@class,'fa fa-pencil')]"));
+            Assert.assertEquals(icon.getAttribute("class"), "fa fa-pencil");
+        }
+        else {
+            WebElement icon = findElement(By.xpath("//i[contains(@class,'check-square')]"));
+            Assert.assertEquals(icon.getAttribute("class"), "fa fa-check-square-o");
+        }
 
         for (int i = 0; i < data.size(); i++) {
             Assert.assertEquals(cells.get(i).getText(), data.get(i));
@@ -135,8 +140,8 @@ public class EntityChevronTest extends BaseTest {
         String status = PENDING;
 
         start(getDriver());
-        chooseSideBarItem(getDriver(), ENTITY_NAME);
-        clickAddButton(getDriver());
+        chooseSideBarItem(ENTITY_NAME);
+        clickAddButton();
         List<String> expectedData = makeRandomData(status);
         fillCreateNewFormFields(expectedData);
         clickSaveButton(ENTITY_NAME);
@@ -148,8 +153,8 @@ public class EntityChevronTest extends BaseTest {
         String status = FULFILLMENT;
 
         start(getDriver());
-        chooseSideBarItem(getDriver(), ENTITY_NAME);
-        clickAddButton(getDriver());
+        chooseSideBarItem(ENTITY_NAME);
+        clickAddButton();
         List<String> expectedData = makeRandomData(status);
         fillCreateNewFormFields(expectedData);
         clickSaveButton(ENTITY_NAME);
@@ -161,11 +166,50 @@ public class EntityChevronTest extends BaseTest {
         String status = SENT;
 
         start(getDriver());
-        chooseSideBarItem(getDriver(), ENTITY_NAME);
-        clickAddButton(getDriver());
+        chooseSideBarItem(ENTITY_NAME);
+        clickAddButton();
         List<String> expectedData = makeRandomData(status);
         fillCreateNewFormFields(expectedData);
         clickSaveButton(ENTITY_NAME);
         checkCreatedRecord(status, false, expectedData);
+    }
+
+    @Test
+    public void testCreatePendingDraftRecord(){
+        String status = PENDING;
+
+        start(getDriver());
+        chooseSideBarItem(ENTITY_NAME);
+        clickAddButton();
+        List<String> expectedData = makeRandomData(status);
+        fillCreateNewFormFields(expectedData);
+        clickSaveDraftButton(ENTITY_NAME);
+        checkCreatedRecord(status, true, expectedData);
+    }
+
+    @Test
+    public void testCreateFulfillmentDraftRecord(){
+        String status = FULFILLMENT;
+
+        start(getDriver());
+        chooseSideBarItem(ENTITY_NAME);
+        clickAddButton();
+        List<String> expectedData = makeRandomData(status);
+        fillCreateNewFormFields(expectedData);
+        clickSaveDraftButton(ENTITY_NAME);
+        checkCreatedRecord(status, true, expectedData);
+    }
+
+    @Test
+    public void testCreateSentDraftRecord(){
+        String status = SENT;
+
+        start(getDriver());
+        chooseSideBarItem(ENTITY_NAME);
+        clickAddButton();
+        List<String> expectedData = makeRandomData(status);
+        fillCreateNewFormFields(expectedData);
+        clickSaveDraftButton(ENTITY_NAME);
+        checkCreatedRecord(status, true, expectedData);
     }
 }

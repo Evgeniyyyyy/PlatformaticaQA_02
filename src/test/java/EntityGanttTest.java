@@ -3,13 +3,13 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.testng.Assert;
-import org.testng.annotations.Ignore;
 import org.testng.annotations.Test;
+import utils.TestUtils;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
-import static utils.ProjectUtils.start;
+import static utils.ProjectUtils.*;
 import static utils.TestUtils.jsClick;
 import static utils.TestUtils.scrollClick;
 
@@ -29,6 +29,11 @@ public class EntityGanttTest extends BaseTest {
     private static final By LIST_BUTTON = By.xpath("//a[@href=\"index.php?action=action_list&list_type=table&entity_id=35\"]");
     private static final By CHECK_ICON = By.xpath("//tbody/tr[1]/td[1]/i[1]");
     private static final By COLUMN_FIELD = By.xpath("//tbody/tr/td[@class = 'pa-list-table-th']");
+    private static final By ACTIONS_BUTTON = By.xpath("//button[@class='btn btn-round btn-sm btn-primary dropdown-toggle']");
+    private static final By VIEW_BUTTON = By.xpath("//a[normalize-space()='view']");
+    private static final By LIST_OF_RECORDS = By.xpath("//span [@class = 'pa-view-field']");
+    private static final By EXIT_BUTTON = By.xpath("//i[contains(text(),'clear')]");
+    private static final By USER_FIELD = By.xpath("//div [@class = 'form-group']/p");
 
     final String stringInputValue = "Test";
     final String textInputValue = "Text";
@@ -47,24 +52,23 @@ public class EntityGanttTest extends BaseTest {
     private void createRecord(){
         start(getDriver());
 
-        scrollClick(getDriver(), getDriver().findElement(GANTT_TAB));
+        scrollClick(getDriver(), findElement(GANTT_TAB));
 
-        getDriver().findElement(CREATE_NEW_RECORD).click();
-        getDriver().findElement(STRING_FIELD).sendKeys(stringInputValue);
-        getDriver().findElement(TEXT_FIELD).sendKeys(textInputValue);
-        getDriver().findElement(INT_FIELD).sendKeys(intInputValue);
-        getDriver().findElement(DECIMAL_FIELD).sendKeys(decimalInputValue);
-        getDriver().findElement(DATE_FIELD).click();
-        getDriver().findElement(TESTER_NAME_FIELD).click();
+        findElement(CREATE_NEW_RECORD).click();
+        findElement(STRING_FIELD).sendKeys(stringInputValue);
+        findElement(TEXT_FIELD).sendKeys(textInputValue);
+        findElement(INT_FIELD).sendKeys(intInputValue);
+        findElement(DECIMAL_FIELD).sendKeys(decimalInputValue);
+        findElement(DATE_FIELD).click();
+        findElement(TESTER_NAME_FIELD).click();
 
-        jsClick(getDriver(), getDriver().findElement(TESTER_NAME));
+        jsClick(getDriver(), findElement(TESTER_NAME));
     }
 
     private void clickListButton(){
         getWait().until(ExpectedConditions.elementToBeClickable(getDriver()
                 .findElement(LIST_BUTTON)))
                 .click();
-      //  getDriver().findElement(LIST_BUTTON).click();
     }
 
     private void getAssertion(){
@@ -80,7 +84,7 @@ public class EntityGanttTest extends BaseTest {
     public void testCreateRecord() {
 
         createRecord();
-        getDriver().findElement(SAVE_BUTTON).click();
+        jsClick(getDriver(), findElement(SAVE_BUTTON));
         clickListButton();
 
         WebElement icon1 = findElement(CHECK_ICON);
@@ -88,16 +92,37 @@ public class EntityGanttTest extends BaseTest {
         getAssertion();
     }
 
-    @Ignore
     @Test
     public void testCreateDraftRecord(){
 
         createRecord();
-        getDriver().findElement(DRAFT_BUTTON).click();
+        jsClick(getDriver(), findElement(DRAFT_BUTTON));
         clickListButton();
 
         WebElement icon2 = findElement(CHECK_ICON);
         Assert.assertEquals(icon2.getAttribute("class"), "fa fa-pencil");
         getAssertion();
+    }
+
+    @Test
+    public void testViewRecord(){
+
+        createRecord();
+        jsClick(getDriver(), findElement(SAVE_BUTTON));
+        clickListButton();
+
+        findElement(ACTIONS_BUTTON).click();
+        getWait().until(TestUtils.movingIsFinished(getDriver().findElement(VIEW_BUTTON))).click();
+
+        List<Object> expectedRecords = Arrays.asList(stringInputValue, textInputValue, intInputValue, decimalInputValue,
+                formatter.format(date), emptyField);
+        List<WebElement> actualRecords = findElements(LIST_OF_RECORDS);
+
+        for (int i = 0; i < expectedRecords.size() ; i++) {
+            Assert.assertEquals(actualRecords.get(i).getText(), expectedRecords.get(i).toString());
+        }
+        Assert.assertEquals(findElement(USER_FIELD).getText(), userName);
+
+        findElement(EXIT_BUTTON).click();
     }
 }

@@ -2,6 +2,7 @@ package base;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
 import org.openqa.selenium.By;
+import org.openqa.selenium.Dimension;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -50,17 +51,23 @@ public abstract class BaseTest {
 
     @BeforeMethod
     protected void beforeMethod() {
+        ChromeOptions chromeOptions = new ChromeOptions();
+        chromeOptions.addArguments("--window-size=1920,1080");
+
         if (isRemoteWebDriver()) {
+
+            chromeOptions.setHeadless(true);
+            chromeOptions.addArguments("--disable-gpu");
+
             try {
-                driver = new RemoteWebDriver(new URL(HUB_URL), new ChromeOptions());
+                driver = new RemoteWebDriver(new URL(HUB_URL), chromeOptions);
             } catch (MalformedURLException e) {
                 throw new RuntimeException(e);
             }
         } else {
-            driver = new ChromeDriver();
+            driver = new ChromeDriver(chromeOptions);
         }
 
-        driver.manage().window().maximize();
         driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
     }
 

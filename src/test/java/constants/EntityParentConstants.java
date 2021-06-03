@@ -5,14 +5,11 @@ import org.openqa.selenium.By;
 public class EntityParentConstants {
 
     public static final By LINK_PARENT_ENTITY = By.xpath("//p[contains(text(),'Parent')]");
-    public static final By GET_PARENT_TITLE = By.tagName("h3");
+    public static final By GET_PARENT_TITLE = By.xpath("//h3[contains(text(), \"Parent\")]");
     public static final String URL = "https://ref2.eteam.work/index.php?action=login";
     public static final String URL_PARENT = "https://ref2.eteam.work/index.php?action=action_list&entity_id=31&mod=2";
 
     public static final By PARENT_ADD_CARD = By.xpath("//div[@class=\"card-icon\"]");
-    public static final By PARENT_BUTTON_SAVE = By.id("pa-entity-form-save-btn");
-    public static final By PARENT_BUTTON_SAVE_DRAFT = By.id("pa-entity-form-draft-btn");
-    public static final By PARENT_BUTTON_CANCEL = By.xpath("//button[contains(text(), \"Cancel\")]");
 
     public static final By STRING_FIELD = By.id("string");
     public static final By TEXT_FIELD = By.id("text");
@@ -32,5 +29,8 @@ public class EntityParentConstants {
     public static final By PARENT_ACTION_DELETE = By.xpath("//ul[@class=\"dropdown-menu dropdown-menu-right show\"]/li/a[contains(text(),\"delete\")]");
     public static final By PARENT_RECYCLING_BIN_ICON = By.xpath("//a[@href=\"index.php?action=recycle_bin\"]");
     public static final By PARENT_RECYCLING_BIN_ICON_NOTICE = By.xpath("//span[@class=\"notification\"]");
+    public static final By PARENT_GET_TEXT_MESSAGE = By.xpath(("//span[@class=\"pagination-info\"]"));
 
+    public static final String TEXT_MESSAGE_ONE = "Showing 1 to 1 of 1 rows";
+    public static final String TEXT_MESSAGE_TWO = "Showing 1 to 2 of 2 rows";
 }

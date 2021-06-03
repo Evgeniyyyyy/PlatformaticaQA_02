@@ -3,6 +3,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.testng.Assert;
+import org.testng.annotations.Ignore;
 import org.testng.annotations.Test;
 import utils.ProjectUtils;
 import utils.TestUtils;
@@ -40,18 +41,19 @@ public class EntityCalendarTest extends BaseTest {
         findElement(By.id("int")).sendKeys(list.get(2));
         findElement(By.id("decimal")).sendKeys(list.get(3));
 
-        TestUtils.scrollClick(getDriver(), findElement(By.id("pa-entity-form-save-btn")));
+        ProjectUtils.clickSave(getDriver());
     }
 
     private void enterToCalendarPageAndCreateRecord(String str, String text, String in, String decimal){
         enterToCalendarPage();
-        createCalendarRecord("StringExample", "TextExample", "12345", "0.1");
+        createCalendarRecord(str, text, in, decimal);
     }
 
     private void enterToCalendarPageAndCreateRecord(List<String> list){
         enterToCalendarPage();
         createCalendarRecord(list);
     }
+
 
     @Test
     public void testDeletedRecordFromBin(){

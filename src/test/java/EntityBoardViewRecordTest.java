@@ -22,28 +22,14 @@ public class EntityBoardViewRecordTest extends BaseTest {
 
         TestUtils.jsClick(getDriver(), findElement(By.xpath("//select/option[text()='Pending']")));
 
-        WebElement dateField = findElement(By.id("date"));
-        dateField.click();
-        dateField.clear();
-        dateField.sendKeys("23/04/2021");
+        TestUtils.scrollClick(getDriver(), findElement(By.xpath("//button[@data-id='user']")));
 
-        WebElement dateTimeField = findElement((By.id("datetime")));
-        dateTimeField.click();
-        dateTimeField.clear();
-        dateTimeField.sendKeys("20/05/2021 20:29:47");
-
-        TestUtils.scroll(getDriver(), findElement(By.name("entity_form_data[user]")));
-
-        WebElement user = findElement(By.xpath("//select/option[text() ='tester10@tester.test']"));
-        user.click();
+        TestUtils.jsClick(getDriver(), getDriver().findElement(
+                By.xpath("//span[text()='tester10@tester.test']")));
 
         findElement(By.id("text")).sendKeys("qwerty");
-        getWait().until(ExpectedConditions.attributeToBe(
-                By.id("text"), "value", "qwerty"));
 
         findElement(By.id("int")).sendKeys("1");
-        getWait().until(ExpectedConditions.attributeToBe(
-                By.id("int"), "value", "1"));
 
         findElement(By.id("decimal")).sendKeys("0.12");
 
@@ -55,9 +41,9 @@ public class EntityBoardViewRecordTest extends BaseTest {
         createRecord();
 
         final List<String> excpectedRecordColumn = List.of(
-                "Pending", "qwerty", "1", "0.12", "23/04/2021", "20/05/2021 20:29:47");
+                "Pending", "qwerty", "1", "0.12", "", "");
         final List<String> excpectedRecordVRow = List.of(
-                "Pending", "qwerty", "1", "0.12", "23/04/2021", "20/05/2021 20:29:47", "", "tester10@tester.test");
+                "Pending", "qwerty", "1", "0.12", "", "", "", "tester10@tester.test");
 
         findElement(By.xpath("//a[@href='index.php?action=action_list&list_type=table&entity_id=31']")).click();
 
@@ -78,7 +64,7 @@ public class EntityBoardViewRecordTest extends BaseTest {
             Assert.assertEquals(columnValues.get(i).getText(), excpectedRecordColumn.get(i));
         }
 
-        WebElement user = findElement(By.xpath("//p[contains(text(), 'tester10@tester.test')]"));
+        WebElement user = findElement(By.xpath("//div[@class='form-group']/p"));
         Assert.assertEquals(user.getText(), "tester10@tester.test");
 
         findElement(By.xpath("//i[text()='clear']")).click();

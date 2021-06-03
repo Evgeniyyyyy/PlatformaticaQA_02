@@ -6,49 +6,21 @@ import org.testng.annotations.Test;
 import utils.ProjectUtils;
 import utils.TestUtils;
 
-import java.util.List;
-import java.util.Random;
-import java.util.UUID;
+import java.util.*;
 
 public class EntityTagTest extends BaseTest{
-
-    private static final Random random = new Random();
-    private static final String TEXT = UUID.randomUUID().toString();
-    private static final Integer INT = random.nextInt();
-    private static final Double DECIMAL = random.nextDouble();
-
-    private static final By TAG_BUTTON = By.xpath("//p[text()=' Tag ']");
-
-    private static final By NEW_FOLDER = By.xpath("//i[text()='create_new_folder']");
-    private static final By STRING_INPUT = By.id("string");
-    private static final By TEXT_INPUT = By.id("text");
-    private static final By INT_INPUT = By.id("int");
-    private static final By DECIMAL_INPUT = By.id("decimal");
-    private static final By DATE_INPUT = By.id("date");
-    private static final By DATETIME_INPUT = By.id("datetime");
-
-    private static final By PENCIL_BOX = By.xpath("//i[@class='fa fa-pencil']");
-    private static final By SQUARE_BOX = By.xpath("//i[@class='fa fa-check-square-o']");
-    private static final By CHECK_ROW = By.xpath(
-            "//table[@id='pa-all-entities-table']/tbody/tr[@data-index='0']");
-
-    private static final By DRAFT_BUTTON = By.id("pa-entity-form-draft-btn");
-    private static final By SAVE_BUTTON = By.id("pa-entity-form-save-btn");
-    private static final By CANCEL_BUTTON= By.xpath("//button[text()='Cancel']");
 
     private void createRecord() {
 
         ProjectUtils.start(getDriver());
 
-        TestUtils.scrollClick(getDriver(), getDriver().findElement(TAG_BUTTON));
+        TestUtils.scrollClick(getDriver(), getDriver().findElement(By.xpath("//p[text()=' Tag ']")));
 
-        getDriver().findElement(NEW_FOLDER).click();
-        getDriver().findElement(STRING_INPUT).sendKeys(TEXT);
-        getDriver().findElement(TEXT_INPUT).sendKeys(TEXT);
-        getDriver().findElement(INT_INPUT).sendKeys(INT.toString());
-        getDriver().findElement(DECIMAL_INPUT).sendKeys(DECIMAL.toString());
-        TestUtils.scrollClick(getDriver(),DATE_INPUT);
-        TestUtils.scrollClick(getDriver(),DATETIME_INPUT);
+        ProjectUtils.clickCreateRecord(getDriver());
+        findElement(By.id("string")).sendKeys("Hello world");
+        findElement(By.id("text")).sendKeys("Be healthy");
+        findElement(By.id("int")).sendKeys("123");
+        findElement(By.id("decimal")).sendKeys("456.98");
 
         getDriver().findElement(By.xpath("//button[@data-id='user']")).click();
 
@@ -61,12 +33,13 @@ public class EntityTagTest extends BaseTest{
 
         createRecord();
 
-        TestUtils.scrollClick(getDriver(), getDriver().findElement(SAVE_BUTTON));
+        ProjectUtils.clickSave(getDriver());
 
-        List<WebElement> records = getDriver().findElements(CHECK_ROW);
+        List<WebElement> records = getDriver().findElements(By.xpath("//tbody/tr"));
+        WebElement box = getDriver().findElement(By.xpath("//tbody/tr/td/i"));
 
+        Assert.assertEquals(box.getAttribute("class"), "fa fa-check-square-o");
         Assert.assertEquals(records.size(), 1);
-        Assert.assertTrue(getDriver().findElement(SQUARE_BOX).isDisplayed());
     }
 
     @Test
@@ -74,12 +47,13 @@ public class EntityTagTest extends BaseTest{
 
         createRecord();
 
-        TestUtils.scrollClick(getDriver(), getDriver().findElement(DRAFT_BUTTON));
+        ProjectUtils.clickSaveDraft(getDriver());
 
-        List<WebElement> records = getDriver().findElements(CHECK_ROW);
+        List<WebElement> records = getDriver().findElements(By.xpath("//tbody/tr"));
+        WebElement box = getDriver().findElement(By.xpath("//tbody/tr/td/i"));
 
+        Assert.assertEquals(box.getAttribute("class"), "fa fa-pencil");
         Assert.assertEquals(records.size(), 1);
-        Assert.assertTrue(getDriver().findElement(PENCIL_BOX).isDisplayed());
     }
 
     @Test
@@ -87,9 +61,9 @@ public class EntityTagTest extends BaseTest{
 
         createRecord();
 
-        TestUtils.scrollClick(getDriver(), CANCEL_BUTTON);
+        ProjectUtils.clickCancel(getDriver());
 
-        List<WebElement> records = getDriver().findElements(CHECK_ROW);
+        List<WebElement> records = getDriver().findElements(By.xpath("//tbody/tr"));
 
         Assert.assertEquals(records.size(), 0);
     }

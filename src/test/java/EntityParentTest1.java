@@ -29,7 +29,7 @@ public class EntityParentTest1 extends BaseTest {
 
     private static final By LIST_BUTTON = By.xpath(
             "//a[@href='index.php?action=action_list&list_type=table&entity_id=57']");
-    private static final By MENU_LIST_BUTTON = By.xpath("//i[text()='menu']");
+    private static final By MENU_ACTION_BUTTON = By.xpath("//i[text()='menu']");
     private static final By CHECK_ROW = By.xpath(
             "//table[@id='pa-all-entities-table']/tbody/tr[@data-index='0']");
 
@@ -55,12 +55,24 @@ public class EntityParentTest1 extends BaseTest {
                 By.xpath("//span[text()='tester26@tester.test']")));
     }
 
+    private void clickSaveButton() {
+        TestUtils.scrollClick(getDriver(), getDriver().findElement(SAVE_BUTTON));
+    }
+
+    private void clickListButton() {
+        findElement(LIST_BUTTON).click();
+    }
+
+    private void clickMenuActionButton() {
+        TestUtils.jsClick(getDriver(), getDriver().findElement(MENU_ACTION_BUTTON));
+    }
+
     @Test
     public void testCreateRecord() {
 
         createRecord();
 
-        TestUtils.scrollClick(getDriver(), getDriver().findElement(SAVE_BUTTON));
+        clickSaveButton();
 
         WebElement row = findElement(By.tagName("tbody"));
         WebElement icon = findElement(By.xpath("//tbody/tr/td/i"));
@@ -77,16 +89,64 @@ public class EntityParentTest1 extends BaseTest {
 
         createRecord();
 
-        TestUtils.scrollClick(getDriver(), getDriver().findElement(SAVE_BUTTON));
+        clickSaveButton();
 
-        findElement(LIST_BUTTON).click();
+        clickListButton();
 
-        TestUtils.jsClick(getDriver(), getDriver().findElement(MENU_LIST_BUTTON));
+        clickMenuActionButton();
 
         TestUtils.jsClick(getDriver(), getDriver().findElement(By.xpath("//a[text()='view']")));
 
         List<WebElement> row = findElements(By.xpath("//span[@class='pa-view-field']"));
 
         Assert.assertEquals(row.size(), 6);
+    }
+
+    @Test
+    public void testEditRecord() {
+
+        createRecord();
+
+        clickSaveButton();
+
+        WebElement record = findElement(By.tagName("tbody"));
+        record.getText();
+
+        clickListButton();
+
+        clickMenuActionButton();
+
+        TestUtils.jsClick(getDriver(), getDriver().findElement(By.xpath("//a[text()='edit']")));
+
+        WebElement string = findElement(STRING_INPUT);
+        string.clear();
+        string.sendKeys(TEXT);
+
+        WebElement text = findElement(TEXT_INPUT);
+        text.clear();
+        text.sendKeys(TEXT);
+
+        WebElement Int = findElement(INT_INPUT);
+        Int.clear();
+        Int.sendKeys(INT.toString());
+
+        WebElement decimal = findElement(DECIMAL_INPUT);
+        decimal.clear();
+        decimal.sendKeys(DECIMAL.toString());
+
+        TestUtils.scrollClick(getDriver(),DATE_INPUT);
+        TestUtils.scrollClick(getDriver(),DATETIME_INPUT);
+
+        getDriver().findElement(By.xpath("//button[@data-id='user']")).click();
+
+        TestUtils.jsClick(getDriver(), getDriver().findElement(
+                By.xpath("//span[text()='tester26@tester.test']")));
+
+        clickSaveButton();
+
+        WebElement newRecord = findElement(By.tagName("tbody"));
+        newRecord.getText();
+
+        Assert.assertNotEquals(record, newRecord);
     }
 }

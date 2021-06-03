@@ -19,7 +19,7 @@ public class ProjectUtils {
     public static final String LOGIN_PROP = "default.username";
     public static final String PAS_PROP = "default.password";
 
-    private static Properties getCredentials() {
+    private static Properties getCredentials(WebDriver driver) {
 
         Properties properties = new Properties();
         if (BaseTest.isRemoteWebDriver()) {
@@ -44,20 +44,21 @@ public class ProjectUtils {
             try {
                 InputStream inputStream = ProjectUtils.class.getClassLoader().getResourceAsStream("local.properties");
                 if (inputStream == null) {
-                    System.out.println("\u001B[31m!!!!! Copy and paste the local.properties.TEMPLATE file to local.properties !!!!!\u001B[0m");
+                    System.out.println("ERROR: The local.properties file not found in src/test/resources/ directory.");
+                    System.out.println("You need to create it from local.properties.TEMPLATE file.");
+                    System.out.println("Please see https://youtu.be/gsicxtw-x34?t=1866 for instructions.");
+                    driver.quit();
                     System.exit(1);
                 }
-
                 properties.load(inputStream);
             } catch (IOException ignore) {
             }
         }
-
         return properties;
     }
 
     public static void login(WebDriver driver) {
-        Properties properties = getCredentials();
+        Properties properties = getCredentials(driver);
         login(driver, properties.getProperty(LOGIN_PROP), properties.getProperty(PAS_PROP));
     }
 
@@ -68,10 +69,12 @@ public class ProjectUtils {
     }
 
     public static void reset(WebDriver driver) {
+        WebDriverWait wait = new WebDriverWait(driver, 10);
+
         driver.findElement(By.id("navbarDropdownProfile")).click();
-        WebDriverWait wait = new WebDriverWait(driver, 20);
-        wait.until(ExpectedConditions.elementToBeClickable(
-                By.xpath("//a[contains(text(),'!!! Reset all for my user !!!')]"))).click();
+        TestUtils.jsClick(driver,
+                wait.until(ExpectedConditions.elementToBeClickable(
+                        By.xpath("//a[contains(text(),'!!! Reset all for my user !!!')]"))));
     }
 
     public static void get(WebDriver driver) {
@@ -82,5 +85,25 @@ public class ProjectUtils {
         get(driver);
         login(driver);
         reset(driver);
+    }
+
+    public static void clickSave(WebDriver driver) {
+        TestUtils.jsClick(driver, driver.findElement(By.id("pa-entity-form-save-btn")));
+    }
+
+    public static void clickSaveDraft(WebDriver driver) {
+        TestUtils.jsClick(driver, driver.findElement(By.id("pa-entity-form-draft-btn")));
+    }
+
+    public static void clickCancel(WebDriver driver) {
+        TestUtils.jsClick(driver, driver.findElement(By.xpath("//button[text()='Cancel']")));
+    }
+
+    public static void clickCreateRecord(WebDriver driver) {
+        driver.findElement(By.xpath("//i[text()='create_new_folder']")).click();
+    }
+
+    public static void clickRecycleBin(WebDriver driver) {
+        driver.findElement(By.xpath("//i[text()='delete_outline']")).click();
     }
 }
