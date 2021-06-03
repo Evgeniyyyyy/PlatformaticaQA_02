@@ -41,12 +41,12 @@ public class EntityCalendarTest extends BaseTest {
         findElement(By.id("int")).sendKeys(list.get(2));
         findElement(By.id("decimal")).sendKeys(list.get(3));
 
-        TestUtils.scrollClick(getDriver(), findElement(By.id("pa-entity-form-save-btn")));
+        ProjectUtils.clickSave(getDriver());
     }
 
     private void enterToCalendarPageAndCreateRecord(String str, String text, String in, String decimal){
         enterToCalendarPage();
-        createCalendarRecord("StringExample", "TextExample", "12345", "0.1");
+        createCalendarRecord(str, text, in, decimal);
     }
 
     private void enterToCalendarPageAndCreateRecord(List<String> list){
@@ -54,7 +54,7 @@ public class EntityCalendarTest extends BaseTest {
         createCalendarRecord(list);
     }
 
-    @Ignore
+
     @Test
     public void testDeletedRecordFromBin(){
         final List<String> createRecordList = List.of("StringExampleCreateRecord", "TextExample", "1111", "0.20");
@@ -75,7 +75,6 @@ public class EntityCalendarTest extends BaseTest {
                 "Good job with housekeeping! Recycle bin is currently empty!");
     }
 
-    @Ignore
     @Test
     public void testCalendarViewCreatedRecord() {
         final List<String> createRecordList = List.of("StringExampleCreateRecord", "TextExample", "1111", "0.20");
@@ -89,7 +88,6 @@ public class EntityCalendarTest extends BaseTest {
                 "StringExampleCreateRecord");
     }
 
-    @Ignore
     @Test
     public void testCreateRecord(){
         final List<String> createRecordList = List.of("StringExampleCreateRecord", "TextExample", "1111", "0.20");

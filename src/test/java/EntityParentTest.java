@@ -4,9 +4,8 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.testng.Assert;
-import org.testng.annotations.Ignore;
 import org.testng.annotations.Test;
-import utils.ProjectUtils;
+import static utils.ProjectUtils.*;
 import utils.TestUtils;
 
 import java.text.SimpleDateFormat;
@@ -65,16 +64,17 @@ public class EntityParentTest extends BaseTest {
         view_action.click();
     }
 
-    @Ignore
     @Test
     public void testCreateNewDraftRecord() {
 
-        ProjectUtils.start(getDriver());
+        start(getDriver());
 
         TestUtils.scrollClick(getDriver(),
                 findElement(EntityParentConstants.LINK_PARENT_ENTITY));
 
-        createRecord(EntityParentConstants.PARENT_BUTTON_SAVE_DRAFT);
+        clickCreateRecord(getDriver());
+        fillForm();
+        clickSaveDraft(getDriver());
 
         getWait().
                 until(ExpectedConditions.presenceOfElementLocated(
@@ -85,29 +85,34 @@ public class EntityParentTest extends BaseTest {
         Assert.assertEquals(getIcon(EntityParentConstants.PARENT_GET_ICON)
                 .getAttribute("class"), EntityParentConstants.CLASS_ITEM_SAVE_DRAFT);
     }
-    @Ignore
+
     @Test
     public void testCancelRecord() {
-        ProjectUtils.start(getDriver());
+        start(getDriver());
         TestUtils.scrollClick(getDriver(),
                 findElement(EntityParentConstants.LINK_PARENT_ENTITY));
 
-        createRecord(EntityParentConstants.PARENT_BUTTON_CANCEL);
+        clickCreateRecord(getDriver());
+        fillForm();
+        clickCancel(getDriver());
 
         Assert.assertNull(findElement(EntityParentConstants.PARENT_GET_CONTANER).getAttribute("value"));
     }
 
-    @Ignore
     @Test
     public void testDeleteRecord() {
-        ProjectUtils.start(getDriver());
+        start(getDriver());
 
         TestUtils.scrollClick(getDriver(),
                 findElement(EntityParentConstants.LINK_PARENT_ENTITY));
 
-        createRecord(EntityParentConstants.PARENT_BUTTON_SAVE);
+        clickCreateRecord(getDriver());
+        fillForm();
+        clickSave(getDriver());
         getWait().until(ExpectedConditions.visibilityOf(findElement(EntityParentConstants.PARENT_ADD_CARD)));
-        createRecord(EntityParentConstants.PARENT_BUTTON_SAVE_DRAFT);
+        clickCreateRecord(getDriver());
+        fillForm();
+        clickSaveDraft(getDriver());
 
         getWait().until(ExpectedConditions.textToBePresentInElementLocated(EntityParentConstants.PARENT_GET_TEXT_MESSAGE,
                 EntityParentConstants.TEXT_MESSAGE_TWO));
