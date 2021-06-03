@@ -13,19 +13,27 @@ import java.util.List;
 
 public class EntityArithmeticInlineTest extends BaseTest {
 
+    public static final Integer F1 = 10;
+    public static final Integer F2 = 2;
+    public static final Integer SUM = F1 + F2;
+    public static final Integer SUB = F1 - F2;
+    public static final Integer MUL = F1 * F2;
+    public static final Integer DIV = F1 / F2;
+    public static final List<Integer> expectedList = List.of(F1, F2, SUM, SUB, MUL, DIV);
+
     private void fillForm(String inputField1, String inputField2) {
         findElement(By.xpath("//input[@id='f1']")).sendKeys(inputField1);
         findElement(By.xpath("//input[@id='f2']")).sendKeys(inputField2);
         getWait().until(ExpectedConditions.attributeToBe(
                 By.xpath("//input[@id='div']"),
                 "value",
-                EntityArithmeticInlineConstants.DIV.toString()));
+                DIV.toString()));
         clickSave(getDriver());
     }
 
     private void createRecord() {
         findElement(EntityArithmeticInlineConstants.ADD_CARD).click();
-        fillForm(EntityArithmeticInlineConstants.F1.toString(), EntityArithmeticInlineConstants.F2.toString());
+        fillForm(F1.toString(), F2.toString());
     }
 
     private void viewAction() {
@@ -39,7 +47,7 @@ public class EntityArithmeticInlineTest extends BaseTest {
         WebElement button_close_window = findElement(EntityArithmeticInlineConstants.VIEW_WINDOW_CLOSE);
         button_close_window.click();
     }
-    @Ignore
+
     @Test
     public void testViewRecord() {
 
@@ -49,12 +57,11 @@ public class EntityArithmeticInlineTest extends BaseTest {
                 findElement(EntityArithmeticInlineConstants.LINK_ENTITY));
 
         clickCreateRecord(getDriver());
-        fillForm(EntityArithmeticInlineConstants.F1.toString(), EntityArithmeticInlineConstants.F2.toString());
+        fillForm(F1.toString(), F2.toString());
         viewAction();
 
         getWait().until(ExpectedConditions.presenceOfElementLocated(EntityArithmeticInlineConstants.ACTION_VIEW_TITLE));
         List<WebElement> actualList = findElements(EntityArithmeticInlineConstants.RESULT_LIST);
-        List<Integer> expectedList = EntityArithmeticInlineConstants.expectedList;
 
         Assert.assertEquals(actualList.size(), expectedList.size());
         for (int i = 0; i < expectedList.size(); i++) {

@@ -5,13 +5,6 @@ import org.openqa.selenium.By;
 import java.util.List;
 
 public class EntityArithmeticInlineConstants {
-    public static final Integer F1 = 10;
-    public static final Integer F2 = 2;
-    public static final Integer SUM = F1 + F2;
-    public static final Integer SUB = F1 - F2;
-    public static final Integer MUL = F1 * F2;
-    public static final Integer DIV = F1 / F2;
-    public static final List<Integer> expectedList = List.of(F1, F2, SUM, SUB, MUL, DIV);
 
     public static final By LINK_ENTITY = By.xpath("//p[contains(text(),'Arithmetic Inline')]");
     public static final By LINK_ICON = By.xpath("//a[@href=\"index.php?action=action_list&entity_id=54&mod=2\"]/i");
