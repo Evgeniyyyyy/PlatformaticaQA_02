@@ -19,9 +19,13 @@ public class EntityChildRecordsLoopTest extends BaseTest {
     private final double editCardAmountValue = 500;
     private final double expectedEditEndBalanceValue = startBalanceValue + editCardAmountValue;
 
-    private void createChildRecordsLoopCard() {
+    private void scrollToChildRecordsLoopCard() {
         WebElement childRecordsLoop = findElement(By.xpath("//p[contains(text(),'Child records loop')]"));
         TestUtils.scrollClick(getDriver(), childRecordsLoop);
+    }
+
+    private void createChildRecordsLoopCard() {
+        scrollToChildRecordsLoopCard();
 
         WebElement newChildRecLoopFolder = findElement(By.xpath("//i[contains(text(),'create_new_folder')]"));
         newChildRecLoopFolder.click();
@@ -194,5 +198,51 @@ public class EntityChildRecordsLoopTest extends BaseTest {
 
         Assert.assertTrue(deletedStartBalance.isDisplayed());
         Assert.assertTrue(deletedEndBalance.isDisplayed());
+    }
+
+    @Test
+    public void testRestoreChildRecordsLoopCard(){
+        ProjectUtils.start(getDriver());
+
+        createChildRecordsLoopCard();
+
+        WebElement childRecordsLoop = findElement(By.xpath("//p[contains(text(),'Child records loop')]"));
+        TestUtils.scrollClick(getDriver(), childRecordsLoop);
+
+        List<WebElement> columnList = findElements(By.xpath("//tbody/tr/td[@class='pa-list-table-th']"));
+        Assert.assertTrue(columnList.size() > 0);
+
+        int numberOfCards = columnList.size() / 2;
+
+        double startBalanceToBeDeleted = Double.parseDouble(columnList.get(columnList.size() - 2).findElement(By.tagName("a")).getText());
+        double endBalanceToBeDeleted = Double.parseDouble(columnList.get(columnList.size() - 1).findElement(By.tagName("a")).getText());
+
+        Assert.assertEquals(startBalanceValue, startBalanceToBeDeleted);
+        Assert.assertEquals(expectedEndBalance, endBalanceToBeDeleted);
+
+        WebElement targetRowDiv = findElement(By.xpath("//tbody/tr[" + numberOfCards + "]/td[4]/div[1]"));
+
+        WebElement lastCardDropdownMenu = targetRowDiv.findElement(By.xpath("button[1]"));
+        lastCardDropdownMenu.click();
+
+        WebElement deleteEntity = targetRowDiv.findElement(By.xpath("ul/li/a[text() = 'delete']"));
+        getWait().until(ExpectedConditions.elementToBeClickable(deleteEntity));
+        TestUtils.jsClick(getDriver(), deleteEntity);
+
+        getWait().until(ExpectedConditions.visibilityOf(findElement(By.className("notification"))));
+
+        WebElement recycleBinIcon = findElement(By.xpath("//i[contains(text(),'delete_outline')]"));
+        recycleBinIcon.click();
+
+        WebElement restoreAsADraftEntity = findElement(By.xpath("//a[contains(text(),'restore as draft')]"));
+        TestUtils.jsClick(getDriver(), restoreAsADraftEntity);
+
+        WebElement recycleBinMessage = findElement(By.xpath(" //div[contains(text(),'Good job with housekeeping! Recycle bin is current')]"));
+        recycleBinMessage.isDisplayed();
+
+        scrollToChildRecordsLoopCard();
+
+        WebElement checkIcon = findElement(By.xpath("//tbody/tr/td/i[@class = 'fa fa-pencil']"));
+        Assert.assertTrue(checkIcon.isDisplayed());
     }
 }
