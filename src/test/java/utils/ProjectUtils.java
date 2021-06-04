@@ -19,7 +19,7 @@ public class ProjectUtils {
     public static final String LOGIN_PROP = "default.username";
     public static final String PAS_PROP = "default.password";
 
-    private static Properties getCredentials(WebDriver driver) {
+    private static Properties getCredentials() {
 
         Properties properties = new Properties();
         if (BaseTest.isRemoteWebDriver()) {
@@ -47,7 +47,6 @@ public class ProjectUtils {
                     System.out.println("ERROR: The local.properties file not found in src/test/resources/ directory.");
                     System.out.println("You need to create it from local.properties.TEMPLATE file.");
                     System.out.println("Please see https://youtu.be/gsicxtw-x34?t=1866 for instructions.");
-                    driver.quit();
                     System.exit(1);
                 }
                 properties.load(inputStream);
@@ -58,7 +57,7 @@ public class ProjectUtils {
     }
 
     public static void login(WebDriver driver) {
-        Properties properties = getCredentials(driver);
+        Properties properties = getCredentials();
         login(driver, properties.getProperty(LOGIN_PROP), properties.getProperty(PAS_PROP));
     }
 
