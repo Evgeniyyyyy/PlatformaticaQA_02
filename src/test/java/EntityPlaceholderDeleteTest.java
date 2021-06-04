@@ -1,12 +1,14 @@
 import base.BaseTest;
 import org.openqa.selenium.By;
 import org.testng.Assert;
+import org.testng.annotations.Ignore;
 import org.testng.annotations.Test;
 import utils.ProjectUtils;
 import utils.TestUtils;
 
 public class EntityPlaceholderDeleteTest extends BaseTest {
 
+    @Ignore
     @Test
     public void testPlaceholderDeleteRecordPermanently() {
         ProjectUtils.start(getDriver());

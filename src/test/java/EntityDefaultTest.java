@@ -36,9 +36,13 @@ public class EntityDefaultTest extends BaseTest {
     private static final By USER_FIELD = By.xpath("//div [@class = 'form-group']/p");
     private static final By EXIT_BUTTON = By.xpath("//i[contains(text(),'clear')]");
     private static final By EDIT_OPTION = By.xpath("//a[@href] [contains(text(), 'edit')]");
-    private static final By DELETE_BUTTON = By.xpath("//a[@href] [contains(text(), 'delete')]");
+    private static final By DELETE_OPTION = By.xpath("//a[@href] [contains(text(), 'delete')]");
     private static final By RECYCLE_BIN = By.xpath("//i[contains(text(),'delete_outline')]");
     private static final By RECYCLE_INFO = By.xpath("//span[@class='pagination-info']");
+    private static final By LIST_BUTTON = By
+            .xpath("//a[@href=\"index.php?action=action_list&list_type=table&entity_id=7\"]");
+    private static final By ORDER_BUTTON = By
+            .xpath("//a[@href=\"index.php?action=action_list&list_type=table&entity_id=7&draggable=1\"]");
 
     final String stringInputValue = "String";
     final String textInputValue = "Text";
@@ -98,6 +102,18 @@ public class EntityDefaultTest extends BaseTest {
         findElement(TESTER_NAME_FIELD).click();
 
         jsClick(getDriver(), findElement(TESTER_NAME2));
+    }
+
+    private void clickListButton(){
+        getWait().until(ExpectedConditions.elementToBeClickable(getDriver()
+                .findElement(LIST_BUTTON)))
+                .click();
+    }
+
+    private void clickOrderButton(){
+        getWait().until(ExpectedConditions.elementToBeClickable(getDriver()
+                .findElement(ORDER_BUTTON)))
+                .click();
     }
 
     private void getAssertion(){
@@ -169,6 +185,25 @@ public class EntityDefaultTest extends BaseTest {
     }
 
     @Test
+    public void testSwitchBetweenListAndOrder(){
+
+        createRecord();
+        jsClick(getDriver(), findElement(SAVE_BUTTON));
+
+        clickOrderButton();
+        getAssertion();
+
+        clickListButton();
+        getAssertion();
+
+        findElement(ACTIONS_BUTTON).click();
+
+        Assert.assertEquals(findElement(VIEW_OPTION).getText(), "view");
+        Assert.assertEquals(findElement(EDIT_OPTION).getText(), "edit");
+        Assert.assertEquals(findElement(DELETE_OPTION).getText(), "delete");
+    }
+
+    @Test
     public void testDeleteRecord(){
 
         createRecord();
@@ -176,7 +211,7 @@ public class EntityDefaultTest extends BaseTest {
 
         findElement(ACTIONS_BUTTON).click();
 
-        getWait().until(TestUtils.movingIsFinished(getDriver().findElement(DELETE_BUTTON))).click();
+        getWait().until(TestUtils.movingIsFinished(getDriver().findElement(DELETE_OPTION))).click();
 
         findElement(RECYCLE_BIN).click();
 
@@ -224,7 +259,7 @@ public class EntityDefaultTest extends BaseTest {
         jsClick(getDriver(), findElement(SAVE_BUTTON));
         findElement(ACTIONS_BUTTON).click();
 
-        getWait().until(TestUtils.movingIsFinished(getDriver().findElement(DELETE_BUTTON))).click();
+        getWait().until(TestUtils.movingIsFinished(getDriver().findElement(DELETE_OPTION))).click();
         findElement(RECYCLE_BIN).click();
 
         findElement(By.linkText("restore as draft")).click();
