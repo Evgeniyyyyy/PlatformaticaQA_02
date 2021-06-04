@@ -4,6 +4,7 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.testng.Assert;
+import org.testng.annotations.Ignore;
 import org.testng.annotations.Test;
 import utils.ProjectUtils;
 import utils.TestUtils;
@@ -15,6 +16,7 @@ import static utils.ProjectUtils.start;
 import static utils.TestUtils.jsClick;
 import static utils.TestUtils.scrollClick;
 
+@Ignore
 public class EntityDefaultTest extends BaseTest {
 
     private static final By DEFAULT_TAB = By.xpath("//p[contains (text(), 'Default')]");
@@ -125,6 +127,7 @@ public class EntityDefaultTest extends BaseTest {
         getAssertion();
     }
 
+    @Ignore
     @Test(dependsOnMethods = "testCreateRecord")
     public void testViewRecord() {
         secondStart();
@@ -145,8 +148,8 @@ public class EntityDefaultTest extends BaseTest {
 
         findElement(EXIT_BUTTON).click();
     }
-
-    @Test(dependsOnMethods = "testViewRecord")
+    @Ignore
+    @Test(dependsOnMethods = "testCreateRecord")
     public void testSwitchBetweenListAndOrder(){
         secondStart();
 
@@ -163,7 +166,7 @@ public class EntityDefaultTest extends BaseTest {
         Assert.assertEquals(findElement(DELETE_OPTION).getText(), "delete");
     }
 
-    @Test(dependsOnMethods = "testSwitchBetweenListAndOrder")
+    @Test(dependsOnMethods = "testCreateRecord")
     public void testEditRecord() {
         secondStart();
 
