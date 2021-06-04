@@ -102,6 +102,7 @@ public class EntityBoardDraftRecordTest extends BaseTest {
         }
     }
 
+    @Ignore
     @Test
     public void testDeleteRecordFromRecycleBin() {
 
