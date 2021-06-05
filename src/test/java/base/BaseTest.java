@@ -2,13 +2,11 @@ package base;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
 import org.openqa.selenium.By;
-import org.openqa.selenium.Dimension;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.remote.RemoteWebDriver;
-import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.annotations.*;
 
@@ -51,6 +49,10 @@ public abstract class BaseTest {
 
     @BeforeMethod
     protected void beforeMethod() {
+        initDriver();
+    }
+
+    protected void initDriver() {
         ChromeOptions chromeOptions = new ChromeOptions();
         chromeOptions.addArguments("--window-size=1920,1080");
 
@@ -73,6 +75,10 @@ public abstract class BaseTest {
 
     @AfterMethod
     protected void afterMethod() {
+        stopDriver();
+    }
+
+    protected void stopDriver() {
         driver.quit();
         wait = null;
     }

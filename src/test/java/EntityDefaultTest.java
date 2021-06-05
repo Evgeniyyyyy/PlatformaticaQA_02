@@ -1,11 +1,10 @@
 import base.BaseTest;
+import base.DriverPerClassBaseTest;
 import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.testng.Assert;
-import org.testng.annotations.Ignore;
-import org.testng.annotations.Test;
+import org.testng.annotations.*;
 import utils.ProjectUtils;
 import utils.TestUtils;
 import java.text.SimpleDateFormat;
@@ -17,7 +16,7 @@ import static utils.ProjectUtils.*;
 import static utils.TestUtils.jsClick;
 import static utils.TestUtils.scrollClick;
 
-public class EntityDefaultTest extends BaseTest {
+public class EntityDefaultTest extends DriverPerClassBaseTest {
 
     private static final By DEFAULT_TAB = By.xpath("//p[contains (text(), 'Default')]");
     private static final By CREATE_NEW_RECORD = By.xpath("//div/i[.='create_new_folder']");
@@ -161,10 +160,9 @@ public class EntityDefaultTest extends BaseTest {
         getAssertion();
     }
 
-    @Ignore
     @Test(dependsOnMethods = "testCreateRecord")
     public void testViewRecord() {
-        secondStart();
+//        secondStart();
 
         jsClick(getDriver(), findElement(ACTIONS_BUTTON));
 
@@ -182,9 +180,9 @@ public class EntityDefaultTest extends BaseTest {
     }
 
     @Ignore
-    @Test(dependsOnMethods = "testCreateRecord")
+    @Test(dependsOnMethods = "testViewRecord")
     public void testSwitchBetweenListAndOrder(){
-        secondStart();
+//        secondStart();
 
         clickOrderButton();
         getAssertion();
@@ -199,10 +197,10 @@ public class EntityDefaultTest extends BaseTest {
         Assert.assertEquals(findElement(DELETE_OPTION).getText(), "delete");
     }
 
-    @Ignore
-    @Test(dependsOnMethods = "testCreateRecord")
+
+    @Test(dependsOnMethods = "testViewRecord")
     public void testEditRecord() {
-        secondStart();
+//        secondStart();
 
         findElement(ACTIONS_BUTTON).click();
 
@@ -272,6 +270,7 @@ public class EntityDefaultTest extends BaseTest {
         Assert.assertFalse(result.isEmpty());
     }
 
+    @Ignore
     @Test
     public void testCreateNewRecordAsDraft() {
         ProjectUtils.start(getDriver());
@@ -302,6 +301,7 @@ public class EntityDefaultTest extends BaseTest {
         Assert.assertEquals(icon.getAttribute("class"), pencilIconClass);
     }
 
+    @Ignore
     @Test
     public void testSortRecords() {
         start(getDriver());
