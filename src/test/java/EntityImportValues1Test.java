@@ -3,6 +3,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.Select;
 import org.testng.Assert;
+import org.testng.annotations.Ignore;
 import org.testng.annotations.Test;
 import utils.ProjectUtils;
 import utils.TestUtils;
@@ -43,6 +44,7 @@ public class EntityImportValues1Test extends BaseTest {
         }
         return list;
     }
+    @Ignore
     @Test
     public void testViewNewRecord(){
         final List<String> expectedValues = Arrays.asList(
