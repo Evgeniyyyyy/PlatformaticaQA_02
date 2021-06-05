@@ -1,15 +1,17 @@
 import base.BaseTest;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.testng.Assert;
+import org.testng.annotations.Ignore;
 import org.testng.annotations.Test;
 import utils.ProjectUtils;
 import utils.TestUtils;
 
 import java.util.List;
 
-public class EntityParentTest1 extends BaseTest {
-
+@Ignore
+public class EntityParentSTest extends BaseTest {
 
     private void createRecord() {
 
@@ -20,9 +22,9 @@ public class EntityParentTest1 extends BaseTest {
         findElement(By.id("decimal")).sendKeys("456.98");
 
         TestUtils.jsClick(getDriver(), getDriver().findElement(By.xpath("//button[@data-id='user']")));
-
         TestUtils.jsClick(getDriver(), getDriver().findElement(
                 By.xpath("//span[text()='tester26@tester.test']")));
+        ProjectUtils.clickSave(getDriver());
     }
 
     private void createNewRecord() {
@@ -40,9 +42,9 @@ public class EntityParentTest1 extends BaseTest {
         getDriver().findElement(By.id("decimal")).sendKeys("345.67");
 
         TestUtils.jsClick(getDriver(), getDriver().findElement(By.xpath("//button[@data-id='user']")));
-
         TestUtils.jsClick(getDriver(), getDriver().findElement(
                 By.xpath("//span[text()='tester26@tester.test']")));
+        ProjectUtils.clickSave(getDriver());
     }
 
     private void clickParentButton() {
@@ -54,12 +56,17 @@ public class EntityParentTest1 extends BaseTest {
                 "//a[@href='index.php?action=action_list&list_type=table&entity_id=57']")).click();
     }
 
-    private void clickMenuActionButton() {
-        TestUtils.jsClick(getDriver(), getDriver().findElement(By.xpath("//i[text()='menu']")));
+    private void login() {
+        ProjectUtils.get(getDriver());
+        ProjectUtils.login(getDriver());
+        clickParentButton();
     }
 
     private final List<String> expect = List.of(
             "Hello world", "Be healthy", "123", "456.98", "", "");
+
+    private final List<String> expect1 = List.of(
+            "Hello for everyone", "Peace to all", "345", "345.67", "", "");
 
     @Test
     public void testCreateRecord() {
@@ -68,69 +75,47 @@ public class EntityParentTest1 extends BaseTest {
         clickParentButton();
         createRecord();
 
-        ProjectUtils.clickSave(getDriver());
-
         WebElement icon = findElement(By.xpath("//tbody/tr/td/i"));
 
-        List<WebElement> records = getDriver().findElements(By.xpath("//tbody/tr"));
         List<WebElement> result = getDriver().findElements(By.xpath(
-                "//a[@href='index.php?action=action_view&entity_id=57&row_id=301']"));
+                "//tbody/tr/td/a"));
 
-        Assert.assertEquals(records.size(), 1);
         Assert.assertEquals(icon.getAttribute("class"), "fa fa-check-square-o");
         for (int i = 0; i < result.size(); i++) {
             Assert.assertEquals(result.get(i).getText(), expect.get(i));
         }
     }
 
-    @Test
+    @Test(dependsOnMethods = "testCreateRecord")
     public void testViewRecord() {
 
-        ProjectUtils.start(getDriver());
-
-        clickParentButton();
-        createRecord();
-        ProjectUtils.clickSave(getDriver());
-
+        login();
         clickListButton();
 
-        clickMenuActionButton();
-
+        findElement(By.xpath("//button/i[@class='material-icons']")).click();
         TestUtils.jsClick(getDriver(), getDriver().findElement(By.xpath("//a[text()='view']")));
 
         List<WebElement> row = findElements(By.xpath("//span[@class='pa-view-field']"));
-
         Assert.assertEquals(row.size(), 6);
         for (int i = 0; i < row.size(); i++) {
             Assert.assertEquals(row.get(i).getText(), expect.get(i));
         }
     }
 
-    @Test
+    @Test(dependsOnMethods = "testViewRecord")
     public void testEditRecord() {
 
-        List<String> expect1 = List.of(
-                "Hello for everyone", "Peace to all", "345", "345.67", "", "");
-
-        ProjectUtils.start(getDriver());
-
-        clickParentButton();
-        createRecord();
-        ProjectUtils.clickSave(getDriver());
+        login();
 
         WebElement record = findElement(By.tagName("tbody"));
         record.getText();
 
-        clickListButton();
-        clickMenuActionButton();
-
+        findElement(By.xpath("//button/i[@class='material-icons']")).click();
         TestUtils.jsClick(getDriver(), getDriver().findElement(By.xpath("//a[text()='edit']")));
 
         createNewRecord();
-        ProjectUtils.clickSave(getDriver());
 
-        List<WebElement> result = getDriver().findElements(By.xpath(
-                "//a[@href='index.php?action=action_view&entity_id=57&row_id=301']"));
+        List<WebElement> result = getDriver().findElements(By.xpath("//tbody/tr/td/a"));
         for (int i = 0; i < result.size(); i++) {
             Assert.assertEquals(result.get(i).getText(), expect1.get(i));
         }
@@ -140,25 +125,15 @@ public class EntityParentTest1 extends BaseTest {
         Assert.assertNotEquals(record, newRecord);
     }
 
-    @Test
+    @Test(dependsOnMethods = "testEditRecord")
     public void testSearchRecord() {
 
-        ProjectUtils.start(getDriver());
-
-        clickParentButton();
+        login();
         createRecord();
 
-        ProjectUtils.clickSave(getDriver());
-        ProjectUtils.clickCreateRecord(getDriver());
-
-        createNewRecord();
-
-        ProjectUtils.clickSave(getDriver());
-
-        WebElement record = findElement(By.xpath("//tr[@data-index='0']"));
+        WebElement record = getDriver().findElement(By.xpath("//tr[@data-index='0']"));
         record.getText();
-
-        WebElement record1 = findElement(By.xpath("//tr[@data-index='1']"));
+        WebElement record1 = getDriver().findElement(By.xpath("//tr[@data-index='1']"));
         record1.getText();
 
         List <WebElement> fields = findElements(By.xpath("//tbody/tr"));
@@ -166,15 +141,25 @@ public class EntityParentTest1 extends BaseTest {
         Assert.assertNotEquals(record, record1);
 
         findElement(By.xpath("//input[@type='text']")).sendKeys("world");
+        getWait().until(ExpectedConditions.textToBePresentInElementLocated(
+                By.xpath("//span[@class='pagination-info']"), "Showing 1 to 1 of 1 rows"));
 
-        List<WebElement> result = findElements(By.xpath(
-                "//a[@href='index.php?action=action_view&entity_id=57&row_id=301']"));
-
+        List<WebElement> result = getDriver().findElements(By.xpath("//tbody/tr/td/a"));
         for (int i = 0; i < result.size(); i++) {
             Assert.assertEquals(result.get(i).getText(), expect.get(i));
         }
 
-        List <WebElement> field = findElements(By.xpath("//tbody/tr"));
-        Assert.assertEquals(field.size(), 1);
+        findElement(By.xpath("//input[@type='text']")).clear();
+        getWait().until(ExpectedConditions.textToBePresentInElementLocated(
+                By.xpath("//span[@class='pagination-info']"), "Showing 1 to 2 of 2 rows"));
+
+        findElement(By.xpath("//input[@type='text']")).sendKeys("for");
+        getWait().until(ExpectedConditions.textToBePresentInElementLocated(
+                By.xpath("//span[@class='pagination-info']"), "Showing 1 to 1 of 1 rows"));
+
+        List<WebElement> result1 = getDriver().findElements(By.xpath("//tbody/tr/td/a"));
+        for (int i = 0; i < result1.size(); i++) {
+            Assert.assertEquals(result1.get(i).getText(), expect1.get(i));
+        }
     }
 }
