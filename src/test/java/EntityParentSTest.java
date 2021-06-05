@@ -1,17 +1,15 @@
-import base.BaseTest;
+import base.DriverPerClassBaseTest;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.testng.Assert;
-import org.testng.annotations.Ignore;
 import org.testng.annotations.Test;
 import utils.ProjectUtils;
 import utils.TestUtils;
 
 import java.util.List;
 
-@Ignore
-public class EntityParentSTest extends BaseTest {
+public class EntityParentSTest extends DriverPerClassBaseTest {
 
     private void createRecord() {
 
@@ -56,12 +54,6 @@ public class EntityParentSTest extends BaseTest {
                 "//a[@href='index.php?action=action_list&list_type=table&entity_id=57']")).click();
     }
 
-    private void login() {
-        ProjectUtils.get(getDriver());
-        ProjectUtils.login(getDriver());
-        clickParentButton();
-    }
-
     private final List<String> expect = List.of(
             "Hello world", "Be healthy", "123", "456.98", "", "");
 
@@ -89,7 +81,6 @@ public class EntityParentSTest extends BaseTest {
     @Test(dependsOnMethods = "testCreateRecord")
     public void testViewRecord() {
 
-        login();
         clickListButton();
 
         findElement(By.xpath("//button/i[@class='material-icons']")).click();
@@ -100,14 +91,13 @@ public class EntityParentSTest extends BaseTest {
         for (int i = 0; i < row.size(); i++) {
             Assert.assertEquals(row.get(i).getText(), expect.get(i));
         }
+        getDriver().findElement(By.xpath("//i[text()='clear']")).click();
     }
 
     @Test(dependsOnMethods = "testViewRecord")
     public void testEditRecord() {
 
-        login();
-
-        WebElement record = findElement(By.tagName("tbody"));
+        WebElement record = getDriver().findElement(By.tagName("tbody"));
         record.getText();
 
         findElement(By.xpath("//button/i[@class='material-icons']")).click();
@@ -128,7 +118,6 @@ public class EntityParentSTest extends BaseTest {
     @Test(dependsOnMethods = "testEditRecord")
     public void testSearchRecord() {
 
-        login();
         createRecord();
 
         WebElement record = getDriver().findElement(By.xpath("//tr[@data-index='0']"));
