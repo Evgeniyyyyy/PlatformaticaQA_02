@@ -3,85 +3,103 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.testng.Assert;
-import org.testng.annotations.Ignore;
 import org.testng.annotations.Test;
-import utils.ProjectUtils;
-import utils.TestUtils;
+import java.util.ArrayList;
 import java.util.List;
 import static utils.ProjectUtils.*;
+import static utils.TestUtils.*;
 
 public class EntityBoardDraftRecordTest extends BaseTest {
 
+    private static final By BOARD_TAB = By.xpath("//p[contains (text(), 'Board')]");
+    private static final By ACTIONS_BUTTON = By.xpath("//button/i[text()='menu']");
+    private static final By LIST_BUTTON = By.xpath(
+            "//a[@href='index.php?action=action_list&list_type=table&entity_id=31']");
+
+
     private static final List<String> EXPECTED_CREATED_RECORD = List.of(
-            "Pending", "qw", "1", "0.12", "", "", "", "tester10@tester.test");
+            "Pending", "q", "1", "0.12", "", "", "", "tester10@tester.test");
+
+    private static final List<String> EXPECTED_EDITED_RECORD = List.of(
+            "Pending", "q", "1", "0.22", "", "", "", "tester10@tester.test");
 
     private void createDraftRecord() {
-        ProjectUtils.start(getDriver());
 
-        TestUtils.jsClick(getDriver(), findElement(By.xpath("//p[contains (text(), 'Board')]")));
+        start(getDriver());
+
+        jsClick(getDriver(), findElement(BOARD_TAB));
 
         clickCreateRecord(getDriver());
 
         findElement(By.xpath("//button[@data-id='string']")).click();
 
-        TestUtils.jsClick(getDriver(), findElement(By.xpath("//select/option[text()='Pending']")));
+        jsClick(getDriver(), findElement(By.xpath("//select/option[text()='Pending']")));
+        getWait().until(
+                ExpectedConditions.invisibilityOf(findElement(By.xpath("//div[@class='dropdown-menu ']"))));
 
-        TestUtils.scrollClick(getDriver(), findElement(By.xpath("//button[@data-id='user']")));
+        WebElement text = findElement(By.id("text"));
+        text.click();
+        text.sendKeys("q");
 
-        TestUtils.jsClick(getDriver(), getDriver().findElement(
-                By.xpath("//span[text()='tester10@tester.test']")));
+        WebElement integer = findElement(By.id("int"));
+        integer.click();
+        integer.sendKeys("1");
 
-        findElement(By.id("text")).sendKeys("qw");
+        WebElement decimal = findElement(By.id("decimal"));
+        decimal.click();
+        decimal.sendKeys("0.12");
 
-        findElement(By.id("int")).sendKeys("1");
+        scrollClick(getDriver(), findElement(By.xpath("//button[@data-id='user']")));
 
-        findElement(By.id("decimal")).sendKeys("0.12");
+        jsClick(getDriver(), findElement(By.xpath("//span[text()='tester10@tester.test']")));
 
         clickSaveDraft(getDriver());
     }
 
-    private void deleteDraftRecord() {
-        findElement(By.xpath("//a[@href='index.php?action=action_list&list_type=table&entity_id=31']"))
-                .click();
+    private List<String> getActualValues(List<WebElement> actualElements) {
+        List<String> listValues = new ArrayList<>();
+        for (WebElement element : actualElements) {
+            listValues.add(element.getText());
+        }
 
-        findElement(By.xpath("//div[@class='dropdown pull-left']")).click();
-
-        getWait().until(ExpectedConditions.elementToBeClickable(By.linkText("delete"))).click();
+        return listValues;
     }
 
-    @Ignore
+    private void deleteDraftRecord() {
+
+        findElement(LIST_BUTTON).click();
+
+        findElement(ACTIONS_BUTTON).click();
+
+        getWait().until(movingIsFinished(By.linkText("delete"))).click();
+    }
+
     @Test
     public void testEditDraftRecord() {
 
         createDraftRecord();
 
-        final List<String> excpectedEditedRecord = List.of(
-                "Pending", "qw", "1", "0.22", "", "", "", "tester10@tester.test");
-
         WebElement headerBoard = findElement(By.xpath("//div[@class='d-flex justify-content-between']/h3"));
         Assert.assertEquals(headerBoard.getText(), "Board");
 
-        findElement(By.xpath("//a[@href='index.php?action=action_list&list_type=table&entity_id=31']")).click();
+        findElement(LIST_BUTTON).click();
 
         WebElement icon = findElement(By.xpath("//tbody/tr/td/i"));
         Assert.assertEquals(icon.getAttribute("class"), "fa fa-pencil");
 
-        findElement(By.xpath("//div[@class='dropdown pull-left']")).click();
+        findElement(ACTIONS_BUTTON).click();
 
-        getWait().until(ExpectedConditions.elementToBeClickable(By.linkText("edit"))).click();
+        getWait().until(movingIsFinished(By.linkText("edit"))).click();
 
         findElement(By.id("decimal")).clear();
         findElement(By.id("decimal")).sendKeys("0.22");
 
         clickSaveDraft(getDriver());
 
-        List<WebElement> rowValues = findElements(By.xpath("//td[@class='pa-list-table-th']/a"));
-        for (int i = 0; i < rowValues.size(); i++) {
-            Assert.assertEquals(rowValues.get(i).getText(), excpectedEditedRecord.get(i));
-        }
+        List<WebElement> actualRecord = findElements(By.xpath("//td[@class='pa-list-table-th']"));
+        Assert.assertEquals(getActualValues(actualRecord), EXPECTED_EDITED_RECORD);
     }
 
-    @Ignore
     @Test
     public void testDeleteDraftRecord() {
 
@@ -94,12 +112,8 @@ public class EntityBoardDraftRecordTest extends BaseTest {
         WebElement checkNotification = findElement(By.xpath("//a/span[@class='notification']"));
         Assert.assertEquals(checkNotification.getText(), "1");
 
-        getWait().until(ExpectedConditions.presenceOfAllElementsLocatedBy(By.xpath("//tbody/tr")));
-
-        List<WebElement> recordValues = findElements(By.xpath("//tbody/tr/td[@class='pa-list-table-th']"));
-        for (int i = 0; i < recordValues.size(); i++) {
-            Assert.assertEquals(recordValues.get(i).getText(), EXPECTED_CREATED_RECORD.get(i));
-        }
+        List<WebElement> actualRecord = findElements(By.xpath("//tbody/tr"));
+        Assert.assertEquals(actualRecord.size(), 1);
     }
 
     @Test
@@ -114,10 +128,8 @@ public class EntityBoardDraftRecordTest extends BaseTest {
         WebElement header = findElement(By.xpath("//a[@class='navbar-brand']"));
         Assert.assertEquals(header.getText(), "Recycle Bin");
 
-        getWait().until(ExpectedConditions.presenceOfAllElementsLocatedBy(By.xpath("//tbody/tr")));
-
-        List<WebElement> rows = findElements(By.xpath("//tbody/tr"));
-        Assert.assertEquals(rows.size(), 1);
+        List<WebElement> actualRecord = findElements(By.xpath("//tbody/tr"));
+        Assert.assertEquals(actualRecord.size(), 1);
 
         getWait().until(ExpectedConditions.elementToBeClickable(By.linkText("delete permanently"))).click();
 

@@ -12,24 +12,23 @@ import java.util.List;
 import static utils.ProjectUtils.start;
 import static utils.TestUtils.scrollClick;
 
-public class EntityImportValuesDraftRecordTest extends BaseTest {
+public class EntityExportDestinationSaveRecordTest extends BaseTest {
 
     @Test
-    public void testCreateDraftRecord(){
+    public void testSaveRecord() {
 
         List<String> expectedValues = Arrays.asList(
-                "Some string", "Import values text.", "457", "27.35",
+                "Some string", "Export destination text.", "457", "27.35",
                 "01/06/2021", "01/06/2021 13:07:06", "", "apptester1@tester.test");
 
         start(getDriver());
-        scrollClick(getDriver(), findElement(By.xpath("//p[contains(.,' Import values ')]")));
+        scrollClick(getDriver(), findElement(By.xpath("//p[contains(text(), ' Export destination ')]")));
 
         getWait().until(ExpectedConditions.elementToBeClickable(findElement(
-                By.xpath("//i[text() = 'create_new_folder']"))));
+                By.xpath("//i[contains(text(), 'create_new_folder')]")))).click();
 
-        findElement(By.xpath("//i[text() = 'create_new_folder']")).click();
         findElement(By.id("string")).sendKeys("Some string");
-        findElement(By.id("text")).sendKeys("Import values text.");
+        findElement(By.id("text")).sendKeys("Export destination text.");
         findElement(By.id("int")).sendKeys("457");
         findElement(By.id("decimal")).sendKeys("27.35");
         findElement(By.id("date")).click();
@@ -39,12 +38,12 @@ public class EntityImportValuesDraftRecordTest extends BaseTest {
         findElement(By.id("datetime")).clear();
         findElement(By.id("datetime")).sendKeys("01/06/2021 13:07:06");
 
-        scrollClick(getDriver(), findElement(By.id("pa-entity-form-draft-btn")));
+        scrollClick(getDriver(), findElement(By.id("pa-entity-form-save-btn")));
 
-        List<WebElement> rows = findElements(By.xpath("//table[@id='pa-all-entities-table']/tbody/tr"));
+        List<WebElement> trs = findElements(By.xpath("//table[@id='pa-all-entities-table']/tbody/tr"));
         List<WebElement> tds = findElements(By.xpath("//tbody/tr/td[@class = 'pa-list-table-th']"));
 
-        WebElement pencilIcon = getDriver().findElement(By.xpath("//tbody/tr/td[1]/i"));
+        WebElement CheckSquareIcon = findElement(By.xpath("//i[@class='fa fa-check-square-o']"));
 
         List<String> actualValues = new ArrayList<>();
 
@@ -52,8 +51,8 @@ public class EntityImportValuesDraftRecordTest extends BaseTest {
             actualValues.add(tds.get(i).getText());
         }
 
-        Assert.assertEquals(rows.size(),1);
-        Assert.assertTrue(pencilIcon.isDisplayed());
+        Assert.assertEquals(trs.size(),1);
+        Assert.assertTrue(CheckSquareIcon.isDisplayed());
         Assert.assertEquals(actualValues, expectedValues);
     }
 }

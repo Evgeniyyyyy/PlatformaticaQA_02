@@ -212,4 +212,30 @@ public class EntityChevronTest extends BaseTest {
         clickSaveDraftButton(ENTITY_NAME);
         checkCreatedRecord(status, true, expectedData);
     }
+
+    @Test
+    public void testCancelCreateRecord(){
+        String status = PENDING;
+
+        start(getDriver());
+        chooseSideBarItem(ENTITY_NAME);
+        clickAddButton();
+        List<String> expectedData = makeRandomData(status);
+        fillCreateNewFormFields(expectedData);
+        clickCancel(getDriver());
+        Assert.assertEquals(findElements(By.cssSelector("tbody tr")).size(), 0);
+    }
+
+    @Test
+    public void testCancelCreateDraftRecord(){
+        String status = FULFILLMENT;
+
+        start(getDriver());
+        chooseSideBarItem(ENTITY_NAME);
+        clickAddButton();
+        List<String> expectedData = makeRandomData(status);
+        fillCreateNewFormFields(expectedData);
+        clickCancel(getDriver());
+        Assert.assertEquals(findElements(By.cssSelector("tbody tr")).size(), 0);
+    }
 }

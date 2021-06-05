@@ -1,21 +1,21 @@
-import base.BaseTest;
+import base.DriverPerClassBaseTest;
 import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.testng.annotations.*;
 import utils.ProjectUtils;
 import utils.TestUtils;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
-import static utils.ProjectUtils.start;
+
+import static utils.ProjectUtils.*;
 import static utils.TestUtils.jsClick;
 import static utils.TestUtils.scrollClick;
 
-public class EntityDefaultTest extends BaseTest {
+public class EntityDefaultTest extends DriverPerClassBaseTest {
 
     private static final By DEFAULT_TAB = By.xpath("//p[contains (text(), 'Default')]");
     private static final By CREATE_NEW_RECORD = By.xpath("//div/i[.='create_new_folder']");
@@ -31,7 +31,7 @@ public class EntityDefaultTest extends BaseTest {
     private static final By SAVE_BUTTON = By.id("pa-entity-form-save-btn");
     private static final By CHECK_ICON = By.xpath("//tbody/tr[1]/td[1]/i[1]");
     private static final By COLUMN_FIELD = By.xpath("//tbody/tr/td[@class = 'pa-list-table-th']");
-    private static final By ACTIONS_BUTTON = By.xpath("//i[text()='menu']");
+    private static final By ACTIONS_BUTTON = By.xpath("//i[text()=\"menu\"]");
     private static final By VIEW_OPTION = By.xpath("//a[@href] [contains(text(), 'view')]");
     private static final By LIST_OF_RECORDS = By.xpath("//span [@class = 'pa-view-field']");
     private static final By USER_FIELD = By.xpath("//div [@class = 'form-group']/p");
@@ -44,6 +44,11 @@ public class EntityDefaultTest extends BaseTest {
             .xpath("//a[@href=\"index.php?action=action_list&list_type=table&entity_id=7\"]");
     private static final By ORDER_BUTTON = By
             .xpath("//a[@href=\"index.php?action=action_list&list_type=table&entity_id=7&draggable=1\"]");
+    private static final By COLUMN_STRING = By.xpath("//thead/tr/th/div[text()=\"String\"]");
+    private static final By COLUMN_TEXT = By.xpath("//thead/tr/th/div[text()=\"Text\"]");
+    private static final By COLUMN_INT = By.xpath("//thead/tr/th/div[text()=\"Int\"]");
+    private static final By COLUMN_DECIMAL = By.xpath("//thead/tr/th/div[text()=\"Decimal\"]");
+    private static final By COLUMN_USER = By.xpath("//thead/tr/th/div[text()=\"User\"]");
 
     private final String stringInputValue = "String";
     private final String textInputValue = "Text";
@@ -87,6 +92,54 @@ public class EntityDefaultTest extends BaseTest {
         jsClick(getDriver(), findElement(TESTER_NAME));
     }
 
+    private void fillFieldsForRecord() {
+
+        findElement(CREATE_NEW_RECORD).click();
+        findElement(STRING_FIELD).clear();
+        findElement(TEXT_FIELD).clear();
+        findElement(INT_FIELD).clear();
+        findElement(DECIMAL_FIELD).clear();
+        findElement(DATE_FIELD).clear();
+        findElement(DATETIME_FIELD).clear();
+        findElement(STRING_FIELD).sendKeys(stringInputValue);
+        findElement(TEXT_FIELD).sendKeys(textInputValue);
+        findElement(INT_FIELD).sendKeys(intInputValue);
+        findElement(DECIMAL_FIELD).sendKeys(decimalInputValue);
+        findElement(DATE_FIELD).click();
+        findElement(TESTER_NAME_FIELD).click();
+
+        jsClick(getDriver(), findElement(TESTER_NAME));
+    }
+
+    private void clearFields() {
+        findElement(STRING_FIELD).clear();
+        findElement(TEXT_FIELD).clear();
+        findElement(INT_FIELD).clear();
+        findElement(DECIMAL_FIELD).clear();
+        findElement(DATE_FIELD).clear();
+        findElement(DATETIME_FIELD).clear();
+    }
+
+    private List<Object> fillFieldsRecordAndReturnExpectedList(
+            String stringInputValueSort, String textInputValueSort,
+            String intInputValueSort, String decimalInputValueSort,
+            String userNameSort) {
+
+        findElement(STRING_FIELD).sendKeys(stringInputValueSort);
+        findElement(TEXT_FIELD).sendKeys(textInputValueSort);
+        findElement(INT_FIELD).sendKeys(intInputValueSort);
+        findElement(DECIMAL_FIELD).sendKeys(decimalInputValueSort);
+        findElement(DATE_FIELD).click();
+        findElement(TESTER_NAME_FIELD).click();
+        By userNameForSort = By.xpath("//span[text()='"+ userNameSort + "']");
+
+        jsClick(getDriver(), findElement(userNameForSort));
+        final List<Object> expectedValues = Arrays
+                .asList(stringInputValueSort, textInputValueSort, intInputValueSort, decimalInputValueSort,
+                        formatter.format(date), emptyField, emptyField, emptyField, userNameSort);
+        return expectedValues;
+    }
+
     private void clickListButton(){
         getWait().until(ExpectedConditions.elementToBeClickable(getDriver()
                 .findElement(LIST_BUTTON)))
@@ -127,15 +180,12 @@ public class EntityDefaultTest extends BaseTest {
 
     @Test(dependsOnMethods = "testCreateRecord")
     public void testViewRecord() {
-        secondStart();
 
-        List<Object> expectedRecords = Arrays.asList(stringInputValue, textInputValue, intInputValue, decimalInputValue,
-                formatter.format(date), emptyField);
-
-        findElement(ACTIONS_BUTTON).click();
+        jsClick(getDriver(), findElement(ACTIONS_BUTTON));
 
         getWait().until(TestUtils.movingIsFinished(getDriver().findElement(VIEW_OPTION))).click();
-
+        List<Object> expectedRecords = Arrays.asList(stringInputValue, textInputValue, intInputValue, decimalInputValue,
+                formatter.format(date), emptyField);
         List<WebElement> actualRecords = findElements(LIST_OF_RECORDS);
 
         for (int i = 0; i < expectedRecords.size() ; i++) {
@@ -148,7 +198,6 @@ public class EntityDefaultTest extends BaseTest {
 
     @Test(dependsOnMethods = "testViewRecord")
     public void testSwitchBetweenListAndOrder(){
-        secondStart();
 
         clickOrderButton();
         getAssertion();
@@ -165,9 +214,6 @@ public class EntityDefaultTest extends BaseTest {
 
     @Test(dependsOnMethods = "testSwitchBetweenListAndOrder")
     public void testEditRecord() {
-        secondStart();
-
-        findElement(ACTIONS_BUTTON).click();
 
         getWait().until(TestUtils.movingIsFinished(getDriver().findElement(EDIT_OPTION))).click();
 
@@ -202,7 +248,6 @@ public class EntityDefaultTest extends BaseTest {
 
     @Test(dependsOnMethods = "testEditRecord")
     public void testDeleteRecord() {
-        secondStart();
 
         findElement(ACTIONS_BUTTON).click();
         getWait().until(TestUtils.movingIsFinished(getDriver().findElement(DELETE_OPTION))).click();
@@ -217,7 +262,6 @@ public class EntityDefaultTest extends BaseTest {
 
     @Test(dependsOnMethods = "testDeleteRecord")
     public void testRestoreRecord() {
-        secondStart();
 
         findElement(RECYCLE_BIN).click();
         findElement(By.linkText("restore as draft")).click();
@@ -233,9 +277,8 @@ public class EntityDefaultTest extends BaseTest {
         Assert.assertFalse(result.isEmpty());
     }
 
-    @Test
+    @Test(dependsOnMethods = "testRestoreRecord")
     public void testCreateNewRecordAsDraft() {
-        ProjectUtils.start(getDriver());
 
         WebElement EntityDefault = findElement(By.xpath("//a[@href='index.php?action=action_list&entity_id=7&mod=2']"));
         EntityDefault.click();
@@ -251,7 +294,7 @@ public class EntityDefaultTest extends BaseTest {
         String pencilIconClass = "fa fa-pencil";
 
         WebElement SaveDraft = findElement(By.id("pa-entity-form-draft-btn"));
-        SaveDraft.click();
+        jsClick(getDriver(), SaveDraft);
 
         WebElement icon = findElement(By.xpath("//tbody/tr/td[1]/i"));
 
@@ -261,5 +304,68 @@ public class EntityDefaultTest extends BaseTest {
         Assert.assertTrue(result.contains(intField),(decimal));
         Assert.assertTrue(result.contains(datetime),(text));
         Assert.assertEquals(icon.getAttribute("class"), pencilIconClass);
+    }
+
+    @Test(dependsOnMethods = "testCreateNewRecordAsDraft")
+    public void testSortRecords() {
+
+        reset(getDriver());
+        scrollClick(getDriver(), findElement(DEFAULT_TAB));
+        clickCreateRecord(getDriver());
+        clearFields();
+        List<Object> expectedValues1 = fillFieldsRecordAndReturnExpectedList(
+                "String",
+                "Text",
+                "2021",
+                "0.10",
+                "tester100@tester.test");
+        clickSave(getDriver());
+
+        getWait().until(ExpectedConditions.elementToBeClickable(findElement(CREATE_NEW_RECORD)));
+        clickCreateRecord(getDriver());
+        clearFields();
+        List<Object> expectedValues2 = fillFieldsRecordAndReturnExpectedList(
+                "Pending",
+                "Success",
+                "2018",
+                "0.25",
+                "tester88@tester.test");
+        clickSaveDraft(getDriver());
+
+        getWait().until(ExpectedConditions.elementToBeClickable(findElement(CREATE_NEW_RECORD)));
+        clickCreateRecord(getDriver());
+        clearFields();
+        List<Object> expectedValues3 = fillFieldsRecordAndReturnExpectedList(
+                "Yamal",
+                "News",
+                "2035",
+                "0.12",
+                "tester107@tester.test");
+        clickSave(getDriver());
+        getWait().until(ExpectedConditions.elementToBeClickable(findElement(CREATE_NEW_RECORD)));
+
+        WebElement icon1 = findElement(By.xpath("//tbody/tr[1]/td[1]/i[1]"));
+        Assert.assertEquals(icon1.getAttribute("class"), "fa fa-check-square-o");
+        WebElement icon2 = findElement(By.xpath("//tbody/tr[2]/td[1]/i[1]"));
+        Assert.assertEquals(icon2.getAttribute("class"), "fa fa-pencil");
+        WebElement icon3 = findElement(By.xpath("//tbody/tr[3]/td[1]/i[1]"));
+        Assert.assertEquals(icon3.getAttribute("class"), "fa fa-check-square-o");
+
+        findElement(COLUMN_STRING).click();
+        icon1 = findElement(By.xpath("//tbody/tr[1]/td[1]/i[1]"));
+        Assert.assertEquals(icon1.getAttribute("class"), "fa fa-pencil");
+
+        findElement(COLUMN_TEXT).click();
+        icon2 = findElement(By.xpath("//tbody/tr[2]/td[1]/i[1]"));
+        Assert.assertEquals(icon2.getAttribute("class"), "fa fa-pencil");
+
+        findElement(COLUMN_INT).click();
+        icon1 = findElement(By.xpath("//tbody/tr[1]/td[1]/i[1]"));
+        Assert.assertEquals(icon1.getAttribute("class"), "fa fa-pencil");
+
+        findElement(COLUMN_DECIMAL).click();
+        icon3 = findElement(By.xpath("//tbody/tr[3]/td[1]/i[1]"));
+        Assert.assertEquals(icon3.getAttribute("class"), "fa fa-pencil");
+
     }
 }
