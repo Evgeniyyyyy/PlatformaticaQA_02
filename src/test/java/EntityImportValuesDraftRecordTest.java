@@ -22,41 +22,27 @@ public class EntityImportValuesDraftRecordTest extends BaseTest {
                 "01/06/2021", "01/06/2021 13:07:06", "", "apptester1@tester.test");
 
         start(getDriver());
+        scrollClick(getDriver(), findElement(By.xpath("//p[contains(.,' Import values ')]")));
 
-        scrollClick(getDriver(), getDriver().findElement(By.xpath("//p[contains(.,' Import values ')]")));
-
-        getWait().until(ExpectedConditions.elementToBeClickable(getDriver().findElement(
+        getWait().until(ExpectedConditions.elementToBeClickable(findElement(
                 By.xpath("//i[text() = 'create_new_folder']"))));
 
-        getDriver().findElement(By.xpath("//i[text() = 'create_new_folder']")).click();
+        findElement(By.xpath("//i[text() = 'create_new_folder']")).click();
+        findElement(By.id("string")).sendKeys("Some string");
+        findElement(By.id("text")).sendKeys("Import values text.");
+        findElement(By.id("int")).sendKeys("457");
+        findElement(By.id("decimal")).sendKeys("27.35");
+        findElement(By.id("date")).click();
+        findElement(By.id("date")).clear();
+        findElement(By.id("date")).sendKeys("01/06/2021");
+        findElement(By.id("datetime")).click();
+        findElement(By.id("datetime")).clear();
+        findElement(By.id("datetime")).sendKeys("01/06/2021 13:07:06");
 
-        getDriver().findElement(By.id("string")).sendKeys("Some string");
+        scrollClick(getDriver(), findElement(By.id("pa-entity-form-draft-btn")));
 
-        getDriver().findElement(By.id("text")).sendKeys("Import values text.");
-
-        getDriver().findElement(By.id("int")).sendKeys("457");
-
-        getDriver().findElement(By.id("decimal")).sendKeys("27.35");
-
-        WebElement dateField = getDriver().findElement(By.id("date"));
-        dateField.click();
-        dateField.clear();
-        dateField.sendKeys("01/06/2021");
-
-        WebElement dateTimeField = getDriver().findElement(By.id("datetime"));
-        dateTimeField.click();
-        dateTimeField.clear();
-        dateTimeField.sendKeys("01/06/2021 13:07:06");
-
-        getDriver().findElement(By.xpath("//button[@data-id='user']")).click();
-
-        scrollClick(getDriver(), getDriver().findElement(By.id("pa-entity-form-draft-btn")));
-
-        List<WebElement> rows = getDriver().findElements(
-                By.xpath("//div[@class='card-body ']//table[@id='pa-all-entities-table']/tbody/tr"));
-
-        List<WebElement> tds = getDriver().findElements(
-                By.xpath("//table[@id = 'pa-all-entities-table']/tbody/tr/td[@class = 'pa-list-table-th']"));
+        List<WebElement> rows = findElements(By.xpath("//table[@id='pa-all-entities-table']/tbody/tr"));
+        List<WebElement> tds = findElements(By.xpath("//tbody/tr/td[@class = 'pa-list-table-th']"));
 
         WebElement pencilIcon = getDriver().findElement(By.xpath("//tbody/tr/td[1]/i"));
 
