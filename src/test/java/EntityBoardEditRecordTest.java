@@ -2,9 +2,7 @@ import base.BaseTest;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Assert;
-import org.testng.annotations.Ignore;
 import org.testng.annotations.Test;
 import utils.ProjectUtils;
 import utils.TestUtils;
@@ -17,13 +15,16 @@ import static utils.TestUtils.scrollClick;
 
 public class EntityBoardEditRecordTest extends BaseTest {
 
-    final String NEW_TEXT = "any text";
-    final String NEW_INT = "2222";
+    private void getTextField() {
+        WebElement textField = getWait().until(ExpectedConditions.elementToBeClickable(TEXT_INPUT_AREA));
+        textField.click();
+        textField.clear();
+    }
 
     private static final By ENTITY_BOARD_MENU = By.xpath("//div[@id='menu-list-parent']//li[10]/a/i");
     private static final By CREATE_NEW_RECORD = By.xpath("//i[contains (text(), 'create_new_folder')]");
-    private static final By TEXT_INPUT_AREA = By.xpath("//textarea[@id='text']");
-    private static final By INT_INPUT_AREA = By.xpath("//span/input[@id='int']");
+    private static final By TEXT_INPUT_AREA = By.id("text");
+    private static final By INT_INPUT_AREA = By.id("int");
     private static final By SAVE_BUTTON = By.xpath("//button[@id='pa-entity-form-save-btn']");
     private static final By LIST_BUTTON = By.xpath("//li//a[@class='nav-link ']/i[@class='material-icons']");
     private static final By ACTIONS_BUTTON = By.xpath("//tbody/tr//td//button[@type='button']");
@@ -41,7 +42,6 @@ public class EntityBoardEditRecordTest extends BaseTest {
         for (WebElement cell : getCells()) {
             actualValues.add(cell.getText());
         }
-
         return actualValues;
     }
 
@@ -54,19 +54,19 @@ public class EntityBoardEditRecordTest extends BaseTest {
         ProjectUtils.start(getDriver());
 
         TestUtils.scrollClick(getDriver(), getDriver().findElement(ENTITY_BOARD_MENU));
-        getWait().until(ExpectedConditions.elementToBeClickable(getDriver()
-                .findElement(CREATE_NEW_RECORD)))
-                .click();
+        getDriver().findElement(CREATE_NEW_RECORD).click();
+        getTextField();
         getDriver().findElement(TEXT_INPUT_AREA).sendKeys("Some text here...");
         getDriver().findElement(INT_INPUT_AREA).sendKeys("1234");
         WebElement findSaveButton = getDriver().findElement(SAVE_BUTTON);
         TestUtils.scrollClick(getDriver(), findSaveButton);
     }
 
-    @Ignore
     @Test
     public void testEditRecord() {
 
+        String NEW_TEXT = "any text";
+        String NEW_INT = "2222";
         final List<String> expectedValues = Arrays.asList(
                 "Pending", NEW_TEXT, NEW_INT, "0.00", "", "", "", "apptester1@tester.test");
 
@@ -76,18 +76,14 @@ public class EntityBoardEditRecordTest extends BaseTest {
         getDriver().findElement(LIST_BUTTON).click();
         getDriver().findElement(ACTIONS_BUTTON).click();
 
-        getWait().until(ExpectedConditions.elementToBeClickable(EDIT_BUTTON));
-        getDriver().findElement(EDIT_BUTTON).click();
-        getWait().until(ExpectedConditions.elementToBeClickable(TEXT_INPUT_AREA));
-        WebElement textField = getDriver().findElement(TEXT_INPUT_AREA);
-        textField.clear();
-        textField.sendKeys(NEW_TEXT);
+        getWait().until(TestUtils.movingIsFinished(EDIT_BUTTON)).click();
+        getTextField();
+        getDriver().findElement(TEXT_INPUT_AREA).sendKeys(NEW_TEXT);
 
         WebElement intField = getDriver().findElement(INT_INPUT_AREA);
         intField.clear();
         intField.sendKeys(NEW_INT);
-        WebElement SaveButton = getDriver().findElement(SAVE_BUTTON);
-        TestUtils.scrollClick(getDriver(), SaveButton);
+        TestUtils.scrollClick(getDriver(), getDriver().findElement(SAVE_BUTTON));
 
         Assert.assertEquals(getAttributeClass(), "fa fa-check-square-o");
         Assert.assertEquals(getCells().size(), expectedValues.size());
