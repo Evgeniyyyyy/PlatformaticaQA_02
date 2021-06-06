@@ -19,17 +19,17 @@ public class EntityCalendarRecordSearchTest extends BaseTest {
         findElement(By.id("date")).clear();
         findElement(By.id("date")).sendKeys(date);
 
-        TestUtils.scrollClick(getDriver(), findElement(By.id("pa-entity-form-save-btn")));
+        TestUtils.jsClick(getDriver(), findElement(By.id("pa-entity-form-save-btn")));
     }
 
-    @Ignore
     @Test
     public void testSearchCreatedRecord() {
         ProjectUtils.start(getDriver());
 
         createBasicCalendarRecord("Vote",  "01/01/2025");
         createBasicCalendarRecord("Surgery",  "02/02/2025");
-
+        getWait().until(ExpectedConditions.elementToBeClickable(By.xpath
+                ("//a[@href='index.php?action=action_list&list_type=table&entity_id=32']")));
         findElement(By.xpath("//a[@href='index.php?action=action_list&list_type=table&entity_id=32']")).click();
 
         Assert.assertEquals(findElement(By.xpath("//span[@class='pagination-info']")).getText(),
