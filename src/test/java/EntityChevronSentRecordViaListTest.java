@@ -7,6 +7,7 @@ import org.testng.annotations.Test;
 import utils.ProjectUtils;
 import utils.TestUtils;
 import java.util.List;
+import static utils.ProjectUtils.clickSave;
 
 public class EntityChevronSentRecordViaListTest extends BaseTest {
 
@@ -15,21 +16,29 @@ public class EntityChevronSentRecordViaListTest extends BaseTest {
     private void createNewRecord() {
         ProjectUtils.start(getDriver());
         TestUtils.scrollClick(getDriver(), By.xpath("//p[contains(text(),'Chevron')]"));
-        getWait().until(ExpectedConditions.elementToBeClickable(getDriver().findElement(By.xpath("//i[contains(text(),'create_new_folder')]")))).click();
-        getDriver().findElement(By.id("text")).sendKeys(enteredData);
-        getDriver().findElement(By.id("pa-entity-form-save-btn")).click();
+        getWait().until(ExpectedConditions.elementToBeClickable(getDriver()
+                .findElement(By.xpath("//i[contains(text(),'create_new_folder')]"))))
+                .click();
+        findElement(By.id("text")).sendKeys(enteredData);
+    }
+
+    public void sentCreatedRecord() {
+        findElement(By.xpath("//button[contains(text(),'Sent')]")).click();
+    }
+
+    private void verifyThatCreatedRecordIsInSentFolder() {
+        findElement(By.xpath("//a[contains(text(),'Sent')]")).click();
     }
 
     @Test
     public void testSentRecordViaList() {
         createNewRecord();
+        clickSave(getDriver());
         final List<Object> expectedRecordsRow = List.of(enteredData);
-        final List<WebElement> actualList = findElements(By.xpath("//a[contains(text(),'firstExample')]"));
+        final List<WebElement> actualList = findElements(By.xpath("//tbody/tr[1]"));
         Assert.assertEquals(actualList.size(), expectedRecordsRow.size());
-
-        getDriver().findElement(By.xpath("//button[contains(text(),'Sent')]")).click();
-        getDriver().findElement(By.xpath("//a[contains(text(),'Sent')]")).click();
-
+        sentCreatedRecord();
+        verifyThatCreatedRecordIsInSentFolder();
         final List<Object> expectedRecordsRowAfterSent = List.of(enteredData);
         Assert.assertEquals(actualList.size(), expectedRecordsRowAfterSent.size());
     }
