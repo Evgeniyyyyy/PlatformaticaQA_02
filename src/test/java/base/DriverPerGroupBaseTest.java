@@ -1,6 +1,9 @@
 package base;
 
-import org.testng.annotations.*;
+import org.testng.annotations.AfterGroups;
+import org.testng.annotations.AfterMethod;
+import org.testng.annotations.BeforeGroups;
+import org.testng.annotations.BeforeMethod;
 
 public abstract class DriverPerGroupBaseTest extends BaseTest {
 
@@ -27,5 +30,4 @@ public abstract class DriverPerGroupBaseTest extends BaseTest {
     protected void afterMethod() {
         System.out.println("empty afterMethod");
     }
-
 }
