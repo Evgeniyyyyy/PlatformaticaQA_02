@@ -1,35 +1,36 @@
 import base.BaseTest;
 import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.testng.Assert;
 import org.testng.annotations.Test;
-
-import static utils.ProjectUtils.start;
-import static utils.TestUtils.scrollClick;
+import utils.ProjectUtils;
+import utils.TestUtils;
+import java.util.List;
 
 public class EntityChevronSentRecordViaListTest extends BaseTest {
 
-    private static final By createNewRecord = By.xpath("//i[contains(text(),'create_new_folder')]");
-    private static final By textField = By.xpath("//textarea[@id='text']");
-    private static final By saveButton = By.xpath("//button[@id='pa-entity-form-save-btn']");
-    private static final By sentButton = By.xpath("//button[contains(text(), 'Sent')]");
-    private static final By verifySentButton = By.xpath("//a[contains(text(),'Sent')]");
-    private static final By recordedData = By.xpath("//a[contains(text(), 'firstExample')]");
-    private static final By CHEVRON_MENU = By.xpath("//p[contains(text(),'Chevron')]");
+    final String enteredData = "firstExample";
+
+    private void createNewRecord() {
+        ProjectUtils.start(getDriver());
+        TestUtils.scrollClick(getDriver(), By.xpath("//p[contains(text(),'Chevron')]"));
+        getWait().until(ExpectedConditions.elementToBeClickable(getDriver().findElement(By.xpath("//i[contains(text(),'create_new_folder')]")))).click();
+        getDriver().findElement(By.id("text")).sendKeys(enteredData);
+        getDriver().findElement(By.id("pa-entity-form-save-btn")).click();
+    }
 
     @Test
-    public void testCreateRecordVerifyThatExist() {
+    public void testSentRecordViaList() {
+        createNewRecord();
+        final List<Object> expectedRecordsRow = List.of(enteredData);
+        final List<WebElement> actualList = findElements(By.xpath("//a[contains(text(),'firstExample')]"));
+        Assert.assertEquals(actualList.size(), expectedRecordsRow.size());
 
-        final String ENTERED_TEXT_FIELD = "firstExample";
+        getDriver().findElement(By.xpath("//button[contains(text(),'Sent')]")).click();
+        getDriver().findElement(By.xpath("//a[contains(text(),'Sent')]")).click();
 
-        start(getDriver());
-        scrollClick(getDriver(), getDriver().findElement(CHEVRON_MENU));
-        getWait().until(ExpectedConditions.elementToBeClickable(getDriver().findElement(createNewRecord))).click();
-        getDriver().findElement(textField).sendKeys(ENTERED_TEXT_FIELD);
-        getDriver().findElement(saveButton).click();
-        getWait().until(ExpectedConditions.elementToBeClickable(getDriver().findElement(sentButton))).click();
-        getWait().until(ExpectedConditions.elementToBeClickable(getDriver().findElement(verifySentButton))).click();
-
-        Assert.assertEquals(getDriver().findElement(recordedData).getText(), ENTERED_TEXT_FIELD);
+        final List<Object> expectedRecordsRowAfterSent = List.of(enteredData);
+        Assert.assertEquals(actualList.size(), expectedRecordsRowAfterSent.size());
     }
 }
