@@ -49,7 +49,6 @@ public class EntityBoardDraftRecordTest extends DriverPerClassBaseTest {
 
         jsClick(getDriver(), findElement(By.xpath("//span[text()='tester10@tester.test']")));
 
-        clickSaveDraft(getDriver());
     }
 
     private List<String> getActualValues(List<WebElement> actualElements) {
@@ -57,7 +56,6 @@ public class EntityBoardDraftRecordTest extends DriverPerClassBaseTest {
         for (WebElement element : actualElements) {
             listValues.add(element.getText());
         }
-
         return listValues;
     }
 
@@ -71,17 +69,29 @@ public class EntityBoardDraftRecordTest extends DriverPerClassBaseTest {
     }
 
     @Test
-    public void testEditDraftRecord() {
+    public void testCreateDraftRecord() {
 
         createDraftRecord();
 
-        WebElement headerBoard = findElement(By.xpath("//div[@class='d-flex justify-content-between']/h3"));
-        Assert.assertEquals(headerBoard.getText(), "Board");
+        clickSaveDraft(getDriver());
 
         findElement(LIST_BUTTON).click();
 
         WebElement icon = findElement(By.xpath("//tbody/tr/td/i"));
         Assert.assertEquals(icon.getAttribute("class"), "fa fa-pencil");
+
+        List<WebElement> actualRecord = findElements(By.xpath("//td[@class='pa-list-table-th']"));
+        Assert.assertEquals(getActualValues(actualRecord), EXPECTED_CREATED_RECORD);
+    }
+
+    @Test(dependsOnMethods = "testCreateDraftRecord")
+    public void testEditDraftRecord() {
+
+        WebElement headerBoard = findElement(By.xpath("//div[@class='d-flex justify-content-between']/h3"));
+        Assert.assertEquals(headerBoard.getText(), "Board");
+
+        WebElement rowsCountsText = findElement(By.xpath("//div/span[@class='pagination-info']"));
+        Assert.assertEquals(rowsCountsText.getText(), "Showing 1 to 1 of 1 rows");
 
         findElement(ACTIONS_BUTTON).click();
 
