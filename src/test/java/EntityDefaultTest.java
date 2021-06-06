@@ -280,30 +280,41 @@ public class EntityDefaultTest extends DriverPerClassBaseTest {
     @Test(dependsOnMethods = "testRestoreRecord")
     public void testCreateNewRecordAsDraft() {
 
-        WebElement EntityDefault = findElement(By.xpath("//a[@href='index.php?action=action_list&entity_id=7&mod=2']"));
-        EntityDefault.click();
+        clickCreateRecord(getDriver());
 
-        WebElement NewRecord = findElement(By.xpath("//i[contains(text(),'create_new_folder')]"));
-        NewRecord.click();
-
-        String string = findElement(By.id("string")).getAttribute("value");
-        String text = findElement(By.id("text")).getText();
-        String intField = findElement(By.id("int")).getAttribute("value");
-        String decimal = findElement(By.id("decimal")).getAttribute("value");
-        String datetime = findElement(By.id("datetime")).getAttribute("value");
+        String string = findElement(STRING_FIELD).getAttribute("value");
+        String text = findElement(TEXT_FIELD).getText();
+        String intField = findElement(INT_FIELD).getAttribute("value");
+        String decimal = findElement(DECIMAL_FIELD).getAttribute("value");
+        String date = findElement(DATE_FIELD).getAttribute("value");
+        String datetime = findElement(DATETIME_FIELD).getAttribute("value");
+        String file = "";
+        String fileImage = "";
+        String user = "apptester1@tester.test";
         String pencilIconClass = "fa fa-pencil";
+        Date date2 = new Date();
+        SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+
+        List<Object> expectedResult = Arrays.asList(stringInputValue2, textInputValue2, intInputValue2, decimalInputValue2,
+                formatter.format(date2), emptyField, emptyField, emptyField, userName2, string, text, intField, decimal, date, datetime, file, fileImage, user);
 
         WebElement SaveDraft = findElement(By.id("pa-entity-form-draft-btn"));
         jsClick(getDriver(), SaveDraft);
 
+        List<WebElement> actualResult = findElements(COLUMN_FIELD);
         WebElement icon = findElement(By.xpath("//tbody/tr/td[1]/i"));
 
-        String result = findElement(By.xpath("//table[@id='pa-all-entities-table']/tbody")).getText();
-
-        Assert.assertTrue(result.contains(string),(text));
-        Assert.assertTrue(result.contains(intField),(decimal));
-        Assert.assertTrue(result.contains(datetime),(text));
+        Assert.assertFalse(string.isEmpty());
+        Assert.assertFalse(text.isEmpty());
+        Assert.assertFalse(intField.isEmpty());
+        Assert.assertFalse(decimal.isEmpty());
+        Assert.assertFalse(date.isEmpty());
+        Assert.assertFalse(datetime.isEmpty());
         Assert.assertEquals(icon.getAttribute("class"), pencilIconClass);
+        Assert.assertEquals(actualResult.size(), expectedResult.size());
+        for (int i = 0; i < actualResult.size(); i++) {
+            Assert.assertEquals(expectedResult.get(i), actualResult.get(i).getText());
+        }
     }
 
     @Test(dependsOnMethods = "testCreateNewRecordAsDraft")
@@ -366,6 +377,5 @@ public class EntityDefaultTest extends DriverPerClassBaseTest {
         findElement(COLUMN_DECIMAL).click();
         icon3 = findElement(By.xpath("//tbody/tr[3]/td[1]/i[1]"));
         Assert.assertEquals(icon3.getAttribute("class"), "fa fa-pencil");
-
     }
 }
