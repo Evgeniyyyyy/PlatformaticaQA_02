@@ -1,4 +1,4 @@
-import base.BaseTest;
+import base.DriverPerClassBaseTest;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -9,13 +9,12 @@ import java.util.List;
 import static utils.ProjectUtils.*;
 import static utils.TestUtils.*;
 
-public class EntityBoardDraftRecordTest extends BaseTest {
+public class EntityBoardDraftRecordTest extends DriverPerClassBaseTest {
 
     private static final By BOARD_TAB = By.xpath("//p[contains (text(), 'Board')]");
     private static final By ACTIONS_BUTTON = By.xpath("//button/i[text()='menu']");
     private static final By LIST_BUTTON = By.xpath(
             "//a[@href='index.php?action=action_list&list_type=table&entity_id=31']");
-
 
     private static final List<String> EXPECTED_CREATED_RECORD = List.of(
             "Pending", "q", "1", "0.12", "", "", "", "tester10@tester.test");
@@ -38,15 +37,12 @@ public class EntityBoardDraftRecordTest extends BaseTest {
                 ExpectedConditions.invisibilityOf(findElement(By.xpath("//div[@class='dropdown-menu ']"))));
 
         WebElement text = findElement(By.id("text"));
-        text.click();
         text.sendKeys("q");
 
         WebElement integer = findElement(By.id("int"));
-        integer.click();
         integer.sendKeys("1");
 
         WebElement decimal = findElement(By.id("decimal"));
-        decimal.click();
         decimal.sendKeys("0.12");
 
         scrollClick(getDriver(), findElement(By.xpath("//button[@data-id='user']")));
@@ -100,10 +96,8 @@ public class EntityBoardDraftRecordTest extends BaseTest {
         Assert.assertEquals(getActualValues(actualRecord), EXPECTED_EDITED_RECORD);
     }
 
-    @Test
+    @Test(dependsOnMethods = "testEditDraftRecord")
     public void testDeleteDraftRecord() {
-
-        createDraftRecord();
 
         deleteDraftRecord();
 
@@ -116,14 +110,8 @@ public class EntityBoardDraftRecordTest extends BaseTest {
         Assert.assertEquals(actualRecord.size(), 1);
     }
 
-    @Test
+    @Test(dependsOnMethods = "testDeleteDraftRecord")
     public void testDeleteRecordFromRecycleBin() {
-
-        createDraftRecord();
-
-        deleteDraftRecord();
-
-        clickRecycleBin(getDriver());
 
         WebElement header = findElement(By.xpath("//a[@class='navbar-brand']"));
         Assert.assertEquals(header.getText(), "Recycle Bin");
