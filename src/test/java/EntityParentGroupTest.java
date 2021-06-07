@@ -2,6 +2,8 @@ import base.DriverPerClassBaseTest;
 import constants.EntityParentConstants;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.interactions.Action;
+import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -14,14 +16,14 @@ import java.util.List;
 
 import static utils.ProjectUtils.*;
 
-public class EntityParentDependsMethodTest extends DriverPerClassBaseTest {
+public class EntityParentGroupTest extends DriverPerClassBaseTest {
 
-    final String stringInputValue = "Pending";
-    final String textInputValue = "qwerty";
-    final String intInputValue = "12345";
-    final String decimalInputValue = "0.10";
-    final String emptyField = "";
-    final String userName = "apptester10@tester.test";
+    private static final String stringInputValue = "Pending";
+    private static final String textInputValue = "qwerty";
+    private static final String intInputValue = "12345";
+    private static final String decimalInputValue = "0.10";
+    private static final String emptyField = "";
+    private static final String userName = "apptester10@tester.test";
 
     Date date = new Date();
     SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
@@ -95,17 +97,17 @@ public class EntityParentDependsMethodTest extends DriverPerClassBaseTest {
     }
 
     private void deleteAction() {
-        WebElement view_action = findElement(EntityParentConstants.PARENT_ACTION_DELETE);
-        view_action.click();
+        WebElement delete_action = findElement(EntityParentConstants.PARENT_ACTION_DELETE);
+        delete_action.click();
     }
 
-    private final List<String> expect = List.of(
+    private final List<String> world = List.of(
             "Hello world", "Be healthy", "123", "456.98", "", "");
 
-    private final List<String> expect1 = List.of(
+    private final List<String> everyone = List.of(
             "Hello for everyone", "Peace to all", "345", "345.67", "", "");
 
-    @Test
+    @Test(groups = {"first"})
     public void testCreateRecord() {
 
         start(getDriver());
@@ -119,11 +121,11 @@ public class EntityParentDependsMethodTest extends DriverPerClassBaseTest {
 
         Assert.assertEquals(icon.getAttribute("class"), "fa fa-check-square-o");
         for (int i = 0; i < result.size(); i++) {
-            Assert.assertEquals(result.get(i).getText(), expect.get(i));
+            Assert.assertEquals(result.get(i).getText(), world.get(i));
         }
     }
 
-    @Test(dependsOnMethods = "testCreateRecord")
+    @Test(groups = {"first"}, dependsOnMethods = "testCreateRecord")
     public void testViewRecord() {
 
         clickListButton();
@@ -134,12 +136,12 @@ public class EntityParentDependsMethodTest extends DriverPerClassBaseTest {
         List<WebElement> row = findElements(By.xpath("//span[@class='pa-view-field']"));
         Assert.assertEquals(row.size(), 6);
         for (int i = 0; i < row.size(); i++) {
-            Assert.assertEquals(row.get(i).getText(), expect.get(i));
+            Assert.assertEquals(row.get(i).getText(), world.get(i));
         }
         getDriver().findElement(By.xpath("//i[text()='clear']")).click();
     }
 
-    @Test(dependsOnMethods = "testViewRecord")
+    @Test(groups = {"first"}, dependsOnMethods = "testViewRecord")
     public void testEditRecord() {
 
         WebElement record = getDriver().findElement(By.tagName("tbody"));
@@ -152,7 +154,7 @@ public class EntityParentDependsMethodTest extends DriverPerClassBaseTest {
 
         List<WebElement> result = getDriver().findElements(By.xpath("//tbody/tr/td/a"));
         for (int i = 0; i < result.size(); i++) {
-            Assert.assertEquals(result.get(i).getText(), expect1.get(i));
+            Assert.assertEquals(result.get(i).getText(), everyone.get(i));
         }
 
         WebElement newRecord = findElement(By.tagName("tbody"));
@@ -160,7 +162,7 @@ public class EntityParentDependsMethodTest extends DriverPerClassBaseTest {
         Assert.assertNotEquals(record, newRecord);
     }
 
-    @Test(dependsOnMethods = "testEditRecord")
+    @Test(groups = {"first"}, dependsOnMethods = "testEditRecord")
     public void testSearchRecord() {
 
         createRecord();
@@ -180,7 +182,7 @@ public class EntityParentDependsMethodTest extends DriverPerClassBaseTest {
 
         List<WebElement> result = getDriver().findElements(By.xpath("//tbody/tr/td/a"));
         for (int i = 0; i < result.size(); i++) {
-            Assert.assertEquals(result.get(i).getText(), expect.get(i));
+            Assert.assertEquals(result.get(i).getText(), world.get(i));
         }
 
         findElement(By.xpath("//input[@type='text']")).clear();
@@ -193,15 +195,49 @@ public class EntityParentDependsMethodTest extends DriverPerClassBaseTest {
 
         List<WebElement> result1 = getDriver().findElements(By.xpath("//tbody/tr/td/a"));
         for (int i = 0; i < result1.size(); i++) {
-            Assert.assertEquals(result1.get(i).getText(), expect1.get(i));
+            Assert.assertEquals(result1.get(i).getText(), everyone.get(i));
         }
     }
 
-    @Test(dependsOnMethods = "testSearchRecord")
+    @Test(groups = {"first"}, dependsOnMethods = "testSearchRecord")
+    public void testReorderRecord() {
+
+        findElement(By.xpath("//input[@type='text']")).clear();
+        findElement(By.xpath("//i[text()='format_line_spacing']")).click();
+
+        List<WebElement> record = getDriver().findElements(By.xpath("//tbody/tr/td/a"));
+        Assert.assertEquals(record.get(0).getText(), everyone.get(0));
+
+        Actions actions = new Actions(getDriver());
+        WebElement row = findElement(By.xpath("//tbody/tr"));
+        actions.moveToElement(row).clickAndHold(row).dragAndDropBy(row, 0, 20);
+        Action swapRow = actions.build();
+        swapRow.perform();
+
+        List<WebElement> record1 = getDriver().findElements(By.xpath("//tbody/tr/td/a"));
+        Assert.assertEquals(record1.get(0).getText(), world.get(0));
+
+        getDriver().findElement(By.xpath("//i[@class='fa fa-toggle-off']")).click();
+
+        List<WebElement> viewToggle = getDriver().findElements(By.xpath("//div/span/a"));
+        Assert.assertEquals(viewToggle.get(0).getText(), world.get(0));
+
+        WebElement card = getDriver().findElement(By.id("customId_0"));
+        actions.moveToElement(card).clickAndHold(card).dragAndDropBy(card, 0, 100);
+        Action swapCard = actions.build();
+        swapCard.perform();
+
+        List<WebElement> viewCard = getDriver().findElements(By.xpath("//div/span/a"));
+        Assert.assertEquals(viewCard.get(0).getText(), everyone.get(0));
+    }
+
+    @Test(groups = {"second"}, dependsOnGroups = {"first"})
     public void testCreateNewDraftRecord() {
 
         reset(getDriver());
-        clickParentButton();
+
+        TestUtils.scrollClick(getDriver(),
+                findElement(EntityParentConstants.LINK_PARENT_ENTITY));
 
         clickCreateRecord(getDriver());
         fillForm();
@@ -217,7 +253,7 @@ public class EntityParentDependsMethodTest extends DriverPerClassBaseTest {
                 .getAttribute("class"), EntityParentConstants.CLASS_ITEM_SAVE_DRAFT);
     }
 
-    @Test(dependsOnMethods = "testCreateNewDraftRecord")
+    @Test(groups = {"second"}, dependsOnMethods = "testCreateNewDraftRecord")
     public void testCancelRecord() {
 
         clickCreateRecord(getDriver());
@@ -227,7 +263,7 @@ public class EntityParentDependsMethodTest extends DriverPerClassBaseTest {
         Assert.assertNull(findElement(EntityParentConstants.PARENT_GET_CONTANER).getAttribute("value"));
     }
 
-    @Test(dependsOnMethods = "testCancelRecord")
+    @Test(groups = {"second"}, dependsOnMethods = "testCancelRecord")
     public void testDeleteRecord() {
 
         clickCreateRecord(getDriver());
