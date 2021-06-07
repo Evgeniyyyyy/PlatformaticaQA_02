@@ -3,12 +3,14 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.testng.Assert;
+import org.testng.annotations.Ignore;
 import org.testng.annotations.Test;
 import java.util.ArrayList;
 import java.util.List;
 import static utils.ProjectUtils.*;
 import static utils.TestUtils.*;
 
+@Ignore
 public class EntityBoardDraftRecordTest extends DriverPerClassBaseTest {
 
     private static final By BOARD_TAB = By.xpath("//p[contains (text(), 'Board')]");
@@ -68,6 +70,7 @@ public class EntityBoardDraftRecordTest extends DriverPerClassBaseTest {
         getWait().until(movingIsFinished(By.linkText("delete"))).click();
     }
 
+    @Ignore
     @Test
     public void testCreateDraftRecord() {
 

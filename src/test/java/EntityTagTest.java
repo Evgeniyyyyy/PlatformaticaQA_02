@@ -22,24 +22,27 @@ public class EntityTagTest extends BaseTest{
         findElement(By.id("int")).sendKeys("123");
         findElement(By.id("decimal")).sendKeys("456.98");
 
-        getDriver().findElement(By.xpath("//button[@data-id='user']")).click();
-
+        TestUtils.jsClick(getDriver(), getDriver().findElement(By.xpath("//button[@data-id='user']")));
         TestUtils.jsClick(getDriver(), getDriver().findElement(
                         By.xpath("//span[text()='tester26@tester.test']")));
     }
+
+    private final List<String> world = List.of(
+            "Hello world", "Be healthy", "123", "456.98", "", "");
 
     @Test
     public void testCreateRecord() {
 
         createRecord();
-
         ProjectUtils.clickSave(getDriver());
 
-        List<WebElement> records = getDriver().findElements(By.xpath("//tbody/tr"));
+        List<WebElement> records = getDriver().findElements(By.xpath("//tbody/tr/td/a"));
         WebElement box = getDriver().findElement(By.xpath("//tbody/tr/td/i"));
 
         Assert.assertEquals(box.getAttribute("class"), "fa fa-check-square-o");
-        Assert.assertEquals(records.size(), 1);
+        for (int i = 0; i < records.size(); i++) {
+            Assert.assertEquals(records.get(i).getText(), world.get(i));
+        }
     }
 
     @Test
@@ -49,22 +52,21 @@ public class EntityTagTest extends BaseTest{
 
         ProjectUtils.clickSaveDraft(getDriver());
 
-        List<WebElement> records = getDriver().findElements(By.xpath("//tbody/tr"));
+        List<WebElement> records = getDriver().findElements(By.xpath("//tbody/tr/td/a"));
         WebElement box = getDriver().findElement(By.xpath("//tbody/tr/td/i"));
 
         Assert.assertEquals(box.getAttribute("class"), "fa fa-pencil");
-        Assert.assertEquals(records.size(), 1);
+        for (int i = 0; i < records.size(); i++) {
+            Assert.assertEquals(records.get(i).getText(), world.get(i));
+        }
     }
 
     @Test
     public void testCancelRecord() {
 
         createRecord();
-
         ProjectUtils.clickCancel(getDriver());
 
-        List<WebElement> records = getDriver().findElements(By.xpath("//tbody/tr"));
-
-        Assert.assertEquals(records.size(), 0);
+        Assert.assertNull(findElement(By.className("card-body")).getAttribute("value"));
     }
 }
