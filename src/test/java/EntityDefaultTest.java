@@ -44,6 +44,7 @@ public class EntityDefaultTest extends DriverPerClassBaseTest {
             .xpath("//a[@href=\"index.php?action=action_list&list_type=table&entity_id=7\"]");
     private static final By ORDER_BUTTON = By
             .xpath("//a[@href=\"index.php?action=action_list&list_type=table&entity_id=7&draggable=1\"]");
+    private static final By GET_LIST_ROW = By.xpath("//tbody/tr");
     private static final By COLUMN_STRING = By.xpath("//thead/tr/th/div[text()=\"String\"]");
     private static final By COLUMN_TEXT = By.xpath("//thead/tr/th/div[text()=\"Text\"]");
     private static final By COLUMN_INT = By.xpath("//thead/tr/th/div[text()=\"Int\"]");
@@ -318,6 +319,18 @@ public class EntityDefaultTest extends DriverPerClassBaseTest {
     }
 
     @Test(dependsOnMethods = "testCreateNewRecordAsDraft")
+    public void testCreateNewDefaultSaveRecord() {
+        reset(getDriver());
+        scrollClick(getDriver(), findElement(DEFAULT_TAB));
+        clickCreateRecord(getDriver());
+        clickSave(getDriver());
+        List<WebElement> records = findElements(GET_LIST_ROW);
+        Assert.assertEquals(records.size(), 1);
+        WebElement icon1 = findElement(CHECK_ICON);
+        Assert.assertEquals(icon1.getAttribute("class"), "fa fa-check-square-o");
+    }
+
+    @Test(dependsOnMethods = "testCreateNewDefaultSaveRecord")
     public void testSortRecords() {
 
         reset(getDriver());
