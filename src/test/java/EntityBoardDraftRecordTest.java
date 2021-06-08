@@ -5,6 +5,7 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import static utils.ProjectUtils.*;
 import static utils.TestUtils.*;
@@ -15,22 +16,35 @@ public class EntityBoardDraftRecordTest extends DriverPerClassBaseTest {
     private static final By ACTIONS_BUTTON = By.xpath("//button/i[text()='menu']");
     private static final By LIST_BUTTON = By.xpath(
             "//a[@href='index.php?action=action_list&list_type=table&entity_id=31']");
+    private static final By INTEGER_FIELD  = By.id("int");
+    private static final By TEXT_FIELD  = By.id("text");
+    private static final By DECIMAL_FIELD  = By.id("decimal");
 
-    private static final List<String> EXPECTED_CREATED_RECORD = List.of(
-            "Pending", "q", "1", "0.12", "", "", "", "tester10@tester.test");
+    private final String stringInputValue = "Pending";
+    private final String intInputValue = "12345";
+    private final String textInputValue = "qwerty";
+    private final String decimalInputValue = "12.45";
+    private final String newDecimalInputValue = "0.22";
+    private final String userName = "tester10@tester.test";
+    private final String emptyField = "";
 
-    private static final List<String> EXPECTED_EDITED_RECORD = List.of(
-            "Pending", "q", "1", "0.22", "", "", "", "tester10@tester.test");
+    final List<Object> expectedCreatedRecord = Arrays
+            .asList(stringInputValue, textInputValue, intInputValue, decimalInputValue,
+                    emptyField, emptyField, emptyField, userName);
+
+    final List<Object> expectedEditedRecord = Arrays
+            .asList(stringInputValue, textInputValue, intInputValue, newDecimalInputValue,
+                    emptyField, emptyField, emptyField, userName);
 
     private void createDraftRecord() {
 
         clickCreateRecord(getDriver());
 
-        findElement(By.id("text")).sendKeys("q");
-        findElement(By.id("int")).sendKeys("1");
-        findElement(By.id("decimal")).sendKeys("0.12");
-        findElement(By.xpath("//button[@data-id='string']")).click();
+        sendKeysOneByOne(findElement(INTEGER_FIELD), intInputValue);
+        sendKeysOneByOne(findElement(TEXT_FIELD), textInputValue);
+        sendKeysOneByOne(findElement(DECIMAL_FIELD), decimalInputValue);
 
+        findElement(By.xpath("//button[@data-id='string']")).click();
         jsClick(getDriver(), findElement(By.xpath("//select/option[text()='Pending']")));
         getWait().until(
                 ExpectedConditions.invisibilityOf(findElement(By.xpath("//div[@class='dropdown-menu ']"))));
@@ -41,6 +55,13 @@ public class EntityBoardDraftRecordTest extends DriverPerClassBaseTest {
         clickSaveDraft(getDriver());
     }
 
+    private void sendKeysOneByOne(WebElement element, String input) {
+        char[] editKeys = input.toCharArray();
+        for (char c : editKeys) {
+            element.sendKeys(String.valueOf(c));
+        }
+    }
+
     private List<String> getActualValues(List<WebElement> actualElements) {
         List<String> listValues = new ArrayList<>();
         for (WebElement element : actualElements) {
@@ -49,12 +70,22 @@ public class EntityBoardDraftRecordTest extends DriverPerClassBaseTest {
         return listValues;
     }
 
+    private void editDraftRecord(){
+        findElement(ACTIONS_BUTTON).click();
+        getWait().until(movingIsFinished(By.linkText("edit"))).click();
+
+        findElement(DECIMAL_FIELD).click();
+        findElement(DECIMAL_FIELD).clear();
+        sendKeysOneByOne(findElement(DECIMAL_FIELD), newDecimalInputValue);
+
+        clickSaveDraft(getDriver());
+    }
+
     private void deleteDraftRecord() {
 
         findElement(LIST_BUTTON).click();
 
         findElement(ACTIONS_BUTTON).click();
-
         getWait().until(movingIsFinished(By.linkText("delete"))).click();
     }
 
@@ -73,7 +104,7 @@ public class EntityBoardDraftRecordTest extends DriverPerClassBaseTest {
         Assert.assertEquals(icon.getAttribute("class"), "fa fa-pencil");
 
         List<WebElement> actualRecord = findElements(By.xpath("//td[@class='pa-list-table-th']"));
-        Assert.assertEquals(getActualValues(actualRecord), EXPECTED_CREATED_RECORD);
+        Assert.assertEquals(getActualValues(actualRecord), expectedCreatedRecord);
     }
 
     @Test(dependsOnMethods = "testCreateDraftRecord")
@@ -85,17 +116,10 @@ public class EntityBoardDraftRecordTest extends DriverPerClassBaseTest {
         WebElement rowsCountsText = findElement(By.xpath("//div/span[@class='pagination-info']"));
         Assert.assertEquals(rowsCountsText.getText(), "Showing 1 to 1 of 1 rows");
 
-        findElement(ACTIONS_BUTTON).click();
-
-        getWait().until(movingIsFinished(By.linkText("edit"))).click();
-
-        findElement(By.id("decimal")).clear();
-        findElement(By.id("decimal")).sendKeys("0.22");
-
-        clickSaveDraft(getDriver());
+        editDraftRecord();
 
         List<WebElement> actualEditedRecord = findElements(By.xpath("//td[@class='pa-list-table-th']"));
-        Assert.assertEquals(getActualValues(actualEditedRecord), EXPECTED_EDITED_RECORD);
+        Assert.assertEquals(getActualValues(actualEditedRecord), expectedEditedRecord);
     }
 
     @Test(dependsOnMethods = "testEditDraftRecord")
