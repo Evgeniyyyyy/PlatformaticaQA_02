@@ -1,6 +1,7 @@
 import base.BaseTest;
 import constants.EntityAssignConstants;
 import org.openqa.selenium.By;
+import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Action;
@@ -9,6 +10,8 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 import static utils.ProjectUtils.*;
+
+import utils.ProjectUtils;
 import utils.TestUtils;
 
 import java.text.SimpleDateFormat;
@@ -145,5 +148,65 @@ public class EntityAssignTest extends BaseTest {
         List<WebElement> records2 = findElements(EntityAssignConstants.ASSIGN_GET_LIST_ROW);
         Assert.assertEquals(records2.size(), 1);
         Assert.assertEquals(findElement(By.xpath("//tbody/tr/td[2]/a")).getText(),"Notes");
+    }
+
+    private void createNewRecord(String stringRecord, String textRecord, String integerRecord, String decimalRecord) {
+
+        final By stringField = By.id("string");
+        final By textField = By.id("text");
+        final By intField = By.id("int");
+        final By decimalField = By.id("decimal");
+
+        getDriver().findElement(EntityAssignConstants.ASSIGN_ADD_CARD).click();
+        getDriver().findElement(stringField).sendKeys(stringRecord);
+        getDriver().findElement(textField).sendKeys(textRecord);
+        getDriver().findElement(intField).sendKeys(integerRecord);
+        getDriver().findElement(decimalField).sendKeys(decimalRecord);
+
+        WebElement saveButton = findElement(EntityAssignConstants.ASSIGN_BUTTON_SAVE);
+        TestUtils.scrollClick(getDriver(),saveButton);
+    }
+
+    private void switchToViewMode() {
+
+        final By listButton = By.xpath("(//*[@class='nav-item'])[3]");
+        final By dropDownMenuButton = By.xpath("//button[@class='btn btn-round btn-sm btn-primary dropdown-toggle']");
+        final By dropDownView = By.xpath("//a[contains(text(), 'view')]");
+
+        getDriver().findElement(listButton).click();
+        getDriver().findElement(dropDownMenuButton).click();
+        getWait().until(ExpectedConditions.elementToBeClickable(dropDownView)).click();
+    }
+
+    private boolean isAssignButtonPresent() {
+        try {
+            getDriver().findElement(EntityAssignConstants.ASSIGN_ADD_CARD);
+            return true;
+        }catch (NoSuchElementException e) {
+            return false;
+        }
+    }
+
+    @Test
+    public void testViewMode() {
+        final String stringRecord = "Just a string";
+        final String textRecord = "Just a text";
+        final String integerRecord = "61";
+        final String decimalRecord = "0.61";
+        final List<String> expectedRowsContent = List.of(stringRecord, textRecord, integerRecord, decimalRecord);
+
+        ProjectUtils.start(getDriver());
+        moveToElementAction(getDriver());
+        createNewRecord(stringRecord, textRecord, integerRecord, decimalRecord);
+        switchToViewMode();
+
+        Assert.assertFalse(isAssignButtonPresent());
+
+        List<WebElement> recordRowsContent = findElements(By.xpath("//span[@class='pa-view-field' and text()]"));
+
+        Assert.assertEquals(recordRowsContent.size(), expectedRowsContent.size());
+        for (int i = 0; i < expectedRowsContent.size(); i++) {
+            Assert.assertEquals(recordRowsContent.get(i).getText(), expectedRowsContent.get(i));
+        }
     }
 }
