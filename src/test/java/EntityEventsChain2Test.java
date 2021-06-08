@@ -15,7 +15,7 @@ import static utils.TestUtils.scrollClick;
 public class EntityEventsChain2Test extends BaseTest {
 
     private void clickEventsChain2Menu() {
-        scrollClick(getDriver(), getDriver().findElement(By.xpath("//p[contains(.,'Events Chain 1')]")));
+        scrollClick(getDriver(), getDriver().findElement(By.xpath("//p[contains(.,'Events Chain 2')]")));
         getWait().until(ExpectedConditions.elementToBeClickable(
                 getDriver().findElement(By.xpath("//i[text() = 'create_new_folder']"))));
     }
@@ -71,6 +71,22 @@ public class EntityEventsChain2Test extends BaseTest {
         clickEventsChain2Menu();
         clickCreateNewFolderButton();
         getDriver().findElement(By.id("f1")).sendKeys(f1InputValue);
+        clickSaveButton();
+
+        Assert.assertEquals(getCells().size(), exceptedValues.size());
+        Assert.assertEquals(getRowValues(), exceptedValues);
+        Assert.assertEquals(getAttributeClass(), "fa fa-check-square-o");
+    }
+
+    @Test
+    public void testCreateNewRecord03() {
+        final String f1InputValue = "-1";
+        final List<String> exceptedValues = Arrays.asList("-1", "-1", "-2", "-3", "-5", "-8", "-13", "-21", "-34", "-55");
+
+        start(getDriver());
+        clickEventsChain2Menu();
+        clickCreateNewFolderButton();
+        inputF1Value(f1InputValue);
         clickSaveButton();
 
         Assert.assertEquals(getCells().size(), exceptedValues.size());
