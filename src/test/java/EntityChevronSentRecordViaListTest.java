@@ -1,35 +1,79 @@
 import base.BaseTest;
 import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.testng.Assert;
 import org.testng.annotations.Test;
+import utils.ProjectUtils;
+import utils.TestUtils;
 
-import static utils.ProjectUtils.start;
-import static utils.TestUtils.scrollClick;
+import java.util.ArrayList;
+import java.util.List;
+
+import static utils.ProjectUtils.clickSave;
 
 public class EntityChevronSentRecordViaListTest extends BaseTest {
 
-    private static final By createNewRecord = By.xpath("//i[contains(text(),'create_new_folder')]");
-    private static final By textField = By.xpath("//textarea[@id='text']");
-    private static final By saveButton = By.xpath("//button[@id='pa-entity-form-save-btn']");
-    private static final By sentButton = By.xpath("//button[contains(text(), 'Sent')]");
-    private static final By verifySentButton = By.xpath("//a[contains(text(),'Sent')]");
-    private static final By recordedData = By.xpath("//a[contains(text(), 'firstExample')]");
-    private static final By CHEVRON_MENU = By.xpath("//p[contains(text(),'Chevron')]");
+    private static final String ENTERED_DATA = "firstExample";
+
+    private void createNewRecord() {
+        getWait().until(ExpectedConditions.elementToBeClickable(getDriver()
+                .findElement(By.xpath("//i[contains(text(),'create_new_folder')]"))))
+                .click();
+        findElement(By.id("text")).sendKeys(ENTERED_DATA);
+        clickSave(getDriver());
+    }
+
+    private void sentCreatedRecord() {
+        findElement(By.xpath("//button[contains(text(),'Sent')]")).click();
+    }
+
+    private void clickSentMenu() {
+        findElement(By.xpath("//a[contains(.,'Sent')]")).click();
+    }
+
+    private List<WebElement> getCellsValues(){
+        return findElements(By.xpath("//tbody/tr/td[@class = 'pa-list-table-th']/a"));
+    }
+
+    private List<String> getValues() {
+        List<String> values = new ArrayList<>();
+        for (int i = 1; i < getCellsValues().size(); i++) {
+            values.add(getCellsValues().get(i).getText());
+        }
+        return values;
+    }
+
+    private List<WebElement> getCells(){
+        return findElements(By.xpath("//tbody/tr/td[@class = 'pa-list-table-th']"));
+    }
+
+    private List<String> getLastTwoCellsValues() {
+        List<String> values = new ArrayList<>();
+        for (int i = getCells().size() - 2; i < getCells().size(); i++) {
+            values.add(getCells().get(i).getText());
+        }
+        return  values;
+    }
 
     @Test
-    public void testCreateRecordVerifyThatExist() {
+    public void testSentRecordViaList() {
+        ProjectUtils.start(getDriver());
+        TestUtils.scrollClick(getDriver(), By.xpath("//p[contains(text(),'Chevron')]"));
 
-        final String ENTERED_TEXT_FIELD = "firstExample";
+        createNewRecord();
 
-        start(getDriver());
-        scrollClick(getDriver(), getDriver().findElement(CHEVRON_MENU));
-        getWait().until(ExpectedConditions.elementToBeClickable(getDriver().findElement(createNewRecord))).click();
-        getDriver().findElement(textField).sendKeys(ENTERED_TEXT_FIELD);
-        getDriver().findElement(saveButton).click();
-        getWait().until(ExpectedConditions.elementToBeClickable(getDriver().findElement(sentButton))).click();
-        getWait().until(ExpectedConditions.elementToBeClickable(getDriver().findElement(verifySentButton))).click();
+        List<String> oldValues = getValues();
+        oldValues.addAll(getLastTwoCellsValues());
 
-        Assert.assertEquals(getDriver().findElement(recordedData).getText(), ENTERED_TEXT_FIELD);
+        sentCreatedRecord();
+        clickSentMenu();
+
+        Assert.assertEquals(getCellsValues().get(0).getText(), "Sent");
+
+        List<String> newValues = getValues();
+        newValues.addAll(getLastTwoCellsValues());
+
+        Assert.assertEquals(newValues, oldValues);
     }
 }
