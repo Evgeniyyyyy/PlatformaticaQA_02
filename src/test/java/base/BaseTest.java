@@ -100,6 +100,13 @@ public abstract class BaseTest {
         }
     }
 
+    @AfterClass
+    protected void afterClass() {
+        if (!driver.toString().contains("null")) {
+            stopDriver();
+        }
+    }
+
     protected void stopDriver() {
         driver.quit();
         wait = null;

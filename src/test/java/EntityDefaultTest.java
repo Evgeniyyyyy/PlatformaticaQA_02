@@ -15,7 +15,6 @@ import static utils.ProjectUtils.*;
 import static utils.TestUtils.jsClick;
 import static utils.TestUtils.scrollClick;
 
-@Ignore
 public class EntityDefaultTest extends BaseTest {
 
     private static final By DEFAULT_TAB = By.xpath("//p[contains (text(), 'Default')]");
@@ -71,28 +70,6 @@ public class EntityDefaultTest extends BaseTest {
     private final List<Object> expectedValues = Arrays.asList(
             stringInputValue, textInputValue, intInputValue, decimalInputValue,
             formatter.format(date), emptyField, emptyField, emptyField, userName);
-
-    private void createRecord() {
-        start(getDriver());
-
-        scrollClick(getDriver(), findElement(DEFAULT_TAB));
-
-        findElement(CREATE_NEW_RECORD).click();
-        findElement(STRING_FIELD).clear();
-        findElement(TEXT_FIELD).clear();
-        findElement(INT_FIELD).clear();
-        findElement(DECIMAL_FIELD).clear();
-        findElement(DATE_FIELD).clear();
-        findElement(DATETIME_FIELD).clear();
-        findElement(STRING_FIELD).sendKeys(stringInputValue);
-        findElement(TEXT_FIELD).sendKeys(textInputValue);
-        findElement(INT_FIELD).sendKeys(intInputValue);
-        findElement(DECIMAL_FIELD).sendKeys(decimalInputValue);
-        findElement(DATE_FIELD).click();
-        findElement(TESTER_NAME_FIELD).click();
-
-        jsClick(getDriver(), findElement(TESTER_NAME));
-    }
 
     private void fillFieldsForRecord() {
 
@@ -172,7 +149,8 @@ public class EntityDefaultTest extends BaseTest {
     @Test
     public void testCreateRecord() {
 
-        createRecord();
+        scrollClick(getDriver(), findElement(DEFAULT_TAB));
+        fillFieldsForRecord();
         jsClick(getDriver(), findElement(SAVE_BUTTON));
 
         WebElement icon1 = findElement(CHECK_ICON);
@@ -182,7 +160,7 @@ public class EntityDefaultTest extends BaseTest {
 
     @Test(dependsOnMethods = "testCreateRecord")
     public void testViewRecord() {
-
+        scrollClick(getDriver(), findElement(DEFAULT_TAB));
         jsClick(getDriver(), findElement(ACTIONS_BUTTON));
 
         getWait().until(TestUtils.movingIsFinished(getDriver().findElement(VIEW_OPTION))).click();
@@ -201,6 +179,7 @@ public class EntityDefaultTest extends BaseTest {
     @Test(dependsOnMethods = "testViewRecord")
     public void testSwitchBetweenListAndOrder(){
 
+        scrollClick(getDriver(), findElement(DEFAULT_TAB));
         clickOrderButton();
         getAssertion();
 
@@ -217,6 +196,8 @@ public class EntityDefaultTest extends BaseTest {
     @Test(dependsOnMethods = "testSwitchBetweenListAndOrder")
     public void testEditRecord() {
 
+        scrollClick(getDriver(), findElement(DEFAULT_TAB));
+        findElement(ACTIONS_BUTTON).click();
         getWait().until(TestUtils.movingIsFinished(getDriver().findElement(EDIT_OPTION))).click();
 
         findElement(STRING_FIELD).clear();
@@ -251,6 +232,7 @@ public class EntityDefaultTest extends BaseTest {
     @Test(dependsOnMethods = "testEditRecord")
     public void testDeleteRecord() {
 
+        scrollClick(getDriver(), findElement(DEFAULT_TAB));
         findElement(ACTIONS_BUTTON).click();
         getWait().until(TestUtils.movingIsFinished(getDriver().findElement(DELETE_OPTION))).click();
 
@@ -264,6 +246,8 @@ public class EntityDefaultTest extends BaseTest {
 
     @Test(dependsOnMethods = "testDeleteRecord")
     public void testRestoreRecord() {
+
+        scrollClick(getDriver(), findElement(DEFAULT_TAB));
 
         findElement(RECYCLE_BIN).click();
         findElement(By.linkText("restore as draft")).click();
@@ -282,6 +266,7 @@ public class EntityDefaultTest extends BaseTest {
     @Test(dependsOnMethods = "testRestoreRecord")
     public void testCreateNewRecordAsDraft() {
 
+        scrollClick(getDriver(), findElement(DEFAULT_TAB));
         clickCreateRecord(getDriver());
 
         String string = findElement(STRING_FIELD).getAttribute("value");
@@ -321,7 +306,8 @@ public class EntityDefaultTest extends BaseTest {
 
     @Test(dependsOnMethods = "testCreateNewRecordAsDraft")
     public void testCreateNewDefaultSaveRecord() {
-        reset(getDriver());
+
+        cleanOut(getDriver());
         scrollClick(getDriver(), findElement(DEFAULT_TAB));
 
         clickCreateRecord(getDriver());
@@ -334,7 +320,7 @@ public class EntityDefaultTest extends BaseTest {
 
     @Test(dependsOnMethods = "testCreateNewDefaultSaveRecord")
     public void testCreateNewDefaultDraftRecord() {
-        reset(getDriver());
+        cleanOut(getDriver());
         scrollClick(getDriver(), findElement(DEFAULT_TAB));
         clickCreateRecord(getDriver());
         clickSaveDraft(getDriver());
@@ -347,7 +333,7 @@ public class EntityDefaultTest extends BaseTest {
     @Test(dependsOnMethods = "testCreateNewDefaultDraftRecord")
     public void testSortRecords() {
 
-        reset(getDriver());
+        cleanOut(getDriver());
         scrollClick(getDriver(), findElement(DEFAULT_TAB));
         clickCreateRecord(getDriver());
         clearFields();
@@ -409,8 +395,8 @@ public class EntityDefaultTest extends BaseTest {
     @Test(dependsOnMethods = "testSortRecords")
     public void testCancelDefaultRecord () {
 
-        reset(getDriver());
-        findElement(DEFAULT_TAB).click();
+        cleanOut(getDriver());
+        scrollClick(getDriver(), findElement(DEFAULT_TAB));
 
         clickCreateRecord(getDriver());
 
@@ -433,5 +419,6 @@ public class EntityDefaultTest extends BaseTest {
 
         List<WebElement> result = findElements(By.xpath("//td[@class = 'pa-list-table-th']"));
         Assert.assertEquals(result.size(), 0);
+//        getDriver().quit();
     }
 }
