@@ -1,8 +1,9 @@
-import base.DriverPerClassBaseTest;
+import base.BaseTest;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.testng.Assert;
+import org.testng.annotations.Ignore;
 import org.testng.annotations.Test;
 
 import utils.TestUtils;
@@ -15,7 +16,8 @@ import java.util.List;
 import static utils.ProjectUtils.*;
 import static utils.TestUtils.*;
 
-public class EntityGanttTest extends DriverPerClassBaseTest {
+@Ignore
+public class EntityGanttTest extends BaseTest {
 
     private static final By GANTT_TAB = By.xpath("//p[contains (text(), 'Gantt')]");
     private static final By CREATE_NEW_RECORD = By.xpath("//div/i[.='create_new_folder']");

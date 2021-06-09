@@ -1,4 +1,4 @@
-import base.DriverPerClassBaseTest;
+import base.BaseTest;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -15,7 +15,8 @@ import static utils.ProjectUtils.*;
 import static utils.TestUtils.jsClick;
 import static utils.TestUtils.scrollClick;
 
-public class EntityDefaultTest extends DriverPerClassBaseTest {
+@Ignore
+public class EntityDefaultTest extends BaseTest {
 
     private static final By DEFAULT_TAB = By.xpath("//p[contains (text(), 'Default')]");
     private static final By CREATE_NEW_RECORD = By.xpath("//div/i[.='create_new_folder']");

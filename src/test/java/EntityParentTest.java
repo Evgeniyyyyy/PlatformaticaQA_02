@@ -1,4 +1,4 @@
-import base.DriverPerClassBaseTest;
+import base.BaseTest;
 import constants.EntityParentConstants;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
@@ -6,6 +6,7 @@ import org.openqa.selenium.interactions.Action;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.testng.Assert;
+import org.testng.annotations.Ignore;
 import org.testng.annotations.Test;
 import utils.TestUtils;
 
@@ -16,7 +17,8 @@ import java.util.List;
 
 import static utils.ProjectUtils.*;
 
-public class EntityParentTest extends DriverPerClassBaseTest {
+@Ignore
+public class EntityParentTest extends BaseTest {
 
     final String stringInputValue = "Pending";
     final String textInputValue = "qwerty";

@@ -1,10 +1,11 @@
-import base.DriverPerClassBaseTest;
+import base.BaseTest;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.RandomUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.testng.Assert;
+import org.testng.annotations.Ignore;
 import org.testng.annotations.Test;
 
 import java.time.LocalDate;
@@ -16,7 +17,8 @@ import java.util.List;
 import static utils.ProjectUtils.*;
 import static utils.TestUtils.*;
 
-public class EntityChevronTest extends DriverPerClassBaseTest {
+@Ignore
+public class EntityChevronTest extends BaseTest {
 
     final String ENTITY_NAME = "Chevron";
     final String PENDING = "Pending";

@@ -11,9 +11,11 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.annotations.*;
 
 import java.io.IOException;
+import java.lang.reflect.Method;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -47,9 +49,27 @@ public abstract class BaseTest {
     private WebDriver driver;
     private WebDriverWait wait;
 
+    private final List<String> methodList = new ArrayList<>();
+
+    @BeforeClass
+    protected void beforeClass() {
+        for (Method method : this.getClass().getMethods()) {
+            Test test = method.getAnnotation(Test.class);
+            if (test != null) {
+                methodList.addAll(List.of(test.dependsOnMethods()));
+            }
+        }
+    }
+
     @BeforeMethod
-    protected void beforeMethod() {
-        initDriver();
+    protected void beforeMethod(Method method) {
+        if (method.getAnnotation(Test.class).dependsOnMethods().length == 0) {
+            initDriver();
+
+            ProjectLogin.start(getDriver());
+        } else {
+            ProjectLogin.get(getDriver());
+        }
     }
 
     protected void initDriver() {
@@ -74,8 +94,12 @@ public abstract class BaseTest {
     }
 
     @AfterMethod
-    protected void afterMethod() {
-        stopDriver();
+    protected void afterMethod(Method method) {
+        if (method.getAnnotation(Test.class).dependsOnMethods().length == 0) {
+            if (!methodList.contains(method.getName())) {
+                stopDriver();
+            }
+        }
     }
 
     protected void stopDriver() {

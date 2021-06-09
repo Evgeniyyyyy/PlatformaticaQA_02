@@ -1,8 +1,9 @@
-import base.DriverPerClassBaseTest;
+import base.BaseTest;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.testng.Assert;
+import org.testng.annotations.Ignore;
 import org.testng.annotations.Test;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -10,7 +11,8 @@ import java.util.List;
 import static utils.ProjectUtils.*;
 import static utils.TestUtils.*;
 
-public class EntityBoardDraftRecordTest extends DriverPerClassBaseTest {
+@Ignore
+public class EntityBoardDraftRecordTest extends BaseTest {
 
     private static final By BOARD_TAB = By.xpath("//p[contains (text(), 'Board')]");
     private static final By ACTIONS_BUTTON = By.xpath("//button/i[text()='menu']");
