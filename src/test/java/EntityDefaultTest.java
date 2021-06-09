@@ -159,6 +159,33 @@ public class EntityDefaultTest extends BaseTest {
     }
 
     @Test(dependsOnMethods = "testCreateRecord")
+    public void testCancelDefaultRecord () {
+
+        scrollClick(getDriver(), findElement(DEFAULT_TAB));
+        clickCreateRecord(getDriver());
+
+        String string = findElement(STRING_FIELD).getAttribute("value");
+        String text = findElement(TEXT_FIELD).getText();
+        String intField = findElement(INT_FIELD).getAttribute("value");
+        String decimal = findElement(DECIMAL_FIELD).getAttribute("value");
+        String date = findElement(DATE_FIELD).getAttribute("value");
+        String datetime = findElement(DATETIME_FIELD).getAttribute("value");
+
+        Assert.assertFalse(string.isEmpty());
+        Assert.assertFalse(text.isEmpty());
+        Assert.assertFalse(intField.isEmpty());
+        Assert.assertFalse(decimal.isEmpty());
+        Assert.assertFalse(date.isEmpty());
+        Assert.assertFalse(datetime.isEmpty());
+
+        WebElement cancelButton = findElement(By.xpath("//button[text()='Cancel']"));
+        scrollClick(getDriver(), cancelButton);
+
+        List<WebElement> result = findElements(By.xpath("//td[@class = 'pa-list-table-th']"));
+        Assert.assertEquals(result.size(), 9);
+    }
+
+    @Test(dependsOnMethods = "testCancelDefaultRecord")
     public void testViewRecord() {
         scrollClick(getDriver(), findElement(DEFAULT_TAB));
         jsClick(getDriver(), findElement(ACTIONS_BUTTON));
@@ -390,35 +417,5 @@ public class EntityDefaultTest extends BaseTest {
         findElement(COLUMN_DECIMAL).click();
         icon3 = findElement(By.xpath("//tbody/tr[3]/td[1]/i[1]"));
         Assert.assertEquals(icon3.getAttribute("class"), "fa fa-pencil");
-    }
-
-    @Test(dependsOnMethods = "testSortRecords")
-    public void testCancelDefaultRecord () {
-
-        cleanOut(getDriver());
-        scrollClick(getDriver(), findElement(DEFAULT_TAB));
-
-        clickCreateRecord(getDriver());
-
-        String string = findElement(STRING_FIELD).getAttribute("value");
-        String text = findElement(TEXT_FIELD).getText();
-        String intField = findElement(INT_FIELD).getAttribute("value");
-        String decimal = findElement(DECIMAL_FIELD).getAttribute("value");
-        String date = findElement(DATE_FIELD).getAttribute("value");
-        String datetime = findElement(DATETIME_FIELD).getAttribute("value");
-
-        Assert.assertFalse(string.isEmpty());
-        Assert.assertFalse(text.isEmpty());
-        Assert.assertFalse(intField.isEmpty());
-        Assert.assertFalse(decimal.isEmpty());
-        Assert.assertFalse(date.isEmpty());
-        Assert.assertFalse(datetime.isEmpty());
-
-        WebElement cancelButton = findElement(By.xpath("//button[text()='Cancel']"));
-        scrollClick(getDriver(), cancelButton);
-
-        List<WebElement> result = findElements(By.xpath("//td[@class = 'pa-list-table-th']"));
-        Assert.assertEquals(result.size(), 0);
-//        getDriver().quit();
     }
 }
