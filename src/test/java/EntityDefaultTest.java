@@ -322,6 +322,7 @@ public class EntityDefaultTest extends DriverPerClassBaseTest {
     public void testCreateNewDefaultSaveRecord() {
         reset(getDriver());
         scrollClick(getDriver(), findElement(DEFAULT_TAB));
+
         clickCreateRecord(getDriver());
         clickSave(getDriver());
         List<WebElement> records = findElements(GET_LIST_ROW);
@@ -331,6 +332,18 @@ public class EntityDefaultTest extends DriverPerClassBaseTest {
     }
 
     @Test(dependsOnMethods = "testCreateNewDefaultSaveRecord")
+    public void testCreateNewDefaultDraftRecord() {
+        reset(getDriver());
+        scrollClick(getDriver(), findElement(DEFAULT_TAB));
+        clickCreateRecord(getDriver());
+        clickSaveDraft(getDriver());
+        List<WebElement> records = findElements(GET_LIST_ROW);
+        Assert.assertEquals(records.size(), 1);
+        WebElement icon1 = findElement(CHECK_ICON);
+        Assert.assertEquals(icon1.getAttribute("class"), "fa fa-pencil");
+    }
+
+    @Test(dependsOnMethods = "testCreateNewDefaultDraftRecord")
     public void testSortRecords() {
 
         reset(getDriver());
