@@ -41,6 +41,13 @@ public class EntityEventsChain1Test extends BaseTest {
         getWait().until(ExpectedConditions.presenceOfElementLocated(By.id("f1")));
     }
 
+    private void clickDeleteMenu() {
+        clickDropDownMenu();
+        getWait().until(movingIsFinished(By.xpath("//a[contains (text(), 'delete')]"))).click();
+        getWait().until(
+                ExpectedConditions.presenceOfElementLocated(By.xpath("//div[@class = 'card-body ']")));
+    }
+
     private void inputF1Value(String value) {
         getDriver().findElement(By.id("f1")).sendKeys(value);
         getWait().until(ExpectedConditions.attributeToBeNotEmpty(getDriver().findElement(By.id("f10")), "value"));
@@ -114,5 +121,37 @@ public class EntityEventsChain1Test extends BaseTest {
         Assert.assertEquals(getRowValues(), expectedValues);
         Assert.assertNotEquals(getRowValues(), oldValues);
         Assert.assertEquals(getAttributeClass(), "fa fa-check-square-o");
+    }
+
+    @Test(dependsOnMethods = "testEditRecord")
+    public void testDeleteRecord() {
+
+        String expectedTextCardBodyBeforeDelete = "F1\n" + "F2\n" + "F3\n" + "F4\n" + "F5\n" + "F6\n" + "F7\n" + "F8\n"
+                + "F9\n" + "F10\n" + "Actions\n" + "2\n" + "4\n" + "8\n" + "16\n" + "32\n" + "64\n" + "128\n" +
+                "256\n" + "512\n" + "1024\n" + "menu\n" + "Showing 1 to 1 of 1 rows";
+        String expectedTextRecycleBinBeforeDelete = "delete_outline";
+        String expectedTextRecycleBinAfterDelete = "delete_outline\n" + "1";
+
+        clickEventsChain1Menu();
+
+        Assert.assertEquals(getPaginationInfo(), "Showing 1 to 1 of 1 rows");
+
+        String textCardBodyBeforeDelete = getDriver().findElement(By.xpath("//div[@class = 'card-body ']")).getText();
+        String textRecycleBinBeforeDelete = getDriver().findElement(
+                By.xpath("//a[@href='index.php?action=recycle_bin']")).getText();
+
+        Assert.assertEquals(textCardBodyBeforeDelete, expectedTextCardBodyBeforeDelete);
+        Assert.assertEquals(textRecycleBinBeforeDelete, expectedTextRecycleBinBeforeDelete);
+
+        clickDeleteMenu();
+
+        String textCardBodyAfterDelete = getDriver().findElement(By.xpath("//div[@class = 'card-body ']")).getText();
+        String textRecycleBinAfterDelete = getDriver().findElement(
+                By.xpath("//a[@href='index.php?action=recycle_bin']")).getText();
+
+        Assert.assertTrue(textCardBodyAfterDelete.isBlank());
+        Assert.assertTrue(textCardBodyAfterDelete.isEmpty());
+        Assert.assertNotEquals(textRecycleBinBeforeDelete, textRecycleBinAfterDelete);
+        Assert.assertEquals(textRecycleBinAfterDelete, expectedTextRecycleBinAfterDelete);
     }
 }
