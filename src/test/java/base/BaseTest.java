@@ -95,10 +95,8 @@ public abstract class BaseTest {
 
     @AfterMethod
     protected void afterMethod(Method method) {
-        if (method.getAnnotation(Test.class).dependsOnMethods().length == 0) {
-            if (!methodList.contains(method.getName())) {
-                stopDriver();
-            }
+        if (!methodList.contains(method.getName())) {
+            stopDriver();
         }
     }
 
