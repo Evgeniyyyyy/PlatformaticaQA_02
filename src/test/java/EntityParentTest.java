@@ -6,7 +6,6 @@ import org.openqa.selenium.interactions.Action;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.testng.Assert;
-import org.testng.annotations.Ignore;
 import org.testng.annotations.Test;
 import utils.TestUtils;
 
@@ -17,7 +16,6 @@ import java.util.List;
 
 import static utils.ProjectUtils.*;
 
-@Ignore
 public class EntityParentTest extends BaseTest {
 
     final String stringInputValue = "Pending";
@@ -112,7 +110,6 @@ public class EntityParentTest extends BaseTest {
     @Test
     public void testCreateRecord() {
 
-        start(getDriver());
         clickParentButton();
         createRecord();
 
@@ -130,6 +127,7 @@ public class EntityParentTest extends BaseTest {
     @Test(dependsOnMethods = "testCreateRecord")
     public void testViewRecord() {
 
+        clickParentButton();
         clickListButton();
 
         findElement(By.xpath("//button/i[@class='material-icons']")).click();
@@ -146,6 +144,7 @@ public class EntityParentTest extends BaseTest {
     @Test(dependsOnMethods = "testViewRecord")
     public void testEditRecord() {
 
+        clickParentButton();
         WebElement record = getDriver().findElement(By.tagName("tbody"));
         record.getText();
 
@@ -167,6 +166,7 @@ public class EntityParentTest extends BaseTest {
     @Test(dependsOnMethods = "testEditRecord")
     public void testSearchRecord() {
 
+        clickParentButton();
         createRecord();
 
         WebElement record = getDriver().findElement(By.xpath("//tr[@data-index='0']"));
@@ -204,6 +204,8 @@ public class EntityParentTest extends BaseTest {
     @Test(dependsOnMethods = "testSearchRecord")
     public void testReorderRecord() {
 
+        clickParentButton();
+
         findElement(By.xpath("//input[@type='text']")).clear();
         findElement(By.xpath("//i[text()='format_line_spacing']")).click();
 
@@ -236,7 +238,7 @@ public class EntityParentTest extends BaseTest {
     @Test(dependsOnMethods = "testReorderRecord")
     public void testCreateNewDraftRecord() {
 
-        reset(getDriver());
+        cleanOut(getDriver());
         clickParentButton();
 
         clickCreateRecord(getDriver());
@@ -256,6 +258,7 @@ public class EntityParentTest extends BaseTest {
     @Test(dependsOnMethods = "testCreateNewDraftRecord")
     public void testCancelRecord() {
 
+        clickParentButton();
         clickCreateRecord(getDriver());
         fillForm();
         clickCancel(getDriver());
@@ -266,6 +269,7 @@ public class EntityParentTest extends BaseTest {
     @Test(dependsOnMethods = "testCancelRecord")
     public void testDeleteRecord() {
 
+        clickParentButton();
         clickCreateRecord(getDriver());
         fillForm();
         clickSave(getDriver());
