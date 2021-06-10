@@ -1,16 +1,18 @@
 import base.BaseTest;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 import java.util.List;
-import static utils.ProjectUtils.start;
-import static utils.TestUtils.scrollClick;
+import java.util.UUID;
+import java.util.concurrent.TimeUnit;
+import static utils.TestUtils.*;
 
 public class EntityPlaceholderSaveDraftTest extends BaseTest {
 
-    private static final String STRING_INPUT_VALUE = "Zyx1 zyx2";
-    private static final String TEXT_INPUT_VALUE = "Test1";
+    private static final String STRING_INPUT_VALUE = UUID.randomUUID().toString();
+    private static final String TEXT_INPUT_VALUE = UUID.randomUUID().toString();
     private static final String INT_INPUT_VALUE = "777";
     private static final String DECIMAL_INPUT_VALUE = "20.20";
     private static final String DATE_VALUE = "30/05/2021";
@@ -29,36 +31,85 @@ public class EntityPlaceholderSaveDraftTest extends BaseTest {
     private static final By SAVE_DRAFT_BUTTON = By.id("pa-entity-form-draft-btn");
     private static final By ICON_PENCIL = By.xpath("//tbody/tr/td[1]/i");
     private static final By RESULT_COLUMNS = By.xpath("//tbody/tr/td[@class = 'pa-list-table-th']");
+    private static final By ACTIONS_MENU = By.xpath("//i[contains(text(),'menu')]");
+    private static final By LIST_BUTTON = By.xpath("//div[1]/div[1]/ul[1]/li[1]/a[1]");
+    private static final By DELETE_BUTTON = By.xpath("//a[contains (text(), 'delete')]");
+    private static final By CHECK_ROW = By.id("pa-all-entities-table");
 
-    @Test
-    public void testCreateNewDraftRecord() {
-        start(getDriver());
-        scrollClick(getDriver(), getDriver().findElement(PLACEHOLDER_MENU));
+    @Test(groups = {"first"})
+    public void testCreateNewPlaceholderDraftRecord() {
+        clickPlaceholderMenu();
+        clickAddNewPlaceholder();
+        createNewPlaceholderDraftRecord();
 
-        getDriver().findElement(CREATE_NEW_RECORD).click();
+        WebElement icon = getIcon();
+        Assert.assertEquals(icon.getAttribute("class"), PENCIL_ICON_CLASS);
+        List<WebElement> columnList = getPlaceholderTableColumns();
+        final List<String> expectedResultLine = createExpectedResults();
+        Assert.assertEquals(columnList.size(), expectedResultLine.size());
+        for (int i = 0; i < expectedResultLine.size(); i++) {
+            Assert.assertEquals(columnList.get(i).getText(), expectedResultLine.get(i));
+        }
+    }
+
+    @Test(groups = {"first"}, dependsOnMethods = "testCreateNewPlaceholderDraftRecord")
+    public void testDeletePlaceholderDraftRecord() {
+        clickPlaceholderMenu();
+        deletePlaceholderDraftRecord();
+
+        getDriver().manage().timeouts().implicitlyWait(0, TimeUnit.MILLISECONDS);
+        Assert.assertEquals(getPlaceholderTableRaws().size(), 0);
+    }
+
+    private List<String> createExpectedResults() {
+        final List<String> expectedResultLine = List
+                .of(STRING_INPUT_VALUE, TEXT_INPUT_VALUE, INT_INPUT_VALUE, DECIMAL_INPUT_VALUE, DATE_VALUE, DATETIME_VALUE, "", "", "apptester1@tester.test");
+        return expectedResultLine;
+    }
+
+    private List<WebElement> getPlaceholderTableColumns() {
+        List<WebElement> columnList = getDriver().findElements(RESULT_COLUMNS);
+        return columnList;
+    }
+
+    private WebElement getIcon() {
+        WebElement icon = getDriver().findElement(ICON_PENCIL);
+        return icon;
+    }
+
+    private List<WebElement> getPlaceholderTableRaws() {
+        return findElements(CHECK_ROW);
+    }
+
+    private void createNewPlaceholderDraftRecord() {
         getDriver().findElement(STRING_FIELD).sendKeys(STRING_INPUT_VALUE);
         getDriver().findElement(TEXT_FIELD).sendKeys(TEXT_INPUT_VALUE);
         getDriver().findElement(INT_FIELD).sendKeys(INT_INPUT_VALUE);
         getDriver().findElement(DECIMAL_FIELD).sendKeys(DECIMAL_INPUT_VALUE);
-        getDriver().findElement(DATE_FIELD ).click();
-        getDriver().findElement(DATE_FIELD ).clear();
-        getDriver().findElement(DATE_FIELD ).sendKeys(DATE_VALUE);
+        getDriver().findElement(DATE_FIELD).click();
+        getDriver().findElement(DATE_FIELD).clear();
+        getDriver().findElement(DATE_FIELD).sendKeys(DATE_VALUE);
         getDriver().findElement(DATETIME_FIELD).click();
         getDriver().findElement(DATETIME_FIELD).clear();
         getDriver().findElement(DATETIME_FIELD).sendKeys(DATETIME_VALUE);
         getDriver().findElement(USER_VALUE_LIST).isDisplayed();
         scrollClick(getDriver(), getDriver().findElement(SAVE_DRAFT_BUTTON));
+    }
 
-        final List<String> expectedResultLine = List
-                .of(STRING_INPUT_VALUE, TEXT_INPUT_VALUE, INT_INPUT_VALUE, DECIMAL_INPUT_VALUE, DATE_VALUE, DATETIME_VALUE, "", "", "apptester1@tester.test");
+    private void clickPlaceholderMenu() {
+        scrollClick(getDriver(), getDriver().findElement(PLACEHOLDER_MENU));
+    }
 
-        WebElement icon = getDriver().findElement(ICON_PENCIL);
-        List<WebElement> columnList = getDriver().findElements(RESULT_COLUMNS);
+    private void clickAddNewPlaceholder() {
+        getDriver().findElement(CREATE_NEW_RECORD).click();
+    }
 
-        Assert.assertEquals(icon.getAttribute("class"), PENCIL_ICON_CLASS);
-        Assert.assertEquals(columnList.size(), expectedResultLine.size());
-        for (int i = 0; i < expectedResultLine.size(); i++) {
-            Assert.assertEquals(columnList.get(i).getText(), expectedResultLine.get(i));
-        }
+    private void deletePlaceholderDraftRecord() {
+        getWait().until(ExpectedConditions.visibilityOfElementLocated(LIST_BUTTON));
+        findElement(LIST_BUTTON).click();
+        jsClick(getDriver(), getDriver().findElement(ACTIONS_MENU));
+        getDriver().findElement(ACTIONS_MENU).click();
+        getWait().until(ExpectedConditions.visibilityOfElementLocated(DELETE_BUTTON));
+        jsClick(getDriver(), getDriver().findElement(DELETE_BUTTON));
     }
 }
