@@ -18,7 +18,7 @@ import java.util.List;
 import static utils.ProjectUtils.*;
 import static utils.TestUtils.*;
 
-@Ignore
+
 public class EntityChevronTest extends BaseTest {
 
     final private static String ENTITY_NAME = "Chevron";
@@ -68,6 +68,45 @@ public class EntityChevronTest extends BaseTest {
         randomData.add(user);
 
         return randomData;
+    }
+
+    private void checkFormIsNotEmpty(){
+        WebElement stringButton = findElement(By.xpath("//button[@data-id='string']"));
+        WebElement text = findElement(By.xpath("//textarea[@id='text']"));
+        WebElement intData = findElement(By.id("int"));
+        WebElement decimalData = findElement(By.id("decimal"));
+        WebElement date = findElement(By.xpath("//input[@id='date']"));
+        WebElement datetime = findElement(By.xpath("//input[@id='datetime']"));
+        WebElement user = findElement(By.xpath("//button[@data-id='user']"));
+        Assert.assertFalse(stringButton.getAttribute("title").isEmpty());
+        Assert.assertFalse(text.getText().isEmpty());
+        Assert.assertFalse(intData.getAttribute("value").isEmpty());
+        Assert.assertFalse(decimalData.getAttribute("value").isEmpty());
+        Assert.assertFalse(date.getAttribute("value").isEmpty());
+        Assert.assertFalse(datetime.getAttribute("value").isEmpty());
+        Assert.assertFalse(user.getAttribute("title").isEmpty());
+    }
+
+    private void emptyForm(){
+        WebElement date = findElement(By.xpath("//input[@id='date']"));
+        date.click();
+        date.clear();
+
+        WebElement datetime = findElement(By.xpath("//input[@id='datetime']"));
+        datetime.click();
+        datetime.clear();
+
+        WebElement text = findElement(By.xpath("//textarea[@id='text']"));
+        text.click();
+        text.clear();
+
+        WebElement intData = findElement(By.xpath("//input[@id='int']"));
+        intData.click();
+        intData.clear();
+
+        WebElement decimalData = findElement(By.xpath("//input[@id='decimal']"));
+        decimalData.click();
+        decimalData.clear();
     }
 
     private void fillFormFields(List<String> data){
@@ -121,7 +160,7 @@ public class EntityChevronTest extends BaseTest {
 
         for(int j = 1; j <= records.size(); j ++){
             List<WebElement> cells = findElements(By.xpath("//tbody/tr["+ j +"]/td[@class = 'pa-list-table-th']"));
-            System.out.println(cells.size());
+
             if(cells.get(1).getText().equals(data.get(1))){
                 if(isDraft){
                     WebElement icon = findElement(By.xpath("//i[contains(@class,'fa fa-pencil')]"));
@@ -157,13 +196,11 @@ public class EntityChevronTest extends BaseTest {
 
     @Test
     public void testCreatePendingRecord(){
-        String status = PENDING;
-
         chooseSideBarItem(ENTITY_NAME);
         clickCreateRecord(getDriver());
         fillFormFields(EXPECTED_DATA_PENDING_RECORD);
         clickSave(getDriver());
-        checkCreatedRecord(status, false, EXPECTED_DATA_PENDING_RECORD);
+        checkCreatedRecord(PENDING, false, EXPECTED_DATA_PENDING_RECORD);
     }
 
     @Test(dependsOnMethods = {"testCreatePendingRecord"})
@@ -177,19 +214,32 @@ public class EntityChevronTest extends BaseTest {
 
         checkRecordInViewMode(EXPECTED_DATA_PENDING_RECORD);
     }
+
+    @Test(dependsOnMethods = {"testViewPendingRecord"})
+    public void testEditPendingRecord() {
+        chooseSideBarItem(ENTITY_NAME);
+
+        int row = chooseRecordNumberInTable(EXPECTED_DATA_PENDING_RECORD);
+        findElement(By.xpath("//tr[@data-index='"+ row +"']//button/i[@class='material-icons'][position()=1]")).click();
+        getWait().until(TestUtils.movingIsFinished(getDriver().
+                findElement(By.xpath("//tr[@data-index='"+ row +"']//a[text()='edit']")))).click();
+
+        checkFormIsNotEmpty();
+        emptyForm();
+        fillFormFields(EXPECTED_DATA_FULFILLMENT_DRAFT_RECORD);
+        clickSave(getDriver());
+        checkCreatedRecord(FULFILLMENT, false, EXPECTED_DATA_FULFILLMENT_DRAFT_RECORD);
+    }
     
     @Test
     public void testCreateFulfillmentRecord(){
-        String status = FULFILLMENT;
-
         chooseSideBarItem(ENTITY_NAME);
         clickCreateRecord(getDriver());
         fillFormFields(EXPECTED_DATA_FULFILLMENT_RECORD);
         clickSave(getDriver());
-        checkCreatedRecord(status, false, EXPECTED_DATA_FULFILLMENT_RECORD);
+        checkCreatedRecord(FULFILLMENT, false, EXPECTED_DATA_FULFILLMENT_RECORD);
     }
 
-    @Ignore
     @Test(dependsOnMethods = {"testCreateFulfillmentRecord"})
     public void testViewFulfillmentRecord() {
         chooseSideBarItem(ENTITY_NAME);
@@ -201,19 +251,15 @@ public class EntityChevronTest extends BaseTest {
 
         checkRecordInViewMode(EXPECTED_DATA_FULFILLMENT_RECORD);
     }
-
     @Ignore
     @Test
     public void testCreateSentRecord(){
-        String status = SENT;
-
         chooseSideBarItem(ENTITY_NAME);
         clickCreateRecord(getDriver());
         fillFormFields(EXPECTED_DATA_SENT_RECORD);
         clickSave(getDriver());
-        checkCreatedRecord(status, false, EXPECTED_DATA_SENT_RECORD);
+        checkCreatedRecord(SENT, false, EXPECTED_DATA_SENT_RECORD);
     }
-
     @Ignore
     @Test(dependsOnMethods = {"testCreateSentRecord"})
     public void testViewSentRecord() {
@@ -230,13 +276,11 @@ public class EntityChevronTest extends BaseTest {
     @Ignore
     @Test
     public void testCreatePendingDraftRecord(){
-        String status = PENDING;
-
         chooseSideBarItem(ENTITY_NAME);
         clickCreateRecord(getDriver());
         fillFormFields(EXPECTED_DATA_PENDING_DRAFT_RECORD);
         clickSaveDraft(getDriver());
-        checkCreatedRecord(status, true, EXPECTED_DATA_PENDING_DRAFT_RECORD);
+        checkCreatedRecord(PENDING, true, EXPECTED_DATA_PENDING_DRAFT_RECORD);
     }
     @Ignore
     @Test(dependsOnMethods = {"testCreatePendingDraftRecord"})
@@ -253,13 +297,11 @@ public class EntityChevronTest extends BaseTest {
     @Ignore
     @Test
     public void testCreateFulfillmentDraftRecord(){
-        String status = FULFILLMENT;
-
         chooseSideBarItem(ENTITY_NAME);
         clickCreateRecord(getDriver());
         fillFormFields(EXPECTED_DATA_FULFILLMENT_DRAFT_RECORD);
         clickSaveDraft(getDriver());
-        checkCreatedRecord(status, true, EXPECTED_DATA_FULFILLMENT_DRAFT_RECORD);
+        checkCreatedRecord(FULFILLMENT, true, EXPECTED_DATA_FULFILLMENT_DRAFT_RECORD);
     }
     @Ignore
     @Test(dependsOnMethods = {"testCreateFulfillmentDraftRecord"})
@@ -276,13 +318,11 @@ public class EntityChevronTest extends BaseTest {
     @Ignore
     @Test
     public void testCreateSentDraftRecord(){
-        String status = SENT;
-
         chooseSideBarItem(ENTITY_NAME);
         clickCreateRecord(getDriver());
         fillFormFields(EXPECTED_DATA_SENT_DRAFT_RECORD);
         clickSaveDraft(getDriver());
-        checkCreatedRecord(status, true, EXPECTED_DATA_SENT_DRAFT_RECORD);
+        checkCreatedRecord(SENT, true, EXPECTED_DATA_SENT_DRAFT_RECORD);
     }
     @Ignore
     @Test(dependsOnMethods = {"testCreateSentDraftRecord"})
@@ -300,11 +340,9 @@ public class EntityChevronTest extends BaseTest {
 
     @Test
     public void testCancelCreateRecord(){
-        String status = PENDING;
-
         chooseSideBarItem(ENTITY_NAME);
         clickCreateRecord(getDriver());
-        List<String> expectedData = makeRandomData(status);
+        List<String> expectedData = makeRandomData(PENDING);
         fillFormFields(expectedData);
         clickCancel(getDriver());
         List<WebElement> tableElements = findElements(By.xpath("//div[@class='card-body ']/*"));
@@ -313,15 +351,12 @@ public class EntityChevronTest extends BaseTest {
 
     @Test
     public void testCancelCreateDraftRecord(){
-        String status = FULFILLMENT;
-
         chooseSideBarItem(ENTITY_NAME);
         clickCreateRecord(getDriver());
-        List<String> expectedData = makeRandomData(status);
+        List<String> expectedData = makeRandomData(FULFILLMENT);
         fillFormFields(expectedData);
         clickCancel(getDriver());
         List<WebElement> tableElements = findElements(By.xpath("//div[@class='card-body ']/*"));
         Assert.assertEquals(tableElements.size(), 1);
     }
-
 }
