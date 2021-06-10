@@ -14,8 +14,24 @@ import static utils.TestUtils.scroll;
 
 public class EntityCalendarTest extends BaseTest {
 
+    private static final List<String> createRecordList = List.of("StringExampleCreateRecord", "TextExample", "1111", "0.20");
+
+
     private void enterToCalendarPage() {
         TestUtils.scrollClick(getDriver(), findElement(By.xpath("//p[contains (text(), 'Calendar')]")));
+    }
+
+    private void createCalendarRecord(String str, String text, String in, String decimal){
+        findElement(By.xpath("//*[@class='card-icon']")).click();
+
+        findElement(By.id("string")).sendKeys(str);
+        findElement(By.id("text")).sendKeys(text);
+        findElement(By.id("date")).click();
+        findElement(By.id("datetime")).click();
+        findElement(By.id("int")).sendKeys(in);
+        findElement(By.id("decimal")).sendKeys(decimal);
+
+        TestUtils.scrollClick(getDriver(), findElement(By.id("pa-entity-form-save-btn")));
     }
 
     private void createCalendarRecord(List<String> list){
@@ -31,6 +47,11 @@ public class EntityCalendarTest extends BaseTest {
         ProjectUtils.clickSave(getDriver());
     }
 
+    private void enterToCalendarPageAndCreateRecord(String str, String text, String in, String decimal){
+        enterToCalendarPage();
+        createCalendarRecord(str, text, in, decimal);
+    }
+
     private void enterToCalendarPageAndCreateRecord(List<String> list){
         enterToCalendarPage();
         createCalendarRecord(list);
@@ -39,7 +60,6 @@ public class EntityCalendarTest extends BaseTest {
 
     @Test
     public void testDeletedRecordFromBin(){
-        final List<String> createRecordList = List.of("StringExampleCreateRecord", "TextExample", "1111", "0.20");
 
         enterToCalendarPageAndCreateRecord(createRecordList);
 
@@ -55,13 +75,12 @@ public class EntityCalendarTest extends BaseTest {
                 "Good job with housekeeping! Recycle bin is currently empty!");
     }
 
-    @Test
+    @Test(dependsOnMethods = "testCreateRecord")
     public void testViewRecord() {
-        final List<String> createRecordList = List.of("StringExampleCreateRecord", "TextExample", "1111", "0.20");
 
-        enterToCalendarPageAndCreateRecord(createRecordList);
+        enterToCalendarPage();
         TestUtils.jsClick(getDriver(), findElement(By.xpath(
-                "//*[@class='fc-title']")));
+                "//span[contains(text(), 'StringExample')]")));
 
         Assert.assertEquals(findElement(By.xpath("//*[contains(text(), 'StringExa')]")).getText(),
                 "StringExampleCreateRecord");
@@ -69,8 +88,7 @@ public class EntityCalendarTest extends BaseTest {
 
     @Test
     public void testCreateRecord(){
-        final List<String> createRecordList = List.of("StringExampleCreateRecord", "TextExample", "1111", "0.20");
-        
+
         enterToCalendarPageAndCreateRecord(createRecordList);
 
         findElement(By.xpath("//*[contains(@href,'table&entity_id=32')]")).click();
