@@ -15,6 +15,7 @@ import java.util.List;
 
 public class EntityCalendarAddRecordTest extends BaseTest {
 
+    @Ignore
     @Test
     public void testCreateRecord() throws InterruptedException {
         ProjectUtils.start(getDriver());
