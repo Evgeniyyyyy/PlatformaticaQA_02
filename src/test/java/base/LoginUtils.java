@@ -14,7 +14,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Properties;
 
-abstract class ProjectLogin {
+abstract class LoginUtils {
 
     public static final String LOGIN_PROP = "default.username";
     public static final String PAS_PROP = "default.password";
@@ -45,7 +45,7 @@ abstract class ProjectLogin {
                 }
             } else {
                 try {
-                    InputStream inputStream = ProjectLogin.class.getClassLoader().getResourceAsStream("local.properties");
+                    InputStream inputStream = LoginUtils.class.getClassLoader().getResourceAsStream("local.properties");
                     if (inputStream == null) {
                         System.out.println("ERROR: The \u001B[31mlocal.properties\u001B[0m file not found in src/test/resources/ directory.");
                         System.out.println("You need to create it from local.properties.TEMPLATE file.");
