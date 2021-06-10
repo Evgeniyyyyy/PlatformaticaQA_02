@@ -18,6 +18,7 @@ import java.util.List;
 import static utils.ProjectUtils.*;
 import static utils.TestUtils.*;
 
+@Ignore
 public class EntityChevronTest extends BaseTest {
 
     final private static String ENTITY_NAME = "Chevron";
