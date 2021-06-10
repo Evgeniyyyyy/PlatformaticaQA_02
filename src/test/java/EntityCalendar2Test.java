@@ -3,7 +3,6 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.testng.Assert;
-import org.testng.annotations.Ignore;
 import org.testng.annotations.Test;
 import utils.ProjectUtils;
 import utils.TestUtils;
@@ -16,17 +15,17 @@ public class EntityCalendar2Test extends BaseTest {
         TestUtils.scrollClick(getDriver(), findElement(By.xpath("//p[contains (text(), 'Calendar')]")));
         getDriver().findElement(By.xpath("//*[@class='card-icon']")).click();
 
-        getDriver().findElement(By.id("string")).sendKeys(str);
-        getDriver().findElement(By.id("text")).sendKeys(text);
-        getDriver().findElement(By.id("date")).click();
-        getDriver().findElement(By.id("datetime")).click();
-        getDriver().findElement(By.id("int")).sendKeys(in);
-        getDriver().findElement(By.id("decimal")).sendKeys(decimal);
+        findElement(By.id("string")).sendKeys(str);
+        findElement(By.id("text")).sendKeys(text);
+        findElement(By.id("date")).click();
+        findElement(By.id("datetime")).click();
+        findElement(By.id("int")).sendKeys(in);
+        findElement(By.id("decimal")).sendKeys(decimal);
 
         TestUtils.scrollClick(getDriver(), findElement(By.id("pa-entity-form-draft-btn")));
     }
 
-    @Ignore
+
     @Test
     public void testEditSaveDraftRecord() {
 
@@ -48,8 +47,8 @@ public class EntityCalendar2Test extends BaseTest {
         findElement(By.xpath("//a[@class='nav-link ' and contains(.,'list')]")).click();
         findElement(By.xpath("//a[contains(.,'Java Learning')]/parent::td/parent::tr//button")).click();
 
-        getWait().until(ExpectedConditions.elementToBeClickable(By.xpath
-                ("//a[contains(.,'Java Learning')]/parent::td/parent::tr//div//a[contains(.,'edit')]"))).click();
+        getWait().until(TestUtils.movingIsFinished(getDriver().findElement(By.xpath
+                ("//a[contains(.,'Java Learning')]/parent::td/parent::tr//div//a[contains(.,'edit')]")))).click();
 
         getWait().until(ExpectedConditions.elementToBeClickable(By.xpath("//input[@id='string']"))).clear();
         findElement(By.id("string")).sendKeys(newString);
@@ -72,12 +71,12 @@ public class EntityCalendar2Test extends BaseTest {
         findElement(By.xpath("//div[@class='filter-option-inner']")).click();
 
         getWait().until(ExpectedConditions.elementToBeClickable(By.xpath("//div[@class='dropdown-menu show']")));
-        TestUtils.scrollClick(getDriver(),By.xpath("//li//span[@class='text' and text() = '" + tester + "']"));
+        TestUtils.scrollClick(getDriver(), By.xpath("//li//span[@class='text' and text() = '" + tester + "']"));
 
         findElement(By.id("pa-entity-form-draft-btn")).click();
 
         List<WebElement> result = getDriver().findElements(
-                By.xpath("//a[contains(.,'"+ newString +"')]/parent::td/parent::tr/td[@class='pa-list-table-th']"));
+                By.xpath("//a[contains(.,'" + newString + "')]/parent::td/parent::tr/td[@class='pa-list-table-th']"));
         for (int i = 0; i < 8; i++) {
             Assert.assertEquals(result.get(i).getText(), expextedResult.get(i));
         }
