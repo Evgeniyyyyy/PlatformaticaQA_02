@@ -32,20 +32,18 @@ public class EntityBoardViewDraftRecordTest extends BaseTest {
         scrollClick(getDriver(), findElement(By.xpath("//button[@data-id='user']")));
         jsClick(getDriver(), findElement(By.xpath("//span[text()='tester43@tester.test']")));
 
-        WebElement text = findElement(By.id("text"));
-        text.click();
-        text.sendKeys("Text");
-        getWait().until(ExpectedConditions.attributeToBe(text, "value", "Text"));
-
-        WebElement integer = findElement(By.id("int"));
-        integer.sendKeys("23");
-        getWait().until(ExpectedConditions.attributeToBe(integer, "value", "23"));
-
-        WebElement decimal = findElement(By.id("decimal"));
-        decimal.sendKeys("1.50");
-        getWait().until(ExpectedConditions.attributeToBe(decimal, "value", "1.50"));
+        sendKeysOneByOne(findElement(By.id("text")), "Text");
+        sendKeysOneByOne(findElement(By.id("int")), "23");
+        sendKeysOneByOne(findElement(By.id("decimal")), "1.50");
 
         findElement(By.id("pa-entity-form-draft-btn")).click();
+    }
+
+    private void sendKeysOneByOne(WebElement element, String input) {
+        char[] editKeys = input.toCharArray();
+        for (char c : editKeys) {
+            element.sendKeys(String.valueOf(c));
+        }
     }
 
     private List<String> getActualValues(List<WebElement> actualElements) {
@@ -53,7 +51,6 @@ public class EntityBoardViewDraftRecordTest extends BaseTest {
         for (WebElement element : actualElements) {
             list.add(element.getText());
         }
-
         return list;
     }
 
