@@ -103,4 +103,20 @@ public class EntityFieldsTest extends BaseTest {
         List<WebElement> viewCard = getDriver().findElements(By.xpath("//div/span/a"));
         Assert.assertEquals(viewCard.get(0).getText(), world.get(0));
     }
+
+    @Test (dependsOnMethods = "testReorderRecord")
+    public void testSearchCreatedRecord () {
+
+        clickFieldsButton();
+        findElement(By.xpath("//input[@placeholder = 'Search']")).sendKeys(world.get(0));
+        clickFieldsButton();
+        findElement(By.xpath("//input[@placeholder = 'Search']")).sendKeys(world.get(0));
+
+        Assert.assertEquals(findElements(By.xpath("//tbody/tr")).size(), 2);
+
+        List<WebElement> foundedRecord = getDriver().findElements(By.xpath("//tbody/tr/td/a"));
+        for (int i = 0; i < foundedRecord.size() - 6; i++) {
+            Assert.assertEquals(foundedRecord.get(i).getText(), world.get(i));
+        }
+    }
 }
