@@ -4,6 +4,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.testng.Assert;
 import org.testng.annotations.Test;
+import utils.TestUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -33,7 +34,9 @@ public class EntityBoardDraftRecordTest extends BaseTest {
     final List<Object> expectedCreatedRecord = Arrays
             .asList(stringInputValue, textInputValue, intInputValue, decimalInputValue,
                     emptyField, emptyField, emptyField, userName);
-
+    final List<Object> expectedViewedRecord = Arrays
+            .asList(stringInputValue, textInputValue, intInputValue, decimalInputValue,
+                    emptyField, emptyField);
     final List<Object> expectedEditedRecord = Arrays
             .asList(stringInputValue, textInputValue, intInputValue, newDecimalInputValue,
                     emptyField, emptyField, emptyField, userName);
@@ -83,7 +86,6 @@ public class EntityBoardDraftRecordTest extends BaseTest {
     }
 
     private void deleteDraftRecord() {
-
         findElement(LIST_BUTTON).click();
 
         findElement(ACTIONS_BUTTON).click();
@@ -105,8 +107,29 @@ public class EntityBoardDraftRecordTest extends BaseTest {
         List<WebElement> actualRecord = findElements(By.xpath("//td[@class='pa-list-table-th']"));
         Assert.assertEquals(getActualValues(actualRecord), expectedCreatedRecord);
     }
-
     @Test(dependsOnMethods = "testCreateDraftRecord")
+    public void testViewDraftRecord() {
+
+        jsClick(getDriver(), findElement(BOARD_TAB));
+        findElement(LIST_BUTTON).click();
+
+        WebElement iconCheckBox = findElement(By.xpath("//tbody/tr/td/i"));
+        Assert.assertEquals(iconCheckBox.getAttribute("class"), "fa fa-pencil");
+
+        findElement(ACTIONS_BUTTON).click();
+
+        getWait().until(TestUtils.movingIsFinished(By.linkText("view"))).click();
+
+        List<WebElement> actualRecord = findElements(By.xpath("//span[@class='pa-view-field']"));
+        WebElement actualUser = findElement(By.xpath("//div[@class='form-group']/p"));
+
+        Assert.assertEquals(getActualValues(actualRecord), expectedViewedRecord);
+        Assert.assertEquals(actualUser.getText(), userName);
+
+        findElement(By.xpath("//i[text()='clear']")).click();
+    }
+
+    @Test(dependsOnMethods = "testViewDraftRecord")
     public void testEditDraftRecord() {
 
         jsClick(getDriver(), findElement(BOARD_TAB));
