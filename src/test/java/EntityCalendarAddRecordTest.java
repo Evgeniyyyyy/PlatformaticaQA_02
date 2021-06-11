@@ -15,9 +15,9 @@ import java.util.List;
 
 public class EntityCalendarAddRecordTest extends BaseTest {
 
-    @Ignore
+
     @Test
-    public void testCreateRecord() throws InterruptedException {
+    public void testCreateRecord() {
         ProjectUtils.start(getDriver());
         TestUtils.scrollClick(getDriver(), getDriver().findElement(By.xpath("//p[contains (text(), 'Calendar')]")));
         findElement(By.xpath("//i[contains(text(),'create_new_folder')]")).click();
