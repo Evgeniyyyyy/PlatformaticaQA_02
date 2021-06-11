@@ -109,8 +109,6 @@ public class EntityFieldsTest extends BaseTest {
 
         clickFieldsButton();
         findElement(By.xpath("//input[@placeholder = 'Search']")).sendKeys(world.get(0));
-        clickFieldsButton();
-        findElement(By.xpath("//input[@placeholder = 'Search']")).sendKeys(world.get(0));
 
         Assert.assertEquals(findElements(By.xpath("//tbody/tr")).size(), 2);
 
