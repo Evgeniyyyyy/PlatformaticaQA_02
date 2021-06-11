@@ -331,10 +331,9 @@ public class EntityDefaultTest extends BaseTest {
         }
     }
 
-    @Test(dependsOnMethods = "testCreateNewRecordAsDraft")
+    @Test
     public void testCreateNewDefaultSaveRecord() {
 
-        cleanOut(getDriver());
         scrollClick(getDriver(), findElement(DEFAULT_TAB));
 
         clickCreateRecord(getDriver());
@@ -345,9 +344,9 @@ public class EntityDefaultTest extends BaseTest {
         Assert.assertEquals(icon1.getAttribute("class"), "fa fa-check-square-o");
     }
 
-    @Test(dependsOnMethods = "testCreateNewDefaultSaveRecord")
+    @Test
     public void testCreateNewDefaultDraftRecord() {
-        cleanOut(getDriver());
+
         scrollClick(getDriver(), findElement(DEFAULT_TAB));
         clickCreateRecord(getDriver());
         clickSaveDraft(getDriver());
@@ -357,10 +356,9 @@ public class EntityDefaultTest extends BaseTest {
         Assert.assertEquals(icon1.getAttribute("class"), "fa fa-pencil");
     }
 
-    @Test(dependsOnMethods = "testCreateNewDefaultDraftRecord")
+    @Test
     public void testSortRecords() {
 
-        cleanOut(getDriver());
         scrollClick(getDriver(), findElement(DEFAULT_TAB));
         clickCreateRecord(getDriver());
         clearFields();

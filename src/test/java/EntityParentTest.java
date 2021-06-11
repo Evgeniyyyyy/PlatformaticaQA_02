@@ -18,12 +18,12 @@ import static utils.ProjectUtils.*;
 
 public class EntityParentTest extends BaseTest {
 
-    final String stringInputValue = "Pending";
-    final String textInputValue = "qwerty";
-    final String intInputValue = "12345";
-    final String decimalInputValue = "0.10";
-    final String emptyField = "";
-    final String userName = "apptester10@tester.test";
+    private static final String stringInputValue = "Pending";
+    private static final String textInputValue = "qwerty";
+    private static final String intInputValue = "12345";
+    private static final String decimalInputValue = "0.10";
+    private static final String emptyField = "";
+    private static final String userName = "apptester10@tester.test";
 
     Date date = new Date();
     SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
@@ -235,10 +235,20 @@ public class EntityParentTest extends BaseTest {
         Assert.assertEquals(viewCard.get(0).getText(), everyone.get(0));
     }
 
-    @Test(dependsOnMethods = "testReorderRecord")
+    @Test
+    public void testCancelRecord() {
+
+        clickParentButton();
+        clickCreateRecord(getDriver());
+        fillForm();
+        clickCancel(getDriver());
+
+        Assert.assertEquals(findElement(EntityParentConstants.PARENT_GET_CONTANER).getText(), "");
+    }
+
+    @Test(dependsOnMethods = "testCancelRecord")
     public void testCreateNewDraftRecord() {
 
-        cleanOut(getDriver());
         clickParentButton();
 
         clickCreateRecord(getDriver());
@@ -256,17 +266,6 @@ public class EntityParentTest extends BaseTest {
     }
 
     @Test(dependsOnMethods = "testCreateNewDraftRecord")
-    public void testCancelRecord() {
-
-        clickParentButton();
-        clickCreateRecord(getDriver());
-        fillForm();
-        clickCancel(getDriver());
-
-        Assert.assertNull(findElement(EntityParentConstants.PARENT_GET_CONTANER).getAttribute("value"));
-    }
-
-    @Test(dependsOnMethods = "testCancelRecord")
     public void testDeleteRecord() {
 
         clickParentButton();
