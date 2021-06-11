@@ -30,10 +30,13 @@ public class EntityGanttTest extends BaseTest {
     private static final By ACTIONS_BUTTON = By.xpath("//button[@class='btn btn-round btn-sm btn-primary dropdown-toggle']");
     private static final By VIEW_BUTTON = By.xpath("//a[normalize-space()='view']");
     private static final By EDIT_BUTTON = By.xpath("//a[@href] [contains(text(), 'edit')]");
+    private static final By DELETE_BUTTON = By.xpath("//a[@href] [contains(text(), 'delete')]");
+    private static final By RECYCLE_INFO = By.xpath("//span[@class='pagination-info']");
     private static final By LIST_OF_RECORDS = By.xpath("//span [@class = 'pa-view-field']");
     private static final By EXIT_BUTTON = By.xpath("//i[contains(text(),'clear')]");
     private static final By USER_FIELD = By.xpath("//div [@class = 'form-group']/p");
-    private static final By ROWS_ELEMENT = By.xpath(" //div[@class='fixed-table-body']//table[@id='pa-all-entities-table']/tbody/tr");
+    private static final By ROWS_ELEMENT = By.xpath("//div[@class='fixed-table-body']//table[@id='pa-all-entities-table']/tbody/tr");
+    private static final By CARD_BODY = By.xpath("//div[@class = 'card-body ']");
 
     private static final String STRING_INPUT_VALUE = "Test";
     private static final String TEXT_INPUT_VALUE = "Text";
@@ -55,11 +58,11 @@ public class EntityGanttTest extends BaseTest {
                 .click();
     }
 
-    private void chooseSideBarItem(){
+    private void chooseSideBarItem() {
         scrollClick(getDriver(), By.xpath("//a[@class='nav-link'][contains(.,'Gantt')]"));
     }
 
-    private void startCreateSteps(){
+    private void startCreateSteps() {
         chooseSideBarItem();
 
         clickCreateRecord(getDriver());
@@ -156,6 +159,29 @@ public class EntityGanttTest extends BaseTest {
         for (int i = 0; i < expectedValues2.size(); i++) {
             Assert.assertEquals(columnList.get(i).getText(), expectedValues2.get(i).toString());
         }
+    }
+
+    @Test(dependsOnMethods = "testEditRecord")
+    public void testDeleteRecord() {
+        chooseSideBarItem();
+
+        clickListButton();
+        findElement(ACTIONS_BUTTON).click();
+
+        List<WebElement> rows = getDriver().findElements(ROWS_ELEMENT);
+        Assert.assertEquals(rows.size(), 1);
+
+        getWait().until(TestUtils.movingIsFinished(getDriver().findElement(DELETE_BUTTON))).click();
+
+        String textCardBodyAfterDelete = getDriver().findElement(CARD_BODY).getText();
+        Assert.assertTrue(textCardBodyAfterDelete.isEmpty());
+
+        clickRecycleBin(getDriver());
+
+        WebElement recycleBinPage = findElement(RECYCLE_INFO);
+        String currentString = recycleBinPage.getText();
+        boolean checkBin = !currentString.equals("");
+        Assert.assertTrue(checkBin, "Showing 1 to 1 of 1 rows");
     }
 
     @Test
