@@ -70,16 +70,25 @@ public abstract class BaseTest {
 
         if (method.getAnnotation(Test.class).dependsOnMethods().length == 0) {
             System.out.println("Browser open, get web page and login");
-            initDriver();
-
-            LoginUtils.start(getDriver());
+            startDriver();
+            loginWeb();
         } else {
             System.out.println("Get web page");
-            LoginUtils.get(getDriver());
+            getWeb();
         }
     }
 
-    protected void initDriver() {
+    protected void loginWeb() {
+        LoginUtils.get(driver);
+        LoginUtils.login(driver);
+        LoginUtils.reset(driver);
+    }
+
+    protected void getWeb() {
+        LoginUtils.get(getDriver());
+    }
+
+    protected void startDriver() {
         ChromeOptions chromeOptions = new ChromeOptions();
         chromeOptions.addArguments("--window-size=1920,1080");
 

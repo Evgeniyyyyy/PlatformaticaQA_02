@@ -79,10 +79,4 @@ abstract class LoginUtils {
     public static void get(WebDriver driver) {
         driver.get("https://ref2.eteam.work/");
     }
-
-    public static void start(WebDriver driver) {
-        get(driver);
-        login(driver);
-        reset(driver);
-    }
 }
