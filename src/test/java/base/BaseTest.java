@@ -103,7 +103,7 @@ public abstract class BaseTest {
     @AfterMethod
     protected void afterMethod(Method method, ITestResult testResult) {
         List<Method> list = OrderUtils.find(methodList, method).orElse(null);
-        if (list == null || (list.remove(method) && list.isEmpty())) {
+        if (!testResult.isSuccess() || list == null || (list.remove(method) && list.isEmpty())) {
             stopDriver();
             System.out.println("Browser closed");
         }
