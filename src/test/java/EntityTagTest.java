@@ -3,96 +3,64 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.testng.Assert;
 import org.testng.annotations.Test;
-import static utils.TestUtils.*;
 import static utils.ProjectUtils.*;
 
 import java.util.*;
 
 public class EntityTagTest extends BaseTest{
 
-    private void createRecord() {
+    private static final String STRING = "Hello world";
+    private static final String TEXT = "Be healthy";
+    private static final String INT = "123";
+    private static final String DECIMAL = "456.98";
 
-        findElement(By.id("string")).sendKeys("Hello world");
-        findElement(By.id("text")).sendKeys("Be healthy");
-        findElement(By.id("int")).sendKeys("123");
-        findElement(By.id("decimal")).sendKeys("456.98");
+    private static final List<String> EXPECTED_RESULT = List.of(STRING, TEXT, INT, DECIMAL, "", "");
 
-        jsClick(getDriver(), getDriver().findElement(By.xpath("//button[@data-id='user']")));
-        jsClick(getDriver(), getDriver().findElement(
-                        By.xpath("//span[text()='tester26@tester.test']")));
-    }
+    private static final By ICON = By.xpath("//tbody/tr/td/i");
 
-    private void editRecord() {
+    private void fillForm() {
 
-        getDriver().findElement(By.id("string")).clear();
-        getDriver().findElement(By.id("string")).sendKeys("Hello for everyone");
+        getEntity(getDriver(),"Tag");
+        clickCreateRecord(getDriver());
 
-        getDriver().findElement(By.id("text")).clear();
-        getDriver().findElement(By.id("text")).sendKeys("Peace to all");
-
-        getDriver().findElement(By.id("int")).clear();
-        getDriver().findElement(By.id("int")).sendKeys("345");
-
-        getDriver().findElement(By.id("decimal")).clear();
-        getDriver().findElement(By.id("decimal")).sendKeys("345.67");
-
-        jsClick(getDriver(), getDriver().findElement(By.xpath("//button[@data-id='user']")));
-        jsClick(getDriver(), getDriver().findElement(
-                By.xpath("//span[text()='tester26@tester.test']")));
-    }
-
-    private final List<String> world = List.of(
-            "Hello world", "Be healthy", "123", "456.98", "", "");
-
-    private final List<String> everyone = List.of(
-            "Hello for everyone", "Peace to all", "345", "345.67", "", "");
-
-    private void clickTagButton() {
-        scrollClick(getDriver(), getDriver().findElement(By.xpath("//p[text()=' Tag ']")));
+        findElement(By.id("string")).sendKeys(STRING);
+        findElement(By.id("text")).sendKeys(TEXT);
+        findElement(By.id("int")).sendKeys(INT);
+        findElement(By.id("decimal")).sendKeys(DECIMAL);
     }
 
     @Test
     public void testCancelRecord() {
 
-        clickTagButton();
-        clickCreateRecord(getDriver());
-        createRecord();
+        fillForm();
         clickCancel(getDriver());
 
         Assert.assertNull(findElement(By.className("card-body")).getAttribute("value"));
     }
 
-    @Test(dependsOnMethods = "testCancelRecord")
+    @Test
     public void testCreateRecord() {
 
-        clickTagButton();
-        clickCreateRecord(getDriver());
-        createRecord();
+        fillForm();
         clickSave(getDriver());
 
-        List<WebElement> records = getDriver().findElements(By.xpath("//tbody/tr/td/a"));
-        WebElement box = getDriver().findElement(By.xpath("//tbody/tr/td/i"));
-
-        Assert.assertEquals(box.getAttribute("class"), "fa fa-check-square-o");
-        for (int i = 0; i < records.size(); i++) {
-            Assert.assertEquals(records.get(i).getText(), world.get(i));
+        WebElement icon = findElement(ICON);
+        Assert.assertEquals(icon.getAttribute("class"), "fa fa-check-square-o");
+        for (int i = 0; i < ACTUAL_RESULT(getDriver()).size(); i++) {
+            Assert.assertEquals(ACTUAL_RESULT(getDriver()).get(i).getText(), EXPECTED_RESULT.get(i));
         }
     }
 
-    @Test(dependsOnMethods = "testCreateRecord")
+    @Test
     public void testCreateDraftRecord() {
 
-        clickTagButton();
-        clickCreateRecord(getDriver());
-        editRecord();
+        fillForm();
         clickSaveDraft(getDriver());
 
-        List<WebElement> records = getDriver().findElements(By.xpath("//tbody/tr[2]/td/a"));
-        WebElement box = getDriver().findElement(By.xpath("//tbody/tr[2]/td/i"));
-
-        Assert.assertEquals(box.getAttribute("class"), "fa fa-pencil");
-        for (int i = 0; i < records.size(); i++) {
-            Assert.assertEquals(records.get(i).getText(), everyone.get(i));
+        WebElement icon = findElement(ICON);
+        Assert.assertEquals(icon.getAttribute("class"), "fa fa-pencil");
+        for (int i = 0; i < ACTUAL_RESULT(getDriver()).size(); i++) {
+            Assert.assertEquals(ACTUAL_RESULT(getDriver()).get(i).getText(), EXPECTED_RESULT.get(i));
         }
     }
 }
