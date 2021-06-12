@@ -3,6 +3,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Action;
 import org.openqa.selenium.interactions.Actions;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -110,11 +111,9 @@ public class EntityFieldsTest extends BaseTest {
         clickFieldsButton();
         findElement(By.xpath("//input[@placeholder = 'Search']")).sendKeys(world.get(0));
 
-        Assert.assertEquals(findElements(By.xpath("//tbody/tr")).size(), 2);
-
-        List<WebElement> foundedRecord = getDriver().findElements(By.xpath("//tbody/tr/td/a"));
-        for (int i = 0; i < foundedRecord.size() - 6; i++) {
-            Assert.assertEquals(foundedRecord.get(i).getText(), world.get(i));
+        List<WebElement> foundRecord = getDriver().findElements(By.xpath("//tbody/tr/td/a"));
+        for (int i = 0; i < foundRecord.size() - 6; i++) {
+            Assert.assertEquals(foundRecord.get(i).getText(), world.get(i));
         }
     }
 }
