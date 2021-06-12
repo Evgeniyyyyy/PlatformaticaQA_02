@@ -111,8 +111,11 @@ public class EntityFieldsTest extends BaseTest {
         clickFieldsButton();
         findElement(By.xpath("//input[@placeholder = 'Search']")).sendKeys(world.get(0));
 
+        getWait().until(ExpectedConditions.textToBePresentInElementLocated(
+                By.xpath("//span[@class='pagination-info']"), "Showing 1 to 1 of 1 rows"));
+
         List<WebElement> foundRecord = getDriver().findElements(By.xpath("//tbody/tr/td/a"));
-        for (int i = 0; i < foundRecord.size() - 6; i++) {
+        for (int i = 0; i < foundRecord.size(); i++) {
             Assert.assertEquals(foundRecord.get(i).getText(), world.get(i));
         }
     }
