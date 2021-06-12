@@ -23,30 +23,33 @@ public class EntityBoardDraftRecordTest extends BaseTest {
     private static final By TEXT_FIELD  = By.id("text");
     private static final By DECIMAL_FIELD  = By.id("decimal");
 
-    private final String stringInputValue = "Pending";
-    private final String intInputValue = "12345";
-    private final String textInputValue = "qwerty";
-    private final String decimalInputValue = "12.45";
-    private final String newDecimalInputValue = "0.22";
-    private final String userName = "tester10@tester.test";
-    private final String emptyField = "";
+    private static final String STRING_INPUT_VALUE = "Pending";
+    private static final String INT_INPUT_VALUE = "12345";
+    private static final String TEXT_INPUT_VALUE = "qwerty";
+    private static final String DECIMAL_INPUT_VALUE = "12.45";
+    private static final String NEW_DECIMAL_INPUT_VALUE = "0.22";
+    private static final String USER_NAME = "tester10@tester.test";
+    private static final String EMPTY_FIELD = "";
 
-    final List<Object> expectedCreatedRecord = Arrays
-            .asList(stringInputValue, textInputValue, intInputValue, decimalInputValue,
-                    emptyField, emptyField, emptyField, userName);
-    final List<Object> expectedViewedRecord = Arrays
-            .asList(stringInputValue, textInputValue, intInputValue, decimalInputValue,
-                    emptyField, emptyField);
-    final List<Object> expectedEditedRecord = Arrays
-            .asList(stringInputValue, textInputValue, intInputValue, newDecimalInputValue,
-                    emptyField, emptyField, emptyField, userName);
+    private final List<Object> expectedCreatedRecord = Arrays
+            .asList(STRING_INPUT_VALUE, TEXT_INPUT_VALUE, INT_INPUT_VALUE, DECIMAL_INPUT_VALUE,
+                    EMPTY_FIELD, EMPTY_FIELD, EMPTY_FIELD, USER_NAME);
+    private final List<Object> expectedViewedRecord = Arrays
+            .asList(STRING_INPUT_VALUE, TEXT_INPUT_VALUE, INT_INPUT_VALUE, DECIMAL_INPUT_VALUE,
+                    EMPTY_FIELD, EMPTY_FIELD);
+    private final List<Object> expectedEditedRecord = Arrays
+            .asList(STRING_INPUT_VALUE, TEXT_INPUT_VALUE, INT_INPUT_VALUE, NEW_DECIMAL_INPUT_VALUE,
+                    EMPTY_FIELD, EMPTY_FIELD, EMPTY_FIELD, USER_NAME);
+    private final List<Object> expectedDelitedRecord = Arrays
+            .asList(STRING_INPUT_VALUE, TEXT_INPUT_VALUE, INT_INPUT_VALUE, NEW_DECIMAL_INPUT_VALUE,
+                    EMPTY_FIELD, EMPTY_FIELD);
 
-    private void createDraftRecord() {
+    private void fillForm() {
         clickCreateRecord(getDriver());
 
-        sendKeysOneByOne(findElement(INTEGER_FIELD), intInputValue);
-        sendKeysOneByOne(findElement(TEXT_FIELD), textInputValue);
-        sendKeysOneByOne(findElement(DECIMAL_FIELD), decimalInputValue);
+        sendKeysOneByOne(findElement(INTEGER_FIELD), INT_INPUT_VALUE);
+        sendKeysOneByOne(findElement(TEXT_FIELD), TEXT_INPUT_VALUE);
+        sendKeysOneByOne(findElement(DECIMAL_FIELD), DECIMAL_INPUT_VALUE);
 
         findElement(By.xpath("//button[@data-id='string']")).click();
         jsClick(getDriver(), findElement(By.xpath("//select/option[text()='Pending']")));
@@ -80,7 +83,7 @@ public class EntityBoardDraftRecordTest extends BaseTest {
 
         findElement(DECIMAL_FIELD).click();
         findElement(DECIMAL_FIELD).clear();
-        sendKeysOneByOne(findElement(DECIMAL_FIELD), newDecimalInputValue);
+        sendKeysOneByOne(findElement(DECIMAL_FIELD), NEW_DECIMAL_INPUT_VALUE);
 
         clickSaveDraft(getDriver());
     }
@@ -97,7 +100,7 @@ public class EntityBoardDraftRecordTest extends BaseTest {
 
         jsClick(getDriver(), findElement(BOARD_TAB));
 
-        createDraftRecord();
+        fillForm();
 
         findElement(LIST_BUTTON).click();
 
@@ -107,6 +110,7 @@ public class EntityBoardDraftRecordTest extends BaseTest {
         List<WebElement> actualRecord = findElements(By.xpath("//td[@class='pa-list-table-th']"));
         Assert.assertEquals(getActualValues(actualRecord), expectedCreatedRecord);
     }
+
     @Test(dependsOnMethods = "testCreateDraftRecord")
     public void testViewDraftRecord() {
 
@@ -124,9 +128,7 @@ public class EntityBoardDraftRecordTest extends BaseTest {
         WebElement actualUser = findElement(By.xpath("//div[@class='form-group']/p"));
 
         Assert.assertEquals(getActualValues(actualRecord), expectedViewedRecord);
-        Assert.assertEquals(actualUser.getText(), userName);
-
-        findElement(By.xpath("//i[text()='clear']")).click();
+        Assert.assertEquals(actualUser.getText(), USER_NAME);
     }
 
     @Test(dependsOnMethods = "testViewDraftRecord")
@@ -174,8 +176,15 @@ public class EntityBoardDraftRecordTest extends BaseTest {
         WebElement header = findElement(By.xpath("//a[@class='navbar-brand']"));
         Assert.assertEquals(header.getText(), "Recycle Bin");
 
-        List<WebElement> actualRecord = findElements(By.xpath("//tbody/tr"));
-        Assert.assertEquals(actualRecord.size(), 1);
+        getWait().until(ExpectedConditions.elementToBeClickable(By
+                .xpath("//td[@class='pa-recycle-col']/a"))).click();
+
+        List<WebElement> actualRecord = findElements(By.xpath("//span[@class='pa-view-field']"));
+        WebElement actualUser = findElement(By.xpath("//div[@class='form-group']/p"));
+        Assert.assertEquals(getActualValues(actualRecord), expectedDelitedRecord);
+        Assert.assertEquals(actualUser.getText(), USER_NAME);
+
+        findElement(By.xpath("//button[contains(.,'clear')]")).click();
 
         getWait().until(ExpectedConditions.elementToBeClickable(By.linkText("delete permanently"))).click();
 
