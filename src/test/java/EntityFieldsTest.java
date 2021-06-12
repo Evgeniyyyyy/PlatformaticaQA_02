@@ -3,6 +3,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Action;
 import org.openqa.selenium.interactions.Actions;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -102,5 +103,20 @@ public class EntityFieldsTest extends BaseTest {
 
         List<WebElement> viewCard = getDriver().findElements(By.xpath("//div/span/a"));
         Assert.assertEquals(viewCard.get(0).getText(), world.get(0));
+    }
+
+    @Test (dependsOnMethods = "testReorderRecord")
+    public void testSearchCreatedRecord () {
+
+        clickFieldsButton();
+        findElement(By.xpath("//input[@placeholder = 'Search']")).sendKeys(world.get(0));
+
+        getWait().until(ExpectedConditions.textToBePresentInElementLocated(
+                By.xpath("//span[@class='pagination-info']"), "Showing 1 to 1 of 1 rows"));
+
+        List<WebElement> foundRecord = getDriver().findElements(By.xpath("//tbody/tr/td/a"));
+        for (int i = 0; i < foundRecord.size(); i++) {
+            Assert.assertEquals(foundRecord.get(i).getText(), world.get(i));
+        }
     }
 }
