@@ -26,9 +26,6 @@ public class EntityChevronTest extends BaseTest {
     final private static String FULFILLMENT = "Fulfillment";
     final private static String SENT = "Sent";
 
-    private void chooseSideBarItem(String name){
-        scrollClick(getDriver(), By.xpath("//a[@class='nav-link'][contains(.,'"+name+"')]"));
-    }
 
     private void chooseStringDropDownItem(String dropDownItem) {
         WebElement stringButton = findElement(By.xpath("//button[@data-id='string']"));
@@ -181,10 +178,28 @@ public class EntityChevronTest extends BaseTest {
         List<WebElement> actualRecords = findElements(By.xpath("//span [@class = 'pa-view-field']"));
 
         for (int i = 0; i < actualRecords.size() ; i++) {
-            Assert.assertEquals(actualRecords.get(i).getText(), data.get(i).toString());
+            Assert.assertEquals(actualRecords.get(i).getText(), data.get(i));
         }
         WebElement user = findElement(By.xpath("//div[@class = 'form-group']/p"));
         Assert.assertEquals(user.getText(), data.get(7));
+    }
+
+    private void clickActionsView(int row) {
+        findElement(By.xpath("//tr[@data-index='"+ row +"']//button/i[@class='material-icons'][position()=1]")).click();
+        getWait().until(TestUtils.movingIsFinished(getDriver().
+                findElement(By.xpath("//tr[@data-index='"+ row +"']//a[text()='view']")))).click();
+    }
+
+    private void clickActionsEdit(int row) {
+        findElement(By.xpath("//tr[@data-index='"+ row +"']//button/i[@class='material-icons'][position()=1]")).click();
+        getWait().until(TestUtils.movingIsFinished(getDriver().
+                findElement(By.xpath("//tr[@data-index='"+ row +"']//a[text()='edit']")))).click();
+    }
+
+    private void clickActionsDelete(int row) {
+        findElement(By.xpath("//tr[@data-index='"+ row +"']//button/i[@class='material-icons'][position()=1]")).click();
+        getWait().until(TestUtils.movingIsFinished(getDriver().
+                findElement(By.xpath("//tr[@data-index='"+ row +"']//a[text()='delete']")))).click();
     }
 
     final private static List<String> EXPECTED_DATA_PENDING_RECORD = makeRandomData(PENDING);
@@ -196,7 +211,7 @@ public class EntityChevronTest extends BaseTest {
 
     @Test
     public void testCreatePendingRecord(){
-        chooseSideBarItem(ENTITY_NAME);
+        getEntity(getDriver(), ENTITY_NAME);
         clickCreateRecord(getDriver());
         fillFormFields(EXPECTED_DATA_PENDING_RECORD);
         clickSave(getDriver());
@@ -205,24 +220,20 @@ public class EntityChevronTest extends BaseTest {
 
     @Test(dependsOnMethods = {"testCreatePendingRecord"})
     public void testViewPendingRecord() {
-        chooseSideBarItem(ENTITY_NAME);
+        getEntity(getDriver(), ENTITY_NAME);
 
         int row = chooseRecordNumberInTable(EXPECTED_DATA_PENDING_RECORD);
-        findElement(By.xpath("//tr[@data-index='"+ row +"']//button/i[@class='material-icons'][position()=1]")).click();
-        getWait().until(TestUtils.movingIsFinished(getDriver().
-                findElement(By.xpath("//tr[@data-index='"+ row +"']//a[text()='view']")))).click();
+        clickActionsView(row);
 
         checkRecordInViewMode(EXPECTED_DATA_PENDING_RECORD);
     }
 
     @Test(dependsOnMethods = {"testViewPendingRecord"})
     public void testEditPendingRecord() {
-        chooseSideBarItem(ENTITY_NAME);
+        getEntity(getDriver(), ENTITY_NAME);
 
         int row = chooseRecordNumberInTable(EXPECTED_DATA_PENDING_RECORD);
-        findElement(By.xpath("//tr[@data-index='"+ row +"']//button/i[@class='material-icons'][position()=1]")).click();
-        getWait().until(TestUtils.movingIsFinished(getDriver().
-                findElement(By.xpath("//tr[@data-index='"+ row +"']//a[text()='edit']")))).click();
+        clickActionsEdit(row);
 
         checkFormIsNotEmpty();
         emptyForm();
@@ -230,10 +241,25 @@ public class EntityChevronTest extends BaseTest {
         clickSave(getDriver());
         checkCreatedRecord(FULFILLMENT, false, EXPECTED_DATA_FULFILLMENT_DRAFT_RECORD);
     }
-    
+
+    @Test(dependsOnMethods =  {"testEditPendingRecord"})
+    public void testDeleteFulfillmentRecord(){
+        getEntity(getDriver(), ENTITY_NAME);
+
+        int row = chooseRecordNumberInTable(EXPECTED_DATA_PENDING_RECORD);
+        clickActionsDelete(row);
+        List<WebElement> tableElements = findElements(By.xpath("//div[@class='card-body ']/*"));
+        Assert.assertEquals(tableElements.size(), 1);
+
+        String expectedTextRecycleBinAfterDelete = "delete_outline\n" + "1";
+        String textRecycleBinAfterDelete = getDriver().findElement(
+                By.xpath("//a[@href='index.php?action=recycle_bin']")).getText();
+        Assert.assertEquals(textRecycleBinAfterDelete, expectedTextRecycleBinAfterDelete);
+    }
+
     @Test
     public void testCreateFulfillmentRecord(){
-        chooseSideBarItem(ENTITY_NAME);
+        getEntity(getDriver(), ENTITY_NAME);
         clickCreateRecord(getDriver());
         fillFormFields(EXPECTED_DATA_FULFILLMENT_RECORD);
         clickSave(getDriver());
@@ -242,19 +268,17 @@ public class EntityChevronTest extends BaseTest {
 
     @Test(dependsOnMethods = {"testCreateFulfillmentRecord"})
     public void testViewFulfillmentRecord() {
-        chooseSideBarItem(ENTITY_NAME);
+        getEntity(getDriver(), ENTITY_NAME);
 
         int row = chooseRecordNumberInTable(EXPECTED_DATA_FULFILLMENT_RECORD);
-        findElement(By.xpath("//tr[@data-index='"+ row +"']//button/i[@class='material-icons'][position()=1]")).click();
-        getWait().until(TestUtils.movingIsFinished(getDriver().
-                findElement(By.xpath("//tr[@data-index='"+ row +"']//a[text()='view']")))).click();
+        clickActionsView(row);
 
         checkRecordInViewMode(EXPECTED_DATA_FULFILLMENT_RECORD);
     }
     @Ignore
     @Test
     public void testCreateSentRecord(){
-        chooseSideBarItem(ENTITY_NAME);
+        getEntity(getDriver(), ENTITY_NAME);
         clickCreateRecord(getDriver());
         fillFormFields(EXPECTED_DATA_SENT_RECORD);
         clickSave(getDriver());
@@ -263,20 +287,18 @@ public class EntityChevronTest extends BaseTest {
     @Ignore
     @Test(dependsOnMethods = {"testCreateSentRecord"})
     public void testViewSentRecord() {
-        chooseSideBarItem(ENTITY_NAME);
+        getEntity(getDriver(), ENTITY_NAME);
         findElement(By.xpath("//a[text()='All']")).click();
 
         int row = chooseRecordNumberInTable(EXPECTED_DATA_SENT_RECORD);
-        findElement(By.xpath("//tr[@data-index='"+ row +"']//button/i[@class='material-icons'][position()=1]")).click();
-        getWait().until(TestUtils.movingIsFinished(getDriver().
-                findElement(By.xpath("//tr[@data-index='"+ row +"']//a[text()='view']")))).click();
+        clickActionsView(row);
 
         checkRecordInViewMode(EXPECTED_DATA_SENT_RECORD);
     }
     @Ignore
     @Test
     public void testCreatePendingDraftRecord(){
-        chooseSideBarItem(ENTITY_NAME);
+        getEntity(getDriver(), ENTITY_NAME);
         clickCreateRecord(getDriver());
         fillFormFields(EXPECTED_DATA_PENDING_DRAFT_RECORD);
         clickSaveDraft(getDriver());
@@ -285,19 +307,17 @@ public class EntityChevronTest extends BaseTest {
     @Ignore
     @Test(dependsOnMethods = {"testCreatePendingDraftRecord"})
     public void testViewPendingDraftRecord() {
-        chooseSideBarItem(ENTITY_NAME);
+        getEntity(getDriver(), ENTITY_NAME);
 
         int row = chooseRecordNumberInTable(EXPECTED_DATA_PENDING_DRAFT_RECORD);
-        findElement(By.xpath("//tr[@data-index='"+ row +"']//button/i[@class='material-icons'][position()=1]")).click();
-        getWait().until(TestUtils.movingIsFinished(getDriver().
-                findElement(By.xpath("//tr[@data-index='"+ row +"']//a[text()='view']")))).click();
+        clickActionsView(row);
 
         checkRecordInViewMode(EXPECTED_DATA_PENDING_DRAFT_RECORD);
     }
     @Ignore
     @Test
     public void testCreateFulfillmentDraftRecord(){
-        chooseSideBarItem(ENTITY_NAME);
+        getEntity(getDriver(), ENTITY_NAME);
         clickCreateRecord(getDriver());
         fillFormFields(EXPECTED_DATA_FULFILLMENT_DRAFT_RECORD);
         clickSaveDraft(getDriver());
@@ -306,19 +326,17 @@ public class EntityChevronTest extends BaseTest {
     @Ignore
     @Test(dependsOnMethods = {"testCreateFulfillmentDraftRecord"})
     public void testViewFulfillmentDraftRecord() {
-        chooseSideBarItem(ENTITY_NAME);
+        getEntity(getDriver(), ENTITY_NAME);
 
         int row = chooseRecordNumberInTable(EXPECTED_DATA_FULFILLMENT_DRAFT_RECORD);
-        findElement(By.xpath("//tr[@data-index='"+ row +"']//button/i[@class='material-icons'][position()=1]")).click();
-        getWait().until(TestUtils.movingIsFinished(getDriver().
-                findElement(By.xpath("//tr[@data-index='"+ row +"']//a[text()='view']")))).click();
+        clickActionsView(row);
 
         checkRecordInViewMode(EXPECTED_DATA_FULFILLMENT_DRAFT_RECORD);
     }
     @Ignore
     @Test
     public void testCreateSentDraftRecord(){
-        chooseSideBarItem(ENTITY_NAME);
+        getEntity(getDriver(), ENTITY_NAME);
         clickCreateRecord(getDriver());
         fillFormFields(EXPECTED_DATA_SENT_DRAFT_RECORD);
         clickSaveDraft(getDriver());
@@ -327,20 +345,18 @@ public class EntityChevronTest extends BaseTest {
     @Ignore
     @Test(dependsOnMethods = {"testCreateSentDraftRecord"})
     public void testViewSentDraftRecord() {
-        chooseSideBarItem(ENTITY_NAME);
+        getEntity(getDriver(), ENTITY_NAME);
         findElement(By.xpath("//a[text()='All']")).click();
 
         int row = chooseRecordNumberInTable(EXPECTED_DATA_SENT_DRAFT_RECORD);
-        findElement(By.xpath("//tr[@data-index='"+ row +"']//button/i[@class='material-icons'][position()=1]")).click();
-        getWait().until(TestUtils.movingIsFinished(getDriver().
-                findElement(By.xpath("//tr[@data-index='"+ row +"']//a[text()='view']")))).click();
+        clickActionsView(row);
 
         checkRecordInViewMode(EXPECTED_DATA_SENT_DRAFT_RECORD);
     }
 
     @Test
     public void testCancelCreateRecord(){
-        chooseSideBarItem(ENTITY_NAME);
+        getEntity(getDriver(), ENTITY_NAME);
         clickCreateRecord(getDriver());
         List<String> expectedData = makeRandomData(PENDING);
         fillFormFields(expectedData);
@@ -351,7 +367,7 @@ public class EntityChevronTest extends BaseTest {
 
     @Test
     public void testCancelCreateDraftRecord(){
-        chooseSideBarItem(ENTITY_NAME);
+        getEntity(getDriver(), ENTITY_NAME);
         clickCreateRecord(getDriver());
         List<String> expectedData = makeRandomData(FULFILLMENT);
         fillFormFields(expectedData);
