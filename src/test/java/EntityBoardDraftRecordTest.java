@@ -22,6 +22,7 @@ public class EntityBoardDraftRecordTest extends BaseTest {
     private static final By INTEGER_FIELD  = By.id("int");
     private static final By TEXT_FIELD  = By.id("text");
     private static final By DECIMAL_FIELD  = By.id("decimal");
+    private static final By ACTUAL_SEARCH_RECORD = By.xpath("//tbody/tr/td/a");
 
     private static final String STRING_INPUT_VALUE = "Pending";
     private static final String INT_INPUT_VALUE = "12345";
@@ -190,5 +191,57 @@ public class EntityBoardDraftRecordTest extends BaseTest {
 
         Assert.assertEquals(findElement(By.className("card-body")).getText(),
                 "Good job with housekeeping! Recycle bin is currently empty!");
+    }
+
+    @Test
+    public void testSearchDraftRecord(){
+
+        final By searchField = By.xpath("//input[contains(@class, 'search-input')]");
+        final List<Object> expectedFoundRecord1 = Arrays
+                .asList(STRING_INPUT_VALUE, "books", "52", "5.36",
+                        EMPTY_FIELD, EMPTY_FIELD);
+        final List<Object> expectedFoundRecord2 = Arrays
+                .asList(STRING_INPUT_VALUE, "magazines", "199", "1.78",
+                        EMPTY_FIELD, EMPTY_FIELD);
+        final String searchTextValue1 = "books";
+        final String searchTextValue2 = "magazines";
+
+        jsClick(getDriver(), findElement(BOARD_TAB));
+
+        clickCreateRecord(getDriver());
+
+        sendKeysOneByOne(findElement(INTEGER_FIELD), "52");
+        sendKeysOneByOne(findElement(TEXT_FIELD), "books");
+        sendKeysOneByOne(findElement(DECIMAL_FIELD), "5.36");
+        clickSaveDraft(getDriver());
+
+        clickCreateRecord(getDriver());
+
+        sendKeysOneByOne(findElement(INTEGER_FIELD), "199");
+        sendKeysOneByOne(findElement(TEXT_FIELD), "magazines");
+        sendKeysOneByOne(findElement(DECIMAL_FIELD), "1.78");
+        clickSaveDraft(getDriver());
+
+        findElement(LIST_BUTTON).click();
+
+        Assert.assertEquals(findElements(By.xpath("//tbody/tr")).size(), 2);
+
+        findElement(searchField).sendKeys(searchTextValue1);
+
+        getWait().until(ExpectedConditions.textToBePresentInElementLocated(
+                By.xpath("//span[@class='pagination-info']"), "Showing 1 to 1 of 1 rows"));
+
+        Assert.assertEquals(getActualValues(findElements(ACTUAL_SEARCH_RECORD)), expectedFoundRecord1);
+
+        findElement(searchField).clear();
+
+        getWait().until(ExpectedConditions.textToBePresentInElementLocated(
+                By.xpath("//span[@class='pagination-info']"), "Showing 1 to 2 of 2 rows"));
+
+        findElement(searchField).sendKeys(searchTextValue2);
+        getWait().until(ExpectedConditions.textToBePresentInElementLocated(
+                By.xpath("//span[@class='pagination-info']"), "Showing 1 to 1 of 1 rows"));
+
+        Assert.assertEquals(getActualValues(findElements(ACTUAL_SEARCH_RECORD)), expectedFoundRecord2);
     }
 }
