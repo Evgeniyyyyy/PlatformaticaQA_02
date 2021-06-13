@@ -88,6 +88,7 @@ public class EntityArithmeticFunctionTest extends BaseTest {
         fillForm(20, 10);
     }
 
+    @Ignore
     @Test
     public void testEditRecord() {
         final Integer F1 = 40;
