@@ -20,6 +20,7 @@ public class EntityTagTest extends BaseTest{
 
     private static final By ICON = By.xpath("//tbody/tr/td/i");
     private static final By ACTUAL_RESULT = By.xpath("//tbody/tr/td/a");
+    private static final By DELETED_RECORD = By.cssSelector("span.pa-view-field");
 
     private void fillForm() {
 
@@ -61,5 +62,16 @@ public class EntityTagTest extends BaseTest{
         WebElement icon = findElement(ICON);
         Assert.assertEquals(icon.getAttribute("class"), "fa fa-pencil");
         Assert.assertEquals(getActualValues(findElements(ACTUAL_RESULT)), EXPECTED_RESULT);
+    }
+
+    @Test(dependsOnMethods = "testCreateRecord")
+    public void testDeleteRecord() {
+
+        getEntity(getDriver(), "Tag");
+        clickActionsDelete(getDriver());
+        clickRecycleBin(getDriver());
+        findElement(ACTUAL_RESULT).click();
+
+        Assert.assertEquals(getActualValues(findElements(DELETED_RECORD)), EXPECTED_RESULT);
     }
 }
