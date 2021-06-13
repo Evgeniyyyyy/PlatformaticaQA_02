@@ -13,6 +13,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
@@ -69,8 +70,12 @@ public class ProjectUtils {
                         By.xpath("//a[contains(text(),'!!! Reset all for my user !!!')]"))));
     }
 
-    public static List<WebElement> ACTUAL_RESULT(WebDriver driver) {
-        return List.of(driver.findElement(By.xpath("//tbody/tr/td/a")));
+    public static List<String> getActualValues(List<WebElement> actualElements) {
+        List<String> listValues = new ArrayList<>();
+        for (WebElement element : actualElements) {
+            listValues.add(element.getText());
+        }
+        return listValues;
     }
 
     public static void getEntity(WebDriver driver, String name) {

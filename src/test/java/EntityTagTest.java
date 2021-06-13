@@ -3,6 +3,8 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.testng.Assert;
 import org.testng.annotations.Test;
+import utils.ProjectUtils;
+
 import static utils.ProjectUtils.*;
 
 import java.util.*;
@@ -17,6 +19,7 @@ public class EntityTagTest extends BaseTest{
     private static final List<String> EXPECTED_RESULT = List.of(STRING, TEXT, INT, DECIMAL, "", "");
 
     private static final By ICON = By.xpath("//tbody/tr/td/i");
+    private static final By ACTUAL_RESULT = By.xpath("//tbody/tr/td/a");
 
     private void fillForm() {
 
@@ -46,9 +49,7 @@ public class EntityTagTest extends BaseTest{
 
         WebElement icon = findElement(ICON);
         Assert.assertEquals(icon.getAttribute("class"), "fa fa-check-square-o");
-        for (int i = 0; i < ACTUAL_RESULT(getDriver()).size(); i++) {
-            Assert.assertEquals(ACTUAL_RESULT(getDriver()).get(i).getText(), EXPECTED_RESULT.get(i));
-        }
+        Assert.assertEquals(getActualValues(findElements(ACTUAL_RESULT)), EXPECTED_RESULT);
     }
 
     @Test
@@ -59,8 +60,6 @@ public class EntityTagTest extends BaseTest{
 
         WebElement icon = findElement(ICON);
         Assert.assertEquals(icon.getAttribute("class"), "fa fa-pencil");
-        for (int i = 0; i < ACTUAL_RESULT(getDriver()).size(); i++) {
-            Assert.assertEquals(ACTUAL_RESULT(getDriver()).get(i).getText(), EXPECTED_RESULT.get(i));
-        }
+        Assert.assertEquals(getActualValues(findElements(ACTUAL_RESULT)), EXPECTED_RESULT);
     }
 }
