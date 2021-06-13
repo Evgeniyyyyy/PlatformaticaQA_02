@@ -9,78 +9,76 @@ import org.testng.annotations.Test;
 
 import java.util.List;
 import static utils.ProjectUtils.*;
-import static utils.TestUtils.jsClick;
 
 public class EntityFieldsTest extends BaseTest {
 
-    private void createRecord() {
+    private static final String STRING = "Hello world";
+    private static final String TEXT = "Be healthy";
+    private static final String INT = "123";
+    private static final String DECIMAL = "456.98";
+    private static final String EDIT_STRING = "Hello for everyone";
+    private static final String EDIT_TEXT = "Peace to all";
+    private static final String EDIT_INT = "345";
+    private static final String EDIT_DECIMAL = "345.67";
 
+    private static final List<String> EDIT_RESULT = List.of(EDIT_STRING, EDIT_TEXT, EDIT_INT, EDIT_DECIMAL, "", "");
+    private static final List<String> EXPECTED_RESULT = List.of(STRING, TEXT, INT, DECIMAL, "", "");
+
+    private static final By ICON = By.xpath("//tbody/tr/td/i");
+    private static final By FILL_STRING = By.id("title");
+    private static final By FILL_TEXT = By.id("comments");
+    private static final By FILL_INT = By.id("int");
+    private static final By FILL_DECIMAL = By.id("decimal");
+    private static final By ACTUAL_RESULT = By.xpath("//tbody/tr/td/a");
+    private static final By RECORD = By.xpath("//div/span/a");
+
+    private void fillForm() {
+
+        getEntity(getDriver(),"Fields");
         clickCreateRecord(getDriver());
 
-        findElement(By.id("title")).sendKeys("Hello world");
-        findElement(By.id("comments")).sendKeys("Be healthy");
-        findElement(By.id("int")).sendKeys("123");
-        findElement(By.id("decimal")).sendKeys("456.98");
-
-        jsClick(getDriver(), getDriver().findElement(By.xpath("//button[@data-id='user']")));
-        jsClick(getDriver(), getDriver().findElement(
-                By.xpath("//span[text()='tester26@tester.test']")));
+        findElement(FILL_STRING).sendKeys(STRING);
+        findElement(FILL_TEXT).sendKeys(TEXT);
+        findElement(FILL_INT).sendKeys(INT);
+        findElement(FILL_DECIMAL).sendKeys(DECIMAL);
+        clickSave(getDriver());
     }
 
-    private void editRecord() {
+    private void editForm() {
 
-        getDriver().findElement(By.id("title")).clear();
-        getDriver().findElement(By.id("title")).sendKeys("Hello for everyone");
+        findElement(FILL_STRING).clear();
+        findElement(FILL_STRING).sendKeys(EDIT_STRING);
 
-        getDriver().findElement(By.id("comments")).clear();
-        getDriver().findElement(By.id("comments")).sendKeys("Peace to all");
+        findElement(FILL_TEXT).clear();
+        findElement(FILL_TEXT).sendKeys(EDIT_TEXT);
 
-        getDriver().findElement(By.id("int")).clear();
-        getDriver().findElement(By.id("int")).sendKeys("345");
+        findElement(FILL_INT).clear();
+        findElement(FILL_INT).sendKeys(EDIT_INT);
 
-        getDriver().findElement(By.id("decimal")).clear();
-        getDriver().findElement(By.id("decimal")).sendKeys("345.67");
-
-        jsClick(getDriver(), getDriver().findElement(By.xpath("//button[@data-id='user']")));
-        jsClick(getDriver(), getDriver().findElement(
-                By.xpath("//span[text()='tester26@tester.test']")));
+        findElement(FILL_DECIMAL).clear();
+        findElement(FILL_DECIMAL).sendKeys(EDIT_DECIMAL);
+        clickSave(getDriver());
     }
-
-    private void clickFieldsButton() {
-        jsClick(getDriver(), getDriver().findElement(By.xpath("//p[text()=' Fields ']")));
-    }
-
-    private final List<String> world = List.of(
-            "Hello world", "Be healthy", "123", "456.98", "", "");
-
-    private final List<String> everyone = List.of(
-            "Hello for everyone", "Peace to all", "345", "345.67", "", "");
 
     @Test
-    public void testCreateNewRecord(){
+    public void testCreateRecord(){
 
-        clickFieldsButton();
-        createRecord();
-        clickSave(getDriver());
+        fillForm();
 
-        List<WebElement> record = getDriver().findElements(By.xpath("//tbody/tr/td/a"));
-        for (int i = 0; i < record.size(); i++) {
-            Assert.assertEquals(record.get(i).getText(), world.get(i));
-        }
+        WebElement icon = getDriver().findElement(ICON);
+        Assert.assertEquals(icon.getAttribute("class"), "fa fa-check-square-o");
+        Assert.assertEquals(getActualValues(findElements(ACTUAL_RESULT)), EXPECTED_RESULT);
     }
 
-    @Test(dependsOnMethods = "testCreateNewRecord")
+    @Test(dependsOnMethods = "testCreateRecord")
     public void testReorderRecord() {
 
-        clickFieldsButton();
+        getEntity(getDriver(),"Fields");
         clickCreateRecord(getDriver());
-        editRecord();
-        clickSaveDraft(getDriver());
+        editForm();
 
         findElement(By.xpath("//i[text()='format_line_spacing']")).click();
-
-        List<WebElement> record = getDriver().findElements(By.xpath("//tbody/tr/td/a"));
-        Assert.assertEquals(record.get(0).getText(), world.get(0));
+        Assert.assertEquals(getActualValues(findElements(ACTUAL_RESULT)).get(0), EXPECTED_RESULT.get(0));
 
         Actions actions = new Actions(getDriver());
         WebElement row = findElement(By.xpath("//tbody/tr"));
@@ -88,35 +86,29 @@ public class EntityFieldsTest extends BaseTest {
         Action swapRow = actions.build();
         swapRow.perform();
 
-        List<WebElement> record1 = getDriver().findElements(By.xpath("//tbody/tr/td/a"));
-        Assert.assertEquals(record1.get(0).getText(), everyone.get(0));
+        Assert.assertEquals(getActualValues(findElements(ACTUAL_RESULT)).get(0), EDIT_RESULT.get(0));
 
         getDriver().findElement(By.xpath("//i[@class='fa fa-toggle-off']")).click();
-
-        List<WebElement> viewToggle = getDriver().findElements(By.xpath("//div/span/a"));
-        Assert.assertEquals(viewToggle.get(0).getText(), everyone.get(0));
+        Assert.assertEquals(getActualValues(findElements(RECORD)).get(0), EDIT_RESULT.get(0));
 
         WebElement card = getDriver().findElement(By.id("customId_0"));
         actions.moveToElement(card).clickAndHold(card).dragAndDropBy(card, 0, 100);
         Action swapCard = actions.build();
         swapCard.perform();
 
-        List<WebElement> viewCard = getDriver().findElements(By.xpath("//div/span/a"));
-        Assert.assertEquals(viewCard.get(0).getText(), world.get(0));
+        Assert.assertEquals(getActualValues(findElements(RECORD)).get(0), EXPECTED_RESULT.get(0));
+
     }
 
     @Test (dependsOnMethods = "testReorderRecord")
     public void testSearchCreatedRecord () {
 
-        clickFieldsButton();
-        findElement(By.xpath("//input[@placeholder = 'Search']")).sendKeys(world.get(0));
+        getEntity(getDriver(), "Fields");
+        findElement(By.xpath("//input[@placeholder = 'Search']")).sendKeys(EXPECTED_RESULT.get(0));
 
         getWait().until(ExpectedConditions.textToBePresentInElementLocated(
                 By.xpath("//span[@class='pagination-info']"), "Showing 1 to 1 of 1 rows"));
 
-        List<WebElement> foundRecord = getDriver().findElements(By.xpath("//tbody/tr/td/a"));
-        for (int i = 0; i < foundRecord.size(); i++) {
-            Assert.assertEquals(foundRecord.get(i).getText(), world.get(i));
-        }
+        Assert.assertEquals(getActualValues(findElements(ACTUAL_RESULT)), EXPECTED_RESULT);
     }
 }
