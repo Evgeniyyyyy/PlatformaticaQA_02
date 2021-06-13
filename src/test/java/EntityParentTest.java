@@ -1,6 +1,7 @@
 import base.BaseTest;
 import constants.EntityParentConstants;
 import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Action;
 import org.openqa.selenium.interactions.Actions;
@@ -18,56 +19,72 @@ import static utils.ProjectUtils.*;
 
 public class EntityParentTest extends BaseTest {
 
-    private static final String stringInputValue = "Pending";
-    private static final String textInputValue = "qwerty";
-    private static final String intInputValue = "12345";
-    private static final String decimalInputValue = "0.10";
-    private static final String emptyField = "";
-    private static final String userName = "apptester10@tester.test";
+    private static final String STRING_INPUT_VALUE = "Pending";
+    private static final String TEXT_INPUT_VALUE = "qwerty";
+    private static final String INT_INPUT_VALUE = "12345";
+    private static final String DECIMAL_INPUT_VALUE = "0.10";
+    private static final String EMPTY_FIELD = "";
+    private static final String USER_NAME = "apptester10@tester.test";
+    private static final String STRING = "Hello world";
+    private static final String TEXT = "Be healthy";
+    private static final String INT = "123";
+    private static final String DECIMAL = "456.98";
+    private static final String EDIT_STRING = "Hello for everyone";
+    private static final String EDIT_TEXT = "Peace to all";
+    private static final String EDIT_INT = "345";
+    private static final String EDIT_DECIMAL = "345.67";
+    private static final String INFO_STR_1_OF_1 = "Showing 1 to 1 of 1 rows";
+    private static final String INFO_STR_2_OF_2 = "Showing 1 to 2 of 2 rows";
+
+    private static final List<String> EDIT_RESULT = List.of(EDIT_STRING, EDIT_TEXT, EDIT_INT, EDIT_DECIMAL, "", "");
+    private static final List<String> EXPECTED_RESULT = List.of(STRING, TEXT, INT, DECIMAL, "", "");
+
+    private static final By ICON = By.xpath("//tbody/tr/td/i");
+    private static final By FILL_STRING = By.id("string");
+    private static final By FILL_TEXT = By.id("text");
+    private static final By FILL_INT = By.id("int");
+    private static final By FILL_DECIMAL = By.id("decimal");
+    private static final By INFO_STRING = By.xpath("//span[@class='pagination-info']");
+    private static final By INPUT = By.xpath("//input[@type='text']");
+    private static final By ACTUAL_RESULT = By.xpath("//tbody/tr/td/a");
 
     Date date = new Date();
     SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
 
     final List<Object> expectedValues = Arrays
-            .asList(stringInputValue, textInputValue, intInputValue, decimalInputValue,
-                    formatter.format(date), emptyField, emptyField, userName);
+            .asList(STRING_INPUT_VALUE, TEXT_INPUT_VALUE, INT_INPUT_VALUE, DECIMAL_INPUT_VALUE,
+                    formatter.format(date), EMPTY_FIELD, EMPTY_FIELD, USER_NAME);
 
-    private void createRecord() {
+    private static List<WebElement> RECORD(WebDriver driver) {
+        return List.of(driver.findElement(By.xpath("//div/span/a")));
+    }
 
+    private void fillForms() {
+
+        getEntity(getDriver(),"Parent");
         clickCreateRecord(getDriver());
-        findElement(By.id("string")).sendKeys("Hello world");
-        findElement(By.id("text")).sendKeys("Be healthy");
-        findElement(By.id("int")).sendKeys("123");
-        findElement(By.id("decimal")).sendKeys("456.98");
 
-        TestUtils.jsClick(getDriver(), getDriver().findElement(By.xpath("//button[@data-id='user']")));
-        TestUtils.jsClick(getDriver(), getDriver().findElement(
-                By.xpath("//span[text()='tester26@tester.test']")));
+        findElement(FILL_STRING).sendKeys(STRING);
+        findElement(FILL_TEXT).sendKeys(TEXT);
+        findElement(FILL_INT).sendKeys(INT);
+        findElement(FILL_DECIMAL).sendKeys(DECIMAL);
         clickSave(getDriver());
     }
 
     private void editRecord() {
 
-        getDriver().findElement(By.id("string")).clear();
-        getDriver().findElement(By.id("string")).sendKeys("Hello for everyone");
+        findElement(FILL_STRING).clear();
+        findElement(FILL_STRING).sendKeys(EDIT_STRING);
 
-        getDriver().findElement(By.id("text")).clear();
-        getDriver().findElement(By.id("text")).sendKeys("Peace to all");
+        findElement(FILL_TEXT).clear();
+        findElement(FILL_TEXT).sendKeys(EDIT_TEXT);
 
-        getDriver().findElement(By.id("int")).clear();
-        getDriver().findElement(By.id("int")).sendKeys("345");
+        findElement(FILL_INT).clear();
+        findElement(FILL_INT).sendKeys(EDIT_INT);
 
-        getDriver().findElement(By.id("decimal")).clear();
-        getDriver().findElement(By.id("decimal")).sendKeys("345.67");
-
-        TestUtils.jsClick(getDriver(), getDriver().findElement(By.xpath("//button[@data-id='user']")));
-        TestUtils.jsClick(getDriver(), getDriver().findElement(
-                By.xpath("//span[text()='tester26@tester.test']")));
+        findElement(FILL_DECIMAL).clear();
+        findElement(FILL_DECIMAL).sendKeys(EDIT_DECIMAL);
         clickSave(getDriver());
-    }
-
-    private void clickParentButton() {
-        TestUtils.jsClick(getDriver(), getDriver().findElement(By.xpath("//p[text()=' Parent ']")));
     }
 
     private void clickListButton() {
@@ -77,10 +94,10 @@ public class EntityParentTest extends BaseTest {
 
     private void fillForm() {
 
-        findElement(EntityParentConstants.STRING_FIELD).sendKeys(stringInputValue);
-        findElement(EntityParentConstants.TEXT_FIELD).sendKeys(textInputValue);
-        findElement(EntityParentConstants.INT_FIELD).sendKeys(intInputValue);
-        findElement(EntityParentConstants.DECIMAL_FIELD).sendKeys(decimalInputValue);
+        findElement(EntityParentConstants.STRING_FIELD).sendKeys(STRING_INPUT_VALUE);
+        findElement(EntityParentConstants.TEXT_FIELD).sendKeys(TEXT_INPUT_VALUE);
+        findElement(EntityParentConstants.INT_FIELD).sendKeys(INT_INPUT_VALUE);
+        findElement(EntityParentConstants.DECIMAL_FIELD).sendKeys(DECIMAL_INPUT_VALUE);
         findElement(EntityParentConstants.DATE_FIELD).click();
         findElement(EntityParentConstants.TESTER_NAME_FIELD).click();
 
@@ -101,73 +118,45 @@ public class EntityParentTest extends BaseTest {
         view_action.click();
     }
 
-    private final List<String> world = List.of(
-            "Hello world", "Be healthy", "123", "456.98", "", "");
-
-    private final List<String> everyone = List.of(
-            "Hello for everyone", "Peace to all", "345", "345.67", "", "");
-
     @Test
     public void testCreateRecord() {
 
-        clickParentButton();
-        createRecord();
+        fillForms();
 
-        WebElement icon = findElement(By.xpath("//tbody/tr/td/i"));
-
-        List<WebElement> result = getDriver().findElements(By.xpath(
-                "//tbody/tr/td/a"));
-
+        WebElement icon = getDriver().findElement(ICON);
         Assert.assertEquals(icon.getAttribute("class"), "fa fa-check-square-o");
-        for (int i = 0; i < result.size(); i++) {
-            Assert.assertEquals(result.get(i).getText(), world.get(i));
-        }
+        Assert.assertEquals(getActualValues(findElements(ACTUAL_RESULT)), EXPECTED_RESULT);
     }
 
     @Test(dependsOnMethods = "testCreateRecord")
     public void testViewRecord() {
 
-        clickParentButton();
+        getEntity(getDriver(), "Parent");
         clickListButton();
 
-        findElement(By.xpath("//button/i[@class='material-icons']")).click();
-        TestUtils.jsClick(getDriver(), getDriver().findElement(By.xpath("//a[text()='view']")));
+        clickActionsView(getDriver());
 
         List<WebElement> row = findElements(By.xpath("//span[@class='pa-view-field']"));
-        Assert.assertEquals(row.size(), 6);
         for (int i = 0; i < row.size(); i++) {
-            Assert.assertEquals(row.get(i).getText(), world.get(i));
+            Assert.assertEquals(row.get(i).getText(), EXPECTED_RESULT.get(i));
         }
-        getDriver().findElement(By.xpath("//i[text()='clear']")).click();
     }
 
     @Test(dependsOnMethods = "testViewRecord")
     public void testEditRecord() {
 
-        clickParentButton();
-        WebElement record = getDriver().findElement(By.tagName("tbody"));
-        record.getText();
+        getEntity(getDriver(), "Parent");
 
-        findElement(By.xpath("//button/i[@class='material-icons']")).click();
-        TestUtils.jsClick(getDriver(), getDriver().findElement(By.xpath("//a[text()='edit']")));
-
+        clickActionsEdit(getDriver());
         editRecord();
 
-        List<WebElement> result = getDriver().findElements(By.xpath("//tbody/tr/td/a"));
-        for (int i = 0; i < result.size(); i++) {
-            Assert.assertEquals(result.get(i).getText(), everyone.get(i));
-        }
-
-        WebElement newRecord = findElement(By.tagName("tbody"));
-        newRecord.getText();
-        Assert.assertNotEquals(record, newRecord);
+        Assert.assertEquals(getActualValues(findElements(ACTUAL_RESULT)), EDIT_RESULT);
     }
 
     @Test(dependsOnMethods = "testEditRecord")
     public void testSearchRecord() {
 
-        clickParentButton();
-        createRecord();
+        fillForms();
 
         WebElement record = getDriver().findElement(By.xpath("//tr[@data-index='0']"));
         record.getText();
@@ -178,39 +167,32 @@ public class EntityParentTest extends BaseTest {
         Assert.assertEquals(fields.size(), 2);
         Assert.assertNotEquals(record, record1);
 
-        findElement(By.xpath("//input[@type='text']")).sendKeys("world");
+        findElement(INPUT).sendKeys(EXPECTED_RESULT.get(0));
         getWait().until(ExpectedConditions.textToBePresentInElementLocated(
-                By.xpath("//span[@class='pagination-info']"), "Showing 1 to 1 of 1 rows"));
+                INFO_STRING, INFO_STR_1_OF_1));
 
-        List<WebElement> result = getDriver().findElements(By.xpath("//tbody/tr/td/a"));
-        for (int i = 0; i < result.size(); i++) {
-            Assert.assertEquals(result.get(i).getText(), world.get(i));
-        }
+        Assert.assertEquals(getActualValues(findElements(ACTUAL_RESULT)), EXPECTED_RESULT);
 
-        findElement(By.xpath("//input[@type='text']")).clear();
+        findElement(INPUT).clear();
         getWait().until(ExpectedConditions.textToBePresentInElementLocated(
-                By.xpath("//span[@class='pagination-info']"), "Showing 1 to 2 of 2 rows"));
+                INFO_STRING, INFO_STR_2_OF_2));
 
-        findElement(By.xpath("//input[@type='text']")).sendKeys("for");
+        findElement(INPUT).sendKeys(EDIT_RESULT.get(0));
         getWait().until(ExpectedConditions.textToBePresentInElementLocated(
-                By.xpath("//span[@class='pagination-info']"), "Showing 1 to 1 of 1 rows"));
+                INFO_STRING, INFO_STR_1_OF_1));
 
-        List<WebElement> result1 = getDriver().findElements(By.xpath("//tbody/tr/td/a"));
-        for (int i = 0; i < result1.size(); i++) {
-            Assert.assertEquals(result1.get(i).getText(), everyone.get(i));
-        }
+        Assert.assertEquals(getActualValues(findElements(ACTUAL_RESULT)), EDIT_RESULT);
     }
 
     @Test(dependsOnMethods = "testSearchRecord")
     public void testReorderRecord() {
 
-        clickParentButton();
+        getEntity(getDriver(), "Parent");
 
         findElement(By.xpath("//input[@type='text']")).clear();
         findElement(By.xpath("//i[text()='format_line_spacing']")).click();
 
-        List<WebElement> record = getDriver().findElements(By.xpath("//tbody/tr/td/a"));
-        Assert.assertEquals(record.get(0).getText(), everyone.get(0));
+        Assert.assertEquals(findElements(ACTUAL_RESULT).get(0).getText(), EDIT_RESULT.get(0));
 
         Actions actions = new Actions(getDriver());
         WebElement row = findElement(By.xpath("//tbody/tr"));
@@ -218,27 +200,25 @@ public class EntityParentTest extends BaseTest {
         Action swapRow = actions.build();
         swapRow.perform();
 
-        List<WebElement> record1 = getDriver().findElements(By.xpath("//tbody/tr/td/a"));
-        Assert.assertEquals(record1.get(0).getText(), world.get(0));
+        Assert.assertEquals(findElements(ACTUAL_RESULT).get(0).getText(), EXPECTED_RESULT.get(0));
 
         getDriver().findElement(By.xpath("//i[@class='fa fa-toggle-off']")).click();
 
-        List<WebElement> viewToggle = getDriver().findElements(By.xpath("//div/span/a"));
-        Assert.assertEquals(viewToggle.get(0).getText(), world.get(0));
+        Assert.assertEquals(RECORD(getDriver()).get(0).getText(), EXPECTED_RESULT.get(0));
 
         WebElement card = getDriver().findElement(By.id("customId_0"));
         actions.moveToElement(card).clickAndHold(card).dragAndDropBy(card, 0, 100);
         Action swapCard = actions.build();
         swapCard.perform();
 
-        List<WebElement> viewCard = getDriver().findElements(By.xpath("//div/span/a"));
-        Assert.assertEquals(viewCard.get(0).getText(), everyone.get(0));
+        Assert.assertEquals(RECORD(getDriver()).get(0).getText(), EDIT_RESULT.get(0));
     }
 
     @Test
     public void testCancelRecord() {
 
-        clickParentButton();
+        getEntity(getDriver(), "Parent");
+
         clickCreateRecord(getDriver());
         fillForm();
         clickCancel(getDriver());
@@ -249,7 +229,7 @@ public class EntityParentTest extends BaseTest {
     @Test(dependsOnMethods = "testCancelRecord")
     public void testCreateNewDraftRecord() {
 
-        clickParentButton();
+        getEntity(getDriver(), "Parent");
 
         clickCreateRecord(getDriver());
         fillForm();
@@ -268,7 +248,8 @@ public class EntityParentTest extends BaseTest {
     @Test(dependsOnMethods = "testCreateNewDraftRecord")
     public void testDeleteRecord() {
 
-        clickParentButton();
+        getEntity(getDriver(), "Parent");
+
         clickCreateRecord(getDriver());
         fillForm();
         clickSave(getDriver());
