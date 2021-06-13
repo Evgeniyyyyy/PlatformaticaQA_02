@@ -8,7 +8,7 @@ import org.testng.annotations.Test;
 import static utils.ProjectUtils.*;
 import utils.TestUtils;
 import constants.EntityArithmeticInlineConstants;
-
+import utils.ProjectUtils;
 import java.util.List;
 
 public class EntityArithmeticInlineTest extends BaseTest {
@@ -47,7 +47,7 @@ public class EntityArithmeticInlineTest extends BaseTest {
         WebElement button_close_window = findElement(EntityArithmeticInlineConstants.VIEW_WINDOW_CLOSE);
         button_close_window.click();
     }
-
+    @Ignore
     @Test
     public void testViewRecord() {
 
@@ -69,5 +69,30 @@ public class EntityArithmeticInlineTest extends BaseTest {
         }
 
         viewActionClose();
+    }
+
+    @Test //test by PRoman-86
+    public void testCreateAndSaveNewRecord() throws InterruptedException {
+
+        ProjectUtils.start(getDriver());
+
+        TestUtils.jsClick(getDriver(), findElement(EntityArithmeticInlineConstants.LINK_ENTITY));
+        TestUtils.jsClick(getDriver(), findElement(EntityArithmeticInlineConstants.ADD_CARD));
+        findElement(By.xpath("//input[@id='f1']")).sendKeys(Integer.toString(F1));
+        findElement(By.xpath("//input[@id='f2']")).sendKeys(Integer.toString(F2));
+
+        getWait().until(ExpectedConditions.textToBePresentInElementValue(By.xpath("//input[@id='div']"), String.valueOf(DIV)));
+        getWait().until(ExpectedConditions.textToBePresentInElementValue(By.xpath("//input[@id='mul']"), String.valueOf(MUL)));
+        getWait().until(ExpectedConditions.textToBePresentInElementValue(By.xpath("//input[@id='sub']"), String.valueOf(SUB)));
+        getWait().until(ExpectedConditions.textToBePresentInElementValue(By.xpath("//input[@id='sum']"), String.valueOf(SUM)));
+
+        TestUtils.scrollClick(getDriver(), findElement(EntityArithmeticInlineConstants.BUTTON_SAVE));
+        TestUtils.jsClick(getDriver(), findElement(EntityArithmeticInlineConstants.ACTION_BUTTON));
+        TestUtils.jsClick(getDriver(), findElement(EntityArithmeticInlineConstants.ACTION_VIEW));
+
+        Assert.assertEquals(findElement(By.xpath("//div[3]//div[1]")).getText(), String.valueOf(SUM));
+        Assert.assertEquals(findElement(By.xpath("//div[4]//div[1]")).getText(), String.valueOf(SUB));
+        Assert.assertEquals(findElement(By.xpath("//div[5]//div[1]")).getText(), String.valueOf(MUL));
+        Assert.assertEquals(findElement(By.xpath("//div[6]//div[1]")).getText(), String.valueOf(DIV));
     }
 }

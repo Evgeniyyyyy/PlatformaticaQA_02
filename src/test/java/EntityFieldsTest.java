@@ -1,40 +1,114 @@
 import base.BaseTest;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.interactions.Action;
+import org.openqa.selenium.interactions.Actions;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.testng.Assert;
 import org.testng.annotations.Test;
-import utils.ProjectUtils;
-import utils.TestUtils;
-import java.util.UUID;
+
+import java.util.List;
+import static utils.ProjectUtils.*;
 
 public class EntityFieldsTest extends BaseTest {
 
+    private static final String STRING = "Hello world";
+    private static final String TEXT = "Be healthy";
+    private static final String INT = "123";
+    private static final String DECIMAL = "456.98";
+    private static final String EDIT_STRING = "Hello for everyone";
+    private static final String EDIT_TEXT = "Peace to all";
+    private static final String EDIT_INT = "345";
+    private static final String EDIT_DECIMAL = "345.67";
+
+    private static final List<String> EDIT_RESULT = List.of(EDIT_STRING, EDIT_TEXT, EDIT_INT, EDIT_DECIMAL, "", "");
+    private static final List<String> EXPECTED_RESULT = List.of(STRING, TEXT, INT, DECIMAL, "", "");
+
+    private static final By ICON = By.xpath("//tbody/tr/td/i");
+    private static final By FILL_STRING = By.id("title");
+    private static final By FILL_TEXT = By.id("comments");
+    private static final By FILL_INT = By.id("int");
+    private static final By FILL_DECIMAL = By.id("decimal");
+    private static final By ACTUAL_RESULT = By.xpath("//tbody/tr/td/a");
+    private static final By RECORD = By.xpath("//div/span/a");
+
+    private void fillForm() {
+
+        getEntity(getDriver(),"Fields");
+        clickCreateRecord(getDriver());
+
+        findElement(FILL_STRING).sendKeys(STRING);
+        findElement(FILL_TEXT).sendKeys(TEXT);
+        findElement(FILL_INT).sendKeys(INT);
+        findElement(FILL_DECIMAL).sendKeys(DECIMAL);
+        clickSave(getDriver());
+    }
+
+    private void editForm() {
+
+        findElement(FILL_STRING).clear();
+        findElement(FILL_STRING).sendKeys(EDIT_STRING);
+
+        findElement(FILL_TEXT).clear();
+        findElement(FILL_TEXT).sendKeys(EDIT_TEXT);
+
+        findElement(FILL_INT).clear();
+        findElement(FILL_INT).sendKeys(EDIT_INT);
+
+        findElement(FILL_DECIMAL).clear();
+        findElement(FILL_DECIMAL).sendKeys(EDIT_DECIMAL);
+        clickSave(getDriver());
+    }
+
     @Test
-    public void testCreateNewRecord(){
-        final String tile = UUID.randomUUID().toString();
-        final String comments = UUID.randomUUID().toString();
-        final int number = 10;
-        final double decimal = 10.10;
+    public void testCreateRecord(){
 
-        By menuFields = By.xpath("//p[contains(text(),'Fields')]");
-        By title = By.xpath("//input[@id='title']");
-        By coment = By.xpath("//textarea[@id='comments']");
-        By num = By.xpath("//input[@id='int']");
-        By dec = By.xpath("//input[@id='decimal']");
-        By saveButton = By.xpath("//button[@id='pa-entity-form-save-btn']");
+        fillForm();
 
-        ProjectUtils.start(getDriver());
+        WebElement icon = getDriver().findElement(ICON);
+        Assert.assertEquals(icon.getAttribute("class"), "fa fa-check-square-o");
+        Assert.assertEquals(getActualValues(findElements(ACTUAL_RESULT)), EXPECTED_RESULT);
+    }
 
-        findElement(menuFields).click();
-        WebElement newRecord = findElement(By.xpath("//i[text() = 'create_new_folder']"));
-        newRecord.click();
-        findElement(title).sendKeys(tile);
-        findElement(coment).sendKeys(comments);
-        findElement(num).sendKeys(String.valueOf(number));
-        findElement(dec).sendKeys(String.valueOf(decimal));
-        TestUtils.jsClick(getDriver(), findElement(saveButton));
+    @Test(dependsOnMethods = "testCreateRecord")
+    public void testReorderRecord() {
 
-        WebElement recordTitle = findElement(By.xpath("//tbody//tr//td[2]"));
-        Assert.assertEquals(recordTitle.getText(), tile);
+        getEntity(getDriver(),"Fields");
+        clickCreateRecord(getDriver());
+        editForm();
+
+        findElement(By.xpath("//i[text()='format_line_spacing']")).click();
+        Assert.assertEquals(getActualValues(findElements(ACTUAL_RESULT)).get(0), EXPECTED_RESULT.get(0));
+
+        Actions actions = new Actions(getDriver());
+        WebElement row = findElement(By.xpath("//tbody/tr"));
+        actions.moveToElement(row).clickAndHold(row).dragAndDropBy(row, 0, 20);
+        Action swapRow = actions.build();
+        swapRow.perform();
+
+        Assert.assertEquals(getActualValues(findElements(ACTUAL_RESULT)).get(0), EDIT_RESULT.get(0));
+
+        getDriver().findElement(By.xpath("//i[@class='fa fa-toggle-off']")).click();
+        Assert.assertEquals(getActualValues(findElements(RECORD)).get(0), EDIT_RESULT.get(0));
+
+        WebElement card = getDriver().findElement(By.id("customId_0"));
+        actions.moveToElement(card).clickAndHold(card).dragAndDropBy(card, 0, 100);
+        Action swapCard = actions.build();
+        swapCard.perform();
+
+        Assert.assertEquals(getActualValues(findElements(RECORD)).get(0), EXPECTED_RESULT.get(0));
+
+    }
+
+    @Test (dependsOnMethods = "testReorderRecord")
+    public void testSearchCreatedRecord () {
+
+        getEntity(getDriver(), "Fields");
+        findElement(By.xpath("//input[@placeholder = 'Search']")).sendKeys(EXPECTED_RESULT.get(0));
+
+        getWait().until(ExpectedConditions.textToBePresentInElementLocated(
+                By.xpath("//span[@class='pagination-info']"), "Showing 1 to 1 of 1 rows"));
+
+        Assert.assertEquals(getActualValues(findElements(ACTUAL_RESULT)), EXPECTED_RESULT);
     }
 }

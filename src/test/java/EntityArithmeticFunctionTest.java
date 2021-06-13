@@ -13,10 +13,9 @@ import java.util.List;
 
 public class EntityArithmeticFunctionTest extends BaseTest {
 
-    private static final By F1_FIELD = By.xpath("//input[@id='f1']");
-    private static final By F2_FIELD = By.xpath("//input[@id='f2']");
-    private static final By DIV_FIELD = By.xpath("//input[@id='div']");
-    private static final By CREATE_NEW = By.xpath("//i[text()='create_new_folder']");
+    private static final By F1_FIELD = By.id("f1");
+    private static final By F2_FIELD = By.id("f2");
+    private static final By DIV_FIELD = By.id("div");
 
 
     @Test
@@ -32,14 +31,13 @@ public class EntityArithmeticFunctionTest extends BaseTest {
         TestUtils.scrollClick(getDriver(),
                 findElement(By.xpath("//p[contains(text(),'Arithmetic Function')]")));
 
-        findElement(CREATE_NEW).click();
+        ProjectUtils.clickCreateRecord(getDriver());
 
         findElement(F1_FIELD).sendKeys(F1.toString());
         findElement(F2_FIELD).sendKeys(F2.toString());
 
         getWait().until(ExpectedConditions.attributeToBe(DIV_FIELD,"value", DIV.toString()));
-
-        findElement(By.xpath("//button[@id='pa-entity-form-draft-btn']")).click();
+        ProjectUtils.clickSaveDraft(getDriver());
 
         WebElement icon = findElement(By.xpath("//tbody/tr/td[1]/i"));
         List<WebElement> columnList = findElements(By.xpath("//tbody/tr/td[@class = 'pa-list-table-th']"));
@@ -79,13 +77,13 @@ public class EntityArithmeticFunctionTest extends BaseTest {
         sendKeysSlow(f2, inputField2.toString());
 
         getWait().until(ExpectedConditions.attributeToBe(DIV_FIELD, "value", expectedValueDIV));
-        findElement(By.xpath("//button[@id='pa-entity-form-save-btn']")).click();
+        ProjectUtils.clickSave(getDriver());
     }
 
     private void createRecord() {
         TestUtils.scrollClick(getDriver(),
                 By.xpath("//p[text()=' Arithmetic Function ']/parent::a/parent::li"));
-        findElement(CREATE_NEW).click();
+        ProjectUtils.clickCreateRecord(getDriver());
 
         fillForm(20, 10);
     }
@@ -102,8 +100,8 @@ public class EntityArithmeticFunctionTest extends BaseTest {
         createRecord();
 
         findElement(By.xpath("//div[@class='dropdown pull-left']")).click();
-        getWait().until(ExpectedConditions.elementToBeClickable(By.xpath("//a[text()='edit']")));
-        TestUtils.jsClick(getDriver(), findElement(By.xpath("//a[text()='edit']")));
+        getWait().until(TestUtils.movingIsFinished(By.xpath("//a[text()='edit']"))).click();
+
         fillForm(F1, F2);
 
         List<WebElement> columnList = findElements(By.xpath("//tbody/tr/td[@class = 'pa-list-table-th']"));

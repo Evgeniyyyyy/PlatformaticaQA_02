@@ -2,37 +2,32 @@ import base.BaseTest;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.RandomUtils;
 import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Assert;
 import org.testng.annotations.Ignore;
 import org.testng.annotations.Test;
+import utils.TestUtils;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 import static utils.ProjectUtils.*;
 import static utils.TestUtils.*;
 
+
 public class EntityChevronTest extends BaseTest {
 
-    final String ENTITY_NAME = "Chevron";
-    final String PENDING = "Pending";
-    final String FULFILLMENT = "Fulfillment";
-    final String SENT = "Sent";
+    final private static String ENTITY_NAME = "Chevron";
+    final private static String PENDING = "Pending";
+    final private static String FULFILLMENT = "Fulfillment";
+    final private static String SENT = "Sent";
 
     private void chooseSideBarItem(String name){
         scrollClick(getDriver(), By.xpath("//a[@class='nav-link'][contains(.,'"+name+"')]"));
-    }
-
-    private void clickAddButton(){
-        findElement(By.xpath("//i[contains(.,'create_new_folder')]")).click();
     }
 
     private void chooseStringDropDownItem(String dropDownItem) {
@@ -49,7 +44,7 @@ public class EntityChevronTest extends BaseTest {
         Assert.assertEquals(stringButton.getAttribute("title"), dropDownItem);
     }
 
-    private List<String> makeRandomData(String dropDownItem){
+    private static List<String> makeRandomData(String dropDownItem){
         List<String> randomData = new ArrayList<>();
 
         randomData.add(dropDownItem);
@@ -75,7 +70,46 @@ public class EntityChevronTest extends BaseTest {
         return randomData;
     }
 
-    private void fillCreateNewFormFields(List<String> data){
+    private void checkFormIsNotEmpty(){
+        WebElement stringButton = findElement(By.xpath("//button[@data-id='string']"));
+        WebElement text = findElement(By.xpath("//textarea[@id='text']"));
+        WebElement intData = findElement(By.id("int"));
+        WebElement decimalData = findElement(By.id("decimal"));
+        WebElement date = findElement(By.xpath("//input[@id='date']"));
+        WebElement datetime = findElement(By.xpath("//input[@id='datetime']"));
+        WebElement user = findElement(By.xpath("//button[@data-id='user']"));
+        Assert.assertFalse(stringButton.getAttribute("title").isEmpty());
+        Assert.assertFalse(text.getText().isEmpty());
+        Assert.assertFalse(intData.getAttribute("value").isEmpty());
+        Assert.assertFalse(decimalData.getAttribute("value").isEmpty());
+        Assert.assertFalse(date.getAttribute("value").isEmpty());
+        Assert.assertFalse(datetime.getAttribute("value").isEmpty());
+        Assert.assertFalse(user.getAttribute("title").isEmpty());
+    }
+
+    private void emptyForm(){
+        WebElement date = findElement(By.xpath("//input[@id='date']"));
+        date.click();
+        date.clear();
+
+        WebElement datetime = findElement(By.xpath("//input[@id='datetime']"));
+        datetime.click();
+        datetime.clear();
+
+        WebElement text = findElement(By.xpath("//textarea[@id='text']"));
+        text.click();
+        text.clear();
+
+        WebElement intData = findElement(By.xpath("//input[@id='int']"));
+        intData.click();
+        intData.clear();
+
+        WebElement decimalData = findElement(By.xpath("//input[@id='decimal']"));
+        decimalData.click();
+        decimalData.clear();
+    }
+
+    private void fillFormFields(List<String> data){
         chooseStringDropDownItem(data.get(0));
 
         WebElement date = findElement(By.xpath("//input[@id='date']"));
@@ -101,141 +135,228 @@ public class EntityChevronTest extends BaseTest {
         decimalData.sendKeys(data.get(3));
     }
 
-    private void clickSaveButton(String entity) {
-        findElement(By.xpath("//button[@id='pa-entity-form-save-btn']")).click();
-        getWait().until(ExpectedConditions.textToBePresentInElementLocated(By.xpath("//div[@class='main-panel']//a/b"),
-                entity));
-    }
-
-    private void clickSaveDraftButton(String entity) {
-        findElement(By.xpath("//button[@type='submit'][text() ='Save draft']")).click();
-        getWait().until(ExpectedConditions.textToBePresentInElementLocated(By.xpath("//div[@class='main-panel']//a/b"),
-                entity));
-    }
-
     private void checkCreatedRecord(String recordStatus, Boolean isDraft, List<String> data){
         if(recordStatus.equals(SENT)){
             findElement(By.xpath("//a[text()='All']")).click();
         }
+        checkRecordInTable(isDraft, data);
+    }
+
+    private int chooseRecordNumberInTable(List<String> data) {
         List<WebElement> records = findElements(By.xpath("//tbody/tr"));
-        getWait().until(ExpectedConditions.presenceOfElementLocated(By.xpath("//tbody/tr")));
-        List<WebElement> cells = findElements(By.xpath("//tbody/tr/td[@class = 'pa-list-table-th']"));
 
-        if(isDraft){
-            WebElement icon = findElement(By.xpath("//i[contains(@class,'fa fa-pencil')]"));
-            Assert.assertEquals(icon.getAttribute("class"), "fa fa-pencil");
-        }
-        else {
-            WebElement icon = findElement(By.xpath("//i[contains(@class,'check-square')]"));
-            Assert.assertEquals(icon.getAttribute("class"), "fa fa-check-square-o");
-        }
+        for(int j = 1; j <= records.size(); j ++){
+            List<WebElement> cells = findElements(By.xpath("//tbody/tr["+ j +"]/td[@class = 'pa-list-table-th']"));
 
-        for (int i = 0; i < data.size(); i++) {
-            Assert.assertEquals(cells.get(i).getText(), data.get(i));
+            if(cells.get(1).getText().equals(data.get(1))){
+                return j - 1;
+            }
         }
+        return 0;
+    }
+
+    private void checkRecordInTable(Boolean isDraft, List<String> data){
+        List<WebElement> records = findElements(By.xpath("//tbody/tr"));
+
+        for(int j = 1; j <= records.size(); j ++){
+            List<WebElement> cells = findElements(By.xpath("//tbody/tr["+ j +"]/td[@class = 'pa-list-table-th']"));
+
+            if(cells.get(1).getText().equals(data.get(1))){
+                if(isDraft){
+                    WebElement icon = findElement(By.xpath("//i[contains(@class,'fa fa-pencil')]"));
+                    Assert.assertEquals(icon.getAttribute("class"), "fa fa-pencil");
+                }
+                else {
+                    WebElement icon = findElement(By.xpath("//i[contains(@class,'check-square')]"));
+                    Assert.assertEquals(icon.getAttribute("class"), "fa fa-check-square-o");
+                }
+                for (int i = 0; i < data.size(); i++) {
+                    Assert.assertEquals(cells.get(i).getText(), data.get(i));
+                }
+            }
+        }
+    }
+
+    private void checkRecordInViewMode(List<String> data) {
+        List<WebElement> actualRecords = findElements(By.xpath("//span [@class = 'pa-view-field']"));
+
+        for (int i = 0; i < actualRecords.size() ; i++) {
+            Assert.assertEquals(actualRecords.get(i).getText(), data.get(i).toString());
+        }
+        WebElement user = findElement(By.xpath("//div[@class = 'form-group']/p"));
+        Assert.assertEquals(user.getText(), data.get(7));
+    }
+
+    final private static List<String> EXPECTED_DATA_PENDING_RECORD = makeRandomData(PENDING);
+    final private static List<String> EXPECTED_DATA_FULFILLMENT_RECORD = makeRandomData(FULFILLMENT);
+    final private static List<String> EXPECTED_DATA_SENT_RECORD = makeRandomData(SENT);
+    final private static List<String> EXPECTED_DATA_PENDING_DRAFT_RECORD = makeRandomData(PENDING);
+    final private static List<String> EXPECTED_DATA_FULFILLMENT_DRAFT_RECORD = makeRandomData(FULFILLMENT);
+    final private static List<String> EXPECTED_DATA_SENT_DRAFT_RECORD = makeRandomData(SENT);
+
+    @Test
+    public void testCreatePendingRecord(){
+        chooseSideBarItem(ENTITY_NAME);
+        clickCreateRecord(getDriver());
+        fillFormFields(EXPECTED_DATA_PENDING_RECORD);
+        clickSave(getDriver());
+        checkCreatedRecord(PENDING, false, EXPECTED_DATA_PENDING_RECORD);
+    }
+
+    @Test(dependsOnMethods = {"testCreatePendingRecord"})
+    public void testViewPendingRecord() {
+        chooseSideBarItem(ENTITY_NAME);
+
+        int row = chooseRecordNumberInTable(EXPECTED_DATA_PENDING_RECORD);
+        findElement(By.xpath("//tr[@data-index='"+ row +"']//button/i[@class='material-icons'][position()=1]")).click();
+        getWait().until(TestUtils.movingIsFinished(getDriver().
+                findElement(By.xpath("//tr[@data-index='"+ row +"']//a[text()='view']")))).click();
+
+        checkRecordInViewMode(EXPECTED_DATA_PENDING_RECORD);
+    }
+
+    @Test(dependsOnMethods = {"testViewPendingRecord"})
+    public void testEditPendingRecord() {
+        chooseSideBarItem(ENTITY_NAME);
+
+        int row = chooseRecordNumberInTable(EXPECTED_DATA_PENDING_RECORD);
+        findElement(By.xpath("//tr[@data-index='"+ row +"']//button/i[@class='material-icons'][position()=1]")).click();
+        getWait().until(TestUtils.movingIsFinished(getDriver().
+                findElement(By.xpath("//tr[@data-index='"+ row +"']//a[text()='edit']")))).click();
+
+        checkFormIsNotEmpty();
+        emptyForm();
+        fillFormFields(EXPECTED_DATA_FULFILLMENT_DRAFT_RECORD);
+        clickSave(getDriver());
+        checkCreatedRecord(FULFILLMENT, false, EXPECTED_DATA_FULFILLMENT_DRAFT_RECORD);
     }
     
     @Test
-    public void testCreatePendingRecord(){
-        String status = PENDING;
-
-        start(getDriver());
-        chooseSideBarItem(ENTITY_NAME);
-        clickAddButton();
-        List<String> expectedData = makeRandomData(status);
-        fillCreateNewFormFields(expectedData);
-        clickSaveButton(ENTITY_NAME);
-        checkCreatedRecord(status, false, expectedData);
-    }
-
-    @Test
     public void testCreateFulfillmentRecord(){
-        String status = FULFILLMENT;
-
-        start(getDriver());
         chooseSideBarItem(ENTITY_NAME);
-        clickAddButton();
-        List<String> expectedData = makeRandomData(status);
-        fillCreateNewFormFields(expectedData);
-        clickSaveButton(ENTITY_NAME);
-        checkCreatedRecord(status, false, expectedData);
+        clickCreateRecord(getDriver());
+        fillFormFields(EXPECTED_DATA_FULFILLMENT_RECORD);
+        clickSave(getDriver());
+        checkCreatedRecord(FULFILLMENT, false, EXPECTED_DATA_FULFILLMENT_RECORD);
     }
 
+    @Test(dependsOnMethods = {"testCreateFulfillmentRecord"})
+    public void testViewFulfillmentRecord() {
+        chooseSideBarItem(ENTITY_NAME);
+
+        int row = chooseRecordNumberInTable(EXPECTED_DATA_FULFILLMENT_RECORD);
+        findElement(By.xpath("//tr[@data-index='"+ row +"']//button/i[@class='material-icons'][position()=1]")).click();
+        getWait().until(TestUtils.movingIsFinished(getDriver().
+                findElement(By.xpath("//tr[@data-index='"+ row +"']//a[text()='view']")))).click();
+
+        checkRecordInViewMode(EXPECTED_DATA_FULFILLMENT_RECORD);
+    }
+    @Ignore
     @Test
     public void testCreateSentRecord(){
-        String status = SENT;
-
-        start(getDriver());
         chooseSideBarItem(ENTITY_NAME);
-        clickAddButton();
-        List<String> expectedData = makeRandomData(status);
-        fillCreateNewFormFields(expectedData);
-        clickSaveButton(ENTITY_NAME);
-        checkCreatedRecord(status, false, expectedData);
+        clickCreateRecord(getDriver());
+        fillFormFields(EXPECTED_DATA_SENT_RECORD);
+        clickSave(getDriver());
+        checkCreatedRecord(SENT, false, EXPECTED_DATA_SENT_RECORD);
     }
+    @Ignore
+    @Test(dependsOnMethods = {"testCreateSentRecord"})
+    public void testViewSentRecord() {
+        chooseSideBarItem(ENTITY_NAME);
+        findElement(By.xpath("//a[text()='All']")).click();
 
+        int row = chooseRecordNumberInTable(EXPECTED_DATA_SENT_RECORD);
+        findElement(By.xpath("//tr[@data-index='"+ row +"']//button/i[@class='material-icons'][position()=1]")).click();
+        getWait().until(TestUtils.movingIsFinished(getDriver().
+                findElement(By.xpath("//tr[@data-index='"+ row +"']//a[text()='view']")))).click();
+
+        checkRecordInViewMode(EXPECTED_DATA_SENT_RECORD);
+    }
+    @Ignore
     @Test
     public void testCreatePendingDraftRecord(){
-        String status = PENDING;
-
-        start(getDriver());
         chooseSideBarItem(ENTITY_NAME);
-        clickAddButton();
-        List<String> expectedData = makeRandomData(status);
-        fillCreateNewFormFields(expectedData);
-        clickSaveDraftButton(ENTITY_NAME);
-        checkCreatedRecord(status, true, expectedData);
+        clickCreateRecord(getDriver());
+        fillFormFields(EXPECTED_DATA_PENDING_DRAFT_RECORD);
+        clickSaveDraft(getDriver());
+        checkCreatedRecord(PENDING, true, EXPECTED_DATA_PENDING_DRAFT_RECORD);
     }
+    @Ignore
+    @Test(dependsOnMethods = {"testCreatePendingDraftRecord"})
+    public void testViewPendingDraftRecord() {
+        chooseSideBarItem(ENTITY_NAME);
 
+        int row = chooseRecordNumberInTable(EXPECTED_DATA_PENDING_DRAFT_RECORD);
+        findElement(By.xpath("//tr[@data-index='"+ row +"']//button/i[@class='material-icons'][position()=1]")).click();
+        getWait().until(TestUtils.movingIsFinished(getDriver().
+                findElement(By.xpath("//tr[@data-index='"+ row +"']//a[text()='view']")))).click();
+
+        checkRecordInViewMode(EXPECTED_DATA_PENDING_DRAFT_RECORD);
+    }
+    @Ignore
     @Test
     public void testCreateFulfillmentDraftRecord(){
-        String status = FULFILLMENT;
-
-        start(getDriver());
         chooseSideBarItem(ENTITY_NAME);
-        clickAddButton();
-        List<String> expectedData = makeRandomData(status);
-        fillCreateNewFormFields(expectedData);
-        clickSaveDraftButton(ENTITY_NAME);
-        checkCreatedRecord(status, true, expectedData);
+        clickCreateRecord(getDriver());
+        fillFormFields(EXPECTED_DATA_FULFILLMENT_DRAFT_RECORD);
+        clickSaveDraft(getDriver());
+        checkCreatedRecord(FULFILLMENT, true, EXPECTED_DATA_FULFILLMENT_DRAFT_RECORD);
     }
+    @Ignore
+    @Test(dependsOnMethods = {"testCreateFulfillmentDraftRecord"})
+    public void testViewFulfillmentDraftRecord() {
+        chooseSideBarItem(ENTITY_NAME);
 
+        int row = chooseRecordNumberInTable(EXPECTED_DATA_FULFILLMENT_DRAFT_RECORD);
+        findElement(By.xpath("//tr[@data-index='"+ row +"']//button/i[@class='material-icons'][position()=1]")).click();
+        getWait().until(TestUtils.movingIsFinished(getDriver().
+                findElement(By.xpath("//tr[@data-index='"+ row +"']//a[text()='view']")))).click();
+
+        checkRecordInViewMode(EXPECTED_DATA_FULFILLMENT_DRAFT_RECORD);
+    }
+    @Ignore
     @Test
     public void testCreateSentDraftRecord(){
-        String status = SENT;
-
-        start(getDriver());
         chooseSideBarItem(ENTITY_NAME);
-        clickAddButton();
-        List<String> expectedData = makeRandomData(status);
-        fillCreateNewFormFields(expectedData);
-        clickSaveDraftButton(ENTITY_NAME);
-        checkCreatedRecord(status, true, expectedData);
+        clickCreateRecord(getDriver());
+        fillFormFields(EXPECTED_DATA_SENT_DRAFT_RECORD);
+        clickSaveDraft(getDriver());
+        checkCreatedRecord(SENT, true, EXPECTED_DATA_SENT_DRAFT_RECORD);
+    }
+    @Ignore
+    @Test(dependsOnMethods = {"testCreateSentDraftRecord"})
+    public void testViewSentDraftRecord() {
+        chooseSideBarItem(ENTITY_NAME);
+        findElement(By.xpath("//a[text()='All']")).click();
+
+        int row = chooseRecordNumberInTable(EXPECTED_DATA_SENT_DRAFT_RECORD);
+        findElement(By.xpath("//tr[@data-index='"+ row +"']//button/i[@class='material-icons'][position()=1]")).click();
+        getWait().until(TestUtils.movingIsFinished(getDriver().
+                findElement(By.xpath("//tr[@data-index='"+ row +"']//a[text()='view']")))).click();
+
+        checkRecordInViewMode(EXPECTED_DATA_SENT_DRAFT_RECORD);
     }
 
     @Test
     public void testCancelCreateRecord(){
-        String status = PENDING;
-
-        start(getDriver());
         chooseSideBarItem(ENTITY_NAME);
-        clickAddButton();
-        List<String> expectedData = makeRandomData(status);
-        fillCreateNewFormFields(expectedData);
+        clickCreateRecord(getDriver());
+        List<String> expectedData = makeRandomData(PENDING);
+        fillFormFields(expectedData);
         clickCancel(getDriver());
-        Assert.assertEquals(findElements(By.cssSelector("tbody tr")).size(), 0);
+        List<WebElement> tableElements = findElements(By.xpath("//div[@class='card-body ']/*"));
+        Assert.assertEquals(tableElements.size(), 1);
     }
 
     @Test
     public void testCancelCreateDraftRecord(){
-        String status = FULFILLMENT;
-
-        start(getDriver());
         chooseSideBarItem(ENTITY_NAME);
-        clickAddButton();
-        List<String> expectedData = makeRandomData(status);
-        fillCreateNewFormFields(expectedData);
+        clickCreateRecord(getDriver());
+        List<String> expectedData = makeRandomData(FULFILLMENT);
+        fillFormFields(expectedData);
         clickCancel(getDriver());
-        Assert.assertEquals(findElements(By.cssSelector("tbody tr")).size(), 0);
+        List<WebElement> tableElements = findElements(By.xpath("//div[@class='card-body ']/*"));
+        Assert.assertEquals(tableElements.size(), 1);
     }
 }

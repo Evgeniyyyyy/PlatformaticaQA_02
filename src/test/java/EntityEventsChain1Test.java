@@ -4,49 +4,67 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.testng.Assert;
 import org.testng.annotations.Test;
-import utils.TestUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-
-import static utils.ProjectUtils.start;
-import static utils.TestUtils.movingIsFinished;
-import static utils.TestUtils.scrollClick;
+import static utils.TestUtils.*;
 
 public class EntityEventsChain1Test extends BaseTest {
 
-    private void clickEventsChain1Menu(){
-        scrollClick(getDriver(), getDriver().findElement(By.xpath("//p[contains(.,'Events Chain 1')]")));
+    private void clickEventsChain1Menu() {
+        scrollClick(getDriver(), getDriver().findElement(
+                By.xpath("//p[contains(.,'Events Chain 1')]")));
         getWait().until(ExpectedConditions.elementToBeClickable(
                 getDriver().findElement(By.xpath("//i[text() = 'create_new_folder']"))));
     }
+
     private void clickCreateNewFolderButton() {
         getDriver().findElement(By.xpath("//i[text() = 'create_new_folder']")).click();
         getWait().until(ExpectedConditions.presenceOfElementLocated(By.id("f1")));
     }
 
-    private void inputF1Value(String f1Value){
-        getDriver().findElement(By.id("f1")).sendKeys(f1Value);
-        getWait().until(ExpectedConditions.attributeToBeNotEmpty(getDriver().findElement(By.id("f10")), "value"));
-    }
-
-    private void clickSaveButton(){
+    private void clickSaveButton() {
         getDriver().findElement(By.id("pa-entity-form-save-btn")).click();
         getWait().until(ExpectedConditions.elementToBeClickable(
                 getDriver().findElement(By.xpath("//i[text() = 'create_new_folder']"))));
     }
 
-    private void createNewRecord() {
-        getDriver().findElement(By.xpath("//i[contains(text(), 'create_new_folder')]")).click();
-        getDriver().findElement(By.id("f1")).sendKeys("5");
-        getWait().until(ExpectedConditions.attributeToBeNotEmpty(getDriver().findElement(By.id("f10")), "value"));
-
-        getDriver().findElement(By.id("pa-entity-form-save-btn")).click();
+    private void clickDropDownMenu() {
+        getDriver().findElement(By.xpath("//i[contains(., 'menu')]")).click();
     }
 
-    private List<WebElement> getCells(){
+    private void clickEditMenu() {
+        clickDropDownMenu();
+        getWait().until(movingIsFinished(By.xpath("//a[contains(., 'edit')]"))).click();
+        getWait().until(ExpectedConditions.presenceOfElementLocated(By.id("f1")));
+    }
+
+    private void clickDeleteMenu() {
+        clickDropDownMenu();
+        getWait().until(movingIsFinished(By.xpath("//a[contains (text(), 'delete')]"))).click();
+        getWait().until(
+                ExpectedConditions.presenceOfElementLocated(By.xpath("//div[@class = 'card-body ']")));
+    }
+
+    private void inputF1Value(String value) {
+        getDriver().findElement(By.id("f1")).sendKeys(value);
+        getWait().until(ExpectedConditions.attributeToBeNotEmpty(getDriver().findElement(By.id("f10")), "value"));
+    }
+
+    private void editRecord(String value){
+        final WebElement F1 = getDriver().findElement(By.id("f1"));
+        final WebElement F10 = getDriver().findElement(By.id("f10"));
+
+        F10.clear();
+        F1.click();
+        F1.clear();
+        F1.sendKeys(value);
+        getWait().until(ExpectedConditions.attributeToBeNotEmpty(F10, "value"));
+    }
+
+    private List<WebElement> getCells() {
         return getDriver().findElements(By.xpath("//table[@id = 'pa-all-entities-table']/tbody/tr/td/a"));
     }
 
@@ -64,15 +82,19 @@ public class EntityEventsChain1Test extends BaseTest {
         return getDriver().findElement(By.xpath("//tbody/tr/td[1]/i")).getAttribute("class");
     }
 
+    private String getPaginationInfo() {
+        return getDriver().findElement(By.xpath("//span[@class = 'pagination-info']")).getText();
+    }
+
     @Test
     public void testCreateNewRecord() {
-        final String f1InputValue = "1";
+
+        final String f1Value = "1";
         final List<String> expectedValues = Arrays.asList("1", "2", "4", "8", "16", "32", "64", "128", "256", "512");
 
-        start(getDriver());
         clickEventsChain1Menu();
         clickCreateNewFolderButton();
-        inputF1Value(f1InputValue);
+        inputF1Value(f1Value);
         clickSaveButton();
 
         Assert.assertEquals(getCells().size(), expectedValues.size());
@@ -80,45 +102,56 @@ public class EntityEventsChain1Test extends BaseTest {
         Assert.assertEquals(getAttributeClass(), "fa fa-check-square-o");
     }
 
-    @Test
+    @Test(dependsOnMethods = "testCreateNewRecord")
     public void testEditRecord() {
-        List<String> expectedValues = List.of("2", "4", "8", "16", "32", "64", "128", "256", "512", "1024");
 
-        start(getDriver());
+        final String newF1Value = "2";
+        final List<String> expectedValues = List.of("2", "4", "8", "16", "32", "64", "128", "256", "512", "1024");
 
-        TestUtils.scrollClick(getDriver(), By.xpath("//p[contains(text(), 'Events Chain 1')]"));
+        clickEventsChain1Menu();
 
-        createNewRecord();
+        Assert.assertEquals(getPaginationInfo(), "Showing 1 to 1 of 1 rows");
 
-        String text = getDriver().findElement(By.xpath("//span[@class = 'pagination-info']")).getText();
+        final List<String> oldValues = getRowValues();
 
-        Assert.assertEquals(text, "Showing 1 to 1 of 1 rows");
+        clickEditMenu();
+        editRecord(newF1Value);
+        clickSaveButton();
 
-        List<WebElement> cells = getDriver().findElements(By.xpath("//td[@class = 'pa-list-table-th']"));
-        List<String> oldValues = new ArrayList<>();
-        for(WebElement cell: cells){
-            oldValues.add(cell.getText());
-        }
-
-        getDriver().findElement(By.xpath("//i[contains(., 'menu')]")).click();
-
-        getWait().until(movingIsFinished(By.xpath("//a[contains(., 'edit')]"))).click();
-
-        getDriver().findElement(By.id("f10")).clear();
-        getDriver().findElement(By.id("f1")).clear();
-        getDriver().findElement(By.id("f1")).sendKeys("2");
-        getWait().until(ExpectedConditions.attributeToBeNotEmpty(getDriver().findElement(By.id("f10")), "value"));
-
-        getDriver().findElement(By.id("pa-entity-form-save-btn")).click();
-
-        List<WebElement> cells1 = getDriver().findElements(By.xpath("//td[@class = 'pa-list-table-th']"));
-        List<String> actualValues = new ArrayList<>();
-        for(WebElement cell: cells1){
-            actualValues.add(cell.getText());
-        }
-
-        Assert.assertEquals(actualValues, expectedValues);
-        Assert.assertNotEquals(actualValues, oldValues);
+        Assert.assertEquals(getRowValues(), expectedValues);
+        Assert.assertNotEquals(getRowValues(), oldValues);
         Assert.assertEquals(getAttributeClass(), "fa fa-check-square-o");
+    }
+
+    @Test(dependsOnMethods = "testEditRecord")
+    public void testDeleteRecord() {
+
+        String expectedTextCardBodyBeforeDelete = "F1\n" + "F2\n" + "F3\n" + "F4\n" + "F5\n" + "F6\n" + "F7\n" + "F8\n"
+                + "F9\n" + "F10\n" + "Actions\n" + "2\n" + "4\n" + "8\n" + "16\n" + "32\n" + "64\n" + "128\n" +
+                "256\n" + "512\n" + "1024\n" + "menu\n" + "Showing 1 to 1 of 1 rows";
+        String expectedTextRecycleBinBeforeDelete = "delete_outline";
+        String expectedTextRecycleBinAfterDelete = "delete_outline\n" + "1";
+
+        clickEventsChain1Menu();
+
+        Assert.assertEquals(getPaginationInfo(), "Showing 1 to 1 of 1 rows");
+
+        String textCardBodyBeforeDelete = getDriver().findElement(By.xpath("//div[@class = 'card-body ']")).getText();
+        String textRecycleBinBeforeDelete = getDriver().findElement(
+                By.xpath("//a[@href='index.php?action=recycle_bin']")).getText();
+
+        Assert.assertEquals(textCardBodyBeforeDelete, expectedTextCardBodyBeforeDelete);
+        Assert.assertEquals(textRecycleBinBeforeDelete, expectedTextRecycleBinBeforeDelete);
+
+        clickDeleteMenu();
+
+        String textCardBodyAfterDelete = getDriver().findElement(By.xpath("//div[@class = 'card-body ']")).getText();
+        String textRecycleBinAfterDelete = getDriver().findElement(
+                By.xpath("//a[@href='index.php?action=recycle_bin']")).getText();
+
+        Assert.assertTrue(textCardBodyAfterDelete.isBlank());
+        Assert.assertTrue(textCardBodyAfterDelete.isEmpty());
+        Assert.assertNotEquals(textRecycleBinBeforeDelete, textRecycleBinAfterDelete);
+        Assert.assertEquals(textRecycleBinAfterDelete, expectedTextRecycleBinAfterDelete);
     }
 }

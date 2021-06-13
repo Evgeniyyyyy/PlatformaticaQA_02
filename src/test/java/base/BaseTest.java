@@ -8,16 +8,23 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.support.ui.WebDriverWait;
-import org.testng.annotations.*;
+import org.testng.ITestResult;
+import org.testng.annotations.AfterMethod;
+import org.testng.annotations.BeforeClass;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Listeners;
+import org.testng.annotations.Test;
 
 import java.io.IOException;
+import java.lang.reflect.Method;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
-@Listeners(TestOrder.class)
+@Listeners(OrderUtils.class)
 public abstract class BaseTest {
 
     public static final String HUB_URL = "http://localhost:4444/wd/hub";
@@ -47,12 +54,41 @@ public abstract class BaseTest {
     private WebDriver driver;
     private WebDriverWait wait;
 
-    @BeforeMethod
-    protected void beforeMethod() {
-        initDriver();
+    private List<List<Method>> methodList;
+
+    @BeforeClass
+    protected void beforeClass() {
+        methodList = OrderUtils.orderMethods(
+                Arrays.stream(this.getClass().getMethods()).filter(m -> m.getAnnotation(Test.class) != null).collect(Collectors.toList()),
+                m -> m.getName(),
+                m -> m.getAnnotation(Test.class).dependsOnMethods());
     }
 
-    protected void initDriver() {
+    @BeforeMethod
+    protected void beforeMethod(Method method) {
+        System.out.printf("Run %s.%s\n", this.getClass().getName(), method.getName());
+
+        if (method.getAnnotation(Test.class).dependsOnMethods().length == 0) {
+            System.out.println("Browser open, get web page and login");
+            startDriver();
+            loginWeb();
+        } else {
+            System.out.println("Get web page");
+            getWeb();
+        }
+    }
+
+    protected void loginWeb() {
+        LoginUtils.get(driver);
+        LoginUtils.login(driver);
+        LoginUtils.reset(driver);
+    }
+
+    protected void getWeb() {
+        LoginUtils.get(getDriver());
+    }
+
+    protected void startDriver() {
         ChromeOptions chromeOptions = new ChromeOptions();
         chromeOptions.addArguments("--window-size=1920,1080");
 
@@ -74,8 +110,14 @@ public abstract class BaseTest {
     }
 
     @AfterMethod
-    protected void afterMethod() {
-        stopDriver();
+    protected void afterMethod(Method method, ITestResult testResult) {
+        List<Method> list = OrderUtils.find(methodList, method).orElse(null);
+        if (!testResult.isSuccess() || list == null || (list.remove(method) && list.isEmpty())) {
+            stopDriver();
+            System.out.println("Browser closed");
+        }
+
+        System.out.printf("Execution time is %o\n\n", (testResult.getEndMillis() - testResult.getStartMillis()) / 1000);
     }
 
     protected void stopDriver() {

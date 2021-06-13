@@ -4,67 +4,109 @@ import org.openqa.selenium.WebElement;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 import utils.ProjectUtils;
-import utils.TestUtils;
+
+import static utils.ProjectUtils.*;
 
 import java.util.*;
 
 public class EntityTagTest extends BaseTest{
 
-    private void createRecord() {
+    private static final String STRING = "Hello world";
+    private static final String TEXT = "Be healthy";
+    private static final String INT = "123";
+    private static final String DECIMAL = "456.98";
+    private static final String EDIT_STRING = "Entity Tag";
+    private static final String EDIT_TEXT = "Edit a record";
+    private static final String EDIT_INT = "8900";
+    private static final String EDIT_DECIMAL = "284555.98";
 
-        ProjectUtils.start(getDriver());
+    private static final List<String> EXPECTED_RESULT = List.of(STRING, TEXT, INT, DECIMAL, "", "");
+    private static final List<String> EDIT_RESULT = List.of(EDIT_STRING, EDIT_TEXT, EDIT_INT, EDIT_DECIMAL, "", "");
 
-        TestUtils.scrollClick(getDriver(), getDriver().findElement(By.xpath("//p[text()=' Tag ']")));
+    private static final By ICON = By.xpath("//tbody/tr/td/i");
+    private static final By ACTUAL_RESULT = By.xpath("//tbody/tr/td/a");
+    private static final By DELETED_RECORD = By.cssSelector("span.pa-view-field");
+    private static final By FILL_STRING = By.id("string");
+    private static final By FILL_TEXT = By.id("text");
+    private static final By FILL_INT = By.id("int");
+    private static final By FILL_DECIMAL = By.id("decimal");
 
-        ProjectUtils.clickCreateRecord(getDriver());
-        findElement(By.id("string")).sendKeys("Hello world");
-        findElement(By.id("text")).sendKeys("Be healthy");
-        findElement(By.id("int")).sendKeys("123");
-        findElement(By.id("decimal")).sendKeys("456.98");
+    private void fillForm() {
 
-        getDriver().findElement(By.xpath("//button[@data-id='user']")).click();
+        getEntity(getDriver(),"Tag");
+        clickCreateRecord(getDriver());
 
-        TestUtils.jsClick(getDriver(), getDriver().findElement(
-                        By.xpath("//span[text()='tester26@tester.test']")));
+        findElement(By.id("string")).sendKeys(STRING);
+        findElement(By.id("text")).sendKeys(TEXT);
+        findElement(By.id("int")).sendKeys(INT);
+        findElement(By.id("decimal")).sendKeys(DECIMAL);
     }
 
-    @Test
-    public void testCreateRecord() {
+    private void editRecord() {
 
-        createRecord();
+        findElement(FILL_STRING).clear();
+        findElement(FILL_STRING).sendKeys(EDIT_STRING);
 
-        ProjectUtils.clickSave(getDriver());
+        findElement(FILL_TEXT).clear();
+        findElement(FILL_TEXT).sendKeys(EDIT_TEXT);
 
-        List<WebElement> records = getDriver().findElements(By.xpath("//tbody/tr"));
-        WebElement box = getDriver().findElement(By.xpath("//tbody/tr/td/i"));
+        findElement(FILL_INT).clear();
+        findElement(FILL_INT).sendKeys(EDIT_INT);
 
-        Assert.assertEquals(box.getAttribute("class"), "fa fa-check-square-o");
-        Assert.assertEquals(records.size(), 1);
-    }
-
-    @Test
-    public void testCreateDraftRecord() {
-
-        createRecord();
-
-        ProjectUtils.clickSaveDraft(getDriver());
-
-        List<WebElement> records = getDriver().findElements(By.xpath("//tbody/tr"));
-        WebElement box = getDriver().findElement(By.xpath("//tbody/tr/td/i"));
-
-        Assert.assertEquals(box.getAttribute("class"), "fa fa-pencil");
-        Assert.assertEquals(records.size(), 1);
+        findElement(FILL_DECIMAL).clear();
+        findElement(FILL_DECIMAL).sendKeys(EDIT_DECIMAL);
+        clickSave(getDriver());
     }
 
     @Test
     public void testCancelRecord() {
 
-        createRecord();
+        fillForm();
+        clickCancel(getDriver());
 
-        ProjectUtils.clickCancel(getDriver());
+        Assert.assertNull(findElement(By.className("card-body")).getAttribute("value"));
+    }
 
-        List<WebElement> records = getDriver().findElements(By.xpath("//tbody/tr"));
+    @Test
+    public void testCreateRecord() {
 
-        Assert.assertEquals(records.size(), 0);
+        fillForm();
+        clickSave(getDriver());
+
+        WebElement icon = findElement(ICON);
+        Assert.assertEquals(icon.getAttribute("class"), "fa fa-check-square-o");
+        Assert.assertEquals(getActualValues(findElements(ACTUAL_RESULT)), EXPECTED_RESULT);
+    }
+
+    @Test
+    public void testCreateDraftRecord() {
+
+        fillForm();
+        clickSaveDraft(getDriver());
+
+        WebElement icon = findElement(ICON);
+        Assert.assertEquals(icon.getAttribute("class"), "fa fa-pencil");
+        Assert.assertEquals(getActualValues(findElements(ACTUAL_RESULT)), EXPECTED_RESULT);
+    }
+
+    @Test(dependsOnMethods = "testCreateDraftRecord")
+    public void testEditRecord() {
+
+        getEntity(getDriver(), "Tag");
+        clickActionsEdit(getDriver());
+        editRecord();
+
+        Assert.assertEquals(getActualValues(findElements(ACTUAL_RESULT)), EDIT_RESULT);
+    }
+
+    @Test(dependsOnMethods = "testCreateRecord")
+    public void testDeleteRecord() {
+
+        getEntity(getDriver(), "Tag");
+        clickActionsDelete(getDriver());
+        clickRecycleBin(getDriver());
+        findElement(ACTUAL_RESULT).click();
+
+        Assert.assertEquals(getActualValues(findElements(DELETED_RECORD)), EXPECTED_RESULT);
     }
 }

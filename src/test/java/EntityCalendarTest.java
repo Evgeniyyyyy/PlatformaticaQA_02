@@ -14,6 +14,9 @@ import static utils.TestUtils.scroll;
 
 public class EntityCalendarTest extends BaseTest {
 
+    private static final List<String> createRecordList = List.of("StringExampleCreateRecord", "TextExample", "1111", "0.20");
+
+
     private void enterToCalendarPage() {
         TestUtils.scrollClick(getDriver(), findElement(By.xpath("//p[contains (text(), 'Calendar')]")));
     }
@@ -57,9 +60,6 @@ public class EntityCalendarTest extends BaseTest {
 
     @Test
     public void testDeletedRecordFromBin(){
-        final List<String> createRecordList = List.of("StringExampleCreateRecord", "TextExample", "1111", "0.20");
-
-        ProjectUtils.start(getDriver());
 
         enterToCalendarPageAndCreateRecord(createRecordList);
 
@@ -74,25 +74,20 @@ public class EntityCalendarTest extends BaseTest {
                 findElement(By.xpath("//*[@class='card-body']")).getText(),
                 "Good job with housekeeping! Recycle bin is currently empty!");
     }
-    @Ignore
-    @Test
-    public void testCalendarViewCreatedRecord() {
-        final List<String> createRecordList = List.of("StringExampleCreateRecord", "TextExample", "1111", "0.20");
 
-        ProjectUtils.start(getDriver());
-        enterToCalendarPageAndCreateRecord(createRecordList);
-        TestUtils.scrollClick(getDriver(), findElement(By.xpath("//*[@class='fc-title']")));
-        getWait().until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@class='pa-view-field']")));
+    @Test(dependsOnMethods = "testCreateRecord")
+    public void testViewRecord() {
 
-        Assert.assertEquals(findElement(By.xpath("//*[@class='pa-view-field']")).getText(),
+        enterToCalendarPage();
+        TestUtils.jsClick(getDriver(), findElement(By.xpath(
+                "//span[contains(text(), 'StringExample')]")));
+
+        Assert.assertEquals(findElement(By.xpath("//*[contains(text(), 'StringExa')]")).getText(),
                 "StringExampleCreateRecord");
     }
 
     @Test
     public void testCreateRecord(){
-        final List<String> createRecordList = List.of("StringExampleCreateRecord", "TextExample", "1111", "0.20");
-        
-        ProjectUtils.start(getDriver());
 
         enterToCalendarPageAndCreateRecord(createRecordList);
 

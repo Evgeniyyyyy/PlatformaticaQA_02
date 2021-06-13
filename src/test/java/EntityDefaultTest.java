@@ -1,4 +1,4 @@
-import base.DriverPerClassBaseTest;
+import base.BaseTest;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -15,7 +15,7 @@ import static utils.ProjectUtils.*;
 import static utils.TestUtils.jsClick;
 import static utils.TestUtils.scrollClick;
 
-public class EntityDefaultTest extends DriverPerClassBaseTest {
+public class EntityDefaultTest extends BaseTest {
 
     private static final By DEFAULT_TAB = By.xpath("//p[contains (text(), 'Default')]");
     private static final By CREATE_NEW_RECORD = By.xpath("//div/i[.='create_new_folder']");
@@ -44,6 +44,7 @@ public class EntityDefaultTest extends DriverPerClassBaseTest {
             .xpath("//a[@href=\"index.php?action=action_list&list_type=table&entity_id=7\"]");
     private static final By ORDER_BUTTON = By
             .xpath("//a[@href=\"index.php?action=action_list&list_type=table&entity_id=7&draggable=1\"]");
+    private static final By GET_LIST_ROW = By.xpath("//tbody/tr");
     private static final By COLUMN_STRING = By.xpath("//thead/tr/th/div[text()=\"String\"]");
     private static final By COLUMN_TEXT = By.xpath("//thead/tr/th/div[text()=\"Text\"]");
     private static final By COLUMN_INT = By.xpath("//thead/tr/th/div[text()=\"Int\"]");
@@ -69,28 +70,6 @@ public class EntityDefaultTest extends DriverPerClassBaseTest {
     private final List<Object> expectedValues = Arrays.asList(
             stringInputValue, textInputValue, intInputValue, decimalInputValue,
             formatter.format(date), emptyField, emptyField, emptyField, userName);
-
-    private void createRecord() {
-        start(getDriver());
-
-        scrollClick(getDriver(), findElement(DEFAULT_TAB));
-
-        findElement(CREATE_NEW_RECORD).click();
-        findElement(STRING_FIELD).clear();
-        findElement(TEXT_FIELD).clear();
-        findElement(INT_FIELD).clear();
-        findElement(DECIMAL_FIELD).clear();
-        findElement(DATE_FIELD).clear();
-        findElement(DATETIME_FIELD).clear();
-        findElement(STRING_FIELD).sendKeys(stringInputValue);
-        findElement(TEXT_FIELD).sendKeys(textInputValue);
-        findElement(INT_FIELD).sendKeys(intInputValue);
-        findElement(DECIMAL_FIELD).sendKeys(decimalInputValue);
-        findElement(DATE_FIELD).click();
-        findElement(TESTER_NAME_FIELD).click();
-
-        jsClick(getDriver(), findElement(TESTER_NAME));
-    }
 
     private void fillFieldsForRecord() {
 
@@ -170,7 +149,8 @@ public class EntityDefaultTest extends DriverPerClassBaseTest {
     @Test
     public void testCreateRecord() {
 
-        createRecord();
+        scrollClick(getDriver(), findElement(DEFAULT_TAB));
+        fillFieldsForRecord();
         jsClick(getDriver(), findElement(SAVE_BUTTON));
 
         WebElement icon1 = findElement(CHECK_ICON);
@@ -179,8 +159,35 @@ public class EntityDefaultTest extends DriverPerClassBaseTest {
     }
 
     @Test(dependsOnMethods = "testCreateRecord")
-    public void testViewRecord() {
+    public void testCancelDefaultRecord () {
 
+        scrollClick(getDriver(), findElement(DEFAULT_TAB));
+        clickCreateRecord(getDriver());
+
+        String string = findElement(STRING_FIELD).getAttribute("value");
+        String text = findElement(TEXT_FIELD).getText();
+        String intField = findElement(INT_FIELD).getAttribute("value");
+        String decimal = findElement(DECIMAL_FIELD).getAttribute("value");
+        String date = findElement(DATE_FIELD).getAttribute("value");
+        String datetime = findElement(DATETIME_FIELD).getAttribute("value");
+
+        Assert.assertFalse(string.isEmpty());
+        Assert.assertFalse(text.isEmpty());
+        Assert.assertFalse(intField.isEmpty());
+        Assert.assertFalse(decimal.isEmpty());
+        Assert.assertFalse(date.isEmpty());
+        Assert.assertFalse(datetime.isEmpty());
+
+        WebElement cancelButton = findElement(By.xpath("//button[text()='Cancel']"));
+        scrollClick(getDriver(), cancelButton);
+
+        List<WebElement> result = findElements(By.xpath("//td[@class = 'pa-list-table-th']"));
+        Assert.assertEquals(result.size(), 9);
+    }
+
+    @Test(dependsOnMethods = "testCancelDefaultRecord")
+    public void testViewRecord() {
+        scrollClick(getDriver(), findElement(DEFAULT_TAB));
         jsClick(getDriver(), findElement(ACTIONS_BUTTON));
 
         getWait().until(TestUtils.movingIsFinished(getDriver().findElement(VIEW_OPTION))).click();
@@ -199,6 +206,7 @@ public class EntityDefaultTest extends DriverPerClassBaseTest {
     @Test(dependsOnMethods = "testViewRecord")
     public void testSwitchBetweenListAndOrder(){
 
+        scrollClick(getDriver(), findElement(DEFAULT_TAB));
         clickOrderButton();
         getAssertion();
 
@@ -215,6 +223,8 @@ public class EntityDefaultTest extends DriverPerClassBaseTest {
     @Test(dependsOnMethods = "testSwitchBetweenListAndOrder")
     public void testEditRecord() {
 
+        scrollClick(getDriver(), findElement(DEFAULT_TAB));
+        findElement(ACTIONS_BUTTON).click();
         getWait().until(TestUtils.movingIsFinished(getDriver().findElement(EDIT_OPTION))).click();
 
         findElement(STRING_FIELD).clear();
@@ -249,6 +259,7 @@ public class EntityDefaultTest extends DriverPerClassBaseTest {
     @Test(dependsOnMethods = "testEditRecord")
     public void testDeleteRecord() {
 
+        scrollClick(getDriver(), findElement(DEFAULT_TAB));
         findElement(ACTIONS_BUTTON).click();
         getWait().until(TestUtils.movingIsFinished(getDriver().findElement(DELETE_OPTION))).click();
 
@@ -262,6 +273,8 @@ public class EntityDefaultTest extends DriverPerClassBaseTest {
 
     @Test(dependsOnMethods = "testDeleteRecord")
     public void testRestoreRecord() {
+
+        scrollClick(getDriver(), findElement(DEFAULT_TAB));
 
         findElement(RECYCLE_BIN).click();
         findElement(By.linkText("restore as draft")).click();
@@ -280,6 +293,7 @@ public class EntityDefaultTest extends DriverPerClassBaseTest {
     @Test(dependsOnMethods = "testRestoreRecord")
     public void testCreateNewRecordAsDraft() {
 
+        scrollClick(getDriver(), findElement(DEFAULT_TAB));
         clickCreateRecord(getDriver());
 
         String string = findElement(STRING_FIELD).getAttribute("value");
@@ -317,10 +331,34 @@ public class EntityDefaultTest extends DriverPerClassBaseTest {
         }
     }
 
-    @Test(dependsOnMethods = "testCreateNewRecordAsDraft")
+    @Test
+    public void testCreateNewDefaultSaveRecord() {
+
+        scrollClick(getDriver(), findElement(DEFAULT_TAB));
+
+        clickCreateRecord(getDriver());
+        clickSave(getDriver());
+        List<WebElement> records = findElements(GET_LIST_ROW);
+        Assert.assertEquals(records.size(), 1);
+        WebElement icon1 = findElement(CHECK_ICON);
+        Assert.assertEquals(icon1.getAttribute("class"), "fa fa-check-square-o");
+    }
+
+    @Test
+    public void testCreateNewDefaultDraftRecord() {
+
+        scrollClick(getDriver(), findElement(DEFAULT_TAB));
+        clickCreateRecord(getDriver());
+        clickSaveDraft(getDriver());
+        List<WebElement> records = findElements(GET_LIST_ROW);
+        Assert.assertEquals(records.size(), 1);
+        WebElement icon1 = findElement(CHECK_ICON);
+        Assert.assertEquals(icon1.getAttribute("class"), "fa fa-pencil");
+    }
+
+    @Test
     public void testSortRecords() {
 
-        reset(getDriver());
         scrollClick(getDriver(), findElement(DEFAULT_TAB));
         clickCreateRecord(getDriver());
         clearFields();
