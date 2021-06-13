@@ -58,16 +58,9 @@ public class EntityVisibilityEventsTest extends BaseTest {
         inputTextValue(testField);
         clickSaveButton();
 
-
         Assert.assertEquals(infoText(),"Showing 1 to 1 of 1 rows");
         Assert.assertEquals(getAttributeClass(),"fa fa-check-square-o");
         Assert.assertEquals(getValue(),"My first test 2021");
 
     }
-
-
-
-
-
-
 }
