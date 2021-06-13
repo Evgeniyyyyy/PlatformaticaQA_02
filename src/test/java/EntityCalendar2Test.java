@@ -4,7 +4,6 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.testng.Assert;
 import org.testng.annotations.Test;
-import utils.ProjectUtils;
 import utils.TestUtils;
 
 import java.util.List;
@@ -40,11 +39,11 @@ public class EntityCalendar2Test extends BaseTest {
         final List<String> expextedResult = List.of(newString, newTest, newInt, newDecimal, newData,
                 newDatetime, "", tester);
 
-        ProjectUtils.start(getDriver());
-
         createCalendarDraftRecord("Java Learning", "This is a cool lessons.", "115", "65.35");
 
-        findElement(By.xpath("//a[@class='nav-link ' and contains(.,'list')]")).click();
+        getWait().until(ExpectedConditions.elementToBeClickable(By.xpath
+                ("//a[@class='nav-link ' and contains(.,'list')]"))).click();
+
         findElement(By.xpath("//a[contains(.,'Java Learning')]/parent::td/parent::tr//button")).click();
 
         getWait().until(TestUtils.movingIsFinished(getDriver().findElement(By.xpath
@@ -80,5 +79,28 @@ public class EntityCalendar2Test extends BaseTest {
         for (int i = 0; i < 8; i++) {
             Assert.assertEquals(result.get(i).getText(), expextedResult.get(i));
         }
+    }
+
+
+    @Test(dependsOnMethods = "testEditSaveDraftRecord")
+    public void testDeleteDraftRecord() {
+
+        final String expectedResult = "NEW String";
+
+        TestUtils.scrollClick(getDriver(), findElement(By.xpath("//p[contains (text(), 'Calendar')]")));
+        findElement(By.xpath("//a[@class='nav-link ' and contains(.,'list')]")).click();
+        findElement(By.xpath("//a[contains(.,'" + expectedResult + "')]/parent::td/parent::tr//button")).click();
+
+        getWait().until(TestUtils.movingIsFinished(getDriver().findElement
+                (By.xpath("//a[contains(.,'" + expectedResult + "')]" +
+                        "/parent::td/parent::tr//div//a[contains(.,'delete')]")))).click();
+
+        Assert.assertEquals(findElements(By.xpath("//a[contains(.,'" + expectedResult + "')]")).size(), 0);
+
+        findElement(By.xpath("//b[contains(.,'1')]")).click();
+        findElement(By.xpath("//table//tbody")).click();
+
+        WebElement actualResult = findElement(By.xpath("//b[contains(.,'" + expectedResult + "')]"));
+        Assert.assertEquals(actualResult.getText(), expectedResult);
     }
 }
