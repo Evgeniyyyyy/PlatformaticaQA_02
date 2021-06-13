@@ -6,7 +6,6 @@ import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import static utils.TestUtils.*;
@@ -82,15 +81,66 @@ public class EntityEventsChain1Test extends BaseTest {
         return getDriver().findElement(By.xpath("//tbody/tr/td[1]/i")).getAttribute("class");
     }
 
-    private String getPaginationInfo() {
-        return getDriver().findElement(By.xpath("//span[@class = 'pagination-info']")).getText();
+    private boolean isNumeric(String value){
+        try {
+            Long.parseLong(value);
+            return true;
+        } catch(NumberFormatException e){
+            return false;
+        }
+    }
+
+    private <T> T returnNumericValue(String value) {
+        if (isNumeric(value)) {
+            if (Long.parseLong(value) >= 0) {
+                if (Long.parseLong(value) <= 4194303) {
+                    return (T) Integer.valueOf(Integer.parseInt(value));
+                } else {
+                    return (T) Long.valueOf(Long.parseLong(value));
+                }
+            }
+
+            return null;
+        }
+
+        return null;
+    }
+
+    private List<String> getExpectedValues(String value) {
+        List <String> expectedValues = new ArrayList<>();
+
+        if (returnNumericValue(value) instanceof Integer) {
+            int valueInt = Integer.parseInt(value);
+
+            expectedValues.add(0, String.valueOf(valueInt));
+
+            for (int i = 1; i < 10; i ++) {
+                valueInt = valueInt * 2;
+                expectedValues.add(i, String.valueOf(valueInt));
+            }
+
+            return expectedValues;
+
+        } else if(returnNumericValue(value) instanceof Long) {
+            long valueLong = Long.parseLong(value);
+
+            expectedValues.add(0, String.valueOf(valueLong));
+
+            for (int i = 1; i < 10; i ++) {
+                valueLong = valueLong * 2;
+                expectedValues.add(i, String.valueOf(valueLong));
+            }
+
+            return expectedValues;
+        }
+
+        return null;
     }
 
     @Test
     public void testCreateNewRecord() {
-
         final String f1Value = "1";
-        final List<String> expectedValues = Arrays.asList("1", "2", "4", "8", "16", "32", "64", "128", "256", "512");
+        List<String> expectedValues = getExpectedValues(f1Value);
 
         clickEventsChain1Menu();
         clickCreateNewFolderButton();
@@ -106,11 +156,9 @@ public class EntityEventsChain1Test extends BaseTest {
     public void testEditRecord() {
 
         final String newF1Value = "2";
-        final List<String> expectedValues = List.of("2", "4", "8", "16", "32", "64", "128", "256", "512", "1024");
+        final List<String> expectedValues = getExpectedValues(newF1Value);
 
         clickEventsChain1Menu();
-
-        Assert.assertEquals(getPaginationInfo(), "Showing 1 to 1 of 1 rows");
 
         final List<String> oldValues = getRowValues();
 
@@ -133,8 +181,6 @@ public class EntityEventsChain1Test extends BaseTest {
         String expectedTextRecycleBinAfterDelete = "delete_outline\n" + "1";
 
         clickEventsChain1Menu();
-
-        Assert.assertEquals(getPaginationInfo(), "Showing 1 to 1 of 1 rows");
 
         String textCardBodyBeforeDelete = getDriver().findElement(By.xpath("//div[@class = 'card-body ']")).getText();
         String textRecycleBinBeforeDelete = getDriver().findElement(
