@@ -1,12 +1,12 @@
 import base.BaseTest;
 import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 import utils.TestUtils;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -15,10 +15,6 @@ import static utils.TestUtils.*;
 
 public class EntityBoardDraftRecordTest extends BaseTest {
 
-    private static final By BOARD_TAB = By.xpath("//p[contains (text(), 'Board')]");
-    private static final By ACTIONS_BUTTON = By.xpath("//button/i[text()='menu']");
-    private static final By LIST_BUTTON = By.xpath(
-            "//a[@href='index.php?action=action_list&list_type=table&entity_id=31']");
     private static final By INTEGER_FIELD  = By.id("int");
     private static final By TEXT_FIELD  = By.id("text");
     private static final By DECIMAL_FIELD  = By.id("decimal");
@@ -32,18 +28,25 @@ public class EntityBoardDraftRecordTest extends BaseTest {
     private static final String USER_NAME = "tester10@tester.test";
     private static final String EMPTY_FIELD = "";
 
-    private final List<Object> expectedCreatedRecord = Arrays
-            .asList(STRING_INPUT_VALUE, TEXT_INPUT_VALUE, INT_INPUT_VALUE, DECIMAL_INPUT_VALUE,
-                    EMPTY_FIELD, EMPTY_FIELD, EMPTY_FIELD, USER_NAME);
-    private final List<Object> expectedViewedRecord = Arrays
-            .asList(STRING_INPUT_VALUE, TEXT_INPUT_VALUE, INT_INPUT_VALUE, DECIMAL_INPUT_VALUE,
-                    EMPTY_FIELD, EMPTY_FIELD);
-    private final List<Object> expectedEditedRecord = Arrays
-            .asList(STRING_INPUT_VALUE, TEXT_INPUT_VALUE, INT_INPUT_VALUE, NEW_DECIMAL_INPUT_VALUE,
-                    EMPTY_FIELD, EMPTY_FIELD, EMPTY_FIELD, USER_NAME);
-    private final List<Object> expectedDelitedRecord = Arrays
-            .asList(STRING_INPUT_VALUE, TEXT_INPUT_VALUE, INT_INPUT_VALUE, NEW_DECIMAL_INPUT_VALUE,
-                    EMPTY_FIELD, EMPTY_FIELD);
+    private void clickListButton(WebDriver driver) {
+        driver.findElement(By.xpath(
+                "//a[@href='index.php?action=action_list&list_type=table&entity_id=31']")).click();
+    }
+
+    private  void clickActionsView(WebDriver driver) {
+        driver.findElement(By.xpath("//button/i[text()='menu']")).click();
+        getWait().until(TestUtils.movingIsFinished(By.linkText("view"))).click();
+    }
+
+    private  void clickActionsEdit(WebDriver driver) {
+        driver.findElement(By.xpath("//button/i[text()='menu']")).click();
+        getWait().until(movingIsFinished(By.linkText("edit"))).click();
+    }
+
+    private  void clickActionsDelete(WebDriver driver) {
+        driver.findElement(By.xpath("//button/i[text()='menu']")).click();
+        getWait().until(movingIsFinished(By.linkText("delete"))).click();
+    }
 
     private void fillForm() {
         clickCreateRecord(getDriver());
@@ -70,17 +73,8 @@ public class EntityBoardDraftRecordTest extends BaseTest {
         }
     }
 
-    private List<String> getActualValues(List<WebElement> actualElements) {
-        List<String> listValues = new ArrayList<>();
-        for (WebElement element : actualElements) {
-            listValues.add(element.getText());
-        }
-        return listValues;
-    }
-
     private void editDraftRecord(){
-        findElement(ACTIONS_BUTTON).click();
-        getWait().until(movingIsFinished(By.linkText("edit"))).click();
+        clickActionsEdit(getDriver());
 
         findElement(DECIMAL_FIELD).click();
         findElement(DECIMAL_FIELD).clear();
@@ -89,21 +83,18 @@ public class EntityBoardDraftRecordTest extends BaseTest {
         clickSaveDraft(getDriver());
     }
 
-    private void deleteDraftRecord() {
-        findElement(LIST_BUTTON).click();
-
-        findElement(ACTIONS_BUTTON).click();
-        getWait().until(movingIsFinished(By.linkText("delete"))).click();
-    }
-
     @Test
     public void testCreateDraftRecord() {
 
-        jsClick(getDriver(), findElement(BOARD_TAB));
+        final List<String> expectedCreatedRecord = Arrays
+                .asList(STRING_INPUT_VALUE, TEXT_INPUT_VALUE, INT_INPUT_VALUE, DECIMAL_INPUT_VALUE,
+                        EMPTY_FIELD, EMPTY_FIELD, EMPTY_FIELD, USER_NAME);
+
+        getEntity(getDriver(),"Board");
 
         fillForm();
 
-        findElement(LIST_BUTTON).click();
+        clickListButton(getDriver());
 
         WebElement icon = findElement(By.xpath("//tbody/tr/td/i"));
         Assert.assertEquals(icon.getAttribute("class"), "fa fa-pencil");
@@ -115,15 +106,17 @@ public class EntityBoardDraftRecordTest extends BaseTest {
     @Test(dependsOnMethods = "testCreateDraftRecord")
     public void testViewDraftRecord() {
 
-        jsClick(getDriver(), findElement(BOARD_TAB));
-        findElement(LIST_BUTTON).click();
+        final List<String> expectedViewedRecord = Arrays
+                .asList(STRING_INPUT_VALUE, TEXT_INPUT_VALUE, INT_INPUT_VALUE, DECIMAL_INPUT_VALUE,
+                        EMPTY_FIELD, EMPTY_FIELD);
+
+        getEntity(getDriver(),"Board");
+        clickListButton(getDriver());
 
         WebElement iconCheckBox = findElement(By.xpath("//tbody/tr/td/i"));
         Assert.assertEquals(iconCheckBox.getAttribute("class"), "fa fa-pencil");
 
-        findElement(ACTIONS_BUTTON).click();
-
-        getWait().until(TestUtils.movingIsFinished(By.linkText("view"))).click();
+        clickActionsView(getDriver());
 
         List<WebElement> actualRecord = findElements(By.xpath("//span[@class='pa-view-field']"));
         WebElement actualUser = findElement(By.xpath("//div[@class='form-group']/p"));
@@ -135,14 +128,15 @@ public class EntityBoardDraftRecordTest extends BaseTest {
     @Test(dependsOnMethods = "testViewDraftRecord")
     public void testEditDraftRecord() {
 
-        jsClick(getDriver(), findElement(BOARD_TAB));
-        findElement(LIST_BUTTON).click();
+        final List<String> expectedEditedRecord = Arrays
+                .asList(STRING_INPUT_VALUE, TEXT_INPUT_VALUE, INT_INPUT_VALUE, NEW_DECIMAL_INPUT_VALUE,
+                        EMPTY_FIELD, EMPTY_FIELD, EMPTY_FIELD, USER_NAME);
+
+        getEntity(getDriver(),"Board");
+        clickListButton(getDriver());
 
         List<WebElement> actualRecord = findElements(By.xpath("//tbody/tr"));
         Assert.assertEquals(actualRecord.size(), 1);
-
-        WebElement rowsCountsText = findElement(By.xpath("//div/span[@class='pagination-info']"));
-        Assert.assertEquals(rowsCountsText.getText(), "Showing 1 to 1 of 1 rows");
 
         editDraftRecord();
 
@@ -153,9 +147,11 @@ public class EntityBoardDraftRecordTest extends BaseTest {
     @Test(dependsOnMethods = "testEditDraftRecord")
     public void testDeleteDraftRecord() {
 
-        jsClick(getDriver(), findElement(BOARD_TAB));
+        getEntity(getDriver(),"Board");
 
-        deleteDraftRecord();
+        clickListButton(getDriver());
+
+        clickActionsDelete(getDriver());
 
         String textCardBodyAfterDelete = findElement(By.xpath("//div[@class = 'card-body ']")).getText();
         Assert.assertTrue(textCardBodyAfterDelete.isEmpty());
@@ -171,6 +167,10 @@ public class EntityBoardDraftRecordTest extends BaseTest {
 
     @Test(dependsOnMethods = "testDeleteDraftRecord")
     public void testDeleteRecordFromRecycleBin() {
+
+        final List<String> expectedDelitedRecord = Arrays
+                .asList(STRING_INPUT_VALUE, TEXT_INPUT_VALUE, INT_INPUT_VALUE, NEW_DECIMAL_INPUT_VALUE,
+                        EMPTY_FIELD, EMPTY_FIELD);
 
         clickRecycleBin(getDriver());
 
@@ -197,16 +197,16 @@ public class EntityBoardDraftRecordTest extends BaseTest {
     public void testSearchDraftRecord(){
 
         final By searchField = By.xpath("//input[contains(@class, 'search-input')]");
-        final List<Object> expectedFoundRecord1 = Arrays
+        final List<String> expectedFoundRecord1 = Arrays
                 .asList(STRING_INPUT_VALUE, "books", "52", "5.36",
                         EMPTY_FIELD, EMPTY_FIELD);
-        final List<Object> expectedFoundRecord2 = Arrays
+        final List<String> expectedFoundRecord2 = Arrays
                 .asList(STRING_INPUT_VALUE, "magazines", "199", "1.78",
                         EMPTY_FIELD, EMPTY_FIELD);
         final String searchTextValue1 = "books";
         final String searchTextValue2 = "magazines";
 
-        jsClick(getDriver(), findElement(BOARD_TAB));
+        getEntity(getDriver(),"Board");
 
         clickCreateRecord(getDriver());
 
@@ -222,7 +222,7 @@ public class EntityBoardDraftRecordTest extends BaseTest {
         sendKeysOneByOne(findElement(DECIMAL_FIELD), "1.78");
         clickSaveDraft(getDriver());
 
-        findElement(LIST_BUTTON).click();
+        clickListButton(getDriver());
 
         Assert.assertEquals(findElements(By.xpath("//tbody/tr")).size(), 2);
 
