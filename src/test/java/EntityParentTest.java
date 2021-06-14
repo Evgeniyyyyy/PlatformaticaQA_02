@@ -134,7 +134,7 @@ public class EntityParentTest extends BaseTest {
         getEntity(getDriver(), "Parent");
         clickListButton();
 
-        clickActionsView(getDriver());
+        clickActionsView(getWait(), getDriver());
 
         List<WebElement> row = findElements(By.xpath("//span[@class='pa-view-field']"));
         for (int i = 0; i < row.size(); i++) {
@@ -147,7 +147,7 @@ public class EntityParentTest extends BaseTest {
 
         getEntity(getDriver(), "Parent");
 
-        clickActionsEdit(getDriver());
+        clickActionsEdit(getWait(), getDriver());
         editRecord();
 
         Assert.assertEquals(getActualValues(findElements(ACTUAL_RESULT)), EDIT_RESULT);

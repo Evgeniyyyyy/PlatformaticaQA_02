@@ -138,7 +138,7 @@ public class EntityDefaultTest extends BaseTest {
         List<WebElement> rows = getDriver().findElements(ROWS_ELEMENT);
         Assert.assertEquals(rows.size(), 1);
 
-        clickActionsView(getDriver());
+        clickActionsView(getWait(), getDriver());
 
         List<Object> expectedRecord = Arrays.asList(STRING_INPUT_VALUE, TEXT_INPUT_VALUE, INT_INPUT_VALUE,
                 DECIMAL_INPUT_VALUE, formatter.format(date), EMPTY_FIELD);
@@ -163,7 +163,7 @@ public class EntityDefaultTest extends BaseTest {
     public void testEditRecord() {
 
         getEntity(getDriver(), "Default");
-        clickActionsEdit(getDriver());
+        clickActionsEdit(getWait(), getDriver());
         clearFields();
 
         findElement(STRING_FIELD).sendKeys(STRING_INPUT_VALUE2);
@@ -182,7 +182,7 @@ public class EntityDefaultTest extends BaseTest {
     public void testDeleteRecord() {
 
         getEntity(getDriver(), "Default");
-        clickActionsDelete(getDriver());
+        clickActionsDelete(getWait(), getDriver());
         clickRecycleBin(getDriver());
         findElement(By.xpath("//tbody/tr/td/a")).click();
 

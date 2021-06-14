@@ -93,7 +93,7 @@ public class EntityTagTest extends BaseTest{
     public void testEditRecord() {
 
         getEntity(getDriver(), "Tag");
-        clickActionsEdit(getDriver());
+        clickActionsEdit(getWait(), getDriver());
         editRecord();
 
         Assert.assertEquals(getActualValues(findElements(ACTUAL_RESULT)), EDIT_RESULT);
@@ -103,7 +103,7 @@ public class EntityTagTest extends BaseTest{
     public void testDeleteRecord() {
 
         getEntity(getDriver(), "Tag");
-        clickActionsDelete(getDriver());
+        clickActionsDelete(getWait(), getDriver());
         clickRecycleBin(getDriver());
         findElement(ACTUAL_RESULT).click();
 

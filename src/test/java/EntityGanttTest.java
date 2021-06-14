@@ -92,7 +92,7 @@ public class EntityGanttTest extends BaseTest {
         List<WebElement> rows = getDriver().findElements(ROWS_ELEMENT);
         Assert.assertEquals(rows.size(), 1);
 
-        clickActionsView(getDriver());
+        clickActionsView(getWait(), getDriver());
 
         List<Object> expectedRecords = Arrays.asList(STRING_INPUT_VALUE, TEXT_INPUT_VALUE, INT_INPUT_VALUE,
                 DECIMAL_INPUT_VALUE, formatter.format(date), EMPTY_FIELD);
@@ -113,7 +113,7 @@ public class EntityGanttTest extends BaseTest {
         List<WebElement> rows = getDriver().findElements(ROWS_ELEMENT);
         Assert.assertEquals(rows.size(), 1);
 
-        clickActionsEdit(getDriver());
+        clickActionsEdit(getWait(), getDriver());
 
         findElement(STRING_FIELD).clear();
         findElement(TEXT_FIELD).clear();
@@ -147,7 +147,7 @@ public class EntityGanttTest extends BaseTest {
         List<WebElement> rows = getDriver().findElements(ROWS_ELEMENT);
         Assert.assertEquals(rows.size(), 1);
 
-        clickActionsDelete(getDriver());
+        clickActionsDelete(getWait(), getDriver());
 
         String textCardBodyAfterDelete = getDriver().findElement(By.xpath("//div[@class = 'card-body ']")).getText();
         Assert.assertTrue(textCardBodyAfterDelete.isEmpty());

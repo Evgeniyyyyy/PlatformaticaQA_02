@@ -184,24 +184,6 @@ public class EntityChevronTest extends BaseTest {
         Assert.assertEquals(user.getText(), data.get(7));
     }
 
-    private void clickActionsView(int row) {
-        findElement(By.xpath("//tr[@data-index='"+ row +"']//button/i[@class='material-icons'][position()=1]")).click();
-        getWait().until(TestUtils.movingIsFinished(getDriver().
-                findElement(By.xpath("//tr[@data-index='"+ row +"']//a[text()='view']")))).click();
-    }
-
-    private void clickActionsEdit(int row) {
-        findElement(By.xpath("//tr[@data-index='"+ row +"']//button/i[@class='material-icons'][position()=1]")).click();
-        getWait().until(TestUtils.movingIsFinished(getDriver().
-                findElement(By.xpath("//tr[@data-index='"+ row +"']//a[text()='edit']")))).click();
-    }
-
-    private void clickActionsDelete(int row) {
-        findElement(By.xpath("//tr[@data-index='"+ row +"']//button/i[@class='material-icons'][position()=1]")).click();
-        getWait().until(TestUtils.movingIsFinished(getDriver().
-                findElement(By.xpath("//tr[@data-index='"+ row +"']//a[text()='delete']")))).click();
-    }
-
     final private static List<String> EXPECTED_DATA_PENDING_RECORD = makeRandomData(PENDING);
     final private static List<String> EXPECTED_DATA_FULFILLMENT_RECORD = makeRandomData(FULFILLMENT);
     final private static List<String> EXPECTED_DATA_SENT_RECORD = makeRandomData(SENT);
@@ -223,7 +205,7 @@ public class EntityChevronTest extends BaseTest {
         getEntity(getDriver(), ENTITY_NAME);
 
         int row = chooseRecordNumberInTable(EXPECTED_DATA_PENDING_RECORD);
-        clickActionsView(row);
+        clickActionsView(getWait(), getDriver(), row);
 
         checkRecordInViewMode(EXPECTED_DATA_PENDING_RECORD);
     }
@@ -233,7 +215,7 @@ public class EntityChevronTest extends BaseTest {
         getEntity(getDriver(), ENTITY_NAME);
 
         int row = chooseRecordNumberInTable(EXPECTED_DATA_PENDING_RECORD);
-        clickActionsEdit(row);
+        clickActionsEdit(getWait(), getDriver(), row);
 
         checkFormIsNotEmpty();
         emptyForm();
@@ -247,7 +229,7 @@ public class EntityChevronTest extends BaseTest {
         getEntity(getDriver(), ENTITY_NAME);
 
         int row = chooseRecordNumberInTable(EXPECTED_DATA_PENDING_RECORD);
-        clickActionsDelete(row);
+        clickActionsDelete(getWait(), getDriver(), row);
         List<WebElement> tableElements = findElements(By.xpath("//div[@class='card-body ']/*"));
         Assert.assertEquals(tableElements.size(), 1);
 
@@ -288,7 +270,7 @@ public class EntityChevronTest extends BaseTest {
         getEntity(getDriver(), ENTITY_NAME);
 
         int row = chooseRecordNumberInTable(EXPECTED_DATA_FULFILLMENT_RECORD);
-        clickActionsView(row);
+        clickActionsView(getWait(), getDriver(), row);
 
         checkRecordInViewMode(EXPECTED_DATA_FULFILLMENT_RECORD);
     }
@@ -308,7 +290,7 @@ public class EntityChevronTest extends BaseTest {
         findElement(By.xpath("//a[text()='All']")).click();
 
         int row = chooseRecordNumberInTable(EXPECTED_DATA_SENT_RECORD);
-        clickActionsView(row);
+        clickActionsView(getWait(), getDriver(), row);
 
         checkRecordInViewMode(EXPECTED_DATA_SENT_RECORD);
     }
@@ -327,7 +309,7 @@ public class EntityChevronTest extends BaseTest {
         getEntity(getDriver(), ENTITY_NAME);
 
         int row = chooseRecordNumberInTable(EXPECTED_DATA_PENDING_DRAFT_RECORD);
-        clickActionsView(row);
+        clickActionsView(getWait(), getDriver(), row);
 
         checkRecordInViewMode(EXPECTED_DATA_PENDING_DRAFT_RECORD);
     }
@@ -346,7 +328,7 @@ public class EntityChevronTest extends BaseTest {
         getEntity(getDriver(), ENTITY_NAME);
 
         int row = chooseRecordNumberInTable(EXPECTED_DATA_FULFILLMENT_DRAFT_RECORD);
-        clickActionsView(row);
+        clickActionsView(getWait(), getDriver(), row);
 
         checkRecordInViewMode(EXPECTED_DATA_FULFILLMENT_DRAFT_RECORD);
     }
@@ -366,7 +348,7 @@ public class EntityChevronTest extends BaseTest {
         findElement(By.xpath("//a[text()='All']")).click();
 
         int row = chooseRecordNumberInTable(EXPECTED_DATA_SENT_DRAFT_RECORD);
-        clickActionsView(row);
+        clickActionsView(getWait(), getDriver(), row);
 
         checkRecordInViewMode(EXPECTED_DATA_SENT_DRAFT_RECORD);
     }

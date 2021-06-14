@@ -82,18 +82,33 @@ public class ProjectUtils {
         jsClick(driver, driver.findElement(By.xpath("//p[text()= ' " + name + " ']")));
     }
 
-    public static void clickActionsView(WebDriver driver) {
-        driver.findElement(By.xpath("//button/i[@class='material-icons']")).click();
-        TestUtils.jsClick(driver, driver.findElement(By.xpath("//a[text()='view']")));
+    public static void clickActionsView(WebDriverWait wait, WebDriver driver, int row) {
+        driver.findElement(By.xpath("//tr[@data-index='"+ row +"']//button/i[text()='menu']")).click();
+        wait.until(TestUtils.movingIsFinished(driver.
+            findElement(By.xpath("//tr[@data-index='"+ row +"']//a[text()='view']")))).click();
     }
 
-    public static void clickActionsEdit(WebDriver driver) {
-        driver.findElement(By.xpath("//button/i[@class='material-icons']")).click();
-        TestUtils.jsClick(driver, driver.findElement(By.xpath("//a[text()='edit']")));
+    public static void clickActionsView(WebDriverWait wait, WebDriver driver) {
+        clickActionsView(wait, driver, 0);
     }
 
-    public static void clickActionsDelete(WebDriver driver) {
-        driver.findElement(By.xpath("//button/i[@class='material-icons']")).click();
-        TestUtils.jsClick(driver, driver.findElement(By.xpath("//a[text()='delete']")));
+    public static void clickActionsEdit(WebDriverWait wait, WebDriver driver, int row) {
+        driver.findElement(By.xpath("//tr[@data-index='"+ row +"']//button/i[text()='menu']")).click();
+        wait.until(TestUtils.movingIsFinished(driver.
+                findElement(By.xpath("//tr[@data-index='"+ row +"']//a[text()='edit']")))).click();
+    }
+
+    public static void clickActionsEdit(WebDriverWait wait, WebDriver driver) {
+        clickActionsEdit(wait, driver, 0);
+    }
+
+    public static void clickActionsDelete(WebDriverWait wait, WebDriver driver, int row) {
+        driver.findElement(By.xpath("//tr[@data-index='"+ row +"']//button/i[text()='menu']")).click();
+        wait.until(TestUtils.movingIsFinished(driver.
+                findElement(By.xpath("//tr[@data-index='"+ row +"']//a[text()='delete']")))).click();
+    }
+
+    public static void clickActionsDelete(WebDriverWait wait, WebDriver driver) {
+        clickActionsDelete(wait, driver, 0);
     }
 }
