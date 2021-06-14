@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static utils.ProjectUtils.start;
+import static utils.TestUtils.movingIsFinished;
 import static utils.TestUtils.scrollClick;
 
 public class EntityEventsChain2Test extends BaseTest {
@@ -67,7 +67,6 @@ public class EntityEventsChain2Test extends BaseTest {
         final String f1InputValue = "0";
         final List<String> exceptedValues = Arrays.asList("0", "0", "0", "0", "0", "0", "0", "0", "0", "0");
 
-        start(getDriver());
         clickEventsChain2Menu();
         clickCreateNewFolderButton();
         getDriver().findElement(By.id("f1")).sendKeys(f1InputValue);
@@ -83,7 +82,6 @@ public class EntityEventsChain2Test extends BaseTest {
         final String f1InputValue = "-1";
         final List<String> exceptedValues = Arrays.asList("-1", "-1", "-2", "-3", "-5", "-8", "-13", "-21", "-34", "-55");
 
-        start(getDriver());
         clickEventsChain2Menu();
         clickCreateNewFolderButton();
         inputF1Value(f1InputValue);
@@ -92,5 +90,23 @@ public class EntityEventsChain2Test extends BaseTest {
         Assert.assertEquals(getCells().size(), exceptedValues.size());
         Assert.assertEquals(getRowValues(), exceptedValues);
         Assert.assertEquals(getAttributeClass(), "fa fa-check-square-o");
+    }
+
+    @Test(dependsOnMethods = "testCreateNewRecord03")
+    public void testViewCreatedRecord() {
+        final List<String> exceptedValues = Arrays.asList("-1", "-1", "-2", "-3", "-5", "-8", "-13", "-21", "-34", "-55");
+
+        clickEventsChain2Menu();
+
+        getDriver().findElement(By.xpath("//i[contains(., 'menu')]")).click();
+        getWait().until(movingIsFinished(By.xpath("//a[contains(., 'view')]"))).click();
+
+        List<WebElement> cells = getDriver().findElements(By.xpath("//span[@class = 'pa-view-field']"));
+        List<String> actualValues = new ArrayList<>();
+        for(WebElement cell: cells){
+            actualValues.add(cell.getText());
+        }
+
+        Assert.assertEquals(actualValues, exceptedValues);
     }
 }
