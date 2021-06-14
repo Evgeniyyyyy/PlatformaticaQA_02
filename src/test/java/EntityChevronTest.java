@@ -257,6 +257,23 @@ public class EntityChevronTest extends BaseTest {
         Assert.assertEquals(textRecycleBinAfterDelete, expectedTextRecycleBinAfterDelete);
     }
 
+    @Test(dependsOnMethods =  {"testDeleteFulfillmentRecord"})
+    public void testDeletePermanentlyFulfillmentRecord() {
+        getEntity(getDriver(), ENTITY_NAME);
+
+        String expectedTextRecycleBinBeforeDelete = "delete_outline\n" + "1";
+        String textRecycleBinBeforeDelete = getDriver().findElement(
+                By.xpath("//a[@href='index.php?action=recycle_bin']")).getText();
+        Assert.assertEquals(textRecycleBinBeforeDelete, expectedTextRecycleBinBeforeDelete);
+
+        findElement(By.xpath("//i[contains(text(),'delete_outline')]")).click();
+        findElement(By.linkText("delete permanently")).click();
+
+        WebElement recyclerBin = getDriver().findElement(By.xpath("//div[@class = 'card-body']"));
+        Assert.assertTrue(recyclerBin.getText().contains
+                ("Good job with housekeeping! Recycle bin is currently empty!"));
+    }
+
     @Test
     public void testCreateFulfillmentRecord(){
         getEntity(getDriver(), ENTITY_NAME);
