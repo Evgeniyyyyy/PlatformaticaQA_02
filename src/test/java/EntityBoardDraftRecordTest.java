@@ -197,14 +197,11 @@ public class EntityBoardDraftRecordTest extends BaseTest {
     public void testSearchDraftRecord(){
 
         final By searchField = By.xpath("//input[contains(@class, 'search-input')]");
-        final List<String> expectedFoundRecord1 = Arrays
+        final List<String> expectedFoundRecord = Arrays
                 .asList(STRING_INPUT_VALUE, "books", "52", "5.36",
                         EMPTY_FIELD, EMPTY_FIELD);
-        final List<String> expectedFoundRecord2 = Arrays
-                .asList(STRING_INPUT_VALUE, "magazines", "199", "1.78",
-                        EMPTY_FIELD, EMPTY_FIELD);
-        final String searchTextValue1 = "books";
-        final String searchTextValue2 = "magazines";
+
+        final String searchTextValue = "books";
 
         getEntity(getDriver(),"Board");
 
@@ -226,22 +223,11 @@ public class EntityBoardDraftRecordTest extends BaseTest {
 
         Assert.assertEquals(findElements(By.xpath("//tbody/tr")).size(), 2);
 
-        findElement(searchField).sendKeys(searchTextValue1);
+        findElement(searchField).sendKeys(searchTextValue);
 
         getWait().until(ExpectedConditions.textToBePresentInElementLocated(
                 By.xpath("//span[@class='pagination-info']"), "Showing 1 to 1 of 1 rows"));
 
-        Assert.assertEquals(getActualValues(findElements(ACTUAL_SEARCH_RECORD)), expectedFoundRecord1);
-
-        findElement(searchField).clear();
-
-        getWait().until(ExpectedConditions.textToBePresentInElementLocated(
-                By.xpath("//span[@class='pagination-info']"), "Showing 1 to 2 of 2 rows"));
-
-        findElement(searchField).sendKeys(searchTextValue2);
-        getWait().until(ExpectedConditions.textToBePresentInElementLocated(
-                By.xpath("//span[@class='pagination-info']"), "Showing 1 to 1 of 1 rows"));
-
-        Assert.assertEquals(getActualValues(findElements(ACTUAL_SEARCH_RECORD)), expectedFoundRecord2);
+        Assert.assertEquals(getActualValues(findElements(ACTUAL_SEARCH_RECORD)), expectedFoundRecord);
     }
 }
