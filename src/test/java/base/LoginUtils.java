@@ -14,7 +14,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Properties;
 
-abstract class LoginUtils {
+public abstract class LoginUtils {
 
     private static final String LOGIN_PROP = "default.username";
     private static final String PAS_PROP = "default.password";
