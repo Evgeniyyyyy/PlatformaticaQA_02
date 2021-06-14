@@ -16,12 +16,12 @@ import java.util.Properties;
 
 abstract class LoginUtils {
 
-    public static final String LOGIN_PROP = "default.username";
-    public static final String PAS_PROP = "default.password";
+    private static final String LOGIN_PROP = "default.username";
+    private static final String PAS_PROP = "default.password";
 
     private static Properties properties;
 
-    public static void login(WebDriver driver) {
+    static void login(WebDriver driver) {
 
         if (properties == null) {
             properties = new Properties();
@@ -58,16 +58,16 @@ abstract class LoginUtils {
             }
         }
 
-        login(driver, properties.getProperty(LOGIN_PROP), properties.getProperty(PAS_PROP));
+        login(driver, getUserName(), getUserPassword());
     }
 
-    public static void login(WebDriver driver, String login, String pas) {
+    static void login(WebDriver driver, String login, String pas) {
         driver.findElement(By.name("login_name")).sendKeys(login);
         driver.findElement(By.name("password")).sendKeys(pas);
         driver.findElement(By.cssSelector("button[type=submit]")).click();
     }
 
-    public static void reset(WebDriver driver) {
+    static void reset(WebDriver driver) {
         WebDriverWait wait = new WebDriverWait(driver, 10);
 
         driver.findElement(By.id("navbarDropdownProfile")).click();
@@ -76,7 +76,15 @@ abstract class LoginUtils {
                         By.xpath("//a[contains(text(),'!!! Reset all for my user !!!')]"))));
     }
 
-    public static void get(WebDriver driver) {
+    static void get(WebDriver driver) {
         driver.get("https://ref2.eteam.work/");
+    }
+
+    private static String getUserPassword() {
+        return properties.getProperty(PAS_PROP);
+    }
+
+    public static String getUserName() {
+        return properties.getProperty(LOGIN_PROP);
     }
 }
