@@ -6,6 +6,7 @@ import org.testng.Assert;
 import org.testng.annotations.Test;
 import utils.TestUtils;
 
+import javax.swing.text.Utilities;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -61,4 +62,25 @@ public class EntityReadonlyTest extends BaseTest {
         Assert.assertEquals(getAttributeClass(), "fa fa-check-square-o");
         Assert.assertEquals(getRowValues(), EXPECTED_VALUES);
     }
+
+    @Test
+    public void testCreateDraftRecord() {
+
+        clickEventsReadonlyMenu();
+        clickCreateRecordButton();
+        findElement(By.id("string")).sendKeys("String");
+        findElement(By.id("text")).sendKeys("Text");
+        findElement(By.id("int")).sendKeys("1000");
+        findElement(By.id("decimal")).sendKeys("20.55");
+        scrollClick(getDriver(), getDriver().findElement(
+                By.id("pa-entity-form-draft-btn")));
+        getWait().until(ExpectedConditions.elementToBeClickable(
+                getDriver().findElement(By.xpath(
+                        "//i[text() = 'create_new_folder']"))));
+
+
+        Assert.assertEquals(getAttributeClass(), "fa fa-pencil");
+        Assert.assertEquals(getRowValues(), EXPECTED_VALUES);
+    }
+
 }
