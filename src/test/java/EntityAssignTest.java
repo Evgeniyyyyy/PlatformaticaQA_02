@@ -20,6 +20,16 @@ public class EntityAssignTest extends BaseTest {
     private static final By intField = EntityAssignConstants.ASSIGN_INT_FIELD;
     private static final By dateField = EntityAssignConstants.ASSIGN_DATE_FIELD;
     private static final By datetimeField = EntityAssignConstants.ASSIGN_DATETIME_FIELD;
+    private static final String STRING = "Entity assign";
+    private static final String TEXT = "Create Record";
+    private static final String INT = "666";
+    private static final String DECIMAL = "666.66";
+
+    private static final List<String> EXPECTED_RESULT = List.of(STRING, TEXT, INT, DECIMAL, "", "");
+
+    private static final By ICON = By.xpath("//tbody/tr/td/i");
+    private static final By ACTUAL_RESULT = By.xpath("//tbody/tr/td/a");
+
 
     private void dragAndDropAction(WebDriver driver) {
         Actions builder = new Actions(driver);
@@ -97,6 +107,28 @@ public class EntityAssignTest extends BaseTest {
         WebElement dropdown = getDriver().findElement(By.cssSelector("button.btn-round.dropdown-toggle"));
         TestUtils.scrollClick(getDriver(), dropdown);
         TestUtils.jsClick(getDriver(), getDriver().findElement(By.xpath("//a[text()='edit']")));
+    }
+
+    private void fillForm() {
+
+        getEntity(getDriver(),"Assign");
+        clickCreateRecord(getDriver());
+
+        findElement(By.id("string")).sendKeys(STRING);
+        findElement(By.id("text")).sendKeys(TEXT);
+        findElement(By.id("int")).sendKeys(INT);
+        findElement(By.id("decimal")).sendKeys(DECIMAL);
+    }
+
+    @Test
+    public void testCreateRecord() {
+
+        fillForm();
+        clickSave(getDriver());
+
+        WebElement icon = findElement(ICON);
+        Assert.assertEquals(icon.getAttribute("class"), "fa fa-check-square-o");
+        Assert.assertEquals(getActualValues(findElements(ACTUAL_RESULT)), EXPECTED_RESULT);
     }
 
     @Test
