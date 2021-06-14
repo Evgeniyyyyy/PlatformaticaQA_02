@@ -8,7 +8,9 @@ import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import java.util.List;
+
 import static utils.ProjectUtils.*;
+import static utils.TestUtils.jsClick;
 
 public class EntityFieldsTest extends BaseTest {
 
@@ -34,7 +36,7 @@ public class EntityFieldsTest extends BaseTest {
 
     private void fillForm() {
 
-        getEntity(getDriver(),"Fields");
+        getEntity(getDriver(), "Fields");
         clickCreateRecord(getDriver());
 
         findElement(FILL_STRING).sendKeys(STRING);
@@ -61,7 +63,7 @@ public class EntityFieldsTest extends BaseTest {
     }
 
     @Test
-    public void testCreateRecord(){
+    public void testCreateRecord() {
 
         fillForm();
 
@@ -73,7 +75,7 @@ public class EntityFieldsTest extends BaseTest {
     @Test(dependsOnMethods = "testCreateRecord")
     public void testReorderRecord() {
 
-        getEntity(getDriver(),"Fields");
+        getEntity(getDriver(), "Fields");
         clickCreateRecord(getDriver());
         editForm();
 
@@ -100,8 +102,8 @@ public class EntityFieldsTest extends BaseTest {
 
     }
 
-    @Test (dependsOnMethods = "testReorderRecord")
-    public void testSearchCreatedRecord () {
+    @Test(dependsOnMethods = "testReorderRecord")
+    public void testSearchCreatedRecord() {
 
         getEntity(getDriver(), "Fields");
         findElement(By.xpath("//input[@placeholder = 'Search']")).sendKeys(EXPECTED_RESULT.get(0));
@@ -110,5 +112,21 @@ public class EntityFieldsTest extends BaseTest {
                 By.xpath("//span[@class='pagination-info']"), "Showing 1 to 1 of 1 rows"));
 
         Assert.assertEquals(getActualValues(findElements(ACTUAL_RESULT)), EXPECTED_RESULT);
+    }
+
+    @Test
+    public void deletePermanentlyRecordFromRecycleBin() {
+        jsClick(getDriver(), getDriver().findElement(By.xpath("//p[text()=' Fields ']")));
+        clickCreateRecord(getDriver());
+        clickSave(getDriver());
+        jsClick(getDriver(), getDriver().findElement(
+                By.xpath("//button[@class='btn btn-round btn-sm btn-primary dropdown-toggle']")));
+        jsClick(getDriver(), getDriver().findElement(By.xpath("//a[contains(@href,'delete')]")));
+        getDriver().findElement(By.partialLinkText("delete_outline")).click();
+        getDriver().findElement(By.partialLinkText("delete permanently")).click();
+
+        Assert.assertEquals(getDriver().findElement(
+                By.xpath("//*[@class='card-body']")).getText(),
+                "Good job with housekeeping! Recycle bin is currently empty!");
     }
 }
