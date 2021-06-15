@@ -84,30 +84,39 @@ public class EntityEventsChain1Test extends BaseTest {
     private boolean isNumeric(String value){
         try {
             Long.parseLong(value);
+
             return true;
         } catch(NumberFormatException e){
+
             return false;
         }
     }
 
     private <T> T returnNumericValue(String value) {
-        if (isNumeric(value)) {
-            if (Long.parseLong(value) >= 0) {
-                if (Long.parseLong(value) <= 4194303) {
-                    return (T) Integer.valueOf(Integer.parseInt(value));
-                } else {
-                    return (T) Long.valueOf(Long.parseLong(value));
-                }
-            }
 
-            return null;
+        if (value != null && isNumeric(value)) {
+            long stringParsed = Long.parseLong(value);
+
+            if (stringParsed >= 0) {
+                if (stringParsed <= 4194303) {
+
+                    return (T) Integer.valueOf(value);
+
+                } else {
+
+                    return (T) Long.valueOf(stringParsed);
+                }
+            } else {
+
+                return null;
+            }
         }
 
         return null;
     }
 
     private List<String> getExpectedValues(String value) {
-        List <String> expectedValues = new ArrayList<>();
+        List<String> expectedValues = new ArrayList<>();
 
         if (returnNumericValue(value) instanceof Integer) {
             int valueInt = Integer.parseInt(value);
@@ -119,8 +128,6 @@ public class EntityEventsChain1Test extends BaseTest {
                 expectedValues.add(i, String.valueOf(valueInt));
             }
 
-            return expectedValues;
-
         } else if(returnNumericValue(value) instanceof Long) {
             long valueLong = Long.parseLong(value);
 
@@ -130,17 +137,18 @@ public class EntityEventsChain1Test extends BaseTest {
                 valueLong = valueLong * 2;
                 expectedValues.add(i, String.valueOf(valueLong));
             }
+        } else {
 
-            return expectedValues;
+            return null;
         }
 
-        return null;
+        return expectedValues;
     }
 
     @Test
     public void testCreateNewRecord() {
         final String f1Value = "1";
-        List<String> expectedValues = getExpectedValues(f1Value);
+        final List<String> expectedValues = getExpectedValues(f1Value);
 
         clickEventsChain1Menu();
         clickCreateNewFolderButton();
