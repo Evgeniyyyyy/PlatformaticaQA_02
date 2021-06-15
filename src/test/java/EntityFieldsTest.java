@@ -73,14 +73,24 @@ public class EntityFieldsTest extends BaseTest {
     }
 
     @Test(dependsOnMethods = "testCreateRecord")
+    public void testEditRecord() {
+
+        getEntity(getDriver(), "Fields");
+        clickActionsEdit(getWait(),getDriver());
+        editForm();
+
+        Assert.assertEquals(getActualValues(findElements(ACTUAL_RESULT)), EDIT_RESULT);
+    }
+
+    @Test(dependsOnMethods = "testEditRecord")
     public void testReorderRecord() {
 
         getEntity(getDriver(), "Fields");
         clickCreateRecord(getDriver());
-        editForm();
+        fillForm();
 
         findElement(By.xpath("//i[text()='format_line_spacing']")).click();
-        Assert.assertEquals(getActualValues(findElements(ACTUAL_RESULT)).get(0), EXPECTED_RESULT.get(0));
+        Assert.assertEquals(getActualValues(findElements(ACTUAL_RESULT)).get(0), EDIT_RESULT.get(0));
 
         Actions actions = new Actions(getDriver());
         WebElement row = findElement(By.xpath("//tbody/tr"));
@@ -88,18 +98,17 @@ public class EntityFieldsTest extends BaseTest {
         Action swapRow = actions.build();
         swapRow.perform();
 
-        Assert.assertEquals(getActualValues(findElements(ACTUAL_RESULT)).get(0), EDIT_RESULT.get(0));
+        Assert.assertEquals(getActualValues(findElements(ACTUAL_RESULT)).get(0), EXPECTED_RESULT.get(0));
 
         getDriver().findElement(By.xpath("//i[@class='fa fa-toggle-off']")).click();
-        Assert.assertEquals(getActualValues(findElements(RECORD)).get(0), EDIT_RESULT.get(0));
+        Assert.assertEquals(getActualValues(findElements(RECORD)).get(0), EXPECTED_RESULT.get(0));
 
         WebElement card = getDriver().findElement(By.id("customId_0"));
         actions.moveToElement(card).clickAndHold(card).dragAndDropBy(card, 0, 100);
         Action swapCard = actions.build();
         swapCard.perform();
 
-        Assert.assertEquals(getActualValues(findElements(RECORD)).get(0), EXPECTED_RESULT.get(0));
-
+        Assert.assertEquals(getActualValues(findElements(RECORD)).get(0), EDIT_RESULT.get(0));
     }
 
     @Test(dependsOnMethods = "testReorderRecord")
