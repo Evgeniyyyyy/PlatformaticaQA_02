@@ -1,32 +1,26 @@
 import base.BaseTest;
-import constants.EntityBoardConstants;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 import java.util.List;
-import static utils.ProjectUtils.start;
 
-public class InputDataAndSaveTest extends BaseTest {
+
+public class EntityBoardCreateAndSaveTest extends BaseTest {
 
     private void openMenuAndClick() {
 
-        WebElement boardElement = getDriver().findElement((EntityBoardConstants.LINK_BOARD_ENTITY));
+        WebElement boardElement = getDriver().findElement(By.xpath("//a[@href=\"index.php?action=action_list&entity_id=31&mod=2\"]"));
         Actions actions = new Actions(getDriver());
         actions.moveToElement(boardElement).click(boardElement).build().perform();
     }
 
-    private void addCard() {
-        WebElement card = getDriver().findElement((EntityBoardConstants.BOARD_ADD_CARD));
-        card.click();
-    }
-
     @Test
-    public void testInputDataAndSave()    {
-        start(getDriver());
+    public void testInputDataAndSave() {
         openMenuAndClick();
-        addCard();
+        WebElement addCard = getDriver().findElement(By.xpath(("//div[@class='card-icon']")));
+        addCard.click();
 
         WebElement textField = getDriver().findElement((By.id("text")));
         textField.sendKeys("any Text");
@@ -47,12 +41,13 @@ public class InputDataAndSaveTest extends BaseTest {
             String name = ele.getText();
             if (name.equalsIgnoreCase(userEmail)) {
                 ele.click();
-            } else {
-                System.out.println("userEmail couldn't find");
+                break;
             }
         }
+
         WebElement clickSaveButton = getDriver().findElement(By.id("pa-entity-form-save-btn"));
         clickSaveButton.click();
+
         WebElement pending = getDriver().findElement(By.cssSelector(" main > div > div:nth-child(2)"));
         Assert.assertTrue(pending.getText().toLowerCase().contains(userEmail.toLowerCase()), "New pending task was created");
     }
