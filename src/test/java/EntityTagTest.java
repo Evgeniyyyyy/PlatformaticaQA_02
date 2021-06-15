@@ -109,4 +109,13 @@ public class EntityTagTest extends BaseTest{
 
         Assert.assertEquals(getActualValues(findElements(DELETED_RECORD)), EXPECTED_RESULT);
     }
+
+    @Test(dependsOnMethods = "testCreateRecord")
+    public void testViewRecord(){
+        getEntity(getDriver(), "Tag");
+        clickActionsView(getWait(),getDriver(),0);
+        List<WebElement> viewField =getDriver().findElements(By.xpath("//span[@class='pa-view-field']"));
+
+        Assert.assertEquals(getActualValues(viewField), EXPECTED_RESULT);
+    }
 }
