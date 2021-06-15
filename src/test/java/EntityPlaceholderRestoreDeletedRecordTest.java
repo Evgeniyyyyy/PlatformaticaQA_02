@@ -44,4 +44,44 @@ public class EntityPlaceholderRestoreDeletedRecordTest extends BaseTest {
 
         Assert.assertEquals(actualResult, expectedResult);
     }
+
+    @Test(dependsOnMethods = "testDeleteRecord")
+    public void testRestoreDeletedRecord() {
+
+        List<String> expectedResult = List.of("Task", "English", "25", "25.13", "31");
+        List<String> expectedResult1 = List.of("Task", "English", "25", "25.13", "", "", "", "", "tester29@tester.test");
+
+        clickRecycleBin(getDriver());
+
+        List<WebElement> rows = findElements(By.xpath("//table/tbody/tr"));
+
+        Assert.assertEquals(rows.size(), 1);
+
+        List<WebElement> testData = findElements(
+                By.xpath("// table/tbody/tr/td [@class = 'pa-recycle-col']/a/span/b"));
+        List<String> actualResult = new ArrayList<>();
+        for (int i = 0; i <= testData.size() - 1; i++) {
+            actualResult.add(testData.get(i).getText());
+        }
+
+        Assert.assertEquals(actualResult, expectedResult);
+
+        findElement(
+                By.xpath("//tbody/tr/td [@ class = 'pa-recycle-control']/a[contains (text(), 'restore as draft')]"))
+                .click();
+        scrollClick(getDriver(), By.xpath("//p[contains (text(), 'Placeholder')]"));
+
+        List<WebElement> testData1 = findElements(
+                By.xpath("//table/tbody/tr/td [@class = 'pa-list-table-th']"));
+        List<String> actualResult1 = new ArrayList<>();
+        for (int i = 0; i <= testData1.size() - 1; i++) {
+            actualResult1.add(testData1.get(i).getText());
+        }
+
+        Assert.assertEquals(actualResult1, expectedResult1);
+
+        WebElement icon = findElement(By.xpath("//td [1]/i"));
+
+        Assert.assertEquals(icon.getAttribute("class"), "fa fa-pencil");
+    }
 }
