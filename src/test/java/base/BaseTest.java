@@ -9,11 +9,7 @@ import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.ITestResult;
-import org.testng.annotations.AfterMethod;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Listeners;
-import org.testng.annotations.Test;
+import org.testng.annotations.*;
 
 import java.io.IOException;
 import java.lang.reflect.Method;
@@ -59,7 +55,9 @@ public abstract class BaseTest {
     @BeforeClass
     protected void beforeClass() {
         methodList = OrderUtils.orderMethods(
-                Arrays.stream(this.getClass().getMethods()).filter(m -> m.getAnnotation(Test.class) != null).collect(Collectors.toList()),
+                Arrays.stream(this.getClass().getMethods())
+                        .filter(m -> m.getAnnotation(Test.class) != null && m.getAnnotation(Ignore.class) == null)
+                        .collect(Collectors.toList()),
                 m -> m.getName(),
                 m -> m.getAnnotation(Test.class).dependsOnMethods());
     }
