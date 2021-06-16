@@ -2,6 +2,7 @@ import base.BaseTest;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.testng.Assert;
+import org.testng.annotations.Ignore;
 import org.testng.annotations.Test;
 import utils.ProjectUtils;
 
@@ -110,6 +111,7 @@ public class EntityTagTest extends BaseTest{
         Assert.assertEquals(getActualValues(findElements(DELETED_RECORD)), EXPECTED_RESULT);
     }
 
+    @Ignore
     @Test(dependsOnMethods = "testCreateRecord")
     public void testViewRecord(){
         getEntity(getDriver(), "Tag");

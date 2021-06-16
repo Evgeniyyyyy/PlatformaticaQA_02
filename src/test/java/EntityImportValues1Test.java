@@ -39,6 +39,7 @@ public class EntityImportValues1Test extends BaseTest {
         return list;
     }
 
+    @Ignore
     @Test
     public void testViewNewRecord(){
         final List<String> expectedValues = Arrays.asList(

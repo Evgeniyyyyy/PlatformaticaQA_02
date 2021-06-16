@@ -3,6 +3,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.testng.Assert;
+import org.testng.annotations.Ignore;
 import org.testng.annotations.Test;
 import utils.TestUtils;
 
@@ -20,9 +21,9 @@ public class EntityImportNewRecordTest extends BaseTest {
     private static final String DECIMAL_SECOND = "9.30";
     private static final String USER_SECOND = "apptester1@tester.test";
 
+    @Ignore
     @Test
     public void testCreateNewRecord() {
-
         TestUtils.scrollClick(getDriver(), findElement(By.xpath("//li[7]/a/p[contains(text(), 'Import')]")));
 
         getWait().until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//div[@class ='card-icon']/i")));

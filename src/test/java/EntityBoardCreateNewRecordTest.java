@@ -4,6 +4,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.testng.Assert;
+import org.testng.annotations.Ignore;
 import org.testng.annotations.Test;
 import utils.ProjectUtils;
 import java.text.SimpleDateFormat;
@@ -86,6 +87,7 @@ public class EntityBoardCreateNewRecordTest extends BaseTest {
                 "Board");
    }
 
+    @Ignore
     @Test()
     public void testCreateNewPendingRecordPositive()
     {
