@@ -27,7 +27,7 @@ public abstract class LoginUtils {
             properties = new Properties();
             if (BaseTest.isRemoteWebDriver()) {
                 try {
-                    HttpURLConnection con = (HttpURLConnection) new URL("https://ref2.eteam.work/next_tester.php").openConnection();
+                    HttpURLConnection con = (HttpURLConnection) new URL("https://ref2.eteam.work/next_tester.php?group=group2").openConnection();
                     try {
                         con.setRequestMethod("GET");
                         if (con.getResponseCode() == HttpURLConnection.HTTP_OK) {

@@ -83,4 +83,15 @@ public class EntityReadonlyTest extends BaseTest {
         Assert.assertEquals(getRowValues(), EXPECTED_VALUES);
     }
 
+    @Test(dependsOnMethods = "testCreateDraftRecord")
+    public void testViewDraftRecord(){
+        clickEventsReadonlyMenu();
+        TestUtils.jsClick(getDriver(), findElement(By.xpath(
+                "//*[@id=\"pa-all-entities-table\"]/tbody/tr/td[4]/a")));
+
+        List<WebElement> result = getDriver().findElements(By.xpath("//span[@class='pa-view-field']"));
+        for (int i = 0; i < 6; i++) {
+            Assert.assertEquals(result.get(i).getText(), EXPECTED_VALUES.get(i));
+        }
+    }
 }
