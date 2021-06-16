@@ -115,7 +115,7 @@ public abstract class BaseTest {
             System.out.println("Browser closed");
         }
 
-        System.out.printf("Execution time is %o\n\n", (testResult.getEndMillis() - testResult.getStartMillis()) / 1000);
+        System.out.printf("Execution time is %o sec\n\n", (testResult.getEndMillis() - testResult.getStartMillis()) / 1000);
     }
 
     protected void stopDriver() {
