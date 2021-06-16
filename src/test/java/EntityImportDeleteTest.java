@@ -4,6 +4,7 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.testng.Assert;
+import org.testng.annotations.Ignore;
 import org.testng.annotations.Test;
 
 import java.util.ArrayList;
@@ -15,7 +16,7 @@ import static utils.TestUtils.scrollClick;
 
 public class EntityImportDeleteTest extends BaseTest {
 
-
+  @Ignore
     @Test
     public void testImportDeletePermanently() throws InterruptedException {
 

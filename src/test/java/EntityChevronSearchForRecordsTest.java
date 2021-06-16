@@ -4,6 +4,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.testng.Assert;
+import org.testng.annotations.Ignore;
 import org.testng.annotations.Test;
 import utils.TestUtils;
 
@@ -128,7 +129,7 @@ public class EntityChevronSearchForRecordsTest extends BaseTest {
             }
         }
     }
-
+    @Ignore
     @Test (dependsOnMethods ={"testCreateNewRecordsAndValidation"})
     public void testSearchingForRandomTestData() {
         //Searching and testing for random test data
