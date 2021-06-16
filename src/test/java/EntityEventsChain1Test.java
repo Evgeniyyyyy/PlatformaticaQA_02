@@ -12,59 +12,72 @@ import static utils.TestUtils.*;
 
 public class EntityEventsChain1Test extends BaseTest {
 
+    private static final By CREATE_NEW_FOLDER = By.xpath("//i[text() = 'create_new_folder']");
+    private static final By EVENTS_CHAIN_1 = By.xpath("//p[contains(.,'Events Chain 1')]");
+    private static final By F1 = By.id("f1");
+    private static final By F10 = By.id("f10");
+    private static final By SAVE_BUTTON = By.id("pa-entity-form-save-btn");
+    private static final By DROP_DOWN_MENU = By.xpath("//i[contains(., 'menu')]");
+    private static final By EDIT_MENU = By.xpath("//a[contains(., 'edit')]");
+    private static final By DELETE_MENU = By.xpath("//a[contains (text(), 'delete')]");
+    private static final By CARD_BODY = By.xpath("//div[@class = 'card-body ']");
+    private static final By CELLS = By.xpath("//table[@id = 'pa-all-entities-table']/tbody/tr/td/a");
+    private static final By ICON = By.xpath("//tbody/tr/td[1]/i");
+    private static final By RECYCLE_BIN = By.xpath("//a[@href='index.php?action=recycle_bin']");
+
+    private static final String NEW_F1_VALUE = "2";
+    private static final String EXPECTED_TEXT_RECYCLE_BIN_AFTER_DELETE = "delete_outline\n" + "1";
+
     private void clickEventsChain1Menu() {
-        scrollClick(getDriver(), getDriver().findElement(
-                By.xpath("//p[contains(.,'Events Chain 1')]")));
-        getWait().until(ExpectedConditions.elementToBeClickable(
-                getDriver().findElement(By.xpath("//i[text() = 'create_new_folder']"))));
+        scrollClick(getDriver(), findElement(EVENTS_CHAIN_1));
+        getWait().until(ExpectedConditions.elementToBeClickable(findElement(CREATE_NEW_FOLDER)));
     }
 
     private void clickCreateNewFolderButton() {
-        getDriver().findElement(By.xpath("//i[text() = 'create_new_folder']")).click();
-        getWait().until(ExpectedConditions.presenceOfElementLocated(By.id("f1")));
+        findElement(CREATE_NEW_FOLDER).click();
+        getWait().until(ExpectedConditions.presenceOfElementLocated(F1));
     }
 
     private void clickSaveButton() {
-        getDriver().findElement(By.id("pa-entity-form-save-btn")).click();
-        getWait().until(ExpectedConditions.elementToBeClickable(
-                getDriver().findElement(By.xpath("//i[text() = 'create_new_folder']"))));
+        findElement(SAVE_BUTTON).click();
+        getWait().until(ExpectedConditions.elementToBeClickable(findElement(CREATE_NEW_FOLDER)));
     }
 
     private void clickDropDownMenu() {
-        getDriver().findElement(By.xpath("//i[contains(., 'menu')]")).click();
+        findElement(DROP_DOWN_MENU).click();
     }
 
     private void clickEditMenu() {
         clickDropDownMenu();
-        getWait().until(movingIsFinished(By.xpath("//a[contains(., 'edit')]"))).click();
-        getWait().until(ExpectedConditions.presenceOfElementLocated(By.id("f1")));
+        getWait().until(movingIsFinished(EDIT_MENU)).click();
+        getWait().until(ExpectedConditions.presenceOfElementLocated(F1));
     }
 
     private void clickDeleteMenu() {
         clickDropDownMenu();
-        getWait().until(movingIsFinished(By.xpath("//a[contains (text(), 'delete')]"))).click();
+        getWait().until(movingIsFinished(DELETE_MENU)).click();
         getWait().until(
-                ExpectedConditions.presenceOfElementLocated(By.xpath("//div[@class = 'card-body ']")));
+                ExpectedConditions.presenceOfElementLocated(CARD_BODY));
     }
 
     private void inputF1Value(String value) {
-        getDriver().findElement(By.id("f1")).sendKeys(value);
-        getWait().until(ExpectedConditions.attributeToBeNotEmpty(getDriver().findElement(By.id("f10")), "value"));
+        findElement(F1).sendKeys(value);
+        getWait().until(ExpectedConditions.attributeToBeNotEmpty(getDriver().findElement(F10), "value"));
     }
 
     private void editRecord(String value){
-        final WebElement F1 = getDriver().findElement(By.id("f1"));
-        final WebElement F10 = getDriver().findElement(By.id("f10"));
+        final WebElement f1 = getDriver().findElement(F1);
+        final WebElement f10 = getDriver().findElement(F10);
 
-        F10.clear();
-        F1.click();
-        F1.clear();
-        F1.sendKeys(value);
-        getWait().until(ExpectedConditions.attributeToBeNotEmpty(F10, "value"));
+        f10.clear();
+        f1.click();
+        f1.clear();
+        f1.sendKeys(value);
+        getWait().until(ExpectedConditions.attributeToBeNotEmpty(f10, "value"));
     }
 
     private List<WebElement> getCells() {
-        return getDriver().findElements(By.xpath("//table[@id = 'pa-all-entities-table']/tbody/tr/td/a"));
+        return findElements(CELLS);
     }
 
     private List<String> getRowValues() {
@@ -78,7 +91,17 @@ public class EntityEventsChain1Test extends BaseTest {
     }
 
     private String getAttributeClass() {
-        return getDriver().findElement(By.xpath("//tbody/tr/td[1]/i")).getAttribute("class");
+        return findElement(ICON).getAttribute("class");
+    }
+
+    private String getCardBodyText() {
+
+        return findElement(CARD_BODY).getText();
+    }
+
+    private String getRecycleBinText() {
+
+        return findElement(RECYCLE_BIN).getText();
     }
 
     private boolean isNumeric(String value){
@@ -115,66 +138,71 @@ public class EntityEventsChain1Test extends BaseTest {
         return null;
     }
 
-    private List<String> getExpectedValues(String value) {
+    private List<String> addValues(int value) {
         List<String> expectedValues = new ArrayList<>();
+
+        expectedValues.add(0, String.valueOf(value));
+
+        for (int i = 1; i < 10; i ++) {
+            value *= 2;
+            expectedValues.add(i, String.valueOf(value));
+        }
+        return expectedValues;
+    }
+
+    private List<String> addValues(long value) {
+        List<String> expectedValues = new ArrayList<>();
+
+        expectedValues.add(0, String.valueOf(value));
+
+        for (int i = 1; i < 10; i ++) {
+            value *= 2;
+            expectedValues.add(i, String.valueOf(value));
+        }
+        return expectedValues;
+    }
+
+    private List<String> getExpectedValues(String value) {
 
         if (returnNumericValue(value) instanceof Integer) {
             int valueInt = Integer.parseInt(value);
 
-            expectedValues.add(0, String.valueOf(valueInt));
-
-            for (int i = 1; i < 10; i ++) {
-                valueInt = valueInt * 2;
-                expectedValues.add(i, String.valueOf(valueInt));
-            }
+            return addValues(valueInt);
 
         } else if(returnNumericValue(value) instanceof Long) {
             long valueLong = Long.parseLong(value);
 
-            expectedValues.add(0, String.valueOf(valueLong));
-
-            for (int i = 1; i < 10; i ++) {
-                valueLong = valueLong * 2;
-                expectedValues.add(i, String.valueOf(valueLong));
-            }
-        } else {
-
-            return null;
+            return addValues(valueLong);
         }
 
-        return expectedValues;
+        return null;
     }
 
     @Test
     public void testCreateNewRecord() {
         final String f1Value = "1";
-        final List<String> expectedValues = getExpectedValues(f1Value);
 
         clickEventsChain1Menu();
         clickCreateNewFolderButton();
         inputF1Value(f1Value);
         clickSaveButton();
 
-        Assert.assertEquals(getCells().size(), expectedValues.size());
-        Assert.assertEquals(getRowValues(), expectedValues);
+        Assert.assertEquals(getRowValues(), getExpectedValues(f1Value));
         Assert.assertEquals(getAttributeClass(), "fa fa-check-square-o");
     }
 
     @Test(dependsOnMethods = "testCreateNewRecord")
     public void testEditRecord() {
 
-        final String newF1Value = "2";
-        final List<String> expectedValues = getExpectedValues(newF1Value);
-
         clickEventsChain1Menu();
 
         final List<String> oldValues = getRowValues();
 
         clickEditMenu();
-        editRecord(newF1Value);
+        editRecord(NEW_F1_VALUE);
         clickSaveButton();
 
-        Assert.assertEquals(getRowValues(), expectedValues);
+        Assert.assertEquals(getRowValues(), getExpectedValues(NEW_F1_VALUE));
         Assert.assertNotEquals(getRowValues(), oldValues);
         Assert.assertEquals(getAttributeClass(), "fa fa-check-square-o");
     }
@@ -182,30 +210,19 @@ public class EntityEventsChain1Test extends BaseTest {
     @Test(dependsOnMethods = "testEditRecord")
     public void testDeleteRecord() {
 
-        String expectedTextCardBodyBeforeDelete = "F1\n" + "F2\n" + "F3\n" + "F4\n" + "F5\n" + "F6\n" + "F7\n" + "F8\n"
-                + "F9\n" + "F10\n" + "Actions\n" + "2\n" + "4\n" + "8\n" + "16\n" + "32\n" + "64\n" + "128\n" +
-                "256\n" + "512\n" + "1024\n" + "menu\n" + "Showing 1 to 1 of 1 rows";
-        String expectedTextRecycleBinBeforeDelete = "delete_outline";
-        String expectedTextRecycleBinAfterDelete = "delete_outline\n" + "1";
-
         clickEventsChain1Menu();
 
-        String textCardBodyBeforeDelete = getDriver().findElement(By.xpath("//div[@class = 'card-body ']")).getText();
-        String textRecycleBinBeforeDelete = getDriver().findElement(
-                By.xpath("//a[@href='index.php?action=recycle_bin']")).getText();
-
-        Assert.assertEquals(textCardBodyBeforeDelete, expectedTextCardBodyBeforeDelete);
-        Assert.assertEquals(textRecycleBinBeforeDelete, expectedTextRecycleBinBeforeDelete);
+        final String textCardBodyBeforeDelete = getCardBodyText();
+        final String textRecycleBinBeforeDelete = getRecycleBinText();
 
         clickDeleteMenu();
 
-        String textCardBodyAfterDelete = getDriver().findElement(By.xpath("//div[@class = 'card-body ']")).getText();
-        String textRecycleBinAfterDelete = getDriver().findElement(
-                By.xpath("//a[@href='index.php?action=recycle_bin']")).getText();
+        final String textCardBodyAfterDelete = getCardBodyText();
+        final String textRecycleBinAfterDelete = getRecycleBinText();
 
+        Assert.assertFalse(textCardBodyBeforeDelete.isBlank());
         Assert.assertTrue(textCardBodyAfterDelete.isBlank());
-        Assert.assertTrue(textCardBodyAfterDelete.isEmpty());
         Assert.assertNotEquals(textRecycleBinBeforeDelete, textRecycleBinAfterDelete);
-        Assert.assertEquals(textRecycleBinAfterDelete, expectedTextRecycleBinAfterDelete);
+        Assert.assertEquals(textRecycleBinAfterDelete, EXPECTED_TEXT_RECYCLE_BIN_AFTER_DELETE);
     }
 }
