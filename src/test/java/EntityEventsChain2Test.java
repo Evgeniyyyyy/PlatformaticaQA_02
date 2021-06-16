@@ -30,6 +30,17 @@ public class EntityEventsChain2Test extends BaseTest {
         getWait().until(ExpectedConditions.attributeToBeNotEmpty(getDriver().findElement(By.id("f10")), "value"));
     }
 
+    private void editRecord(String f1Value){
+        final WebElement F1 = getDriver().findElement(By.id("f1"));
+        final WebElement F10 = getDriver().findElement(By.id("f10"));
+
+        F10.clear();
+        F1.click();
+        F1.clear();
+        F1.sendKeys(f1Value);
+        getWait().until(ExpectedConditions.attributeToBeNotEmpty(F10, "value"));
+    }
+
     private void clickSaveButton() {
         getDriver().findElement(By.id("pa-entity-form-save-btn")).click();
         getWait().until(ExpectedConditions.elementToBeClickable(
@@ -92,9 +103,9 @@ public class EntityEventsChain2Test extends BaseTest {
         Assert.assertEquals(getAttributeClass(), "fa fa-check-square-o");
     }
 
-    @Test(dependsOnMethods = "testCreateNewRecord03")
+    @Test(dependsOnMethods = "testEditCreatedRecord")
     public void testViewCreatedRecord() {
-        final List<String> exceptedValues = Arrays.asList("-1", "-1", "-2", "-3", "-5", "-8", "-13", "-21", "-34", "-55");
+        final List<String> exceptedValues = Arrays.asList("3", "3", "6", "9", "15", "24", "39", "63", "102", "165");
 
         clickEventsChain2Menu();
 
@@ -108,5 +119,23 @@ public class EntityEventsChain2Test extends BaseTest {
         }
 
         Assert.assertEquals(actualValues, exceptedValues);
+    }
+
+    @Test(dependsOnMethods = "testCreateNewRecord03")
+    public void testEditCreatedRecord() {
+        final String f1InputValue = "3";
+        final List<String> exceptedValues = Arrays.asList("3", "3", "6", "9", "15", "24", "39", "63", "102", "165");
+
+        clickEventsChain2Menu();
+
+        getDriver().findElement(By.xpath("//i[contains(., 'menu')]")).click();
+        getWait().until(movingIsFinished(By.xpath("//a[contains(., 'edit')]"))).click();
+
+        editRecord(f1InputValue);
+        clickSaveButton();
+
+        Assert.assertEquals(getCells().size(), exceptedValues.size());
+        Assert.assertEquals(getRowValues(), exceptedValues);
+        Assert.assertEquals(getAttributeClass(), "fa fa-check-square-o");
     }
 }
