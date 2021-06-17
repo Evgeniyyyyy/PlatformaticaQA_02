@@ -13,31 +13,50 @@ import static utils.TestUtils.scrollClick;
 
 public class EntityImportValuesDraftRecordTest extends BaseTest {
 
+    private static final By STRING_FIELD = By.id("string");
+    private static final By TEXT_FIELD = By.id("text");
+    private static final By INT_FIELD = By.id("int");
+    private static final By DECIMAL_FIELD = By.id("decimal");
+    private static final By DATE_FIELD = By.id("date");
+    private static final By DATETIME_FIELD = By.id("datetime");
+    private static final By IMPORT_VALUES_MENU = By.xpath("//p[contains(.,' Import values ')]");
+
+    private static final String STRING_INPUT = "Some string";
+    private static final String TEXT_INPUT = "Import values text.";
+    private static final String INT_INPUT = "457";
+    private static final String DECIMAL_INPUT = "27.35";
+    private static final String DATE_INPUT = "01/06/2021";
+    private static final String DATETIME_INPUT = "01/06/2021 13:07:06";
+    private static final String USERNAME_INPUT = "apptester1@tester.test";
+    private static final String FILE_INPUT = "";
+
     private final static List<String> EXPECTED_VALUES = Arrays.asList(
-            "Some string", "Import values text.", "457", "27.35",
-            "01/06/2021", "01/06/2021 13:07:06", "", "apptester1@tester.test");
+            STRING_INPUT, TEXT_INPUT, INT_INPUT, DECIMAL_INPUT,
+            DATE_INPUT, DATETIME_INPUT, FILE_INPUT, USERNAME_INPUT);
 
-    @Test
-    public void testCreateDraftRecord(){
+    private void fillForm() {
+        findElement(STRING_FIELD).sendKeys(STRING_INPUT);
+        findElement(TEXT_FIELD).sendKeys(TEXT_INPUT);
+        findElement(INT_FIELD).sendKeys(INT_INPUT);
+        findElement(DECIMAL_FIELD).sendKeys(DECIMAL_INPUT);
 
-        scrollClick(getDriver(), findElement(By.xpath("//p[contains(.,' Import values ')]")));
-        clickCreateRecord(getDriver());
-
-        findElement(By.id("string")).sendKeys("Some string");
-        findElement(By.id("text")).sendKeys("Import values text.");
-        findElement(By.id("int")).sendKeys("457");
-        findElement(By.id("decimal")).sendKeys("27.35");
-
-        WebElement date = findElement(By.id("date"));
+        WebElement date = findElement(DATE_FIELD);
         date.click();
         date.clear();
-        date.sendKeys("01/06/2021");
+        date.sendKeys(DATE_INPUT);
 
-        WebElement dateTime = findElement(By.id("datetime"));
+        WebElement dateTime = findElement(DATETIME_FIELD);
         dateTime.click();
         dateTime.clear();
-        dateTime.sendKeys("01/06/2021 13:07:06");
+        dateTime.sendKeys(DATETIME_INPUT);
+    }
 
+    @Test
+    public void testCreateDraftRecord() {
+
+        scrollClick(getDriver(), getDriver().findElement(IMPORT_VALUES_MENU));
+        clickCreateRecord(getDriver());
+        fillForm();
         clickSaveDraft(getDriver());
 
         List<WebElement> tds = findElements(By.xpath("//tbody/tr/td[@class = 'pa-list-table-th']"));
@@ -45,11 +64,22 @@ public class EntityImportValuesDraftRecordTest extends BaseTest {
         WebElement pencilIcon = getDriver().findElement(By.xpath("//tbody/tr/td[1]/i"));
 
         List<String> actualValues = new ArrayList<>();
-        for(int i = 0; i < tds.size(); i++) {
-            actualValues.add(tds.get(i).getText());
+        for (WebElement td : tds) {
+            actualValues.add(td.getText());
         }
 
         Assert.assertEquals(pencilIcon.getAttribute("class"), "fa fa-pencil");
         Assert.assertEquals(actualValues, EXPECTED_VALUES);
+    }
+
+    @Test
+    public void testCancelRecord() {
+
+        scrollClick(getDriver(), getDriver().findElement(IMPORT_VALUES_MENU));
+        clickCreateRecord(getDriver());
+        fillForm();
+        clickCancel(getDriver());
+
+        Assert.assertNull(findElement(By.className("card-body")).getAttribute("value"));
     }
 }
