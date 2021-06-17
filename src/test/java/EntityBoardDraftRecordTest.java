@@ -79,10 +79,12 @@ public class EntityBoardDraftRecordTest extends BaseTest {
     }
 
     private void fillFormFields(List<String> data) {
-        sendKeysOneByOne(findElement(INTEGER_FIELD), data.get(2));
-        getWait().until(ExpectedConditions.attributeToBe(findElement(INTEGER_FIELD),"value", data.get(2)));
+        getWait().until(ExpectedConditions.elementToBeClickable(TEXT_FIELD));
+        findElement(TEXT_FIELD).click();
         sendKeysOneByOne(findElement(TEXT_FIELD), data.get(1));
         getWait().until(ExpectedConditions.attributeToBe(findElement(TEXT_FIELD),"value", data.get(1)));
+        sendKeysOneByOne(findElement(INTEGER_FIELD), data.get(2));
+        getWait().until(ExpectedConditions.attributeToBe(findElement(INTEGER_FIELD),"value", data.get(2)));
         sendKeysOneByOne(findElement(DECIMAL_FIELD), data.get(3));
     }
 
@@ -109,6 +111,11 @@ public class EntityBoardDraftRecordTest extends BaseTest {
         }
         WebElement user = findElement(By.xpath("//div[@class = 'form-group']/p"));
         Assert.assertEquals(user.getText(), data.get(7));
+    }
+
+    private String getCardBodyText() {
+
+        return findElement(By.xpath("//div[@class = 'card-body ']")).getText();
     }
 
     @Test
@@ -179,8 +186,7 @@ public class EntityBoardDraftRecordTest extends BaseTest {
 
         clickActionsDelete(getWait(), getDriver());
 
-        String textCardBodyAfterDelete = findElement(By.xpath("//div[@class = 'card-body ']")).getText();
-        Assert.assertTrue(textCardBodyAfterDelete.isEmpty());
+        Assert.assertEquals(getCardBodyText(),"");
 
         clickRecycleBin(getDriver());
 
@@ -271,5 +277,25 @@ public class EntityBoardDraftRecordTest extends BaseTest {
             Assert.assertEquals(findElements(ACTUAL_SEARCH_RECORD).get(i).getText(),
                     EXPECTED_CREATED_PENDING_RECORD.get(i));
         }
+    }
+
+    @Test
+    public void testCancelRecord(){
+
+        getEntity(getDriver(), ENTITY_NAME);
+        final String textCardBodyBeforeCancel = getCardBodyText();
+
+        clickCreateRecord(getDriver());
+        fillDropDownFields(STRING_INPUT_PENDING);
+        fillFormFields(EXPECTED_CREATED_PENDING_RECORD);
+
+        Assert.assertFalse(findElement(TEXT_FIELD).getAttribute("value").isEmpty());
+        Assert.assertFalse(findElement(INTEGER_FIELD).getAttribute("value").isEmpty());
+        Assert.assertFalse(findElement(DECIMAL_FIELD).getAttribute("value").isEmpty());
+
+        clickCancel(getDriver());
+
+        final String textCardBodyAfterCancel = getCardBodyText();
+        Assert.assertEquals(textCardBodyAfterCancel, textCardBodyBeforeCancel);
     }
 }
