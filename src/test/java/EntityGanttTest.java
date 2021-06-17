@@ -20,9 +20,8 @@ public class EntityGanttTest extends BaseTest {
     private static final By INT_FIELD = By.id("int");
     private static final By DECIMAL_FIELD = By.id("decimal");
     private static final By CHECK_ICON = By.xpath("//tbody/tr[1]/td[1]/i[1]");
-    private static final By COLUMN_FIELD = By.xpath("//tbody/tr/td[@class = 'pa-list-table-th']");
-    private static final By RECYCLE_INFO = By.xpath("//span[@class='pagination-info']");
     private static final By ROWS_ELEMENT = By.xpath("//div[@class='fixed-table-body']//table[@id='pa-all-entities-table']/tbody/tr");
+    private static final By ACTUAL_RESULT = By.xpath("//tbody/tr/td[@class = 'pa-list-table-th']");
 
     private static final String STRING_INPUT_VALUE = "Test";
     private static final String TEXT_INPUT_VALUE = "Text";
@@ -36,16 +35,16 @@ public class EntityGanttTest extends BaseTest {
     private static final String INT_INPUT_VALUE2 = "200";
     private static final String DECIMAL_INPUT_VALUE2 = "0.20";
 
-    private static final Date date = new Date();
-    private static final SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+    private static final Date DATE = new Date();
+    private static final SimpleDateFormat FORMATTER = new SimpleDateFormat("dd/MM/yyyy");
 
-    private static final List<Object> expectedValues = Arrays
+    private static final List<Object> EXPECTED_RESULT = Arrays
             .asList(STRING_INPUT_VALUE, TEXT_INPUT_VALUE, INT_INPUT_VALUE, DECIMAL_INPUT_VALUE,
-                    formatter.format(date), EMPTY_FIELD, EMPTY_FIELD, USER_NAME);
+                    FORMATTER.format(DATE), EMPTY_FIELD, EMPTY_FIELD, USER_NAME);
 
-    private static final List<Object> expectedValues2 = Arrays
+    private static final List<Object> EXPECTED_RESULT2 = Arrays
             .asList(STRING_INPUT_VALUE2, TEXT_INPUT_VALUE2, INT_INPUT_VALUE2, DECIMAL_INPUT_VALUE2,
-                    formatter.format(date), EMPTY_FIELD, EMPTY_FIELD, USER_NAME);
+                    FORMATTER.format(DATE), EMPTY_FIELD, EMPTY_FIELD, USER_NAME);
 
     private void clickListButton() {
         getWait().until(ExpectedConditions.elementToBeClickable(getDriver()
@@ -75,12 +74,7 @@ public class EntityGanttTest extends BaseTest {
 
         WebElement icon1 = findElement(CHECK_ICON);
         Assert.assertEquals(icon1.getAttribute("class"), "fa fa-check-square-o");
-
-        List<WebElement> columnList = findElements(COLUMN_FIELD);
-        Assert.assertEquals(columnList.size(), expectedValues.size());
-        for (int i = 0; i < expectedValues.size(); i++) {
-            Assert.assertEquals(columnList.get(i).getText(), expectedValues.get(i).toString());
-        }
+        Assert.assertEquals(getActualValues(findElements(ACTUAL_RESULT)), EXPECTED_RESULT);
     }
 
     @Test(dependsOnMethods = "testCreateRecord")
@@ -95,12 +89,9 @@ public class EntityGanttTest extends BaseTest {
         clickActionsView(getWait(), getDriver());
 
         List<Object> expectedRecords = Arrays.asList(STRING_INPUT_VALUE, TEXT_INPUT_VALUE, INT_INPUT_VALUE,
-                DECIMAL_INPUT_VALUE, formatter.format(date), EMPTY_FIELD);
+                DECIMAL_INPUT_VALUE, FORMATTER.format(DATE), EMPTY_FIELD);
 
-        List<WebElement> actualRecords = findElements(By.xpath("//span [@class = 'pa-view-field']"));
-        for (int i = 0; i < expectedRecords.size(); i++) {
-            Assert.assertEquals(actualRecords.get(i).getText(), expectedRecords.get(i).toString());
-        }
+        Assert.assertEquals(getActualValues(findElements(By.xpath("//span [@class = 'pa-view-field']"))), expectedRecords);
         Assert.assertEquals(findElement(By.xpath("//div [@class = 'form-group']/p")).getText(), USER_NAME);
     }
 
@@ -109,10 +100,6 @@ public class EntityGanttTest extends BaseTest {
 
         getEntity(getDriver(), "Gantt");
         clickListButton();
-
-        List<WebElement> rows = getDriver().findElements(ROWS_ELEMENT);
-        Assert.assertEquals(rows.size(), 1);
-
         clickActionsEdit(getWait(), getDriver());
 
         findElement(STRING_FIELD).clear();
@@ -130,23 +117,14 @@ public class EntityGanttTest extends BaseTest {
 
         WebElement icon1 = findElement(CHECK_ICON);
         Assert.assertEquals(icon1.getAttribute("class"), "fa fa-check-square-o");
-
-        List<WebElement> columnList = findElements(COLUMN_FIELD);
-        Assert.assertEquals(columnList.size(), expectedValues2.size());
-        for (int i = 0; i < expectedValues2.size(); i++) {
-            Assert.assertEquals(columnList.get(i).getText(), expectedValues2.get(i).toString());
-        }
+        Assert.assertEquals(getActualValues(findElements(ACTUAL_RESULT)), EXPECTED_RESULT2);
     }
 
     @Test(dependsOnMethods = "testEditRecord")
     public void testDeleteRecord() {
+
         getEntity(getDriver(), "Gantt");
-
         clickListButton();
-
-        List<WebElement> rows = getDriver().findElements(ROWS_ELEMENT);
-        Assert.assertEquals(rows.size(), 1);
-
         clickActionsDelete(getWait(), getDriver());
 
         String textCardBodyAfterDelete = getDriver().findElement(By.xpath("//div[@class = 'card-body ']")).getText();
@@ -154,10 +132,12 @@ public class EntityGanttTest extends BaseTest {
 
         clickRecycleBin(getDriver());
 
-        WebElement recycleBinPage = findElement(RECYCLE_INFO);
-        String currentString = recycleBinPage.getText();
-        boolean checkBin = !currentString.equals("");
-        Assert.assertTrue(checkBin, "Showing 1 to 1 of 1 rows");
+        findElement(By.xpath("//tbody/tr/td/a")).click();
+
+        List<Object> expectedRecord2 = Arrays.asList(STRING_INPUT_VALUE2, TEXT_INPUT_VALUE2, INT_INPUT_VALUE2,
+                DECIMAL_INPUT_VALUE2, FORMATTER.format(DATE), EMPTY_FIELD);
+
+        Assert.assertEquals(getActualValues(findElements(By.cssSelector("span.pa-view-field"))), expectedRecord2);
     }
 
     @Test(dependsOnMethods = "testDeleteRecord")
@@ -175,12 +155,7 @@ public class EntityGanttTest extends BaseTest {
 
         WebElement icon2 = findElement(CHECK_ICON);
         Assert.assertEquals(icon2.getAttribute("class"), "fa fa-pencil");
-
-        List<WebElement> columnList = findElements(COLUMN_FIELD);
-        Assert.assertEquals(columnList.size(), expectedValues2.size());
-        for (int i = 0; i < expectedValues2.size(); i++) {
-            Assert.assertEquals(columnList.get(i).getText(), expectedValues2.get(i).toString());
-        }
+        Assert.assertEquals(getActualValues(findElements(ACTUAL_RESULT)), EXPECTED_RESULT2);
     }
 
     @Test
@@ -193,11 +168,6 @@ public class EntityGanttTest extends BaseTest {
 
         WebElement icon2 = findElement(CHECK_ICON);
         Assert.assertEquals(icon2.getAttribute("class"), "fa fa-pencil");
-
-        List<WebElement> columnList = findElements(COLUMN_FIELD);
-        Assert.assertEquals(columnList.size(), expectedValues.size());
-        for (int i = 0; i < expectedValues.size(); i++) {
-            Assert.assertEquals(columnList.get(i).getText(), expectedValues.get(i).toString());
-        }
+        Assert.assertEquals(getActualValues(findElements(ACTUAL_RESULT)), EXPECTED_RESULT);
     }
 }
