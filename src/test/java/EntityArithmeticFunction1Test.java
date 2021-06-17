@@ -4,6 +4,8 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.testng.Assert;
 import org.testng.annotations.Test;
+import utils.TestUtils;
+
 import java.util.List;
 import static utils.ProjectUtils.*;
 import static utils.TestUtils.scrollClick;
@@ -27,6 +29,10 @@ public class EntityArithmeticFunction1Test extends BaseTest {
         getWait().until(ExpectedConditions.attributeToBe(DIV_FIELD, "value", DIV.toString()));
         clickSave(getDriver());
     }
+    private List<WebElement> getCells() {
+        List<WebElement> tableRecords = getDriver().findElements(By.xpath("//div[@ class = 'card-body ']//table/tbody/tr"));
+        return tableRecords;
+    }
 
     @Test
     public void testCreateArithmeticFunction() {
@@ -34,12 +40,23 @@ public class EntityArithmeticFunction1Test extends BaseTest {
         for (int i = 0; i < 12; i++) {
             createNewRecords();
         }
-        List<WebElement> tableRecords = getDriver().findElements(By.xpath("//div[@ class = 'card-body ']//table/tbody/tr"));
-        Assert.assertEquals(tableRecords.size(), 10);
+        Assert.assertEquals(getCells().size(), 10);
 
         List<WebElement> elementsWeb = getDriver().findElements(By.xpath("//td[@class = 'pa-list-table-th']"));
         for (int i = 0; i < expectedList.size(); i++) {
-            Assert.assertEquals(elementsWeb.get(i).getText(), expectedList.get(i).toString());
+        Assert.assertEquals(elementsWeb.get(i).getText(), expectedList.get(i).toString());
         }
+    }
+
+    @Test(dependsOnMethods = "testCreateArithmeticFunction")
+    public void testArithmeticFunctionRecordsListPagination() {
+        scrollClick(getDriver(), findElement(LINK_ENTITY_ARITHMETIC_FUNCTION));
+        getWait().until(TestUtils.movingIsFinished(getDriver().findElement(By.xpath("//a[@aria-label='to page 2']")))).click();
+        Assert.assertEquals(getCells().size(), 2);
+
+        findElement(By.xpath("//a[@aria-label='to page 1']")).click();
+        findElement(By.xpath("//span[@class='page-size']")).click();
+        findElement(By.xpath("//a[normalize-space()='25']")).click();
+        Assert.assertEquals(getCells().size(), 12);
     }
 }
