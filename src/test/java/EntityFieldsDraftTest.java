@@ -24,15 +24,12 @@ public class EntityFieldsDraftTest extends BaseTest {
     private static final By USER_FIELD = By.xpath("//div[@class='filter-option-inner']");
     private static final By TYPE_ICON = By.xpath("//tbody/tr[1]/td[1]/i[1]");
     private static final By TABLE_ROWS_ELEMENT = By.xpath("//div[@class='fixed-table-body']//table[@id='pa-all-entities-table']/tbody/tr");
-    //private static final By TESTER_NAME = By.xpath("//span[text()='tester100@tester.test']");
     private static final By ACTUAL_TABLE_RESULT = By.xpath("//tbody/tr/td[@class = 'pa-list-table-th']");
 
     private static final String TITLE_INPUT_VALUE = "Title 1";
     private static final String COMMENTS_INPUT_VALUE = "Title 1 comment 1.";
     private static final String INT_INPUT_VALUE = "100";
     private static final String DECIMAL_INPUT_VALUE = "10.11";
-    private static final String DATE_INPUT_VALUE = "01/01/2025";
-    private static final String DATETIME_INPUT_VALUE = "01/01/2025 12:12:12";
     private static final String EMPTY_FIELD = "";
     private static final String USER_NAME = "apptester1@tester.test";
 
@@ -78,7 +75,6 @@ public class EntityFieldsDraftTest extends BaseTest {
         Assert.assertEquals(icon.getAttribute("class"), "fa fa-pencil");
         Assert.assertEquals(getActualValues(findElements(ACTUAL_TABLE_RESULT)), EXPECTED_RESULT);
     }
-    // cells.stream().map(WebElement::getText).collect(Collectors.toList())
 
     @Test(dependsOnMethods= "testCreateDraftRecord")
     public void testViewDraftRecord(){
@@ -101,6 +97,7 @@ public class EntityFieldsDraftTest extends BaseTest {
     public void testEditDraftRecord(){
 
         getEntity(getDriver(), "Fields");
+
         clickActionsEdit(getWait(), getDriver());
         clearFields();
 
@@ -120,6 +117,7 @@ public class EntityFieldsDraftTest extends BaseTest {
     public void testDeleteDraftRecord(){
 
         getEntity(getDriver(), "Fields");
+
         clickActionsDelete(getWait(), getDriver());
         clickRecycleBin(getDriver());
         findElement(By.xpath("//tbody/tr/td/a")).click();
