@@ -1,5 +1,6 @@
 import base.BaseTest;
 import constants.EntityParentConstants;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -11,9 +12,7 @@ import org.testng.annotations.Test;
 import utils.TestUtils;
 
 import java.text.SimpleDateFormat;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 import static utils.ProjectUtils.*;
 
@@ -29,22 +28,20 @@ public class EntityParentTest extends BaseTest {
     private static final String INFO_STR_2_OF_2 = "Showing 1 to 2 of 2 rows";
 
     private static final By ICON = By.xpath("//tbody/tr/td/i");
-    private static final By FILL_STRING = By.id("string");
-    private static final By FILL_TEXT = By.id("text");
-    private static final By FILL_INT = By.id("int");
-    private static final By FILL_DECIMAL = By.id("decimal");
+    private static final By FIELD_STRING = By.id("string");
+    private static final By FIELD_TEXT = By.id("text");
+    private static final By FIELD_INT = By.id("int");
+    private static final By FIELD_DECIMAL = By.id("decimal");
+    private static final By FIELD_DATE = By.id("date");
+    private static final By FIELD_DATE_TIME = By.id("datetime");
     private static final By INFO_STRING = By.xpath("//span[@class='pagination-info']");
     private static final By INPUT = By.xpath("//input[@type='text']");
     private static final By ACTUAL_RESULT = By.xpath("//td[@class='pa-list-table-th']");
 
-    private static final List<String> EDIT_RESULT = List.of(
-            "Hello for everyone", "Peace to all", "345", "345.67", "", "", "", "tester268@tester.test");
+    private static final List<By> ELEMENTS = List.of(
+            FIELD_STRING, FIELD_TEXT, FIELD_INT, FIELD_DECIMAL, FIELD_DATE, FIELD_DATE_TIME);
 
-    private static final List<String> EXPECTED_RESULT = List.of(
-            "Hello world", "Be healthy", "123", "456.98", "", "", "", "tester26@tester.test");
-
-    private static final List<By> ELEMENTS = List.of(FILL_STRING, FILL_TEXT, FILL_INT, FILL_DECIMAL);
-
+    Random random = new Random();
     Date date = new Date();
     SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
 
@@ -56,12 +53,31 @@ public class EntityParentTest extends BaseTest {
         return List.of(driver.findElement(By.xpath("//div/span/a")));
     }
 
+    List <String> EXPECTED_RESULT = List.of(
+            RandomStringUtils.randomAlphabetic(3),
+            RandomStringUtils.randomAlphabetic(30),
+            String.valueOf(random.nextInt(10000)),
+            String.format("%.2f", random.nextFloat()),
+            new SimpleDateFormat ("dd/MM/yyyy").format(date),
+            new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(date),
+            "", "tester26@tester.test");
+
+    List <String> EDIT_RESULT = List.of(
+            RandomStringUtils.randomAlphabetic(20),
+            RandomStringUtils.randomAlphabetic(15),
+            String.valueOf(random.nextInt(10000)),
+            String.format("%.2f", random.nextFloat()),
+            "15/11/0078", "17/06/0902 12:31:44",
+            "", "tester27@tester.test");
+
     private void fillForms() {
 
         getEntity(getDriver(),"Parent");
         clickCreateRecord(getDriver());
 
         for (int i = 0; i < ELEMENTS.size(); i++) {
+            findElement(ELEMENTS.get(i)).click();
+            findElement(ELEMENTS.get(i)).clear();
             findElement(ELEMENTS.get(i)).sendKeys(EXPECTED_RESULT.get(i));
         }
 
@@ -78,7 +94,7 @@ public class EntityParentTest extends BaseTest {
         }
 
         TestUtils.jsClick(getDriver(), findElement(By.xpath("//div[@class='filter-option-inner-inner']")));
-        TestUtils.jsClick(getDriver(), findElement(By.xpath("//span[text()='tester268@tester.test']")));
+        TestUtils.jsClick(getDriver(), findElement(By.xpath("//span[text()='tester27@tester.test']")));
 
         clickSave(getDriver());
     }
