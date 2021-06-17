@@ -8,6 +8,8 @@ import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import static utils.ProjectUtils.*;
@@ -23,18 +25,32 @@ public class EntityBoardDraftRecordTest extends BaseTest {
     private static final String ENTITY_NAME = "Board";
     private static final String STRING_INPUT_PENDING = "Pending";
     private static final String STRING_INPUT_ONTRACK = "On track";
+    private static final String STRING_INPUT_DONE = "Done";
     private static final String USER_NAME = "tester10@tester.test";
 
     private static final List<String> EXPECTED_CREATED_PENDING_RECORD = makeRandomData(STRING_INPUT_PENDING);
     private static final List<String> EXPECTED_CREATED_ONTRACK_RECORD = makeRandomData(STRING_INPUT_ONTRACK);
+    private static final List<String> EXPECTED_CREATED_DONE_RECORD = makeRandomData(STRING_INPUT_DONE);
+    private static final List<List> ALL_RECORDS_TABLE = new ArrayList<>(List.of(EXPECTED_CREATED_PENDING_RECORD,
+            EXPECTED_CREATED_ONTRACK_RECORD, EXPECTED_CREATED_DONE_RECORD));
+
+    static class CompareByText implements Comparator<List> {
+
+        @Override
+        public int compare(List r1, List r2) {
+            String text1 = r1.get(1).toString();
+            String text2 = r2.get(1).toString();
+            return text1.compareTo(text2);
+        }
+    }
 
     private static List<String> makeRandomData(String dropDownItem) {
         List<String> randomData = new ArrayList<>();
 
         randomData.add(dropDownItem);
-        randomData.add(RandomStringUtils.randomAlphabetic(8));
-        randomData.add("" + RandomUtils.nextInt(0, 10000));
-        randomData.add(RandomUtils.nextInt(0, 10000) + "." + RandomStringUtils.randomNumeric(2));
+        randomData.add(RandomStringUtils.randomAlphabetic(4));
+        randomData.add("" + RandomUtils.nextInt(0, 1000));
+        randomData.add(RandomUtils.nextInt(0, 1000) + "." + RandomStringUtils.randomNumeric(2));
 
         randomData.add("");
         randomData.add("");
@@ -58,15 +74,15 @@ public class EntityBoardDraftRecordTest extends BaseTest {
         for (char c : editKeys) {
             newString.append(c);
             element.sendKeys(String.valueOf(c));
-            getWait().until(ExpectedConditions.attributeToBe(element,"value", String.valueOf(newString)));
+            getWait().until(ExpectedConditions.attributeToBe(element, "value", String.valueOf(newString)));
         }
     }
 
     private void fillFormFields(List<String> data) {
-        sendKeysOneByOne(findElement(TEXT_FIELD), data.get(1));
-        getWait().until(ExpectedConditions.attributeToBe(findElement(TEXT_FIELD),"value", data.get(1)));
         sendKeysOneByOne(findElement(INTEGER_FIELD), data.get(2));
         getWait().until(ExpectedConditions.attributeToBe(findElement(INTEGER_FIELD),"value", data.get(2)));
+        sendKeysOneByOne(findElement(TEXT_FIELD), data.get(1));
+        getWait().until(ExpectedConditions.attributeToBe(findElement(TEXT_FIELD),"value", data.get(1)));
         sendKeysOneByOne(findElement(DECIMAL_FIELD), data.get(3));
     }
 
@@ -226,5 +242,44 @@ public class EntityBoardDraftRecordTest extends BaseTest {
             Assert.assertEquals(findElements(ACTUAL_SEARCH_RECORD).get(i).getText(),
                     EXPECTED_CREATED_PENDING_RECORD.get(i));
         }
+    }
+
+    @Test
+    public void testSortRecords() {
+
+        List<String> expectedSortedRecords = new ArrayList<>();
+        Collections.sort(ALL_RECORDS_TABLE, new CompareByText());
+
+        for (List list : ALL_RECORDS_TABLE) {
+            for (Object el : list) {
+                expectedSortedRecords.add(String.valueOf(el));
+            }
+        }
+
+        getEntity(getDriver(), ENTITY_NAME);
+
+        clickCreateRecord(getDriver());
+        fillDropDownFields(STRING_INPUT_PENDING);
+        fillFormFields(EXPECTED_CREATED_PENDING_RECORD);
+        clickSaveDraft(getDriver());
+
+        clickCreateRecord(getDriver());
+        fillDropDownFields(STRING_INPUT_ONTRACK);
+        fillFormFields(EXPECTED_CREATED_ONTRACK_RECORD);
+        clickSaveDraft(getDriver());
+
+        clickCreateRecord(getDriver());
+        fillDropDownFields(STRING_INPUT_DONE);
+        fillFormFields(EXPECTED_CREATED_DONE_RECORD);
+        clickSaveDraft(getDriver());
+
+        clickListButton();
+
+        Assert.assertEquals(findElements(By.xpath("//tbody/tr")).size(), ALL_RECORDS_TABLE.size());
+
+        jsClick(getDriver(), findElement(By.xpath("//th/div[text()='Text']")));
+
+        List<WebElement> actualRecordsTable = findElements(By.xpath("//td[@class='pa-list-table-th']"));
+        Assert.assertEquals(getActualValues(actualRecordsTable), expectedSortedRecords);
     }
 }
