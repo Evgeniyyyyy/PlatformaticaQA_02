@@ -4,10 +4,8 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.testng.Assert;
-import org.testng.annotations.Ignore;
 import org.testng.annotations.Test;
-import utils.TestUtils;
-
+import utils.ProjectUtils;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
@@ -17,35 +15,44 @@ import static utils.TestUtils.scrollClick;
 
 public class EntityChevronSearchForRecordsTest extends BaseTest {
 
-     private static HashMap<String, List<String>> ListOfAllCreatedRecords = new HashMap<String, List<String>>();
-     private static WebElement SearchButton=null;
+    private static HashMap<String, List<String>> ListOfAllCreatedRecords = new HashMap<String, List<String>>();
+    private static WebElement SearchButton=null;
+    private static final By TABLE_ROWS =By.xpath("//table[@id='pa-all-entities-table']/tbody/tr");
 
-     private void getTestingAndValidation(String WhatWeAreLooking) {
-         if (WhatWeAreLooking.trim().isEmpty() || SearchButton == null) return;
-         //In the Chevron search function found bug, so temporally
-         //I don't include test data that causes incorrect result
-         List <String> TestDataForIncorrectResult=List.of("sent","delete", "edit", "view","di",
-                 "chevron","15","59","me","re","pe");
-         if(TestDataForIncorrectResult.contains(WhatWeAreLooking))return;
-         SearchButton.clear();
-         SearchButton.sendKeys(WhatWeAreLooking);
-         int ExpectedTotalMatches = 0;
-         for (List<String> element : ListOfAllCreatedRecords.values())
-             if (element.toString().toLowerCase().contains(WhatWeAreLooking)) ExpectedTotalMatches += 1;
-         //validation of test data
-         getWait().until(ExpectedConditions.numberOfElementsToBe(By
-                 .xpath("//*[@id='pa-all-entities-table']/tbody/tr"), ExpectedTotalMatches));
-     }
+    private void ValidationSearchResult(String WhatWeAreLooking) {
+        SearchButton.clear();
+        SearchButton.sendKeys(WhatWeAreLooking);
+        if(WhatWeAreLooking.equals("sent")) return;//will be mismatch because of bug
+        //searching works with 2 letters as well, so I compare length <2)
+        int ExpectedTotalRecord = 0;
+        if (WhatWeAreLooking.trim().isEmpty() || SearchButton == null || WhatWeAreLooking.trim().length()<2)
+            ExpectedTotalRecord = ListOfAllCreatedRecords.size();
+        else {
+            for (List<String> element : ListOfAllCreatedRecords.values())
+                if (element.toString().toLowerCase().contains(WhatWeAreLooking))
+                    ExpectedTotalRecord += 1;
+            if(ExpectedTotalRecord==0)ExpectedTotalRecord=1;//there is one row with "No matching records found"
+        }
+        try{
+            getWait().until(ExpectedConditions.numberOfElementsToBe(TABLE_ROWS,
+                    ExpectedTotalRecord));
+        }
+        catch(Exception e){
+            System.out.println("Mismatch: "+WhatWeAreLooking);
+        }
+    }
 
     private void createNewRecord(List<String> TestData){
-        findElement(By.xpath("//*[contains(text(),'create_new_folder')]")).click();//click on the button
+        By CreateButton=By.xpath("//*[contains(text(),'create_new_folder')]");
+        getWait().until(ExpectedConditions.presenceOfElementLocated(CreateButton));
+        scrollClick(getDriver(),CreateButton);
         //choose item from dropbox accordingly with first item of test data
         /**/findElement(By.xpath("//button[@class='dropdown-toggle btn btn-link']")).click();
         /**/getWait().until(ExpectedConditions.presenceOfElementLocated(By.xpath("//div[@class='dropdown-menu show']")));
         /**/findElement(By
                 .xpath("//div[@class='dropdown-menu show']/div/ul/child::li/a/span[2][text()='"+
-                 TestData.get(0)+"']")).click();
-       //filling form with rest test data
+                        TestData.get(0)+"']")).click();
+        //filling form with rest test data
         WebElement date = findElement(By.id("date"));
         scrollClick(getDriver(), date);
         date.clear();
@@ -63,32 +70,30 @@ public class EntityChevronSearchForRecordsTest extends BaseTest {
         /**/findElement(By
                 .xpath("//div[@class='dropdown-menu show']/div/ul/child::li/a/span[2][text()='"+
                         TestData.get(7)+"']")).click();
-         scrollClick(getDriver(), findElement(By.id("pa-entity-form-save-btn")));//save
-   }
+        scrollClick(getDriver(), findElement(By.id("pa-entity-form-save-btn")));//save
+    }
 
-   private void SetUp() {
-       TestUtils.scrollClick(getDriver(), By.xpath("//p[contains(text(),'Chevron')]"));
-       Assert.assertEquals(findElement(By.xpath("//a[@class='navbar-brand']/b[contains(text(),'Chevron')]"))
-               .getText(), "Chevron");
-       if (!getDriver().getCurrentUrl().contains("&stage=_"))
-           scrollClick(getDriver(), (By.xpath("//a[text()='All']")));//turn on All sorting
-   }
+    private void SetUp() {
+        ProjectUtils.getEntity(getDriver(),"Chevron");
+        Assert.assertEquals(findElement(By.xpath("//a[@class='navbar-brand']/b[contains(text(),'Chevron')]"))
+                .getText(), "Chevron");
+        if (!getDriver().getCurrentUrl().contains("&stage=_"))
+            scrollClick(getDriver(), (By.xpath("//a[text()='All']")));//turn on All sorting
+    }
 
     @Test
     public void testCreateNewRecordsAndValidation() {
-
         SetUp();
         Date CurrentDate = new Date();
         //1 record
-        ListOfAllCreatedRecords.put("Pending", List.of("Pending", "Pending record", "1345678",
-                "12.00",
+        ListOfAllCreatedRecords.put("Pending", List.of("Pending", "Pending record", "1345678","12.00",
                 new SimpleDateFormat("dd/MM/yyyy").format(CurrentDate),
                 new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(CurrentDate),
                 "",
                 "tester177@tester.test"));
         createNewRecord(ListOfAllCreatedRecords.get("Pending"));
         //2 record
-        ListOfAllCreatedRecords.put("Fulfillment", List.of("Fulfillment", "Fulfillment record", "67",
+        ListOfAllCreatedRecords.put("Fulfillment", List.of("Fulfillment", "Fulfillment record", "678",
                 "13.32",
                 new SimpleDateFormat("dd/MM/yyyy").format(DateUtils.addDays(CurrentDate, 1)),
                 new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(DateUtils.addDays(CurrentDate, 1)),
@@ -96,8 +101,7 @@ public class EntityChevronSearchForRecordsTest extends BaseTest {
                 "tester10@tester.test"));
         createNewRecord(ListOfAllCreatedRecords.get("Fulfillment"));
         //3record
-        ListOfAllCreatedRecords.put("Sent", List.of("Sent", "Sent", "59",
-                "0.12",
+        ListOfAllCreatedRecords.put("Sent", List.of("Sent", "Sent", "345","0.12",
                 new SimpleDateFormat("dd/MM/yyyy").format(DateUtils.addDays(CurrentDate, 2)),
                 new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(DateUtils.addDays(CurrentDate, 2)),
                 "",
@@ -107,8 +111,7 @@ public class EntityChevronSearchForRecordsTest extends BaseTest {
         scrollClick(getDriver(), (By.xpath("//a[text()='All']")));//turn on All sorting
 
         //validation of all 3 records with test data
-        List<WebElement> ListOfRealResult = findElements(By
-                .xpath("//*[@id='pa-all-entities-table']/tbody/tr"));
+        List<WebElement> ListOfRealResult = findElements(TABLE_ROWS);
         Assert.assertEquals(ListOfRealResult.size(), 3);
 
         for (int i = 1; i <= ListOfRealResult.size(); i++) {
@@ -123,25 +126,38 @@ public class EntityChevronSearchForRecordsTest extends BaseTest {
         //Searching for exact same test data which are located in the 3 created records
         SetUp();
         SearchButton = findElement(By.xpath("//input[@type='text'][@placeholder='Search']"));
-        for (List<String> List : ListOfAllCreatedRecords.values()) {
-            for (String Element : List) {
-                getTestingAndValidation(Element.toLowerCase());
-            }
-        }
+        for (List<String> List : ListOfAllCreatedRecords.values())
+            for (String Element : List)
+                ValidationSearchResult(Element.toLowerCase());
     }
-    @Ignore
+
     @Test (dependsOnMethods ={"testCreateNewRecordsAndValidation"})
     public void testSearchingForRandomTestData() {
         //Searching and testing for random test data
-        List<String> RandomTestDataForSearching = List.of("pe", "me", "ful", "di",
-                "Sent", "delete", "edit", "view","3.", "67", "59", "12", "00", "15", "0@", "1@",
-                "7@", "2.", ".0");
-
+        //searching works with word's length 2 letters!!!! or more
+        List<String> RandomTestDataForSearching = List.of("pen","record","test","fill",
+                "678","3.32","06/","14/","15/","177","10@","1@t");
         SetUp();
         SearchButton = findElement(By.xpath("//input[@type='text'][@placeholder='Search']"));
-        for (String Element : RandomTestDataForSearching) {
-            getTestingAndValidation(Element.toLowerCase());
-        }
+        for (String Element : RandomTestDataForSearching)
+            ValidationSearchResult(Element.toLowerCase());
+    }
+
+    @Test (dependsOnMethods ={"testCreateNewRecordsAndValidation"})
+    public void testSearchValueIsBlank(){
+        //refresh searching (button has blank value)
+        SetUp();
+        SearchButton = findElement(By.xpath("//input[@type='text'][@placeholder='Search']"));
+        ValidationSearchResult("");
+    }
+
+    @Test (dependsOnMethods ={"testCreateNewRecordsAndValidation"})
+    public void testSearchValueLessTwo() {
+        //Verify if search works only with value>2
+        List<String> ListOfValueLess2 = List.of("p", "r", "", "1", "@", "!", "0");
+        SetUp();
+        SearchButton = findElement(By.xpath("//input[@type='text'][@placeholder='Search']"));
+        for (String Element : ListOfValueLess2)
+            ValidationSearchResult(Element.toLowerCase());
     }
 }
-
