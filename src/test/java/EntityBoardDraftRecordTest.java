@@ -213,38 +213,6 @@ public class EntityBoardDraftRecordTest extends BaseTest {
     }
 
     @Test
-    public void testSearchDraftRecord() {
-
-        final By searchField = By.xpath("//input[contains(@class, 'search-input')]");
-
-        getEntity(getDriver(), ENTITY_NAME);
-
-        clickCreateRecord(getDriver());
-        fillDropDownFields(STRING_INPUT_PENDING);
-        fillFormFields(EXPECTED_CREATED_PENDING_RECORD);
-        clickSaveDraft(getDriver());
-
-        clickCreateRecord(getDriver());
-        fillDropDownFields(STRING_INPUT_ONTRACK);
-        fillFormFields(EXPECTED_CREATED_ONTRACK_RECORD);
-        clickSaveDraft(getDriver());
-
-        clickListButton();
-
-        Assert.assertEquals(findElements(By.xpath("//tbody/tr")).size(), 2);
-
-        findElement(searchField).sendKeys(STRING_INPUT_PENDING);
-
-        getWait().until(ExpectedConditions.textToBePresentInElementLocated(
-                By.xpath("//span[@class='pagination-info']"), "Showing 1 to 1 of 1 rows"));
-
-        for (int i = 0; i < findElements(ACTUAL_SEARCH_RECORD).size(); i++) {
-            Assert.assertEquals(findElements(ACTUAL_SEARCH_RECORD).get(i).getText(),
-                    EXPECTED_CREATED_PENDING_RECORD.get(i));
-        }
-    }
-
-    @Test
     public void testSortRecords() {
 
         List<String> expectedSortedRecords = new ArrayList<>();
@@ -281,5 +249,27 @@ public class EntityBoardDraftRecordTest extends BaseTest {
 
         List<WebElement> actualRecordsTable = findElements(By.xpath("//td[@class='pa-list-table-th']"));
         Assert.assertEquals(getActualValues(actualRecordsTable), expectedSortedRecords);
+    }
+
+    @Test(dependsOnMethods = "testSortRecords")
+    public void testSearchDraftRecord() {
+
+        final By searchField = By.xpath("//input[contains(@class, 'search-input')]");
+
+        getEntity(getDriver(), ENTITY_NAME);
+
+        clickListButton();
+
+        Assert.assertEquals(findElements(By.xpath("//tbody/tr")).size(), ALL_RECORDS_TABLE.size());
+
+        findElement(searchField).sendKeys(STRING_INPUT_PENDING);
+
+        getWait().until(ExpectedConditions.textToBePresentInElementLocated(
+                By.xpath("//span[@class='pagination-info']"), "Showing 1 to 1 of 1 rows"));
+
+        for (int i = 0; i < findElements(ACTUAL_SEARCH_RECORD).size(); i++) {
+            Assert.assertEquals(findElements(ACTUAL_SEARCH_RECORD).get(i).getText(),
+                    EXPECTED_CREATED_PENDING_RECORD.get(i));
+        }
     }
 }
