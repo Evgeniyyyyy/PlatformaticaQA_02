@@ -28,12 +28,6 @@ public class EntityParentTest extends BaseTest {
     private static final String INFO_STR_1_OF_1 = "Showing 1 to 1 of 1 rows";
     private static final String INFO_STR_2_OF_2 = "Showing 1 to 2 of 2 rows";
 
-    private static final List<String> EDIT_RESULT = List.of(
-            "Hello for everyone", "Peace to all", "345", "345.67", "", "", "", "tester268@tester.test");
-
-    private static final List<String> EXPECTED_RESULT = List.of(
-            "Hello world", "Be healthy", "123", "456.98", "", "", "", "tester26@tester.test");
-
     private static final By ICON = By.xpath("//tbody/tr/td/i");
     private static final By FILL_STRING = By.id("string");
     private static final By FILL_TEXT = By.id("text");
@@ -42,6 +36,14 @@ public class EntityParentTest extends BaseTest {
     private static final By INFO_STRING = By.xpath("//span[@class='pagination-info']");
     private static final By INPUT = By.xpath("//input[@type='text']");
     private static final By ACTUAL_RESULT = By.xpath("//td[@class='pa-list-table-th']");
+
+    private static final List<String> EDIT_RESULT = List.of(
+            "Hello for everyone", "Peace to all", "345", "345.67", "", "", "", "tester268@tester.test");
+
+    private static final List<String> EXPECTED_RESULT = List.of(
+            "Hello world", "Be healthy", "123", "456.98", "", "", "", "tester26@tester.test");
+
+    private static final List<By> ELEMENTS = List.of(FILL_STRING, FILL_TEXT, FILL_INT, FILL_DECIMAL);
 
     Date date = new Date();
     SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
@@ -59,30 +61,21 @@ public class EntityParentTest extends BaseTest {
         getEntity(getDriver(),"Parent");
         clickCreateRecord(getDriver());
 
-        findElement(FILL_STRING).sendKeys(EXPECTED_RESULT.get(0));
-        findElement(FILL_TEXT).sendKeys(EXPECTED_RESULT.get(1));
-        findElement(FILL_INT).sendKeys(EXPECTED_RESULT.get(2));
-        findElement(FILL_DECIMAL).sendKeys(EXPECTED_RESULT.get(3));
+        for (int i = 0; i < ELEMENTS.size(); i++) {
+            findElement(ELEMENTS.get(i)).sendKeys(EXPECTED_RESULT.get(i));
+        }
 
         TestUtils.jsClick(getDriver(), findElement(By.xpath("//div[@class='filter-option-inner-inner']")));
         TestUtils.jsClick(getDriver(), findElement(By.xpath("//span[text()='tester26@tester.test']")));
-
         clickSave(getDriver());
     }
 
     private void editForms() {
 
-        findElement(FILL_STRING).clear();
-        findElement(FILL_STRING).sendKeys(EDIT_RESULT.get(0));
-
-        findElement(FILL_TEXT).clear();
-        findElement(FILL_TEXT).sendKeys(EDIT_RESULT.get(1));
-
-        findElement(FILL_INT).clear();
-        findElement(FILL_INT).sendKeys(EDIT_RESULT.get(2));
-
-        findElement(FILL_DECIMAL).clear();
-        findElement(FILL_DECIMAL).sendKeys(EDIT_RESULT.get(3));
+        for (int i = 0; i < ELEMENTS.size(); i++) {
+            findElement(ELEMENTS.get(i)).clear();
+            findElement(ELEMENTS.get(i)).sendKeys(EDIT_RESULT.get(i));
+        }
 
         TestUtils.jsClick(getDriver(), findElement(By.xpath("//div[@class='filter-option-inner-inner']")));
         TestUtils.jsClick(getDriver(), findElement(By.xpath("//span[text()='tester268@tester.test']")));
