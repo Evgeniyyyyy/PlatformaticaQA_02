@@ -14,17 +14,11 @@ import static utils.TestUtils.jsClick;
 
 public class EntityFieldsTest extends BaseTest {
 
-    private static final String STRING = "Hello world";
-    private static final String TEXT = "Be healthy";
-    private static final String INT = "123";
-    private static final String DECIMAL = "456.98";
-    private static final String EDIT_STRING = "Hello for everyone";
-    private static final String EDIT_TEXT = "Peace to all";
-    private static final String EDIT_INT = "345";
-    private static final String EDIT_DECIMAL = "345.67";
+    private static final List<String> EDIT_RESULT = List.of(
+            "Hello for everyone", "Peace to all", "345", "345.67", "", "");
 
-    private static final List<String> EDIT_RESULT = List.of(EDIT_STRING, EDIT_TEXT, EDIT_INT, EDIT_DECIMAL, "", "");
-    private static final List<String> EXPECTED_RESULT = List.of(STRING, TEXT, INT, DECIMAL, "", "");
+    private static final List<String> EXPECTED_RESULT = List.of(
+            "Hello world", "Be healthy", "123", "456.98", "", "");
 
     private static final By ICON = By.xpath("//tbody/tr/td/i");
     private static final By FILL_STRING = By.id("title");
@@ -39,26 +33,26 @@ public class EntityFieldsTest extends BaseTest {
         getEntity(getDriver(), "Fields");
         clickCreateRecord(getDriver());
 
-        findElement(FILL_STRING).sendKeys(STRING);
-        findElement(FILL_TEXT).sendKeys(TEXT);
-        findElement(FILL_INT).sendKeys(INT);
-        findElement(FILL_DECIMAL).sendKeys(DECIMAL);
+        findElement(FILL_STRING).sendKeys(EXPECTED_RESULT.get(0));
+        findElement(FILL_TEXT).sendKeys(EXPECTED_RESULT.get(1));
+        findElement(FILL_INT).sendKeys(EXPECTED_RESULT.get(2));
+        findElement(FILL_DECIMAL).sendKeys(EXPECTED_RESULT.get(3));
         clickSave(getDriver());
     }
 
     private void editForm() {
 
         findElement(FILL_STRING).clear();
-        findElement(FILL_STRING).sendKeys(EDIT_STRING);
+        findElement(FILL_STRING).sendKeys(EDIT_RESULT.get(0));
 
         findElement(FILL_TEXT).clear();
-        findElement(FILL_TEXT).sendKeys(EDIT_TEXT);
+        findElement(FILL_TEXT).sendKeys(EDIT_RESULT.get(1));
 
         findElement(FILL_INT).clear();
-        findElement(FILL_INT).sendKeys(EDIT_INT);
+        findElement(FILL_INT).sendKeys(EDIT_RESULT.get(2));
 
         findElement(FILL_DECIMAL).clear();
-        findElement(FILL_DECIMAL).sendKeys(EDIT_DECIMAL);
+        findElement(FILL_DECIMAL).sendKeys(EDIT_RESULT.get(3));
         clickSave(getDriver());
     }
 
