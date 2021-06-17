@@ -25,19 +25,14 @@ public class EntityParentTest extends BaseTest {
     private static final String DECIMAL_INPUT_VALUE = "0.10";
     private static final String EMPTY_FIELD = "";
     private static final String USER_NAME = "apptester10@tester.test";
-    private static final String STRING = "Hello world";
-    private static final String TEXT = "Be healthy";
-    private static final String INT = "123";
-    private static final String DECIMAL = "456.98";
-    private static final String EDIT_STRING = "Hello for everyone";
-    private static final String EDIT_TEXT = "Peace to all";
-    private static final String EDIT_INT = "345";
-    private static final String EDIT_DECIMAL = "345.67";
     private static final String INFO_STR_1_OF_1 = "Showing 1 to 1 of 1 rows";
     private static final String INFO_STR_2_OF_2 = "Showing 1 to 2 of 2 rows";
 
-    private static final List<String> EDIT_RESULT = List.of(EDIT_STRING, EDIT_TEXT, EDIT_INT, EDIT_DECIMAL, "", "");
-    private static final List<String> EXPECTED_RESULT = List.of(STRING, TEXT, INT, DECIMAL, "", "");
+    private static final List<String> EDIT_RESULT = List.of(
+            "Hello for everyone", "Peace to all", "345", "345.67", "", "", "", "tester268@tester.test");
+
+    private static final List<String> EXPECTED_RESULT = List.of(
+            "Hello world", "Be healthy", "123", "456.98", "", "", "", "tester26@tester.test");
 
     private static final By ICON = By.xpath("//tbody/tr/td/i");
     private static final By FILL_STRING = By.id("string");
@@ -46,7 +41,7 @@ public class EntityParentTest extends BaseTest {
     private static final By FILL_DECIMAL = By.id("decimal");
     private static final By INFO_STRING = By.xpath("//span[@class='pagination-info']");
     private static final By INPUT = By.xpath("//input[@type='text']");
-    private static final By ACTUAL_RESULT = By.xpath("//tbody/tr/td/a");
+    private static final By ACTUAL_RESULT = By.xpath("//td[@class='pa-list-table-th']");
 
     Date date = new Date();
     SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
@@ -64,26 +59,34 @@ public class EntityParentTest extends BaseTest {
         getEntity(getDriver(),"Parent");
         clickCreateRecord(getDriver());
 
-        findElement(FILL_STRING).sendKeys(STRING);
-        findElement(FILL_TEXT).sendKeys(TEXT);
-        findElement(FILL_INT).sendKeys(INT);
-        findElement(FILL_DECIMAL).sendKeys(DECIMAL);
+        findElement(FILL_STRING).sendKeys(EXPECTED_RESULT.get(0));
+        findElement(FILL_TEXT).sendKeys(EXPECTED_RESULT.get(1));
+        findElement(FILL_INT).sendKeys(EXPECTED_RESULT.get(2));
+        findElement(FILL_DECIMAL).sendKeys(EXPECTED_RESULT.get(3));
+
+        TestUtils.jsClick(getDriver(), findElement(By.xpath("//div[@class='filter-option-inner-inner']")));
+        TestUtils.jsClick(getDriver(), findElement(By.xpath("//span[text()='tester26@tester.test']")));
+
         clickSave(getDriver());
     }
 
-    private void editRecord() {
+    private void editForms() {
 
         findElement(FILL_STRING).clear();
-        findElement(FILL_STRING).sendKeys(EDIT_STRING);
+        findElement(FILL_STRING).sendKeys(EDIT_RESULT.get(0));
 
         findElement(FILL_TEXT).clear();
-        findElement(FILL_TEXT).sendKeys(EDIT_TEXT);
+        findElement(FILL_TEXT).sendKeys(EDIT_RESULT.get(1));
 
         findElement(FILL_INT).clear();
-        findElement(FILL_INT).sendKeys(EDIT_INT);
+        findElement(FILL_INT).sendKeys(EDIT_RESULT.get(2));
 
         findElement(FILL_DECIMAL).clear();
-        findElement(FILL_DECIMAL).sendKeys(EDIT_DECIMAL);
+        findElement(FILL_DECIMAL).sendKeys(EDIT_RESULT.get(3));
+
+        TestUtils.jsClick(getDriver(), findElement(By.xpath("//div[@class='filter-option-inner-inner']")));
+        TestUtils.jsClick(getDriver(), findElement(By.xpath("//span[text()='tester268@tester.test']")));
+
         clickSave(getDriver());
     }
 
@@ -148,7 +151,7 @@ public class EntityParentTest extends BaseTest {
         getEntity(getDriver(), "Parent");
 
         clickActionsEdit(getWait(), getDriver());
-        editRecord();
+        editForms();
 
         Assert.assertEquals(getActualValues(findElements(ACTUAL_RESULT)), EDIT_RESULT);
     }
@@ -158,14 +161,8 @@ public class EntityParentTest extends BaseTest {
 
         fillForms();
 
-        WebElement record = getDriver().findElement(By.xpath("//tr[@data-index='0']"));
-        record.getText();
-        WebElement record1 = getDriver().findElement(By.xpath("//tr[@data-index='1']"));
-        record1.getText();
-
         List<WebElement> fields = findElements(By.xpath("//tbody/tr"));
         Assert.assertEquals(fields.size(), 2);
-        Assert.assertNotEquals(record, record1);
 
         findElement(INPUT).sendKeys(EXPECTED_RESULT.get(0));
         getWait().until(ExpectedConditions.textToBePresentInElementLocated(
