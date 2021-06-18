@@ -48,9 +48,9 @@ public class EntityBoardDraftRecordTest extends BaseTest {
         List<String> randomData = new ArrayList<>();
 
         randomData.add(dropDownItem);
-        randomData.add(RandomStringUtils.randomAlphabetic(4));
-        randomData.add("" + RandomUtils.nextInt(0, 1000));
-        randomData.add(RandomUtils.nextInt(0, 1000) + "." + RandomStringUtils.randomNumeric(2));
+        randomData.add(RandomStringUtils.randomAlphabetic(8));
+        randomData.add("" + RandomUtils.nextInt(0, 100000));
+        randomData.add(RandomUtils.nextInt(0, 10000) + "." + RandomStringUtils.randomNumeric(2));
 
         randomData.add("");
         randomData.add("");
@@ -68,24 +68,14 @@ public class EntityBoardDraftRecordTest extends BaseTest {
                 "//a[@href='index.php?action=action_list&list_type=table&entity_id=31']")).click();
     }
 
-    private void sendKeysOneByOne(WebElement element, String input) {
-        char[] editKeys = input.toCharArray();
-        StringBuilder newString = new StringBuilder();
-        for (char c : editKeys) {
-            newString.append(c);
-            element.sendKeys(String.valueOf(c));
-            getWait().until(ExpectedConditions.attributeToBe(element, "value", String.valueOf(newString)));
-        }
-    }
-
     private void fillFormFields(List<String> data) {
         getWait().until(ExpectedConditions.elementToBeClickable(TEXT_FIELD));
         findElement(TEXT_FIELD).click();
-        sendKeysOneByOne(findElement(TEXT_FIELD), data.get(1));
+        findElement(TEXT_FIELD).sendKeys(data.get(1));
         getWait().until(ExpectedConditions.attributeToBe(findElement(TEXT_FIELD),"value", data.get(1)));
-        sendKeysOneByOne(findElement(INTEGER_FIELD), data.get(2));
+        findElement(INTEGER_FIELD).sendKeys(data.get(2));
         getWait().until(ExpectedConditions.attributeToBe(findElement(INTEGER_FIELD),"value", data.get(2)));
-        sendKeysOneByOne(findElement(DECIMAL_FIELD), data.get(3));
+        findElement(DECIMAL_FIELD).sendKeys(data.get(3));
     }
 
     private void fillDropDownFields(String dropDownItem) {
