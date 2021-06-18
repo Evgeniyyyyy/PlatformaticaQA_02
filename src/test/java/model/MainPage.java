@@ -11,6 +11,9 @@ public class MainPage extends BaseModel {
     @FindBy(xpath = "//p[text()= ' Fields ']")
     private WebElement fieldsMenuItem;
 
+    @FindBy(xpath = "//p[text()= ' Readonly ']")
+    private WebElement readonlyMenuItem;
+
     public MainPage(WebDriver driver) {
         super(driver);
     }
@@ -19,5 +22,11 @@ public class MainPage extends BaseModel {
         TestUtils.jsClick(getDriver(), fieldsMenuItem);
 
         return new FieldsPage(getDriver());
+    }
+
+    public ReadonlyPage clickReadonlyMenu(){
+        TestUtils.jsClick(getDriver(), readonlyMenuItem);
+
+        return new ReadonlyPage(getDriver());
     }
 }

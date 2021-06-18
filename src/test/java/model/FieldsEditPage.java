@@ -57,5 +57,4 @@ public class FieldsEditPage extends BaseModel {
 
         return new FieldsPage(getDriver());
     }
-
 }

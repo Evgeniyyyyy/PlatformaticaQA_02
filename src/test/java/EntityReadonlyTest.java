@@ -1,4 +1,6 @@
 import base.BaseTest;
+import model.MainPage;
+import model.ReadonlyPage;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -77,17 +79,14 @@ public class EntityReadonlyTest extends BaseTest {
     @Test
     public void testCreateDraftRecord() {
 
-        clickEventsReadonlyMenu();
-        clickCreateRecordButton();
-        findElement(By.id("string")).sendKeys("String");
-        findElement(By.id("text")).sendKeys("Text");
-        findElement(By.id("int")).sendKeys("1000");
-        findElement(By.id("decimal")).sendKeys("20.55");
-        scrollClick(getDriver(), getDriver().findElement(
-                By.id("pa-entity-form-draft-btn")));
-        getWait().until(ExpectedConditions.elementToBeClickable(
-                getDriver().findElement(By.xpath(
-                        "//i[text() = 'create_new_folder']"))));
+        ReadonlyPage readonlyPage = new MainPage(getDriver())
+                .clickReadonlyMenu()
+                .clickNewButton()
+                .fillString("")
+                .fillText("")
+                .fillInt("")
+                .fillDecimal("")
+                .clickSaveDraft();
 
         Assert.assertEquals(getAttributeClass(), "fa fa-pencil");
         Assert.assertEquals(getRowValues(), EXPECTED_VALUES);
