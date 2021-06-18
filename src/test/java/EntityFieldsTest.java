@@ -1,4 +1,7 @@
 import base.BaseTest;
+import model.FieldsEditPage;
+import model.FieldsPage;
+import model.MainPage;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Action;
@@ -14,11 +17,19 @@ import static utils.TestUtils.jsClick;
 
 public class EntityFieldsTest extends BaseTest {
 
+    private static final String TITLE_VALUE = "Hello world";
+    private static final String COMMENTS_VALUE = "Be healthy";
+    private static final String INT_VALUE = "123";
+    private static final String DECIMAL_VALUE = "456.98";
+
     private static final List<String> EDIT_RESULT = List.of(
             "Hello for everyone", "Peace to all", "345", "345.67", "", "");
 
     private static final List<String> EXPECTED_RESULT = List.of(
-            "Hello world", "Be healthy", "123", "456.98", "", "");
+            TITLE_VALUE, COMMENTS_VALUE, INT_VALUE, DECIMAL_VALUE, "", "");
+
+    private static final List<String> NEW_EXPECTED_RESULT = List.of(
+            TITLE_VALUE, COMMENTS_VALUE, INT_VALUE, DECIMAL_VALUE, "", "", "", "apptester1@tester.test", "");
 
     private static final By ICON = By.xpath("//tbody/tr/td/i");
     private static final By FILL_STRING = By.id("title");
@@ -59,11 +70,21 @@ public class EntityFieldsTest extends BaseTest {
     @Test
     public void testCreateRecord() {
 
-        fillForm();
+        FieldsPage fieldsPage = new MainPage(getDriver())
+                .clickFieldsMenu()
+                .clickNewButton()
+                .fillTitle(TITLE_VALUE)
+                .fillComments(COMMENTS_VALUE)
+                .fillInt(INT_VALUE)
+                .fillDecimal(DECIMAL_VALUE)
+                .clickSave();
 
-        WebElement icon = getDriver().findElement(ICON);
-        Assert.assertEquals(icon.getAttribute("class"), "fa fa-check-square-o");
-        Assert.assertEquals(getActualValues(findElements(ACTUAL_RESULT)), EXPECTED_RESULT);
+        Assert.assertEquals(fieldsPage.getRowCount(), 1);
+        Assert.assertEquals(fieldsPage.getRow(0), NEW_EXPECTED_RESULT);
+
+        //WebElement icon = getDriver().findElement(ICON);
+        //Assert.assertEquals(icon.getAttribute("class"), "fa fa-check-square-o");
+        //Assert.assertEquals(getActualValues(findElements(ACTUAL_RESULT)), EXPECTED_RESULT);
     }
 
     @Test(dependsOnMethods = "testCreateRecord")
