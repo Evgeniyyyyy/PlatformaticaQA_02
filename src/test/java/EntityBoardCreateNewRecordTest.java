@@ -15,14 +15,14 @@ import static utils.TestUtils.scrollClick;
 public class EntityBoardCreateNewRecordTest extends BaseTest {
 
      private void createFillNewRecordPositive(String BoardString) { //draft for 3 type of record
-
         //***Test Data***
         Random random=new Random();
         Date date=new Date();
+        int minValue=1;//error bug report is filled
         List <String> expectedResult= List.of(BoardString,
                             "Create "+BoardString+" record",
-                            String.valueOf(random.nextInt(100)),
-                            String.format("%.2f", random.nextFloat()),
+                            String.valueOf(random.nextInt(100)+minValue),
+                            String.format("%.2f", random.nextFloat()+minValue),
                             new SimpleDateFormat ("dd/MM/yyyy").format(date),
                             new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(date),
                             "",
@@ -87,7 +87,6 @@ public class EntityBoardCreateNewRecordTest extends BaseTest {
                 "Board");
    }
 
-    @Ignore
     @Test()
     public void testCreateNewPendingRecordPositive()
     {
