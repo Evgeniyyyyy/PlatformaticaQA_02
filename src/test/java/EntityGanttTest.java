@@ -1,4 +1,6 @@
 import base.BaseTest;
+import model.GanttListPage;
+import model.MainPage;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -29,6 +31,7 @@ public class EntityGanttTest extends BaseTest {
     private static final String DECIMAL_INPUT_VALUE = "0.10";
     private static final String EMPTY_FIELD = "";
     private static final String USER_NAME = "tester100@tester.test";
+    private static final String NEW_USER_NAME = "apptester1@tester.test";
 
     private static final String STRING_INPUT_VALUE2 = "Test2";
     private static final String TEXT_INPUT_VALUE2 = "Text2";
@@ -42,9 +45,13 @@ public class EntityGanttTest extends BaseTest {
             .asList(STRING_INPUT_VALUE, TEXT_INPUT_VALUE, INT_INPUT_VALUE, DECIMAL_INPUT_VALUE,
                     FORMATTER.format(DATE), EMPTY_FIELD, EMPTY_FIELD, USER_NAME);
 
+    private static final List<Object> NEW_EXPECTED_RESULT = Arrays
+            .asList(STRING_INPUT_VALUE, TEXT_INPUT_VALUE, INT_INPUT_VALUE, DECIMAL_INPUT_VALUE,
+                    FORMATTER.format(DATE), EMPTY_FIELD, EMPTY_FIELD, NEW_USER_NAME);
+
     private static final List<Object> EXPECTED_RESULT2 = Arrays
             .asList(STRING_INPUT_VALUE2, TEXT_INPUT_VALUE2, INT_INPUT_VALUE2, DECIMAL_INPUT_VALUE2,
-                    FORMATTER.format(DATE), EMPTY_FIELD, EMPTY_FIELD, USER_NAME);
+                    FORMATTER.format(DATE), EMPTY_FIELD, EMPTY_FIELD, NEW_USER_NAME);
 
     private void clickListButton() {
         getWait().until(ExpectedConditions.elementToBeClickable(getDriver()
@@ -67,14 +74,20 @@ public class EntityGanttTest extends BaseTest {
     @Test
     public void testCreateRecord() {
 
-        getEntity(getDriver(), "Gantt");
-        fillForm();
-        clickSave(getDriver());
-        clickListButton();
+        GanttListPage ganttListPage = new MainPage(getDriver())
+                .clickGanttMenu()
+                .clickNewButton()
+                .fillString(STRING_INPUT_VALUE)
+                .fillText(TEXT_INPUT_VALUE)
+                .fillInt(INT_INPUT_VALUE)
+                .fillDecimal(DECIMAL_INPUT_VALUE)
+                .fillDate(FORMATTER)
+                .clickSave()
+                .clickListButton();
 
-        WebElement icon1 = findElement(CHECK_ICON);
-        Assert.assertEquals(icon1.getAttribute("class"), "fa fa-check-square-o");
-        Assert.assertEquals(getActualValues(findElements(ACTUAL_RESULT)), EXPECTED_RESULT);
+        Assert.assertEquals(ganttListPage.getRowCount(), 1);
+        Assert.assertEquals(ganttListPage.getRow(0), NEW_EXPECTED_RESULT);
+        Assert.assertEquals(ganttListPage.getIcon(), "fa fa-check-square-o");
     }
 
     @Test(dependsOnMethods = "testCreateRecord")
@@ -92,7 +105,7 @@ public class EntityGanttTest extends BaseTest {
                 DECIMAL_INPUT_VALUE, FORMATTER.format(DATE), EMPTY_FIELD);
 
         Assert.assertEquals(getActualValues(findElements(By.xpath("//span [@class = 'pa-view-field']"))), expectedRecords);
-        Assert.assertEquals(findElement(By.xpath("//div [@class = 'form-group']/p")).getText(), USER_NAME);
+        Assert.assertEquals(findElement(By.xpath("//div [@class = 'form-group']/p")).getText(), NEW_USER_NAME);
     }
 
     @Test(dependsOnMethods = "testViewRecord")

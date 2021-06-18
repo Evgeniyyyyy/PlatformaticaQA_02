@@ -3,7 +3,6 @@ package model;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
-import org.openqa.selenium.support.PageFactory;
 import utils.TestUtils;
 
 public class MainPage extends BaseModel {
@@ -13,6 +12,9 @@ public class MainPage extends BaseModel {
 
     @FindBy(xpath = "//p[text()= ' Readonly ']")
     private WebElement readonlyMenuItem;
+
+    @FindBy(xpath = "//p[text()= ' Gantt ']")
+    private WebElement ganttMenuItem;
 
     public MainPage(WebDriver driver) {
         super(driver);
@@ -28,5 +30,11 @@ public class MainPage extends BaseModel {
         TestUtils.jsClick(getDriver(), readonlyMenuItem);
 
         return new ReadonlyPage(getDriver());
+    }
+
+    public GanttPage clickGanttMenu(){
+        TestUtils.jsClick(getDriver(), ganttMenuItem);
+
+        return new GanttPage(getDriver());
     }
 }
