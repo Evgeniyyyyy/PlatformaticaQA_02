@@ -7,7 +7,6 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.testng.Assert;
 import org.testng.annotations.Ignore;
 import org.testng.annotations.Test;
-import utils.TestUtils;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -26,10 +25,16 @@ public class EntityChevronTest extends BaseTest {
     final private static String FULFILLMENT = "Fulfillment";
     final private static String SENT = "Sent";
 
+    private static final List<String> EXPECTED_DATA_PENDING_RECORD = makeRandomData(PENDING);
+    private static final List<String> EXPECTED_DATA_FULFILLMENT_RECORD = makeRandomData(FULFILLMENT);
+    private static final List<String> EXPECTED_DATA_SENT_RECORD = makeRandomData(SENT);
+    private static final List<String> EXPECTED_DATA_PENDING_DRAFT_RECORD = makeRandomData(PENDING);
+    private static final List<String> EXPECTED_DATA_FULFILLMENT_DRAFT_RECORD = makeRandomData(FULFILLMENT);
+    private static final List<String> EXPECTED_DATA_SENT_DRAFT_RECORD = makeRandomData(SENT);
+
 
     private void chooseStringDropDownItem(String dropDownItem) {
         WebElement stringButton = findElement(By.xpath("//button[@data-id='string']"));
-        Assert.assertEquals(stringButton.getAttribute("title"), "Pending");
 
         stringButton.click();
 
@@ -184,12 +189,28 @@ public class EntityChevronTest extends BaseTest {
         Assert.assertEquals(user.getText(), data.get(7));
     }
 
-    final private static List<String> EXPECTED_DATA_PENDING_RECORD = makeRandomData(PENDING);
-    final private static List<String> EXPECTED_DATA_FULFILLMENT_RECORD = makeRandomData(FULFILLMENT);
-    final private static List<String> EXPECTED_DATA_SENT_RECORD = makeRandomData(SENT);
-    final private static List<String> EXPECTED_DATA_PENDING_DRAFT_RECORD = makeRandomData(PENDING);
-    final private static List<String> EXPECTED_DATA_FULFILLMENT_DRAFT_RECORD = makeRandomData(FULFILLMENT);
-    final private static List<String> EXPECTED_DATA_SENT_DRAFT_RECORD = makeRandomData(SENT);
+    private void checkRecordTableIsEmpty() {
+        List<WebElement> tableElements = findElements(By.xpath("//div[@class='card-body ']/*"));
+        Assert.assertEquals(tableElements.size(), 1);
+    }
+
+    private void checkRecycleBinIsNotEmpty() {
+        String expectedTextRecycleBinAfterDelete = "delete_outline\n" + "1";
+        String textRecycleBinAfterDelete = getDriver().findElement(
+                By.xpath("//a[@href='index.php?action=recycle_bin']")).getText();
+        Assert.assertEquals(textRecycleBinAfterDelete, expectedTextRecycleBinAfterDelete);
+    }
+
+    private void checkRecycleBinIsempty() {
+        WebElement recyclerBin = getDriver().findElement(By.xpath("//div[@class = 'card-body']"));
+        Assert.assertTrue(recyclerBin.getText().contains
+                ("Good job with housekeeping! Recycle bin is currently empty!"));
+    }
+
+    private void deleteInRecycleBin(String s) {
+        findElement(By.xpath("//i[contains(text(),'delete_outline')]")).click();
+        findElement(By.linkText(s)).click();
+    }
 
     @Test
     public void testCreatePendingRecord(){
@@ -228,32 +249,19 @@ public class EntityChevronTest extends BaseTest {
     public void testDeleteFulfillmentRecord(){
         getEntity(getDriver(), ENTITY_NAME);
 
-        int row = chooseRecordNumberInTable(EXPECTED_DATA_PENDING_RECORD);
+        int row = chooseRecordNumberInTable(EXPECTED_DATA_FULFILLMENT_DRAFT_RECORD);
         clickActionsDelete(getWait(), getDriver(), row);
-        List<WebElement> tableElements = findElements(By.xpath("//div[@class='card-body ']/*"));
-        Assert.assertEquals(tableElements.size(), 1);
-
-        String expectedTextRecycleBinAfterDelete = "delete_outline\n" + "1";
-        String textRecycleBinAfterDelete = getDriver().findElement(
-                By.xpath("//a[@href='index.php?action=recycle_bin']")).getText();
-        Assert.assertEquals(textRecycleBinAfterDelete, expectedTextRecycleBinAfterDelete);
+        checkRecordTableIsEmpty();
+        checkRecycleBinIsNotEmpty();
     }
 
     @Test(dependsOnMethods =  {"testDeleteFulfillmentRecord"})
     public void testDeletePermanentlyFulfillmentRecord() {
         getEntity(getDriver(), ENTITY_NAME);
 
-        String expectedTextRecycleBinBeforeDelete = "delete_outline\n" + "1";
-        String textRecycleBinBeforeDelete = getDriver().findElement(
-                By.xpath("//a[@href='index.php?action=recycle_bin']")).getText();
-        Assert.assertEquals(textRecycleBinBeforeDelete, expectedTextRecycleBinBeforeDelete);
-
-        findElement(By.xpath("//i[contains(text(),'delete_outline')]")).click();
-        findElement(By.linkText("delete permanently")).click();
-
-        WebElement recyclerBin = getDriver().findElement(By.xpath("//div[@class = 'card-body']"));
-        Assert.assertTrue(recyclerBin.getText().contains
-                ("Good job with housekeeping! Recycle bin is currently empty!"));
+        checkRecycleBinIsNotEmpty();
+        deleteInRecycleBin("delete permanently");
+        checkRecycleBinIsempty();
     }
 
     @Test
@@ -274,6 +282,43 @@ public class EntityChevronTest extends BaseTest {
 
         checkRecordInViewMode(EXPECTED_DATA_FULFILLMENT_RECORD);
     }
+
+    @Test(dependsOnMethods = {"testViewFulfillmentRecord"})
+    public void testEditFulfillmentRecord() {
+        getEntity(getDriver(), ENTITY_NAME);
+
+        int row = chooseRecordNumberInTable(EXPECTED_DATA_FULFILLMENT_RECORD);
+        clickActionsEdit(getWait(), getDriver(), row);
+
+        checkFormIsNotEmpty();
+        emptyForm();
+        fillFormFields(EXPECTED_DATA_PENDING_RECORD);
+        clickSave(getDriver());
+        checkCreatedRecord(PENDING, false, EXPECTED_DATA_PENDING_RECORD);
+    }
+
+    @Test(dependsOnMethods =  {"testEditFulfillmentRecord"})
+    public void testDeletePendingRecord(){
+        getEntity(getDriver(), ENTITY_NAME);
+
+        int row = chooseRecordNumberInTable(EXPECTED_DATA_PENDING_RECORD);
+        clickActionsDelete(getWait(), getDriver(), row);
+        checkRecordTableIsEmpty();
+        checkRecycleBinIsNotEmpty();
+    }
+
+    @Test(dependsOnMethods =  {"testDeletePendingRecord"})
+    public void testRestorePendingRecord(){
+        getEntity(getDriver(), ENTITY_NAME);
+
+        checkRecycleBinIsNotEmpty();
+        deleteInRecycleBin("restore as draft");
+        checkRecycleBinIsempty();
+
+        getEntity(getDriver(), ENTITY_NAME);
+        checkCreatedRecord(PENDING, true, EXPECTED_DATA_PENDING_RECORD);
+    }
+
     @Ignore
     @Test
     public void testCreateSentRecord(){
