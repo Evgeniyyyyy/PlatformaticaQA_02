@@ -4,9 +4,9 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.testng.Assert;
 import org.testng.annotations.Test;
+import utils.ProjectUtils;
 import utils.TestUtils;
 
-import javax.swing.text.Utilities;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -47,7 +47,18 @@ public class EntityReadonlyTest extends BaseTest {
 
         return actualValues;
     }
+ 
+    @Test
+    public void testCancelRecord() {
 
+        ProjectUtils.cleanOut(getDriver());
+        clickEventsReadonlyMenu();
+        clickCreateRecordButton();
+        ProjectUtils.clickCancel(getDriver());
+
+        Assert.assertNull(findElement(By.className("card-body")).getAttribute("value"));
+    }
+  
     @Test
     public void testCreateRecord() {
 
@@ -77,7 +88,6 @@ public class EntityReadonlyTest extends BaseTest {
         getWait().until(ExpectedConditions.elementToBeClickable(
                 getDriver().findElement(By.xpath(
                         "//i[text() = 'create_new_folder']"))));
-
 
         Assert.assertEquals(getAttributeClass(), "fa fa-pencil");
         Assert.assertEquals(getRowValues(), EXPECTED_VALUES);
