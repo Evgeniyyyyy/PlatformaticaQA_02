@@ -1,10 +1,13 @@
 import base.BaseTest;
+import model.BoardListPage;
+import model.MainPage;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.RandomUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.testng.Assert;
+import org.testng.annotations.Ignore;
 import org.testng.annotations.Test;
 
 import java.util.ArrayList;
@@ -26,7 +29,8 @@ public class EntityBoardDraftRecordTest extends BaseTest {
     private static final String STRING_INPUT_PENDING = "Pending";
     private static final String STRING_INPUT_ONTRACK = "On track";
     private static final String STRING_INPUT_DONE = "Done";
-    private static final String USER_NAME = "tester10@tester.test";
+    private static final String USER_NAME = "apptester1@tester.test";
+    private static final String DRAFT_ICON_CLASS_NAME = "fa fa-pencil";
 
     private static final List<String> EXPECTED_CREATED_PENDING_RECORD = makeRandomData(STRING_INPUT_PENDING);
     private static final List<String> EXPECTED_CREATED_ONTRACK_RECORD = makeRandomData(STRING_INPUT_ONTRACK);
@@ -111,20 +115,19 @@ public class EntityBoardDraftRecordTest extends BaseTest {
     @Test
     public void testCreateDraftRecord() {
 
-        getEntity(getDriver(), ENTITY_NAME);
+        BoardListPage boardPage = new MainPage(getDriver())
+                .clickBoardMenu()
+                .clickNewButton()
+                .fillString(STRING_INPUT_PENDING)
+                .fillText(EXPECTED_CREATED_PENDING_RECORD.get(1))
+                .fillInt(EXPECTED_CREATED_PENDING_RECORD.get(2))
+                .fillDecimal(EXPECTED_CREATED_PENDING_RECORD.get(3))
+                .clickSaveDraft()
+                .clickListButton();
 
-        clickCreateRecord(getDriver());
-        fillDropDownFields(STRING_INPUT_PENDING);
-        fillFormFields(EXPECTED_CREATED_PENDING_RECORD);
-        clickSaveDraft(getDriver());
-
-        clickListButton();
-
-        WebElement icon = findElement(By.xpath("//tbody/tr/td/i"));
-        Assert.assertEquals(icon.getAttribute("class"), "fa fa-pencil");
-
-        List<WebElement> actualRecord = findElements(By.xpath("//td[@class='pa-list-table-th']"));
-        Assert.assertEquals(getActualValues(actualRecord), EXPECTED_CREATED_PENDING_RECORD);
+        Assert.assertEquals(boardPage.getRowCount(), 1);
+        Assert.assertEquals(boardPage.getIcon(), DRAFT_ICON_CLASS_NAME);
+        Assert.assertEquals(boardPage.getRow(0), EXPECTED_CREATED_PENDING_RECORD);
     }
 
     @Test(dependsOnMethods = "testCreateDraftRecord")
@@ -208,6 +211,7 @@ public class EntityBoardDraftRecordTest extends BaseTest {
                 "Good job with housekeeping! Recycle bin is currently empty!");
     }
 
+    @Ignore
     @Test
     public void testSortRecords() {
 
@@ -247,6 +251,7 @@ public class EntityBoardDraftRecordTest extends BaseTest {
         Assert.assertEquals(getActualValues(actualRecordsTable), expectedSortedRecords);
     }
 
+    @Ignore
     @Test(dependsOnMethods = "testSortRecords")
     public void testSearchDraftRecord() {
 
@@ -268,7 +273,7 @@ public class EntityBoardDraftRecordTest extends BaseTest {
                     EXPECTED_CREATED_PENDING_RECORD.get(i));
         }
     }
-
+    @Ignore
     @Test
     public void testCancelRecord(){
 

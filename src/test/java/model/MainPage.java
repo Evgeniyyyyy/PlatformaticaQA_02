@@ -16,6 +16,9 @@ public class MainPage extends BaseModel {
     @FindBy(xpath = "//p[text()= ' Gantt ']")
     private WebElement ganttMenuItem;
 
+    @FindBy(xpath = "//p[text()= ' Board ']")
+    private WebElement boardMenuItem;
+
     public MainPage(WebDriver driver) {
         super(driver);
     }
@@ -36,5 +39,11 @@ public class MainPage extends BaseModel {
         TestUtils.jsClick(getDriver(), ganttMenuItem);
 
         return new GanttPage(getDriver());
+    }
+
+    public BoardPage clickBoardMenu() {
+        TestUtils.jsClick(getDriver(), boardMenuItem);
+
+        return new BoardPage(getDriver());
     }
 }
