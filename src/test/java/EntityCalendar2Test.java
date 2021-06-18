@@ -89,13 +89,15 @@ public class EntityCalendar2Test extends BaseTest {
 
         TestUtils.scrollClick(getDriver(), findElement(By.xpath("//p[contains (text(), 'Calendar')]")));
         findElement(By.xpath("//a[@class='nav-link ' and contains(.,'list')]")).click();
+
         findElement(By.xpath("//a[contains(.,'" + expectedResult + "')]/parent::td/parent::tr//button")).click();
 
         getWait().until(TestUtils.movingIsFinished(getDriver().findElement
                 (By.xpath("//a[contains(.,'" + expectedResult + "')]" +
                         "/parent::td/parent::tr//div//a[contains(.,'delete')]")))).click();
 
-        Assert.assertEquals(findElements(By.xpath("//a[contains(.,'" + expectedResult + "')]")).size(), 0);
+        String textCardBodyAfterDelete = getDriver().findElement(By.xpath("//div[@class = 'card-body ']")).getText();
+        Assert.assertTrue(textCardBodyAfterDelete.isEmpty());
 
         findElement(By.xpath("//b[contains(.,'1')]")).click();
         findElement(By.xpath("//table//tbody")).click();
