@@ -8,6 +8,9 @@ import utils.TestUtils;
 
 public class MainPage extends BaseModel {
 
+    @FindBy(xpath = "//p[text()= ' Assign ']")
+    private WebElement assignMenuItem;
+
     @FindBy(xpath = "//p[text()= ' Fields ']")
     private WebElement fieldsMenuItem;
 
@@ -28,6 +31,12 @@ public class MainPage extends BaseModel {
 
     public MainPage(WebDriver driver) {
         super(driver);
+    }
+
+    public AssignPage clickAssignMenu(){
+        TestUtils.jsClick(getDriver(), assignMenuItem);
+
+        return new AssignPage(getDriver());
     }
 
     public FieldsPage clickFieldsMenu() {

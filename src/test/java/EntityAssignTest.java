@@ -1,5 +1,7 @@
 import base.BaseTest;
 import constants.EntityAssignConstants;
+import model.AssignPage;
+import model.MainPage;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -123,12 +125,19 @@ public class EntityAssignTest extends BaseTest {
     @Test
     public void testCreateRecord() {
 
-        fillForm();
-        clickSave(getDriver());
+        AssignPage assignPage = new MainPage(getDriver())
+                .clickAssignMenu()
+                .clickNewButton()
+                .fillTitle(STRING)
+                .fillComments(TEXT)
+                .fillInt(INT)
+                .fillDecimal(DECIMAL)
+                .clickSave();
 
         WebElement icon = findElement(ICON);
         Assert.assertEquals(icon.getAttribute("class"), "fa fa-check-square-o");
         Assert.assertEquals(getActualValues(findElements(ACTUAL_RESULT)), EXPECTED_RESULT);
+        Assert.assertEquals(assignPage.getRowCount(), 1);
     }
 
     @Test
