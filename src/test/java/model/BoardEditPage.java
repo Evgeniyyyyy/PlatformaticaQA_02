@@ -13,13 +13,13 @@ public class BoardEditPage extends BaseModel {
     @FindBy(xpath = "//button[@data-id='string']")
     private WebElement fieldString;
 
-    @FindBy(xpath = "//div[text()='Pending']")
+    @FindBy(xpath = "//span[text()='Pending']")
     private WebElement valueStringPending;
 
-    @FindBy(xpath = "//div[text()='On track']")
+    @FindBy(xpath = "//span[text()='On track']")
     private WebElement valueStringOnTrack;
 
-    @FindBy(xpath = "//div[text()='Done']")
+    @FindBy(xpath = "//span[text()='Done']")
     private WebElement valueStringDone;
 
     @FindBy(id = "text")
@@ -72,8 +72,20 @@ public class BoardEditPage extends BaseModel {
         return this;
     }
 
+    public BoardEditPage clearText() {
+        fieldText.clear();
+
+        return this;
+    }
+
     public BoardEditPage fillInt(String value) {
         sendKeysOneByOne(fieldInt,value);
+
+        return this;
+    }
+
+    public BoardEditPage clearInt() {
+        fieldInt.clear();
 
         return this;
     }
@@ -81,6 +93,11 @@ public class BoardEditPage extends BaseModel {
     public BoardEditPage fillDecimal(String value) {
 
         sendKeysOneByOne(fieldDecimal,value);
+
+        return this;
+    }
+    public BoardEditPage clearDecimal() {
+        fieldDecimal.clear();
 
         return this;
     }
