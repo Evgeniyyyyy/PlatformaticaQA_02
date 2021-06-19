@@ -9,7 +9,6 @@ import java.util.Arrays;
 import java.util.List;
 
 import static utils.ProjectUtils.*;
-import static utils.TestUtils.scrollClick;
 
 public class EntityImportValuesDraftRecordTest extends BaseTest {
 
@@ -19,7 +18,6 @@ public class EntityImportValuesDraftRecordTest extends BaseTest {
     private static final By DECIMAL_FIELD = By.id("decimal");
     private static final By DATE_FIELD = By.id("date");
     private static final By DATETIME_FIELD = By.id("datetime");
-    private static final By IMPORT_VALUES_MENU = By.xpath("//p[contains(.,' Import values ')]");
 
     private static final String STRING_INPUT = "Some string";
     private static final String TEXT_INPUT = "Import values text.";
@@ -29,10 +27,14 @@ public class EntityImportValuesDraftRecordTest extends BaseTest {
     private static final String DATETIME_INPUT = "01/06/2021 13:07:06";
     private static final String USERNAME_INPUT = "apptester1@tester.test";
     private static final String FILE_INPUT = "";
+    private static final String IMPORT_VALUES = "Import values";
 
     private final static List<String> EXPECTED_VALUES = Arrays.asList(
             STRING_INPUT, TEXT_INPUT, INT_INPUT, DECIMAL_INPUT,
             DATE_INPUT, DATETIME_INPUT, FILE_INPUT, USERNAME_INPUT);
+
+    private final static List<String> EXPECTED_RECORDS = Arrays.asList(STRING_INPUT, TEXT_INPUT, INT_INPUT,
+            DECIMAL_INPUT, DATE_INPUT, DATETIME_INPUT);
 
     private void fillForm() {
         findElement(STRING_FIELD).sendKeys(STRING_INPUT);
@@ -54,7 +56,7 @@ public class EntityImportValuesDraftRecordTest extends BaseTest {
     @Test
     public void testCreateDraftRecord() {
 
-        scrollClick(getDriver(), getDriver().findElement(IMPORT_VALUES_MENU));
+        getEntity(getDriver(), IMPORT_VALUES);
         clickCreateRecord(getDriver());
         fillForm();
         clickSaveDraft(getDriver());
@@ -75,11 +77,32 @@ public class EntityImportValuesDraftRecordTest extends BaseTest {
     @Test
     public void testCancelRecord() {
 
-        scrollClick(getDriver(), getDriver().findElement(IMPORT_VALUES_MENU));
+        getEntity(getDriver(), IMPORT_VALUES);
         clickCreateRecord(getDriver());
         fillForm();
         clickCancel(getDriver());
 
         Assert.assertNull(findElement(By.className("card-body")).getAttribute("value"));
+    }
+
+    @Test(dependsOnMethods = "testCreateDraftRecord")
+    public void testViewDraftRecord() {
+
+        getEntity(getDriver(), IMPORT_VALUES);
+
+        WebElement iconCheckBox = findElement(By.xpath("//tbody/tr/td/i"));
+
+        Assert.assertEquals(iconCheckBox.getAttribute("class"), "fa fa-pencil");
+
+        clickActionsView(getWait(), getDriver());
+
+        List<WebElement> viewField = findElements(By.xpath("//span [@class = 'pa-view-field']"));
+
+        List<String> actualValues = new ArrayList<>();
+        for (WebElement td : viewField) {
+            actualValues.add(td.getText());
+        }
+
+        Assert.assertEquals(actualValues, EXPECTED_RECORDS);
     }
 }
