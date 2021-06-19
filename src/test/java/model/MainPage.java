@@ -3,6 +3,7 @@ package model;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
+import org.openqa.selenium.support.PageFactory;
 import utils.TestUtils;
 
 public class MainPage extends BaseModel {
@@ -21,6 +22,9 @@ public class MainPage extends BaseModel {
 
     @FindBy(xpath = "//p[text()= ' Arithmetic Function ']")
     private WebElement arithmeticFunctionMenuItem;
+
+    @FindBy(xpath = "//p[text()= ' Parent ']")
+    private WebElement parentMenuItem;
 
     public MainPage(WebDriver driver) {
         super(driver);
@@ -50,9 +54,16 @@ public class MainPage extends BaseModel {
         return new BoardPage(getDriver());
     }
 
+
     public ArithmeticFunctionPage clickArithmeticFunctionMenu() {
         TestUtils.jsClick(getDriver(), arithmeticFunctionMenuItem);
 
         return new ArithmeticFunctionPage(getDriver());
+    }
+
+    public ParentPage clickParentMenu() {
+        TestUtils.jsClick(getDriver(), parentMenuItem);
+
+        return new ParentPage(getDriver());
     }
 }

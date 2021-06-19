@@ -1,5 +1,8 @@
 import base.BaseTest;
 import constants.EntityParentConstants;
+import model.FieldsPage;
+import model.MainPage;
+import model.ParentPage;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -23,9 +26,11 @@ public class EntityParentTest extends BaseTest {
     private static final String INT_INPUT_VALUE = "12345";
     private static final String DECIMAL_INPUT_VALUE = "0.10";
     private static final String EMPTY_FIELD = "";
+    private static final String USER_DEFAULT_NAME = "apptester1@tester.test";
     private static final String USER_NAME = "apptester10@tester.test";
     private static final String INFO_STR_1_OF_1 = "Showing 1 to 1 of 1 rows";
     private static final String INFO_STR_2_OF_2 = "Showing 1 to 2 of 2 rows";
+    private static final String CLASS_ICON_SAVE = "fa fa-check-square-o";
 
     private static final By ICON = By.xpath("//tbody/tr/td/i");
     private static final By FIELD_STRING = By.id("string");
@@ -42,12 +47,16 @@ public class EntityParentTest extends BaseTest {
             FIELD_STRING, FIELD_TEXT, FIELD_INT, FIELD_DECIMAL, FIELD_DATE, FIELD_DATE_TIME);
 
     Random random = new Random();
-    Date date = new Date();
-    SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+    private static final Date DATE = new Date();
+    private static final SimpleDateFormat FORMATTER = new SimpleDateFormat("dd/MM/yyyy");
 
     final List<Object> expectedValues = Arrays
             .asList(STRING_INPUT_VALUE, TEXT_INPUT_VALUE, INT_INPUT_VALUE, DECIMAL_INPUT_VALUE,
-                    formatter.format(date), EMPTY_FIELD, EMPTY_FIELD, USER_NAME);
+                    FORMATTER.format(DATE), EMPTY_FIELD, EMPTY_FIELD, USER_NAME);
+
+    private static final List<String> NEW_EXPECTED_RESULT = List.of(
+            STRING_INPUT_VALUE, TEXT_INPUT_VALUE, INT_INPUT_VALUE, DECIMAL_INPUT_VALUE,
+            EMPTY_FIELD, EMPTY_FIELD, EMPTY_FIELD, USER_DEFAULT_NAME);
 
     private static List<WebElement> RECORD(WebDriver driver) {
         return List.of(driver.findElement(By.xpath("//div/span/a")));
@@ -58,8 +67,8 @@ public class EntityParentTest extends BaseTest {
             RandomStringUtils.randomAlphabetic(30),
             String.valueOf(random.nextInt(10000)),
             String.format("%.2f", random.nextFloat()),
-            new SimpleDateFormat ("dd/MM/yyyy").format(date),
-            new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(date),
+            new SimpleDateFormat ("dd/MM/yyyy").format(DATE),
+            new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(DATE),
             "", "tester26@tester.test");
 
     List <String> EDIT_RESULT = List.of(
@@ -89,6 +98,7 @@ public class EntityParentTest extends BaseTest {
     private void editForms() {
 
         for (int i = 0; i < ELEMENTS.size(); i++) {
+            findElement(ELEMENTS.get(i)).click();
             findElement(ELEMENTS.get(i)).clear();
             findElement(ELEMENTS.get(i)).sendKeys(EDIT_RESULT.get(i));
         }
@@ -133,11 +143,18 @@ public class EntityParentTest extends BaseTest {
     @Test
     public void testCreateRecord() {
 
-        fillForms();
+        ParentPage parentPage = new MainPage(getDriver())
+                .clickParentMenu()
+                .clickNewButton()
+                .fillString(STRING_INPUT_VALUE)
+                .fillText(TEXT_INPUT_VALUE)
+                .fillInt(INT_INPUT_VALUE)
+                .fillDecimal(DECIMAL_INPUT_VALUE)
+                .clickSave();
 
-        WebElement icon = getDriver().findElement(ICON);
-        Assert.assertEquals(icon.getAttribute("class"), "fa fa-check-square-o");
-        Assert.assertEquals(getActualValues(findElements(ACTUAL_RESULT)), EXPECTED_RESULT);
+        Assert.assertEquals(ParentPage.getRowCount(), 1);
+        Assert.assertEquals(ParentPage.getRow(0), NEW_EXPECTED_RESULT);
+        Assert.assertEquals(ParentPage.getClassIcon(), CLASS_ICON_SAVE);
     }
 
     @Test(dependsOnMethods = "testCreateRecord")
@@ -150,7 +167,7 @@ public class EntityParentTest extends BaseTest {
 
         List<WebElement> row = findElements(By.xpath("//span[@class='pa-view-field']"));
         for (int i = 0; i < row.size(); i++) {
-            Assert.assertEquals(row.get(i).getText(), EXPECTED_RESULT.get(i));
+            Assert.assertEquals(row.get(i).getText(), NEW_EXPECTED_RESULT.get(i));
         }
     }
 
