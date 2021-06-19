@@ -21,13 +21,6 @@ public class RecycleBinPage extends MainPage{
         super(driver);
     }
 
-    public BoardViewPage clickDeletedRecord(){
-        getWait().until(ExpectedConditions.elementToBeClickable(deletedRecord));
-        deletedRecord.click();
-
-        return new BoardViewPage(getDriver());
-    }
-
     public RecycleBinPage clickDeletedRecordPermanently(){
         getWait().until(ExpectedConditions.elementToBeClickable(deletedRecordPermanently));
         deletedRecordPermanently.click();
@@ -38,6 +31,20 @@ public class RecycleBinPage extends MainPage{
     public String getTextCardBody(){
 
         return table.getText();
+    }
+
+    public BoardViewPage clickDeletedRecord(){
+        getWait().until(ExpectedConditions.elementToBeClickable(deletedRecord));
+        deletedRecord.click();
+
+        return new BoardViewPage(getDriver());
+    }
+
+    public ParentViewPage clickDeletedRecordForParent(){
+        getWait().until(ExpectedConditions.elementToBeClickable(deletedRecord));
+        deletedRecord.click();
+
+        return new ParentViewPage(getDriver());
     }
 
 }

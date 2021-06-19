@@ -1,9 +1,7 @@
 import base.BaseTest;
 import constants.EntityParentConstants;
-import model.FieldsPage;
-import model.MainPage;
-import model.ParentPage;
 import org.apache.commons.lang3.RandomStringUtils;
+import org.apache.commons.lang3.RandomUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -11,11 +9,16 @@ import org.openqa.selenium.interactions.Action;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.testng.Assert;
+import org.testng.annotations.Ignore;
 import org.testng.annotations.Test;
 import utils.TestUtils;
 
 import java.text.SimpleDateFormat;
 import java.util.*;
+import model.*;
+import static model.ParentPage.*;
+import static model.ParentEditPage.*;
+import static model.ParentViewPage.*;
 
 import static utils.ProjectUtils.*;
 
@@ -31,6 +34,7 @@ public class EntityParentTest extends BaseTest {
     private static final String INFO_STR_1_OF_1 = "Showing 1 to 1 of 1 rows";
     private static final String INFO_STR_2_OF_2 = "Showing 1 to 2 of 2 rows";
     private static final String CLASS_ICON_SAVE = "fa fa-check-square-o";
+    private static final String CLASS_ICON_SAVE_DRAFT = "fa fa-pencil";
 
     private static final By ICON = By.xpath("//tbody/tr/td/i");
     private static final By FIELD_STRING = By.id("string");
@@ -78,6 +82,13 @@ public class EntityParentTest extends BaseTest {
             String.format("%.2f", random.nextFloat()),
             "15/11/0078", "17/06/0902 12:31:44",
             "", "tester27@tester.test");
+
+    List <String> NEW_EDIT_RESULT = List.of(
+            RandomStringUtils.randomAlphabetic(20),
+            RandomStringUtils.randomAlphabetic(15),
+            String.valueOf(random.nextInt(10000)),
+            RandomUtils.nextInt(0, 10000) + "." + RandomStringUtils.randomNumeric(2),
+            EMPTY_FIELD, EMPTY_FIELD, EMPTY_FIELD, USER_DEFAULT_NAME);
 
     private void fillForms() {
 
@@ -160,26 +171,34 @@ public class EntityParentTest extends BaseTest {
     @Test(dependsOnMethods = "testCreateRecord")
     public void testViewRecord() {
 
-        getEntity(getDriver(), "Parent");
-        clickListButton();
+        ParentViewPage parentViewPage = new MainPage(getDriver())
+                .clickParentMenu()
+                .clickActions()
+                .clickActionsView();
 
-        clickActionsView(getWait(), getDriver());
-
-        List<WebElement> row = findElements(By.xpath("//span[@class='pa-view-field']"));
-        for (int i = 0; i < row.size(); i++) {
-            Assert.assertEquals(row.get(i).getText(), NEW_EXPECTED_RESULT.get(i));
-        }
+        Assert.assertEquals(parentViewPage.getRecordInViewMode(), NEW_EXPECTED_RESULT);
     }
 
     @Test(dependsOnMethods = "testViewRecord")
     public void testEditRecord() {
 
-        getEntity(getDriver(), "Parent");
+        ParentPage parentPage = new MainPage(getDriver())
+                .clickParentMenu()
+                .clickActions()
+                .clickActionsEdit()
+                .clearElement(getDriver(), FIELD_STRING)
+                .fillString(NEW_EDIT_RESULT.get(0))
+                .clearElement(getDriver(),FIELD_TEXT)
+                .fillText(NEW_EDIT_RESULT.get(1))
+                .clearElement(getDriver(), FIELD_INT)
+                .fillInt(NEW_EDIT_RESULT.get(2))
+                .clearElement(getDriver(), FIELD_DECIMAL)
+                .fillDecimal(NEW_EDIT_RESULT.get(3))
+                .clickSaveDraft();
 
-        clickActionsEdit(getWait(), getDriver());
-        editForms();
+        Assert.assertEquals(ParentPage.getRowCount(), 1);
+        Assert.assertEquals(ParentPage.getRow(0), NEW_EDIT_RESULT);
 
-        Assert.assertEquals(getActualValues(findElements(ACTUAL_RESULT)), EDIT_RESULT);
     }
 
     @Test(dependsOnMethods = "testEditRecord")
@@ -200,13 +219,14 @@ public class EntityParentTest extends BaseTest {
         getWait().until(ExpectedConditions.textToBePresentInElementLocated(
                 INFO_STRING, INFO_STR_2_OF_2));
 
-        findElement(INPUT).sendKeys(EDIT_RESULT.get(0));
+        findElement(INPUT).sendKeys(NEW_EDIT_RESULT.get(0));
         getWait().until(ExpectedConditions.textToBePresentInElementLocated(
                 INFO_STRING, INFO_STR_1_OF_1));
 
-        Assert.assertEquals(getActualValues(findElements(ACTUAL_RESULT)), EDIT_RESULT);
+        Assert.assertEquals(getActualValues(findElements(ACTUAL_RESULT)), NEW_EDIT_RESULT);
     }
 
+    @Ignore
     @Test(dependsOnMethods = "testSearchRecord")
     public void testReorderRecord() {
 
@@ -240,32 +260,33 @@ public class EntityParentTest extends BaseTest {
     @Test
     public void testCancelRecord() {
 
-        getEntity(getDriver(), "Parent");
+        ParentPage parentPage = new MainPage(getDriver())
+                .clickParentMenu()
+                .clickNewButton()
+                .fillString(STRING_INPUT_VALUE)
+                .fillText(TEXT_INPUT_VALUE)
+                .fillInt(INT_INPUT_VALUE)
+                .fillDecimal(DECIMAL_INPUT_VALUE)
+                .clickCancel();
 
-        clickCreateRecord(getDriver());
-        fillForm();
-        clickCancel(getDriver());
-
-        Assert.assertEquals(findElement(EntityParentConstants.PARENT_GET_CONTANER).getText(), "");
+        Assert.assertTrue(ParentPage.isTableEmpty());
     }
 
     @Test(dependsOnMethods = "testCancelRecord")
     public void testCreateNewDraftRecord() {
 
-        getEntity(getDriver(), "Parent");
+        ParentPage parentPage = new MainPage(getDriver())
+                .clickParentMenu()
+                .clickNewButton()
+                .fillString(STRING_INPUT_VALUE)
+                .fillText(TEXT_INPUT_VALUE)
+                .fillInt(INT_INPUT_VALUE)
+                .fillDecimal(DECIMAL_INPUT_VALUE)
+                .clickSaveDraft();
 
-        clickCreateRecord(getDriver());
-        fillForm();
-        clickSaveDraft(getDriver());
-
-        getWait().
-                until(ExpectedConditions.presenceOfElementLocated(
-                        EntityParentConstants.GET_PARENT_TITLE));
-        List<WebElement> records = findElements(EntityParentConstants.PARENT_GET_LIST_ROW);
-
-        Assert.assertEquals(records.size(), 1);
-        Assert.assertEquals(getIcon(EntityParentConstants.PARENT_GET_ICON)
-                .getAttribute("class"), EntityParentConstants.CLASS_ITEM_SAVE_DRAFT);
+        Assert.assertEquals(ParentPage.getRowCount(), 1);
+        Assert.assertEquals(ParentPage.getRow(0), NEW_EXPECTED_RESULT);
+        Assert.assertEquals(ParentPage.getClassIcon(), CLASS_ICON_SAVE_DRAFT);
     }
 
     @Test(dependsOnMethods = "testCreateNewDraftRecord")

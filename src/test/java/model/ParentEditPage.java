@@ -1,5 +1,6 @@
 package model;
 
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -36,11 +37,39 @@ public class ParentEditPage extends BaseModel {
     @FindBy(id = "pa-entity-form-draft-btn")
     private WebElement saveDraftButton;
 
-    @FindBy(className = "btn btn-dark")
+    @FindBy(className = "btn-dark")
     private WebElement cancelButton;
 
     public ParentEditPage(WebDriver driver) {
         super(driver);
+    }
+
+    public WebElement getFieldString() {
+        return fieldString;
+    }
+
+    public WebElement getFieldText() {
+        return fieldText;
+    }
+
+    public WebElement getFieldInt() {
+        return fieldInt;
+    }
+
+    public WebElement getFieldDecimal() {
+        return fieldDecimal;
+    }
+
+    public WebElement getFieldDate() {
+        return fieldDate;
+    }
+
+    public WebElement getFieldUser() {
+        return fieldUser;
+    }
+
+    public WebElement getChooseUser() {
+        return chooseUser;
     }
 
     public ParentEditPage fillString(String value) {
@@ -69,6 +98,19 @@ public class ParentEditPage extends BaseModel {
 
     public ParentEditPage fillDate(SimpleDateFormat value) {
         fieldDate.click();
+
+        return this;
+    }
+
+    public ParentEditPage clearElement(WebElement element) {
+        element.clear();
+
+        return this;
+    }
+
+    public ParentEditPage clearElement(WebDriver driver, By by) {
+        WebElement element = driver.findElement(by);
+        element.clear();
 
         return this;
     }
