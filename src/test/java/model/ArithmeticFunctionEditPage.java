@@ -3,6 +3,7 @@ package model;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 import utils.TestUtils;
 
 public class ArithmeticFunctionEditPage extends BaseModel{
@@ -51,6 +52,18 @@ public class ArithmeticFunctionEditPage extends BaseModel{
         return this;
     }
 
+    public ArithmeticFunctionEditPage fillF1_FieldSlow(Integer value) {
+        sendKeysOneByOne(F1_FIELD, value.toString());
+
+        return this;
+    }
+
+    public ArithmeticFunctionEditPage fillF2_FieldSlow(Integer value) {
+        sendKeysOneByOne(F2_FIELD, value.toString());
+
+        return this;
+    }
+
     public ArithmeticFunctionPage clickSave() {
         TestUtils.jsClick(getDriver(), saveButton);
 
@@ -67,5 +80,27 @@ public class ArithmeticFunctionEditPage extends BaseModel{
         TestUtils.jsClick(getDriver(), cancelButton);
 
         return new ArithmeticFunctionPage(getDriver());
+    }
+
+    public ArithmeticFunctionEditPage fillForm(Integer value1, Integer value2) {
+        sendKeysOneByOne(F1_FIELD, value1.toString());
+        sendKeysOneByOne(F2_FIELD, value2.toString());
+        getWait().until(ExpectedConditions.attributeToBe(DIV, "value", String.valueOf(value1/value2)));
+
+        return this;
+    }
+
+    private void sendKeysOneByOne(WebElement element, String input) {
+        if (!element.getAttribute("value").isEmpty()) {
+            element.clear();
+        }
+
+        char[] editKeys = input.toCharArray();
+        StringBuilder newString = new StringBuilder();
+        for (char c : editKeys) {
+            newString.append(c);
+            element.sendKeys(String.valueOf(c));
+            getWait().until(ExpectedConditions.attributeToBe(element, "value", String.valueOf(newString)));
+        }
     }
 }
