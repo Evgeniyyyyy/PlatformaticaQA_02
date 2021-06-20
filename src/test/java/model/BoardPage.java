@@ -12,9 +12,6 @@ public class BoardPage extends MainPage {
     @FindBy(xpath = "//a[@href='index.php?action=action_list&list_type=table&entity_id=31']")
     private WebElement listButton;
 
-    @FindBy(xpath = "//i[text()='delete_outline']")
-    private WebElement recycleBinIcon;
-
     @FindBy(className = "card-body")
     private WebElement table;
 
@@ -32,12 +29,6 @@ public class BoardPage extends MainPage {
         listButton.click();
 
         return new BoardListPage(getDriver());
-    }
-
-    public RecycleBinPage clickRecycleBin(){
-        recycleBinIcon.click();
-
-        return new RecycleBinPage(getDriver());
     }
 
     public String getTextCardBody(){

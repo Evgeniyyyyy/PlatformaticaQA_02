@@ -6,6 +6,8 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 
+import java.util.List;
+
 public class RecycleBinPage extends MainPage{
 
     @FindBy(xpath = "//td[@class='pa-recycle-col']/a")
@@ -19,6 +21,9 @@ public class RecycleBinPage extends MainPage{
 
     @FindBy(xpath = "//a[contains(text(), 'restore as draft')]")
     private WebElement restoreAsDraft;
+
+    @FindBy(xpath = "//tbody/tr")
+    private List<WebElement> rows;
 
     public RecycleBinPage(WebDriver driver) {
         super(driver);
@@ -69,6 +74,10 @@ public class RecycleBinPage extends MainPage{
         restoreAsDraft.click();
 
         return new ParentPage(getDriver());
+    }
+
+    public int getRowCount() {
+        return rows.size();
     }
 
 }

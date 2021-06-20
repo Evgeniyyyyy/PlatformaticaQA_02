@@ -29,6 +29,9 @@ public class MainPage extends BaseModel {
     @FindBy(xpath = "//p[text()= ' Parent ']")
     private WebElement parentMenuItem;
 
+    @FindBy(xpath = "//i[text()='delete_outline']")
+    private WebElement recycleBinIcon;
+
     public MainPage(WebDriver driver) {
         super(driver);
     }
@@ -74,5 +77,11 @@ public class MainPage extends BaseModel {
         TestUtils.jsClick(getDriver(), parentMenuItem);
 
         return new ParentPage(getDriver());
+    }
+
+    public RecycleBinPage clickRecycleBin(){
+        recycleBinIcon.click();
+
+        return new RecycleBinPage(getDriver());
     }
 }

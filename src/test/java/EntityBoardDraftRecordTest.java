@@ -44,7 +44,7 @@ public class EntityBoardDraftRecordTest extends BaseTest {
     }
 
     private static String getRandomIntValue() {
-        return "" + RandomUtils.nextInt(0, 100000);
+        return String.valueOf(RandomUtils.nextInt(0, 100000));
     }
 
     private static String getRandomDecimalValue() {
@@ -114,6 +114,11 @@ public class EntityBoardDraftRecordTest extends BaseTest {
 
         Assert.assertTrue(boardPage.isTableEmpty());
         Assert.assertEquals(boardPage.getTextNotificationRecycleBin(), "1");
+
+        RecycleBinPage boardRecycleBinPage = new MainPage(getDriver())
+                .clickRecycleBin();
+
+        Assert.assertEquals(boardRecycleBinPage.getRowCount(), 1);
     }
 
     @Test(dependsOnMethods = "testDeleteDraftRecord")
