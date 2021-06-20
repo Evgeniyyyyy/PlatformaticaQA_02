@@ -93,7 +93,7 @@ public class FieldsPage extends MainPage {
     public FieldsPage getReorder() {
         actions.moveToElement(row)
                 .clickAndHold(row)
-                .dragAndDropBy(row, 0, 100)
+                .dragAndDropBy(row, 0, 20)
                 .build()
                 .perform();
 

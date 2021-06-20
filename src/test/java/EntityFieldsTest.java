@@ -17,15 +17,15 @@ import static utils.TestUtils.jsClick;
 
 public class EntityFieldsTest extends BaseTest {
 
-    private static final String TITLE_VALUE = RandomStringUtils.randomAlphabetic(200);
-    private static final String COMMENTS_VALUE = RandomStringUtils.randomAlphabetic(150);
+    private static final String TITLE_VALUE = RandomStringUtils.randomAlphabetic(20);
+    private static final String COMMENTS_VALUE = RandomStringUtils.randomAlphabetic(15);
     private static final String INT_VALUE = String.valueOf(RandomUtils.nextInt());
     private static final String DECIMAL_VALUE = String.format("%.2f", new Random().nextFloat());
     private static final String DATE_VALUE = new SimpleDateFormat("dd/MM/yyyy").format(new Date());
     private static final String DATE_TIME_VALUE = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(new Date());
     private static final String TESTER_NAME = "apptester1@tester.test";
-    private static final String EDIT_TITLE_VALUE = RandomStringUtils.randomAlphabetic(100);
-    private static final String EDIT_COMMENTS_VALUE = RandomStringUtils.randomAlphabetic(200);
+    private static final String EDIT_TITLE_VALUE = RandomStringUtils.randomAlphabetic(10);
+    private static final String EDIT_COMMENTS_VALUE = RandomStringUtils.randomAlphabetic(25);
     private static final String EDIT_INT_VALUE = String.valueOf(RandomUtils.nextInt());
     private static final String EDIT_DECIMAL_VALUE = String.format("%.2f", new Random().nextFloat());
     private static final String EDIT_DATE_VALUE = "01/01/0001";
@@ -50,7 +50,7 @@ public class EntityFieldsTest extends BaseTest {
             EDIT_DATE_TIME_VALUE, "",
             TESTER_NAME, "");
 
-    private static final List<String> VIEW_RESULT = List.of(
+    private static final List<String> ORDER_VIEW_RESULT = List.of(
             "", EDIT_TITLE_VALUE,
             EDIT_COMMENTS_VALUE,
             EDIT_INT_VALUE,
@@ -116,7 +116,7 @@ public class EntityFieldsTest extends BaseTest {
 
         fieldsPage.clickToggle()
                 .getNewReorder();
-        Assert.assertEquals(fieldsPage.getOrderToggleRow(0), VIEW_RESULT);
+        Assert.assertEquals(fieldsPage.getOrderToggleRow(0), ORDER_VIEW_RESULT);
     }
 
     @Test(dependsOnMethods = "testReorderRecord")
@@ -145,7 +145,6 @@ public class EntityFieldsTest extends BaseTest {
                 By.xpath("//*[@class='card-body']")).getText(),
                 "Good job with housekeeping! Recycle bin is currently empty!");
     }
-
 
     @Test
     public void deletePermanentlyDraftRecordFromRecycleBin() {
