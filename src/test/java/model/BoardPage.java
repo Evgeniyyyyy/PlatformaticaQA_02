@@ -15,6 +15,9 @@ public class BoardPage extends MainPage {
     @FindBy(xpath = "//i[text()='delete_outline']")
     private WebElement recycleBinIcon;
 
+    @FindBy(className = "card-body")
+    private WebElement table;
+
     public BoardPage(WebDriver driver) {
         super(driver);
     }
@@ -35,5 +38,10 @@ public class BoardPage extends MainPage {
         recycleBinIcon.click();
 
         return new RecycleBinPage(getDriver());
+    }
+
+    public String getTextCardBody(){
+
+        return table.getText();
     }
 }

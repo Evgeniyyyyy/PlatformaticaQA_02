@@ -1,9 +1,6 @@
 import base.BaseTest;
 
-import model.BoardListPage;
-import model.BoardViewPage;
-import model.MainPage;
-import model.RecycleBinPage;
+import model.*;
 
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.RandomUtils;
@@ -128,5 +125,24 @@ public class EntityBoardDraftRecordTest extends BaseTest {
                 .clickDeletedRecordPermanently();
 
         Assert.assertEquals(boardPage.getTextCardBody(), MESSAGE_EMPTY_RECYCLE_BIN);
+    }
+
+    @Test
+    public void testCancelRecord(){
+
+        BoardPage boardPage = new MainPage(getDriver())
+                .clickBoardMenu();
+
+        String textCardBodyBeforeCancel = boardPage.getTextCardBody();
+
+        boardPage.clickNewButton()
+                .fillString(STRING_INPUT_PENDING)
+                .fillText(TEXT_VALUE_PENDING)
+                .fillInt(INT_VALUE_PENDING)
+                .fillDecimal(DECIMAL_VALUE_PENDING)
+                .clickCancel();
+
+        String textCardBodyAfterCancel = boardPage.getTextCardBody();
+        Assert.assertEquals(textCardBodyAfterCancel, textCardBodyBeforeCancel);
     }
 }

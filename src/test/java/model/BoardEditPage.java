@@ -37,6 +37,9 @@ public class BoardEditPage extends BaseModel {
     @FindBy(id = "pa-entity-form-draft-btn")
     private WebElement saveDraftButton;
 
+    @FindBy(xpath = "//button[text()='Cancel']")
+    private WebElement cancelButton;
+
     public BoardEditPage(WebDriver driver) {
         super(driver);
     }
@@ -110,6 +113,12 @@ public class BoardEditPage extends BaseModel {
 
     public BoardPage clickSaveDraft(){
         TestUtils.jsClick(getDriver(), saveDraftButton);
+
+        return new BoardPage(getDriver());
+    }
+
+    public BoardPage clickCancel(){
+        TestUtils.jsClick(getDriver(), cancelButton);
 
         return new BoardPage(getDriver());
     }
