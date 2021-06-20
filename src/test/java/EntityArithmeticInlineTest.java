@@ -1,14 +1,14 @@
 import base.BaseTest;
+import model.*;
 import org.openqa.selenium.By;
-import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.testng.Assert;
-import org.testng.annotations.Ignore;
 import org.testng.annotations.Test;
-import static utils.ProjectUtils.*;
 import utils.TestUtils;
 import constants.EntityArithmeticInlineConstants;
 import utils.ProjectUtils;
+
+import java.util.ArrayList;
 import java.util.List;
 
 public class EntityArithmeticInlineTest extends BaseTest {
@@ -19,56 +19,40 @@ public class EntityArithmeticInlineTest extends BaseTest {
     public static final Integer SUB = F1 - F2;
     public static final Integer MUL = F1 * F2;
     public static final Integer DIV = F1 / F2;
-    public static final List<Integer> expectedList = List.of(F1, F2, SUM, SUB, MUL, DIV);
+    public static final List<String> EXPECTED_LIST = List.of(
+            F1.toString(),
+            F2.toString(),
+            SUM.toString(),
+            SUB.toString(),
+            MUL.toString(),
+            DIV.toString());
+    private static final String CLASS_ICON_SAVE = "fa fa-check-square-o";
+    private static final String CLASS_ICON_SAVE_DRAFT = "fa fa-pencil";
+    private static List<String> ACTUAL_LIST = new ArrayList<>();
 
-    private void fillForm(String inputField1, String inputField2) {
-        findElement(By.xpath("//input[@id='f1']")).sendKeys(inputField1);
-        findElement(By.xpath("//input[@id='f2']")).sendKeys(inputField2);
-        getWait().until(ExpectedConditions.attributeToBe(
-                By.xpath("//input[@id='div']"),
-                "value",
-                DIV.toString()));
-        clickSave(getDriver());
-    }
-
-    private void createRecord() {
-        findElement(EntityArithmeticInlineConstants.ADD_CARD).click();
-        fillForm(F1.toString(), F2.toString());
-    }
-
-    private void viewAction() {
-        WebElement button_action = findElement(EntityArithmeticInlineConstants.ACTION_BUTTON);
-        button_action.click();
-        WebElement view_action = findElement(EntityArithmeticInlineConstants.ACTION_VIEW);
-        view_action.click();
-    }
-
-    private void viewActionClose() {
-        WebElement button_close_window = findElement(EntityArithmeticInlineConstants.VIEW_WINDOW_CLOSE);
-        button_close_window.click();
-    }
-    @Ignore
     @Test
     public void testViewRecord() {
+        ArithmeticInlinePage arithmeticInlinePage = new MainPage(getDriver())
+                .clickArithmeticInlineMenu()
+                .clickNewButton()
+                .fillForm(F1, F2)
+                .clickSave();
 
-        start(getDriver());
+        Assert.assertEquals(ArithmeticInlinePage.getRowCount(), 1);
+        Assert.assertEquals(ArithmeticInlinePage.getRow(0), EXPECTED_LIST);
+        Assert.assertTrue(ArithmeticInlinePage.iconCheck(CLASS_ICON_SAVE));
 
-        TestUtils.scrollClick(getDriver(),
-                findElement(EntityArithmeticInlineConstants.LINK_ENTITY));
+        ArithmeticInlineViewPage arithmeticInlineViewPage = new MainPage(getDriver())
+                .clickArithmeticInlineMenu()
+                .clickActions()
+                .clickActionsView();
 
-        clickCreateRecord(getDriver());
-        fillForm(F1.toString(), F2.toString());
-        viewAction();
+        ACTUAL_LIST = arithmeticInlineViewPage.getRecordInViewMode();
 
-        getWait().until(ExpectedConditions.presenceOfElementLocated(EntityArithmeticInlineConstants.ACTION_VIEW_TITLE));
-        List<WebElement> actualList = findElements(EntityArithmeticInlineConstants.RESULT_LIST);
-
-        Assert.assertEquals(actualList.size(), expectedList.size());
-        for (int i = 0; i < expectedList.size(); i++) {
-            Assert.assertEquals(actualList.get(i).getText(), expectedList.get(i).toString());
+        Assert.assertEquals(ACTUAL_LIST.size(), EXPECTED_LIST.size());
+        for (int i = 0; i < EXPECTED_LIST.size(); i++) {
+            Assert.assertEquals(ACTUAL_LIST.get(i), EXPECTED_LIST.get(i).toString());
         }
-
-        viewActionClose();
     }
 
     @Test //test by PRoman-86

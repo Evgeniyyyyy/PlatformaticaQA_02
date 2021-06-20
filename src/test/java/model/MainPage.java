@@ -26,6 +26,9 @@ public class MainPage extends BaseModel {
     @FindBy(xpath = "//p[text()= ' Arithmetic Function ']")
     private WebElement arithmeticFunctionMenuItem;
 
+    @FindBy(xpath = "//p[text()= ' Arithmetic Inline ']")
+    private WebElement arithmeticInlineMenuItem;
+
     @FindBy(xpath = "//p[text()= ' Parent ']")
     private WebElement parentMenuItem;
 
@@ -71,6 +74,12 @@ public class MainPage extends BaseModel {
         TestUtils.jsClick(getDriver(), arithmeticFunctionMenuItem);
 
         return new ArithmeticFunctionPage(getDriver());
+    }
+
+    public ArithmeticInlinePage clickArithmeticInlineMenu() {
+        TestUtils.jsClick(getDriver(), arithmeticInlineMenuItem);
+
+        return new ArithmeticInlinePage(getDriver());
     }
 
     public ParentPage clickParentMenu() {
