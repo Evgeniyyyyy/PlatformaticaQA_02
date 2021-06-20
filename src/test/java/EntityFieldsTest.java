@@ -141,4 +141,21 @@ public class EntityFieldsTest extends BaseTest {
                 By.xpath("//*[@class='card-body']")).getText(),
                 "Good job with housekeeping! Recycle bin is currently empty!");
     }
+
+
+    @Test
+    public void deletePermanentlyDraftRecordFromRecycleBin() {
+        jsClick(getDriver(), getDriver().findElement(By.xpath("//p[text()=' Fields ']")));
+        clickCreateRecord(getDriver());
+        jsClick(getDriver(), getDriver().findElement(
+                By.xpath("//button [text()='Save draft']")));
+        jsClick(getDriver(), getDriver().findElement(By.xpath("//a[contains(@href,'delete')]")));
+        getDriver().findElement(By.partialLinkText("delete_outline")).click();
+        getDriver().findElement(By.partialLinkText("delete permanently")).click();
+
+
+        Assert.assertEquals(getDriver().findElement(
+                By.xpath("//*[@class='card-body']")).getText(),
+                "Good job with housekeeping! Recycle bin is currently empty!");
+    }
 }
