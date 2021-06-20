@@ -1,6 +1,7 @@
 import base.BaseTest;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -43,6 +44,9 @@ public class EntityImportValuesDraftRecordTest extends BaseTest {
 
     private final static List<String> EXPECTED_VALUES2 = Arrays.asList(STRING_INPUT2, TEXT_INPUT2,
             INT_INPUT2, DECIMAL_INPUT2, DATE_INPUT2, DATETIME_INPUT2, FILE_INPUT, USERNAME_INPUT);
+
+    private final static List<String> EXPECTED_RECORDS2 = Arrays.asList(STRING_INPUT2, TEXT_INPUT2,
+            INT_INPUT2, DECIMAL_INPUT2, DATE_INPUT2, DATETIME_INPUT2);
 
     private void fillForm() {
         findElement(STRING_FIELD).sendKeys(STRING_INPUT);
@@ -175,5 +179,21 @@ public class EntityImportValuesDraftRecordTest extends BaseTest {
         Assert.assertNull(findElement(By.className("card-body")).getAttribute("value"));
         Assert.assertTrue(recycleBinNotification.isDisplayed());
         Assert.assertEquals(recycleBinCountNumber.getText(), "1");
+    }
+
+    @Test(dependsOnMethods = "testDeleteDraftRecord")
+    public void testDeleteDraftRecordFromRecycleBin() {
+
+        clickRecycleBin(getDriver());
+        findElement(By.xpath("//td[@class='pa-recycle-col']/a")).click();
+
+        Assert.assertEquals(getActualValues(findElements(By.cssSelector("span.pa-view-field"))), EXPECTED_RECORDS2);
+
+        findElement(By.xpath("//button[contains(.,'clear')]")).click();
+        getWait().until(ExpectedConditions.elementToBeClickable(
+                By.xpath("//td/a[contains(text(), 'delete permanently')]"))).click();
+
+        Assert.assertEquals(findElement(By.className("card-body")).getText(),
+                "Good job with housekeeping! Recycle bin is currently empty!");
     }
 }
