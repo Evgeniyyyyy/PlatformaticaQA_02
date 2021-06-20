@@ -4,7 +4,9 @@ import com.beust.jcommander.Strings;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.FindBy;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 import utils.TestUtils;
 
 import java.util.List;
@@ -19,6 +21,9 @@ public class ParentPage extends MainPage{
 
     @FindBy(xpath = "//tbody/tr")
     private static List<WebElement> rows;
+
+    @FindBy(xpath = "//tbody/tr")
+    private WebElement row;
 
     @FindBy(xpath = "//tbody/tr/td/i")
     private static WebElement icon;
@@ -36,7 +41,7 @@ public class ParentPage extends MainPage{
     private WebElement actionsDeleteButton;
 
     @FindBy(xpath = "//a/span[@class='notification']")
-    private WebElement notificationRecycleBinIcon;
+    private static WebElement notificationRecycleBinIcon;
 
     @FindBy(xpath = "//a[contains(@href, 'id=57')]/i[text()='list']")
     private WebElement listButton;
@@ -46,6 +51,21 @@ public class ParentPage extends MainPage{
 
     @FindBy(xpath = "//i[text()='delete_outline']")
     private WebElement recycleBinIcon;
+
+    @FindBy(xpath = "//i[text()='format_line_spacing']")
+    private WebElement order;
+
+    @FindBy(xpath = "//i[contains(@class,'fa fa-toggle')]")
+    private WebElement toggle;
+
+    @FindBy(id = "customId_0")
+    private WebElement card;
+
+    @FindBy(xpath = "//input[@placeholder = 'Search']")
+    private WebElement input;
+
+    @FindBy(className = "pagination-info")
+    private static WebElement paginationInfo;
 
     public ParentPage(WebDriver driver) {
         super(driver);
@@ -76,12 +96,6 @@ public class ParentPage extends MainPage{
 
     public static String getClassIcon() {
         return icon.getAttribute("class");
-    }
-
-    public ParentPage clickListButton() {
-        listButton.click();
-
-        return new ParentPage(getDriver());
     }
 
     public RecycleBinPage clickRecycleBin(){
@@ -117,8 +131,65 @@ public class ParentPage extends MainPage{
         return new ParentPage(getDriver());
     }
 
-    public String getTextNotificationRecycleBin(){
+    public static int getTextNotificationRecycleBin(){
 
-        return notificationRecycleBinIcon.getText();
+        return Integer.parseInt(notificationRecycleBinIcon.getText());
+    }
+
+    public ParentPage clickListButton() {
+        listButton.click();
+
+        return new ParentPage(getDriver());
+    }
+
+    public ParentPage clickOrder() {
+        order.click();
+
+        return new ParentPage(getDriver());
+    }
+
+    Actions actions = new Actions(getDriver());
+
+    public ParentPage getReorder() {
+        actions.moveToElement(row)
+               .clickAndHold(row)
+               .dragAndDropBy(row, 0, 20)
+               .build()
+               .perform();
+
+        return new ParentPage(getDriver());
+    }
+
+    public ParentPage clickToggle() {
+        toggle.click();
+
+        return this;
+    }
+
+    public ParentPage getNewReorder() {
+        actions.moveToElement(card)
+               .clickAndHold(card)
+               .dragAndDropBy(card, 0, 140)
+               .build()
+               .perform();
+
+        return this;
+    }
+
+    public static List<String> getRows(int number) {
+        return rows.get(number).findElements(By.className("card-view-value"))
+                .stream().map(WebElement::getText).collect(Collectors.toList());
+    }
+
+    public ParentPage searchInput(String value) {
+        input.clear();
+        input.sendKeys(value);
+
+        return this;
+    }
+
+    public ParentPage getTextPaginationInfo(String value) {
+        getWait().until(ExpectedConditions.textToBePresentInElement(paginationInfo, value));
+        return this;
     }
 }

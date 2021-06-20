@@ -25,6 +25,9 @@ public class ParentEditPage extends BaseModel {
     @FindBy(id = "date")
     private WebElement fieldDate;
 
+    @FindBy(id = "datetime")
+    private WebElement fieldDateTime;
+
     @FindBy(css = "div.filter-option-inner-inner")
     private WebElement fieldUser;
 
@@ -44,60 +47,47 @@ public class ParentEditPage extends BaseModel {
         super(driver);
     }
 
-    public WebElement getFieldString() {
-        return fieldString;
-    }
-
-    public WebElement getFieldText() {
-        return fieldText;
-    }
-
-    public WebElement getFieldInt() {
-        return fieldInt;
-    }
-
-    public WebElement getFieldDecimal() {
-        return fieldDecimal;
-    }
-
-    public WebElement getFieldDate() {
-        return fieldDate;
-    }
-
-    public WebElement getFieldUser() {
-        return fieldUser;
-    }
-
-    public WebElement getChooseUser() {
-        return chooseUser;
-    }
-
     public ParentEditPage fillString(String value) {
+        fieldString.clear();
         fieldString.sendKeys(value);
 
         return this;
     }
 
     public ParentEditPage fillText(String value) {
+        fieldText.clear();
         fieldText.sendKeys(value);
 
         return this;
     }
 
     public ParentEditPage fillInt(String value) {
+        fieldInt.clear();
         fieldInt.sendKeys(value);
 
         return this;
     }
 
     public ParentEditPage fillDecimal(String value) {
+        fieldDecimal.clear();
         fieldDecimal.sendKeys(value);
 
         return this;
     }
 
-    public ParentEditPage fillDate(SimpleDateFormat value) {
+    public ParentEditPage fillDate(String value) {
+
         fieldDate.click();
+        fieldDate.clear();
+        fieldDate.sendKeys(value);
+
+        return this;
+    }
+
+    public ParentEditPage fillDateTime(String value) {
+        fieldDateTime.click();
+        fieldDateTime.clear();
+        fieldDateTime.sendKeys(value);
 
         return this;
     }

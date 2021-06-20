@@ -17,6 +17,9 @@ public class RecycleBinPage extends MainPage{
     @FindBy(className = "card-body")
     private WebElement table;
 
+    @FindBy(xpath = "//a[contains(text(), 'restore as draft')]")
+    private WebElement restoreAsDraft;
+
     public RecycleBinPage(WebDriver driver) {
         super(driver);
     }
@@ -24,6 +27,13 @@ public class RecycleBinPage extends MainPage{
     public RecycleBinPage clickDeletedRecordPermanently(){
         getWait().until(ExpectedConditions.elementToBeClickable(deletedRecordPermanently));
         deletedRecordPermanently.click();
+
+        return new RecycleBinPage(getDriver());
+    }
+
+    public RecycleBinPage clickDeletedRestoreAsDraft(){
+        getWait().until(ExpectedConditions.elementToBeClickable(restoreAsDraft));
+        restoreAsDraft.click();
 
         return new RecycleBinPage(getDriver());
     }
@@ -45,6 +55,20 @@ public class RecycleBinPage extends MainPage{
         deletedRecord.click();
 
         return new ParentViewPage(getDriver());
+    }
+
+    public ParentPage clickDeletedRecordPermanentlyForParent(){
+        getWait().until(ExpectedConditions.elementToBeClickable(deletedRecordPermanently));
+        deletedRecordPermanently.click();
+
+        return new ParentPage(getDriver());
+    }
+
+    public ParentPage clickRestoreAsDraftForParent(){
+        getWait().until(ExpectedConditions.elementToBeClickable(restoreAsDraft));
+        restoreAsDraft.click();
+
+        return new ParentPage(getDriver());
     }
 
 }
