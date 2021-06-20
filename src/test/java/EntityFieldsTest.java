@@ -4,9 +4,7 @@ import model.MainPage;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.RandomUtils;
 import org.openqa.selenium.By;
-import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.testng.Assert;
-import org.testng.annotations.Ignore;
 import org.testng.annotations.Test;
 
 import java.text.SimpleDateFormat;
@@ -18,7 +16,6 @@ import static utils.ProjectUtils.*;
 import static utils.TestUtils.jsClick;
 
 public class EntityFieldsTest extends BaseTest {
-
 
     private static final String TITLE_VALUE = RandomStringUtils.randomAlphabetic(200);
     private static final String COMMENTS_VALUE = RandomStringUtils.randomAlphabetic(150);
@@ -33,20 +30,34 @@ public class EntityFieldsTest extends BaseTest {
     private static final String EDIT_DECIMAL_VALUE = String.format("%.2f", new Random().nextFloat());
     private static final String EDIT_DATE_VALUE = "01/01/0001";
     private static final String EDIT_DATE_TIME_VALUE = "31/12/9999 23:59:59";
+    private static final String INFO_TEXT = "Showing 1 to 1 of 1 rows";
 
-    private static final List<String> NEW_EXPECTED_RESULT = List.of(
-            TITLE_VALUE, COMMENTS_VALUE, INT_VALUE,
-            DECIMAL_VALUE, DATE_VALUE, DATE_TIME_VALUE, "", TESTER_NAME, "");
+    private static final List<String> EXPECTED_RESULT = List.of(
+            TITLE_VALUE,
+            COMMENTS_VALUE,
+            INT_VALUE,
+            DECIMAL_VALUE,
+            DATE_VALUE,
+            DATE_TIME_VALUE, "",
+            TESTER_NAME, "");
 
     private static final List<String> EDIT_RESULT = List.of(
-            EDIT_TITLE_VALUE, EDIT_COMMENTS_VALUE, EDIT_INT_VALUE,
-            EDIT_DECIMAL_VALUE, EDIT_DATE_VALUE, EDIT_DATE_TIME_VALUE, "", TESTER_NAME, "");
+            EDIT_TITLE_VALUE,
+            EDIT_COMMENTS_VALUE,
+            EDIT_INT_VALUE,
+            EDIT_DECIMAL_VALUE,
+            EDIT_DATE_VALUE,
+            EDIT_DATE_TIME_VALUE, "",
+            TESTER_NAME, "");
 
     private static final List<String> VIEW_RESULT = List.of(
-            "", EDIT_TITLE_VALUE, EDIT_COMMENTS_VALUE, EDIT_INT_VALUE,
-            EDIT_DECIMAL_VALUE, EDIT_DATE_VALUE, EDIT_DATE_TIME_VALUE, TESTER_NAME);
-
-    private static final By ACTUAL_RESULT = By.xpath("//tbody/tr/td/a");
+            "", EDIT_TITLE_VALUE,
+            EDIT_COMMENTS_VALUE,
+            EDIT_INT_VALUE,
+            EDIT_DECIMAL_VALUE,
+            EDIT_DATE_VALUE,
+            EDIT_DATE_TIME_VALUE,
+            TESTER_NAME);
 
     @Test
     public void testCreateRecord() {
@@ -63,7 +74,7 @@ public class EntityFieldsTest extends BaseTest {
                 .clickSave();
 
         Assert.assertEquals(fieldsPage.getRowCount(), 1);
-        Assert.assertEquals(fieldsPage.getRow(0), NEW_EXPECTED_RESULT);
+        Assert.assertEquals(fieldsPage.getRow(0), EXPECTED_RESULT);
     }
 
     @Test(dependsOnMethods = "testCreateRecord")
@@ -95,37 +106,30 @@ public class EntityFieldsTest extends BaseTest {
                 .fillComments(COMMENTS_VALUE)
                 .fillInt(INT_VALUE)
                 .fillDecimal(DECIMAL_VALUE)
-                .clickSave();
+                .clickSave()
+                .clickOrder();
 
-        fieldsPage.clickOrder();
         Assert.assertEquals(fieldsPage.getRow(0), EDIT_RESULT);
 
         fieldsPage.getReorder();
-        Assert.assertEquals(fieldsPage.getRow(0), NEW_EXPECTED_RESULT);
+        Assert.assertEquals(fieldsPage.getRow(0), EXPECTED_RESULT);
 
-        fieldsPage.clickToggle();
-        fieldsPage.getNewReorder();
-        Assert.assertEquals(fieldsPage.getRows(0), VIEW_RESULT);
-
+        fieldsPage.clickToggle()
+                .getNewReorder();
+        Assert.assertEquals(fieldsPage.getOrderToggleRow(0), VIEW_RESULT);
     }
 
-    @Ignore
     @Test(dependsOnMethods = "testReorderRecord")
     public void testSearchCreatedRecord() {
 
         FieldsPage fieldsPage = new MainPage(getDriver())
                 .clickFieldsMenu()
-                .searchInput(TITLE_VALUE);
-//        getEntity(getDriver(), "Fields");
-//        findElement(By.xpath("//input[@placeholder = 'Search']")).sendKeys(EXPECTED_RESULT.get(0));
+                .searchInput(TITLE_VALUE)
+                .findInfoText(INFO_TEXT);
 
-        getWait().until(ExpectedConditions.textToBePresentInElementLocated(
-                By.xpath("//span[@class='pagination-info']"), "Showing 1 to 1 of 1 rows"));
-
-        Assert.assertEquals(getActualValues(findElements(ACTUAL_RESULT)), NEW_EXPECTED_RESULT);
+        Assert.assertEquals(fieldsPage.getRow(0), EXPECTED_RESULT);
     }
 
-    @Ignore
     @Test
     public void deletePermanentlyRecordFromRecycleBin() {
         jsClick(getDriver(), getDriver().findElement(By.xpath("//p[text()=' Fields ']")));

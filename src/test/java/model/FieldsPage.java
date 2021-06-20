@@ -7,6 +7,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Action;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.FindBy;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 import utils.TestUtils;
 
 import java.util.List;
@@ -44,9 +45,14 @@ public class FieldsPage extends MainPage {
     @FindBy(xpath = "//input[@placeholder = 'Search']")
     private WebElement input;
 
+    @FindBy(xpath = "//span[@class='pagination-info']")
+    private WebElement text;
+
     public FieldsPage(WebDriver driver) {
         super(driver);
     }
+
+    protected Actions actions = new Actions(getDriver());
 
     public FieldsEditPage clickNewButton() {
         newButton.click();
@@ -84,12 +90,12 @@ public class FieldsPage extends MainPage {
         return new FieldsPage(getDriver());
     }
 
-    Actions actions = new Actions(getDriver());
-
     public FieldsPage getReorder() {
-        actions.moveToElement(row).clickAndHold(row).dragAndDropBy(row, 0, 100);
-        Action swapRow = actions.build();
-        swapRow.perform();
+        actions.moveToElement(row)
+                .clickAndHold(row)
+                .dragAndDropBy(row, 0, 100)
+                .build()
+                .perform();
 
         return new FieldsPage(getDriver());
     }
@@ -101,20 +107,28 @@ public class FieldsPage extends MainPage {
     }
 
     public FieldsPage getNewReorder() {
-        actions.moveToElement(card).clickAndHold(card).dragAndDropBy(card, 0, 140);
-        Action swapCard = actions.build();
-        swapCard.perform();
+        actions.moveToElement(card)
+                .clickAndHold(card)
+                .dragAndDropBy(card, 0, 140)
+                .build()
+                .perform();
 
         return this;
     }
 
-    public List<String> getRows(int number) {
+    public List<String> getOrderToggleRow(int number) {
         return rows.get(number).findElements(By.className("card-view-value"))
                 .stream().map(WebElement::getText).collect(Collectors.toList());
     }
 
     public FieldsPage searchInput(String value) {
         input.sendKeys(value);
+
+        return this;
+    }
+
+    public FieldsPage findInfoText(String value) {
+        getWait().until(ExpectedConditions.textToBePresentInElement(text, value));
 
         return this;
     }
