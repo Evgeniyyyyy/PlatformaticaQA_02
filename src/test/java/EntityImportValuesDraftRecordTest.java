@@ -162,4 +162,18 @@ public class EntityImportValuesDraftRecordTest extends BaseTest {
         Assert.assertEquals(pencilIcon.getAttribute("class"), "fa fa-pencil");
         Assert.assertEquals(actualValues, EXPECTED_VALUES2);
     }
+
+    @Test(dependsOnMethods = "testEditDraftRecord")
+    public void testDeleteDraftRecord() {
+
+        getEntity(getDriver(), IMPORT_VALUES);
+        clickActionsDelete(getWait(), getDriver());
+
+        WebElement recycleBinNotification = findElement(By.xpath("//div/ul/li/a/span[@class='notification']"));
+        WebElement recycleBinCountNumber = findElement(By.xpath("//div/ul/li/a/span/b[contains(text(), '1')]"));
+
+        Assert.assertNull(findElement(By.className("card-body")).getAttribute("value"));
+        Assert.assertTrue(recycleBinNotification.isDisplayed());
+        Assert.assertEquals(recycleBinCountNumber.getText(), "1");
+    }
 }
