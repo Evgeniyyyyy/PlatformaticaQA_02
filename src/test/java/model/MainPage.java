@@ -75,7 +75,6 @@ public class MainPage extends BaseModel {
         return new BoardPage(getDriver());
     }
 
-
     public ArithmeticFunctionPage clickArithmeticFunctionMenu() {
         TestUtils.jsClick(getDriver(), arithmeticFunctionMenuItem);
 

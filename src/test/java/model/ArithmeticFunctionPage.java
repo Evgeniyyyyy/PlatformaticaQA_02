@@ -18,11 +18,38 @@ public class ArithmeticFunctionPage extends MainPage {
     @FindBy(className = "card-body")
     private WebElement table;
 
+    @FindBy(className = "col-md-12")
+    private WebElement viewTable;
+
     @FindBy(xpath = "//tbody/tr")
     private List<WebElement> rows;
 
     @FindBy(xpath = "//tbody/tr/td[1]/i")
     private WebElement icon;
+
+    @FindBy(css = "tr:nth-child(1) .material-icons")
+    private  WebElement actionMenu;
+
+    @FindBy(xpath = "//tr[@data-index='0']//a[contains(text(),'view')]")
+    private  WebElement actionMenuView;
+
+    @FindBy(xpath = "//tr[@data-index='0']//a[contains(text(),'edit')]")
+    private  WebElement actionMenuEdit;
+
+    @FindBy(xpath = "//tr[@data-index='0']//a[contains(text(),'delete')]")
+    private  WebElement actionMenuDelete;
+
+    @FindBy(xpath = "//i[@class='fa fa-pencil']")
+    private WebElement iconDraft;
+
+    @FindBy(xpath = "//i[text()='delete_outline']")
+    private WebElement recycleBinIcon;
+
+    @FindBy(xpath = "//a[contains (text(), 'delete permanently')]")
+    private WebElement deletePermanently;
+
+    @FindBy(xpath = "//span[@class='notification']/b")
+    private WebElement noticeRecycleBin;
 
     public ArithmeticFunctionPage(WebDriver driver) { super(driver); }
 
@@ -30,6 +57,12 @@ public class ArithmeticFunctionPage extends MainPage {
         newButton.click();
 
         return new ArithmeticFunctionEditPage(getDriver());
+    }
+    public ArithmeticFunctionPage clickViewButton() {
+        actionMenu.click();
+        getWait().until(TestUtils.movingIsFinished(actionMenuView)).click();
+
+        return new ArithmeticFunctionPage(getDriver());
     }
 
     public ArithmeticFunctionEditPage clickEditButton(int row) {
@@ -40,6 +73,32 @@ public class ArithmeticFunctionPage extends MainPage {
         return new ArithmeticFunctionEditPage(getDriver());
     }
 
+    public ArithmeticFunctionEditPage clickEditButton() {
+        actionMenu.click();
+        getWait().until(TestUtils.movingIsFinished(actionMenuEdit)).click();
+
+        return new ArithmeticFunctionEditPage(getDriver());
+    }
+
+    public ArithmeticFunctionPage clickDeleteButton() {
+        actionMenu.click();
+        getWait().until(TestUtils.movingIsFinished(actionMenuDelete)).click();
+
+        return new ArithmeticFunctionPage(getDriver());
+    }
+
+    public ArithmeticFunctionPage clickRecycleBinIcon(){
+        recycleBinIcon.click();
+
+        return new ArithmeticFunctionPage(getDriver());
+    }
+
+    public ArithmeticFunctionPage clickDeletePermanently(){
+        deletePermanently.click();
+
+        return new ArithmeticFunctionPage(getDriver());
+    }
+
     public boolean isTableEmpty() {
         return Strings.isStringEmpty(table.getText());
     }
@@ -47,6 +106,19 @@ public class ArithmeticFunctionPage extends MainPage {
     public List<String> getRow(int number) {
         return rows.get(number).findElements(By.className("pa-list-table-th"))
                 .stream().map(WebElement::getText).collect(Collectors.toList());
+    }
+
+    public List<String> viewData(){
+        return viewTable.findElements(By.xpath("//span[@class='pa-view-field']"))
+                .stream().map(WebElement::getText).collect(Collectors.toList());
+    }
+
+    public String getTextEmptyBin(){
+        return table.getText();
+    }
+
+    public String getClassIcon() {
+        return iconDraft.getAttribute("class");
     }
 
     public int getRowCount() {
@@ -63,5 +135,9 @@ public class ArithmeticFunctionPage extends MainPage {
 
     public List<String> wrapValues(List<Integer> expectedValues) {
         return expectedValues.stream().map(String::valueOf).collect(Collectors.toList());
+    }
+
+    public String getNoticeRecycleBin(){
+        return noticeRecycleBin.getText();
     }
 }

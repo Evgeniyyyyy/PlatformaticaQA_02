@@ -1,70 +1,105 @@
 import base.BaseTest;
+import model.ArithmeticFunctionPage;
+import model.MainPage;
 import org.openqa.selenium.By;
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.testng.Assert;
-import org.testng.annotations.Ignore;
 import org.testng.annotations.Test;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static java.lang.String.valueOf;
-import static utils.ProjectUtils.*;
-
+import static model.ArithmeticFunctionEditPage.convertIntToString;
 
 public class EntityArithmeticFunctionWorkTest extends BaseTest {
+    private static final Integer F1 = 10;
+    private static final Integer F2 = 2;
+    private static final Integer SUM = F1 + F2;
+    private static final Integer SUB = F1 - F2;
+    private static final Integer MUL = F1 * F2;
+    private static final Integer DIV = F1 / F2;
 
-    private static final By F1_FIELD = By.xpath("//input[@id='f1']");
-    private static final By F2_FIELD = By.xpath("//input[@id='f2']");
-    private static final By DIV_FIELD = By.id("div");
+    List<Integer> CREATE_DATA = Arrays.asList(F1, F2, SUM, SUB, MUL, DIV);
+    String textEmptyBin = "Good job with housekeeping! Recycle bin is currently empty!";
+    String iconDraft = "fa fa-pencil";
+    String iconSave = "fa fa-check-square-o";
 
-    List<Integer> CREATE_DATA = Arrays.asList(10, 2, 12, 8, 20, 5);
+    @Test
+    public void testCreateNewRecord (){
 
-    private static List<String> convertIntToString (List<Integer> actualElements) {
-        List<String> listValues = new ArrayList<>();
-        for (Integer element : actualElements) {
-            listValues.add(element.toString());
-        }
-        return listValues;
+        ArithmeticFunctionPage arithmeticFunctionPage = new MainPage(getDriver())
+                .clickArithmeticFunctionMenu()
+                .clickNewButton()
+                .fillForm(F1, F2)
+                .clickSave();
+
+        Assert.assertEquals(arithmeticFunctionPage.getRowCount(),1);
+        Assert.assertTrue(arithmeticFunctionPage.iconCheck(iconSave));
+        Assert.assertEquals(arithmeticFunctionPage.getRow(0), convertIntToString(CREATE_DATA));
+    }
+
+    @Test(dependsOnMethods = "testSaveDraftNewRecord")
+    public void testVerifyFunctionalWork () {
+        ArithmeticFunctionPage arithmeticFunctionPage = new MainPage(getDriver())
+                .clickArithmeticFunctionMenu();
+
+        Assert.assertEquals(arithmeticFunctionPage.getRow(0).get(2), SUM.toString());
+        Assert.assertEquals(arithmeticFunctionPage.getRow(0).get(3), SUB.toString());
+        Assert.assertEquals(arithmeticFunctionPage.getRow(0).get(4), MUL.toString());
+        Assert.assertEquals(arithmeticFunctionPage.getRow(0).get(5), DIV.toString());
     }
 
     @Test
-     public void testCreateNewEntity () {
-        getEntity(getDriver(),"Arithmetic Function");
-        clickCreateRecord(getDriver());
-        getDriver().findElement(F1_FIELD).sendKeys(CREATE_DATA.get(0).toString());
-        getDriver().findElement(F2_FIELD).sendKeys(CREATE_DATA.get(1).toString());
-        getWait().until(ExpectedConditions.attributeToBeNotEmpty(getDriver().findElement(DIV_FIELD), "value"));
-        clickSave(getDriver());
+    public void testSaveDraftNewRecord (){
+        ArithmeticFunctionPage arithmeticFunctionPage = new MainPage(getDriver())
+                .clickArithmeticFunctionMenu()
+                .clickNewButton()
+                .fillForm(F1, F2)
+                .clickSaveDraft();
 
-        List<WebElement> viewFields =getDriver().findElements(By.xpath("//tr[@data-index='0']/td[@class='pa-list-table-th']"));
-        Assert.assertEquals(getActualValues(viewFields), convertIntToString(CREATE_DATA));
+        Assert.assertEquals(arithmeticFunctionPage.getRowCount(),1);
+        Assert.assertEquals(arithmeticFunctionPage.getRow(0), convertIntToString(CREATE_DATA));
+        Assert.assertTrue(arithmeticFunctionPage.iconCheck(iconDraft));
     }
 
-    @Test(dependsOnMethods = "testCreateNewEntity")
-    public void testVerifyFunctionalWork () {
-        getEntity(getDriver(),"Arithmetic Function");
+    @Test
+    public void testCancelNewRecord (){
+        ArithmeticFunctionPage arithmeticFunctionPage = new MainPage(getDriver())
+                .clickArithmeticFunctionMenu()
+                .clickNewButton()
+                .fillForm(F1, F2)
+                .clickCancel();
 
-        String sum = valueOf(CREATE_DATA.get(0) + CREATE_DATA.get(1));
-        String sub = valueOf(CREATE_DATA.get(0) - CREATE_DATA.get(1));
-        String mul = valueOf(CREATE_DATA.get(0) * CREATE_DATA.get(1));
-        String div = valueOf(CREATE_DATA.get(0) / CREATE_DATA.get(1));
-
-        Assert.assertEquals(getDriver().findElement(By.xpath("//td[4]/a[1]")).getText(), sum);
-        Assert.assertEquals(getDriver().findElement(By.xpath("//td[5]/a[1]")).getText(), sub);
-        Assert.assertEquals(getDriver().findElement(By.xpath("//td[6]/a[1]")).getText(), mul);
-        Assert.assertEquals(getDriver().findElement(By.xpath("//td[7]/a[1]")).getText(), div);
+        Assert.assertEquals(arithmeticFunctionPage.getRowCount(),0);
     }
 
-    @Test(dependsOnMethods = "testCreateNewEntity")
-    public void testViewArithmeticFunction(){
-        getEntity(getDriver(),"Arithmetic Function");
-        getDriver().findElement(By.xpath("//a[@class='nav-link active']/i[contains(text(), 'list')]")).click();
-        clickActionsView(getWait(),getDriver(),0);
-        List<WebElement> viewFields =getDriver().findElements(By.xpath("//span[@class='pa-view-field']"));
+    @Test(dependsOnMethods = "testCreateNewRecord")
+    public void testDeleteRecord() {
+        ArithmeticFunctionPage arithmeticFunctionPage = new MainPage(getDriver())
+                .clickArithmeticFunctionMenu()
+                .clickDeleteButton();
 
-        Assert.assertEquals(getActualValues(viewFields), convertIntToString(CREATE_DATA));
+
+        Assert.assertEquals(arithmeticFunctionPage.getRowCount(), 0);
+        Assert.assertEquals(arithmeticFunctionPage.getNoticeRecycleBin(), "1");
+    }
+
+    @Test(dependsOnMethods = "testSaveDraftNewRecord")
+    public void testViewRecord() {
+        ArithmeticFunctionPage arithmeticFunctionPage = new MainPage(getDriver())
+                .clickArithmeticFunctionMenu()
+                .clickViewButton();
+
+        Assert.assertEquals(arithmeticFunctionPage.viewData(), convertIntToString(CREATE_DATA));
+    }
+
+    @Test(dependsOnMethods = "testDeleteRecord")
+    public void testDeleteRecycleBinRecord() {
+        ArithmeticFunctionPage arithmeticFunctionPage = new MainPage(getDriver())
+                .clickArithmeticFunctionMenu()
+                .clickRecycleBinIcon()
+                .clickDeletePermanently();
+
+
+        Assert.assertEquals(arithmeticFunctionPage.getTextEmptyBin(), textEmptyBin);
     }
 }
