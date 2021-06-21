@@ -38,6 +38,9 @@ public class MainPage extends BaseModel {
     @FindBy(xpath = "//i[text()='delete_outline']")
     private WebElement recycleBinIcon;
 
+    @FindBy(xpath = "//p[text()= ' Chevron ']")
+    private WebElement chevronMenuItem;
+
     public MainPage(WebDriver driver) {
         super(driver);
     }
@@ -101,5 +104,11 @@ public class MainPage extends BaseModel {
         recycleBinIcon.click();
 
         return new RecycleBinPage(getDriver());
+    }
+
+    public ChevronPage clickChevronMenu() {
+        TestUtils.jsClick(getDriver(), chevronMenuItem);
+
+        return new ChevronPage(getDriver());
     }
 }
