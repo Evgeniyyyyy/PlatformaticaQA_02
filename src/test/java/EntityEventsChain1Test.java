@@ -17,6 +17,7 @@ public class EntityEventsChain1Test extends BaseTest {
     private static final By F1 = By.id("f1");
     private static final By F10 = By.id("f10");
     private static final By SAVE_BUTTON = By.id("pa-entity-form-save-btn");
+    private static final By SAVE_DRAFT_BUTTON = By.id("pa-entity-form-draft-btn");
     private static final By DROP_DOWN_MENU = By.xpath("//i[contains(., 'menu')]");
     private static final By EDIT_MENU = By.xpath("//a[contains(., 'edit')]");
     private static final By DELETE_MENU = By.xpath("//a[contains (text(), 'delete')]");
@@ -224,5 +225,30 @@ public class EntityEventsChain1Test extends BaseTest {
         Assert.assertTrue(textCardBodyAfterDelete.isBlank());
         Assert.assertNotEquals(textRecycleBinBeforeDelete, textRecycleBinAfterDelete);
         Assert.assertEquals(textRecycleBinAfterDelete, EXPECTED_TEXT_RECYCLE_BIN_AFTER_DELETE);
+    }
+
+    @Test
+    public void createChain1DraftRecord(){
+        clickEventsChain1Menu();
+        clickCreateNewFolderButton();
+        inputF1Value("1");
+        clickSaveDraftButton();
+
+        List<String> cells = getRowValues();
+        Assert.assertEquals(cells.size(), 10);
+        for (int i = 0; i < 9; i++) {
+            int cellI = Integer.valueOf(cells.get(i));
+            int cellINext = Integer.valueOf(cells.get(i + 1));
+            Assert.assertEquals(
+                    cellI * 2,
+                    cellINext,
+                    "Expected cell[" + i + "] * 2 == cell[" + (i + 1) + "]"
+            );
+        }
+    }
+
+    private void clickSaveDraftButton() {
+        findElement(SAVE_DRAFT_BUTTON).click();
+        getWait().until(ExpectedConditions.elementToBeClickable(findElement(CREATE_NEW_FOLDER)));
     }
 }
