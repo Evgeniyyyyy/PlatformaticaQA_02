@@ -13,7 +13,7 @@ public class BoardPage extends MainPage {
     private WebElement listButton;
 
     @FindBy(className = "card-body")
-    private WebElement table;
+    private static WebElement table;
 
     public BoardPage(WebDriver driver) {
         super(driver);
@@ -31,7 +31,7 @@ public class BoardPage extends MainPage {
         return new BoardListPage(getDriver());
     }
 
-    public String getTextCardBody(){
+    public static String getTextCardBody(){
 
         return table.getText();
     }

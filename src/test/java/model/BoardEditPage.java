@@ -1,5 +1,6 @@
 package model;
 
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -39,6 +40,9 @@ public class BoardEditPage extends BaseModel {
 
     @FindBy(xpath = "//button[text()='Cancel']")
     private WebElement cancelButton;
+
+    @FindBy(xpath = "//button[@data-id='user']")
+    private WebElement userName;
 
     public BoardEditPage(WebDriver driver) {
         super(driver);
@@ -101,6 +105,14 @@ public class BoardEditPage extends BaseModel {
     }
     public BoardEditPage clearDecimal() {
         fieldDecimal.clear();
+
+        return this;
+    }
+
+    public BoardEditPage findUser(String value) {
+        TestUtils.scrollClick(getDriver(), userName);
+        TestUtils.jsClick(getDriver(), getDriver().findElement(By.xpath(
+                "//span[text()='" + value + "']")));
 
         return this;
     }

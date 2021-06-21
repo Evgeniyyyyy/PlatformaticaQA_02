@@ -19,14 +19,25 @@ public class BoardViewPage extends MainPage {
     @FindBy(xpath = "//div[@class = 'form-group']/p")
     private WebElement user;
 
-    public List<String> getRecordInViewMode(){
+    @FindBy(xpath = "//i[@class = 'material-icons'][text()='clear']")
+    private WebElement closeViewWindow;
+
+    public List<String> getActualRecordInViewMode(){
         List<String> listValues = new ArrayList<>();
         for (WebElement element : viewModeRecord) {
             listValues.add(element.getText());
         }
-        listValues.add("");
-        listValues.add(user.getText());
-
         return listValues;
+    }
+
+    public String getActualUserName(){
+        return user.getText();
+    }
+
+    public RecycleBinPage closeViewWindow(){
+        closeViewWindow.click();
+
+        return new RecycleBinPage(getDriver());
+
     }
 }
