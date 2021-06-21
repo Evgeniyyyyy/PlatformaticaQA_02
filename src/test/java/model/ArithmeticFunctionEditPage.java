@@ -85,6 +85,7 @@ public class ArithmeticFunctionEditPage extends BaseModel{
     public ArithmeticFunctionEditPage fillForm(Integer value1, Integer value2) {
         sendKeysOneByOne(F1_FIELD, value1.toString());
         sendKeysOneByOne(F2_FIELD, value2.toString());
+        getWait().until(ExpectedConditions.attributeToBe(F2_FIELD, "value", String.valueOf(value2)));
         getWait().until(ExpectedConditions.attributeToBe(DIV, "value", String.valueOf(value1/value2)));
 
         return this;
