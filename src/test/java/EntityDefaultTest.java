@@ -11,10 +11,6 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 import model.*;
 
-import static utils.ProjectUtils.*;
-import static utils.ProjectUtils.clickSave;
-
-
 public class EntityDefaultTest extends BaseTest {
 
     private static final String STRING_INPUT_VALUE = RandomStringUtils.randomAlphabetic(20);
@@ -30,7 +26,7 @@ public class EntityDefaultTest extends BaseTest {
     private static final String DATE_DEFAULT_VALUE = "01/01/1970";
     private static final String DATE_TIME_DEFAULT_VALUE = "01/01/1970 00:00:00";
     private static final String USER_DEFAULT_NAME = "apptester1@tester.test";
-    private static final String USER_NAME = "apptester10@tester.test";
+    private static final String TESTER_NAME = "tester" + new Random().nextInt(299) + "@tester.test";
     private static final String EMPTY_FIELD = "";
     private static final String EDIT_STRING_VALUE = RandomStringUtils.randomAlphabetic(20);
     private static final String EDIT_TEXT_VALUE = RandomStringUtils.randomAlphabetic(15);
@@ -66,6 +62,33 @@ public class EntityDefaultTest extends BaseTest {
     private static final List<String> VIEW_RESULT = List.of(
             STRING_INPUT_VALUE, TEXT_INPUT_VALUE, INT_INPUT_VALUE, DECIMAL_INPUT_VALUE,
             DATE_VALUE, DATE_TIME_VALUE, USER_DEFAULT_NAME);
+
+    private static final String STRING_VALUE_1 = "String";
+    private static final String TEXT_VALUE_1 = "Text";
+    private static final String INT_VALUE_1 = "2021";
+    private static final String DECIMAL_VALUE_1 = "0.10";
+
+    private static final String STRING_VALUE_2 = "Pending";
+    private static final String TEXT_VALUE_2 = "Success";
+    private static final String INT_VALUE_2 = "2018";
+    private static final String DECIMAL_VALUE_2 = "0.25";
+
+    private static final String STRING_VALUE_3 = "Yamal";
+    private static final String TEXT_VALUE_3 = "News";
+    private static final String INT_VALUE_3 = "2035";
+    private static final String DECIMAL_VALUE_3 = "0.12";
+
+    private static final List<String> EXPECTED_RESULT_1 = List.of(
+            STRING_VALUE_1, TEXT_VALUE_1, INT_VALUE_1, DECIMAL_VALUE_1,
+            DATE_DEFAULT_VALUE, DATE_TIME_DEFAULT_VALUE, EMPTY_FIELD, EMPTY_FIELD, USER_DEFAULT_NAME);
+
+    private static final List<String> EXPECTED_RESULT_2 = List.of(
+            STRING_VALUE_2, TEXT_VALUE_2, INT_VALUE_2, DECIMAL_VALUE_2,
+            DATE_DEFAULT_VALUE, DATE_TIME_DEFAULT_VALUE, EMPTY_FIELD, EMPTY_FIELD, USER_DEFAULT_NAME);
+
+    private static final List<String> EXPECTED_RESULT_3 = List.of(
+            STRING_VALUE_3, TEXT_VALUE_3, INT_VALUE_3, DECIMAL_VALUE_3,
+            DATE_DEFAULT_VALUE, DATE_TIME_DEFAULT_VALUE, EMPTY_FIELD, EMPTY_FIELD, USER_DEFAULT_NAME);
 
     @Test
     public void testCreateRecord() {
@@ -217,5 +240,51 @@ public class EntityDefaultTest extends BaseTest {
         Assert.assertEquals(DefaultPage.getRowCount(), 1);
         Assert.assertEquals(DefaultPage.getRow(0), DEFAULT_EXPECTED_RESULT);
         Assert.assertEquals(DefaultPage.getClassIcon(), CLASS_ICON_SAVE_DRAFT);
+    }
+
+    @Test
+    public void testSortRecords() {
+
+        DefaultPage defaultPage = new MainPage(getDriver())
+                .clickDefaultMenu()
+                .clickNewButton()
+                .fillFields(STRING_VALUE_1,TEXT_VALUE_1,INT_VALUE_1,DECIMAL_VALUE_1)
+                .clickSave();
+        Assert.assertEquals(DefaultPage.getRowCount(), 1);
+        Assert.assertEquals(DefaultPage.getRow(0), EXPECTED_RESULT_1);
+
+        defaultPage.clickDefaultMenu()
+                .clickNewButton()
+                .fillFields(STRING_VALUE_2,TEXT_VALUE_2,INT_VALUE_2,DECIMAL_VALUE_2)
+                .clickSaveDraft();
+        Assert.assertEquals(DefaultPage.getRowCount(), 2);
+        Assert.assertEquals(DefaultPage.getRow(1), EXPECTED_RESULT_2);
+
+        defaultPage.clickDefaultMenu()
+                .clickNewButton()
+                .fillFields(STRING_VALUE_3,TEXT_VALUE_3,INT_VALUE_3,DECIMAL_VALUE_3)
+                .clickSave();
+        Assert.assertEquals(DefaultPage.getRowCount(), 3);
+        Assert.assertEquals(DefaultPage.getRow(2), EXPECTED_RESULT_3);
+
+        defaultPage.clickStringColumn();
+        Assert.assertEquals(DefaultPage.getRow(0), EXPECTED_RESULT_2);
+        Assert.assertEquals(DefaultPage.getRow(1), EXPECTED_RESULT_1);
+        Assert.assertEquals(DefaultPage.getRow(2), EXPECTED_RESULT_3);
+
+        defaultPage.clickTextColumn();
+        Assert.assertEquals(DefaultPage.getRow(0), EXPECTED_RESULT_3);
+        Assert.assertEquals(DefaultPage.getRow(1), EXPECTED_RESULT_2);
+        Assert.assertEquals(DefaultPage.getRow(2), EXPECTED_RESULT_1);
+
+        defaultPage.clickIntColumn();
+        Assert.assertEquals(DefaultPage.getRow(0), EXPECTED_RESULT_2);
+        Assert.assertEquals(DefaultPage.getRow(1), EXPECTED_RESULT_1);
+        Assert.assertEquals(DefaultPage.getRow(2), EXPECTED_RESULT_3);
+
+        defaultPage.clickDecimalColumn();
+        Assert.assertEquals(DefaultPage.getRow(0), EXPECTED_RESULT_1);
+        Assert.assertEquals(DefaultPage.getRow(1), EXPECTED_RESULT_3);
+        Assert.assertEquals(DefaultPage.getRow(2), EXPECTED_RESULT_2);
     }
 }

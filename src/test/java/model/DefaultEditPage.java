@@ -6,6 +6,10 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import utils.TestUtils;
 
+import java.util.List;
+
+import static utils.TestUtils.jsClick;
+
 public class DefaultEditPage extends BaseModel {
 
     @FindBy(id = "string")
@@ -106,6 +110,7 @@ public class DefaultEditPage extends BaseModel {
     public DefaultEditPage fillUser(String value) {
         fieldUser.click();
         TestUtils.jsClick(getDriver(), chooseUser);
+
         return this;
     }
 
@@ -125,5 +130,14 @@ public class DefaultEditPage extends BaseModel {
         TestUtils.jsClick(getDriver(), cancelButton);
 
         return new DefaultPage(getDriver());
+    }
+
+    public DefaultEditPage fillFields(String string, String text, String int_, String decimal) {
+        fillString(string);
+        fillText(text);
+        fillInt(int_);
+        fillDecimal(decimal);
+
+        return this;
     }
 }

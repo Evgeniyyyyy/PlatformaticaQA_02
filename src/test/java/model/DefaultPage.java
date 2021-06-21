@@ -67,6 +67,18 @@ public class DefaultPage extends MainPage{
     @FindBy(className = "pagination-info")
     private static WebElement paginationInfo;
 
+    @FindBy(xpath = "//th[@data-field='string']/div")
+    private static WebElement stringColumn;
+
+    @FindBy(xpath = "//th[@data-field='text']/div")
+    private static WebElement textColumn;
+
+    @FindBy(xpath = "//th[@data-field='int']/div")
+    private static WebElement intColumn;
+
+    @FindBy(xpath = "//th[@data-field='decimal']/div")
+    private static WebElement decimalColumn;
+
     public DefaultPage(WebDriver driver) {
         super(driver);
     }
@@ -138,6 +150,30 @@ public class DefaultPage extends MainPage{
 
     public DefaultPage clickListButton() {
         listButton.click();
+
+        return new DefaultPage(getDriver());
+    }
+
+    public DefaultPage clickStringColumn() {
+        stringColumn.click();
+
+        return new DefaultPage(getDriver());
+    }
+
+    public DefaultPage clickTextColumn() {
+        textColumn.click();
+
+        return new DefaultPage(getDriver());
+    }
+
+    public DefaultPage clickIntColumn() {
+        intColumn.click();
+
+        return new DefaultPage(getDriver());
+    }
+
+    public DefaultPage clickDecimalColumn() {
+        decimalColumn.click();
 
         return new DefaultPage(getDriver());
     }
