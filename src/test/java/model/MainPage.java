@@ -32,6 +32,9 @@ public class MainPage extends BaseModel {
     @FindBy(xpath = "//p[text()= ' Parent ']")
     private WebElement parentMenuItem;
 
+    @FindBy(xpath = "//p[text()= ' Default ']")
+    private WebElement defaultMenuItem;
+
     @FindBy(xpath = "//i[text()='delete_outline']")
     private WebElement recycleBinIcon;
 
@@ -86,6 +89,12 @@ public class MainPage extends BaseModel {
         TestUtils.jsClick(getDriver(), parentMenuItem);
 
         return new ParentPage(getDriver());
+    }
+
+    public DefaultPage clickDefaultMenu() {
+        TestUtils.jsClick(getDriver(), defaultMenuItem);
+
+        return new DefaultPage(getDriver());
     }
 
     public RecycleBinPage clickRecycleBin(){
