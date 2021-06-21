@@ -11,6 +11,9 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 import model.*;
 
+import static utils.ProjectUtils.*;
+import static utils.ProjectUtils.clickSave;
+
 
 public class EntityDefaultTest extends BaseTest {
 
@@ -20,6 +23,12 @@ public class EntityDefaultTest extends BaseTest {
     private static final String DECIMAL_INPUT_VALUE = String.format("%.2f", new Random().nextFloat());
     private static final String DATE_VALUE = new SimpleDateFormat("dd/MM/yyyy").format(new Date());
     private static final String DATE_TIME_VALUE = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(new Date());
+    private static final String STRING_DEFAULT_VALUE = "DEFAULT STRING VALUE";
+    private static final String TEXT_DEFAULT_VALUE = "DEFAULT TEXT VALUE";
+    private static final String INT_DEFAULT_VALUE = "55";
+    private static final String DECIMAL_DEFAULT_VALUE = "110.32";
+    private static final String DATE_DEFAULT_VALUE = "01/01/1970";
+    private static final String DATE_TIME_DEFAULT_VALUE = "01/01/1970 00:00:00";
     private static final String USER_DEFAULT_NAME = "apptester1@tester.test";
     private static final String USER_NAME = "apptester10@tester.test";
     private static final String EMPTY_FIELD = "";
@@ -34,10 +43,17 @@ public class EntityDefaultTest extends BaseTest {
     private static final String CLASS_ICON_SAVE = "fa fa-check-square-o";
     private static final String CLASS_ICON_SAVE_DRAFT = "fa fa-pencil";
     private static List<String> ACTUAL_LIST = new ArrayList<>();
+    private static final String ENTITY_NAME = "Default";
+    private static final String CARD_BODY_TEXT_EMPTY =
+            "Good job with housekeeping! Recycle bin is currently empty!";
 
     private static final List<String> NEW_EXPECTED_RESULT = List.of(
             STRING_INPUT_VALUE, TEXT_INPUT_VALUE, INT_INPUT_VALUE, DECIMAL_INPUT_VALUE,
             DATE_VALUE, DATE_TIME_VALUE, EMPTY_FIELD, EMPTY_FIELD, USER_DEFAULT_NAME);
+
+    private static final List<String> DEFAULT_EXPECTED_RESULT = List.of(
+            STRING_DEFAULT_VALUE, TEXT_DEFAULT_VALUE, INT_DEFAULT_VALUE, DECIMAL_DEFAULT_VALUE,
+            DATE_DEFAULT_VALUE, DATE_TIME_DEFAULT_VALUE, EMPTY_FIELD, EMPTY_FIELD, USER_DEFAULT_NAME);
 
     private static List<WebElement> RECORD(WebDriver driver) {
         return List.of(driver.findElement(By.xpath("//div/span/a")));
@@ -96,5 +112,110 @@ public class EntityDefaultTest extends BaseTest {
         for (int i = 0; i < VIEW_RESULT.size(); i++) {
             Assert.assertEquals(ACTUAL_LIST.get(i), VIEW_RESULT.get(i).toString());
         }
+    }
+
+    @Test(dependsOnMethods = "testViewRecord")
+    public void testSwitchBetweenListAndOrder() {
+        DefaultPage defaultPage = new MainPage(getDriver())
+                .clickDefaultMenu()
+                .clickOrderButton();
+        Assert.assertEquals(DefaultPage.getRow(0), NEW_EXPECTED_RESULT);
+        Assert.assertEquals(DefaultPage.getClassIcon(), CLASS_ICON_SAVE);
+
+        defaultPage.clickListButton();
+        Assert.assertEquals(DefaultPage.getRow(0), NEW_EXPECTED_RESULT);
+        Assert.assertEquals(DefaultPage.getClassIcon(), CLASS_ICON_SAVE);
+    }
+
+    @Test(dependsOnMethods = "testSwitchBetweenListAndOrder")
+    public void testEditRecord() {
+        DefaultPage defaultPage = new MainPage(getDriver())
+                .clickDefaultMenu()
+                .clickActions()
+                .clickActionsEdit()
+                .fillDateTime(EDIT_DATE_TIME_VALUE)
+                .fillString(EDIT_STRING_VALUE)
+                .fillDate(EDIT_DATE_VALUE)
+                .fillText(EDIT_TEXT_VALUE)
+                .fillInt(EDIT_INT_VALUE)
+                .fillDecimal(EDIT_DECIMAL_VALUE)
+                .clickSaveDraft();
+
+        Assert.assertEquals(DefaultPage.getRowCount(), 1);
+        Assert.assertEquals(DefaultPage.getRow(0), EDIT_RESULT);
+        Assert.assertEquals(DefaultPage.getClassIcon(), CLASS_ICON_SAVE_DRAFT);
+    }
+
+    @Test(dependsOnMethods = "testEditRecord")
+    public void testDeleteRecord() {
+        DefaultPage defaultPage = new MainPage(getDriver())
+                .clickDefaultMenu()
+                .clickActions()
+                .clickActionsDelete();
+        Assert.assertTrue(DefaultPage.isTableEmpty());
+        Assert.assertEquals(DefaultPage.getTextNotificationRecycleBin(), 1);
+    }
+
+    @Test(dependsOnMethods = "testDeleteRecord")
+    public void testRestoreRecord() {
+
+        RecycleBinPage recycleBinPage = new MainPage(getDriver())
+                .clickDefaultMenu()
+                .clickRecycleBin();
+        Assert.assertEquals(RecycleBinPage.getTextPaginationInfo(), INFO_STR_1_OF_1);
+
+        recycleBinPage.clickDeletedRestoreAsDraft();
+        Assert.assertEquals(RecycleBinPage.getTextCardBody(), CARD_BODY_TEXT_EMPTY);
+
+        DefaultPage defaultPage = new MainPage(getDriver())
+                .clickDefaultMenu();
+
+        Assert.assertEquals(DefaultPage.getRowCount(), 1);
+        Assert.assertEquals(DefaultPage.getRow(0), EDIT_RESULT);
+        Assert.assertEquals(DefaultPage.getClassIcon(), CLASS_ICON_SAVE_DRAFT);
+    }
+
+    @Test
+    public void testCreateDraftRecord() {
+        DefaultPage defaultPage = new MainPage(getDriver())
+                .clickDefaultMenu()
+                .clickNewButton()
+                .fillDateTime(DATE_TIME_VALUE)
+                .fillString(STRING_INPUT_VALUE)
+                .fillDate(DATE_VALUE)
+                .fillText(TEXT_INPUT_VALUE)
+                .fillInt(INT_INPUT_VALUE)
+                .fillDecimal(DECIMAL_INPUT_VALUE)
+                .clickSaveDraft();
+
+        Assert.assertEquals(DefaultPage.getRowCount(), 1);
+        Assert.assertEquals(DefaultPage.getRow(0), NEW_EXPECTED_RESULT);
+        Assert.assertEquals(DefaultPage.getClassIcon(), CLASS_ICON_SAVE_DRAFT);
+    }
+
+    @Test
+    public void testCreateDefaultRecord() {
+
+        DefaultPage defaultPage = new MainPage(getDriver())
+                .clickDefaultMenu()
+                .clickNewButton()
+                .clickSave();
+
+        Assert.assertEquals(DefaultPage.getRowCount(), 1);
+        Assert.assertEquals(DefaultPage.getRow(0), DEFAULT_EXPECTED_RESULT);
+        Assert.assertEquals(DefaultPage.getClassIcon(), CLASS_ICON_SAVE);
+    }
+
+    @Test
+    public void testCreateDefaultDraftRecord() {
+
+        DefaultPage defaultPage = new MainPage(getDriver())
+                .clickDefaultMenu()
+                .clickNewButton()
+                .clickSaveDraft();
+
+        Assert.assertEquals(DefaultPage.getRowCount(), 1);
+        Assert.assertEquals(DefaultPage.getRow(0), DEFAULT_EXPECTED_RESULT);
+        Assert.assertEquals(DefaultPage.getClassIcon(), CLASS_ICON_SAVE_DRAFT);
     }
 }
