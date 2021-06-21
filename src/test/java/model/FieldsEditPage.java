@@ -1,9 +1,12 @@
 package model;
 
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import utils.TestUtils;
+
+import java.util.List;
 
 public class FieldsEditPage extends BaseModel {
 
@@ -81,6 +84,14 @@ public class FieldsEditPage extends BaseModel {
         fieldDateTime.click();
         fieldDateTime.clear();
         fieldDateTime.sendKeys(value);
+
+        return this;
+    }
+
+    public FieldsEditPage findUser(String value) {
+        TestUtils.jsClick(getDriver(), fieldUserName);
+        TestUtils.jsClick(getDriver(), getDriver().findElement(By.xpath(
+                "//span[text()='" + value + "']")));
 
         return this;
     }

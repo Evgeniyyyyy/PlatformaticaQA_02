@@ -48,6 +48,9 @@ public class FieldsPage extends MainPage {
     @FindBy(xpath = "//span[@class='pagination-info']")
     private WebElement text;
 
+    @FindBy(xpath = "//tbody/tr/td/i")
+    private static WebElement icon;
+
     public FieldsPage(WebDriver driver) {
         super(driver);
     }
@@ -131,5 +134,9 @@ public class FieldsPage extends MainPage {
         getWait().until(ExpectedConditions.textToBePresentInElement(text, value));
 
         return this;
+    }
+
+    public String getClassIcon() {
+        return icon.getAttribute("class");
     }
 }

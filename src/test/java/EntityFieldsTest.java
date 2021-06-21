@@ -23,7 +23,7 @@ public class EntityFieldsTest extends BaseTest {
     private static final String DECIMAL_VALUE = String.format("%.2f", new Random().nextFloat());
     private static final String DATE_VALUE = new SimpleDateFormat("dd/MM/yyyy").format(new Date());
     private static final String DATE_TIME_VALUE = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(new Date());
-    private static final String TESTER_NAME = "apptester1@tester.test";
+    private static final String TESTER_NAME = "tester" + new Random().nextInt(299) + "@tester.test";
     private static final String EDIT_TITLE_VALUE = RandomStringUtils.randomAlphabetic(10);
     private static final String EDIT_COMMENTS_VALUE = RandomStringUtils.randomAlphabetic(25);
     private static final String EDIT_INT_VALUE = String.valueOf(RandomUtils.nextInt());
@@ -31,6 +31,7 @@ public class EntityFieldsTest extends BaseTest {
     private static final String EDIT_DATE_VALUE = "01/01/0001";
     private static final String EDIT_DATE_TIME_VALUE = "31/12/9999 23:59:59";
     private static final String INFO_TEXT = "Showing 1 to 1 of 1 rows";
+    private static final String ICON = "fa fa-check-square-o";
 
     private static final List<String> EXPECTED_RESULT = List.of(
             TITLE_VALUE,
@@ -71,10 +72,12 @@ public class EntityFieldsTest extends BaseTest {
                 .fillComments(COMMENTS_VALUE)
                 .fillInt(INT_VALUE)
                 .fillDecimal(DECIMAL_VALUE)
+                .findUser(TESTER_NAME)
                 .clickSave();
 
         Assert.assertEquals(fieldsPage.getRowCount(), 1);
         Assert.assertEquals(fieldsPage.getRow(0), EXPECTED_RESULT);
+        Assert.assertEquals(fieldsPage.getClassIcon(), ICON);
     }
 
     @Test(dependsOnMethods = "testCreateRecord")
@@ -89,9 +92,11 @@ public class EntityFieldsTest extends BaseTest {
                 .fillComments(EDIT_COMMENTS_VALUE)
                 .fillInt(EDIT_INT_VALUE)
                 .fillDecimal(EDIT_DECIMAL_VALUE)
+                .findUser(TESTER_NAME)
                 .clickSave();
 
         Assert.assertEquals(fieldsPage.getRow(0), EDIT_RESULT);
+        Assert.assertEquals(fieldsPage.getClassIcon(), ICON);
     }
 
     @Test(dependsOnMethods = "testEditRecord")
@@ -106,6 +111,7 @@ public class EntityFieldsTest extends BaseTest {
                 .fillComments(COMMENTS_VALUE)
                 .fillInt(INT_VALUE)
                 .fillDecimal(DECIMAL_VALUE)
+                .findUser(TESTER_NAME)
                 .clickSave()
                 .clickOrder();
 
@@ -128,6 +134,7 @@ public class EntityFieldsTest extends BaseTest {
                 .findInfoText(INFO_TEXT);
 
         Assert.assertEquals(fieldsPage.getRow(0), EXPECTED_RESULT);
+        Assert.assertEquals(fieldsPage.getClassIcon(), ICON);
     }
 
     @Test
