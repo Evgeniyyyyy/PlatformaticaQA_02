@@ -35,6 +35,9 @@ public class AssignEditPage extends BaseModel {
     @FindBy(id = "pa-entity-form-save-btn")
     private WebElement saveButton;
 
+    @FindBy(id = "pa-entity-form-draft-btn")
+    private WebElement saveDraftButton;
+
     @FindBy(xpath = "//button[text()='Cancel']")
     private WebElement cancelButton;
 
@@ -87,8 +90,23 @@ public class AssignEditPage extends BaseModel {
         return this;
     }
 
+    public AssignEditPage fillFields(String string, String text, String int_, String decimal) {
+        fillTitle(string);
+        fillComments(text);
+        fillInt(int_);
+        fillDecimal(decimal);
+
+        return this;
+    }
+
     public AssignPage clickSave() {
         TestUtils.jsClick(getDriver(), saveButton);
+
+        return new AssignPage(getDriver());
+    }
+
+    public AssignPage clickSaveDraft() {
+        TestUtils.jsClick(getDriver(), saveDraftButton);
 
         return new AssignPage(getDriver());
     }

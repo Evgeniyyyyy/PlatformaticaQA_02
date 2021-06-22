@@ -2,6 +2,7 @@ import base.BaseTest;
 import constants.EntityAssignConstants;
 import model.AssignPage;
 import model.MainPage;
+import model.ParentPage;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -28,12 +29,52 @@ public class EntityAssignTest extends BaseTest {
     private static final String DECIMAL = "666.66";
     private static final String DATE = "02/06/2021";
     private static final String DATETIME = "02/06/2021 22:00:28";
+    private static final String EMPTY_FIELD = "";
+    private static final String USER_DEFAULT_NAME = "apptester1@tester.test";
 
     private static final List<String> EXPECTED_RESULT = List.of(STRING, TEXT, INT, DECIMAL, "", "");
 
-    private static final String ICON = "fa fa-check-square-o";
+    private static final String CLASS_ICON_SAVE = "fa fa-check-square-o";
+    private static final String CLASS_ICON_SAVE_DRAFT = "fa fa-pencil";
+    private static final String INFO_STR_1_OF_1 = "Showing 1 to 1 of 1 rows";
+    private static final String INFO_STR_2_OF_2 = "Showing 1 to 2 of 2 rows";
+    private static final String INFO_STR_3_OF_3 = "Showing 1 to 3 of 3 rows";
     private static final By ACTUAL_RESULT = By.xpath("//tbody/tr/td/a");
 
+    private static final String STRING_VALUE_1 = "String";
+    private static final String TEXT_VALUE_1 = "Text";
+    private static final String INT_VALUE_1 = "2021";
+    private static final String DECIMAL_VALUE_1 = "0.10";
+
+    private static final String STRING_VALUE_2 = "Pending";
+    private static final String TEXT_VALUE_2 = "Success";
+    private static final String INT_VALUE_2 = "2018";
+    private static final String DECIMAL_VALUE_2 = "0.25";
+
+    private static final String STRING_VALUE_3 = "Yamal";
+    private static final String TEXT_VALUE_3 = "News";
+    private static final String INT_VALUE_3 = "2035";
+    private static final String DECIMAL_VALUE_3 = "0.12";
+
+    private static final List<String> EXPECTED_RESULT_1 = List.of(
+            STRING_VALUE_1, TEXT_VALUE_1, INT_VALUE_1, DECIMAL_VALUE_1,
+            EMPTY_FIELD, EMPTY_FIELD, EMPTY_FIELD, USER_DEFAULT_NAME);
+
+    private static final List<String> EXPECTED_RESULT_2 = List.of(
+            STRING_VALUE_2, TEXT_VALUE_2, INT_VALUE_2, DECIMAL_VALUE_2,
+            EMPTY_FIELD, EMPTY_FIELD, EMPTY_FIELD, USER_DEFAULT_NAME);
+
+    private static final List<String> EXPECTED_RESULT_3 = List.of(
+            STRING_VALUE_3, TEXT_VALUE_3, INT_VALUE_3, DECIMAL_VALUE_3,
+            EMPTY_FIELD, EMPTY_FIELD, EMPTY_FIELD, USER_DEFAULT_NAME);
+
+    private static final List<String> EXPECTED_ORDER_RESULT_1 = List.of(
+            EMPTY_FIELD, STRING_VALUE_1, TEXT_VALUE_1, INT_VALUE_1, DECIMAL_VALUE_1,
+            EMPTY_FIELD, EMPTY_FIELD, USER_DEFAULT_NAME);
+
+    private static final List<String> EXPECTED_ORDER_RESULT_2 = List.of(
+            EMPTY_FIELD, STRING_VALUE_2, TEXT_VALUE_2, INT_VALUE_2, DECIMAL_VALUE_2,
+            EMPTY_FIELD, EMPTY_FIELD, USER_DEFAULT_NAME);
 
     private void dragAndDropAction(WebDriver driver) {
         Actions builder = new Actions(driver);
@@ -136,7 +177,7 @@ public class EntityAssignTest extends BaseTest {
                 .fillDecimal(DECIMAL)
                 .clickSave();
 
-        Assert.assertEquals(assignPage.getClassIcon(), ICON);
+        Assert.assertEquals(assignPage.getClassIcon(), CLASS_ICON_SAVE);
         Assert.assertEquals(getActualValues(findElements(ACTUAL_RESULT)), EXPECTED_RESULT);
         Assert.assertEquals(assignPage.getRowCount(), 1);
     }
@@ -263,58 +304,50 @@ public class EntityAssignTest extends BaseTest {
                 By.xpath("//tbody/tr[2]/td[1]/i")).getAttribute("class"), "fa fa-pencil");
     }
 
-    @Test(dependsOnMethods = "testSaveDraftRecord")
+    @Test
     public void testReorderRecords() {
 
-        moveToAssignEntity();
+        AssignPage assignPage = new MainPage(getDriver())
+                .clickAssignMenu()
+                .clickNewButton()
+                .fillFields(STRING_VALUE_1, TEXT_VALUE_1, INT_VALUE_1, DECIMAL_VALUE_1)
+                .clickSave();
+        Assert.assertEquals(AssignPage.getRow(0), EXPECTED_RESULT_1);
 
-        toggleAction(EntityAssignConstants.ASSIGN_TOGGLE_ORDER_ACTION);
-        dragAndDropAction(getDriver());
+        assignPage.clickNewButton()
+                .fillFields(STRING_VALUE_2, TEXT_VALUE_2, INT_VALUE_2, DECIMAL_VALUE_2)
+                .clickSaveDraft();
+        Assert.assertEquals(AssignPage.getRow(1), EXPECTED_RESULT_2);
 
-        Assert.assertEquals(getIcon(EntityAssignConstants.ASSIGN_GET_ICON)
-                .getAttribute("class"), EntityAssignConstants.CLASS_ITEM_SAVE_DRAFT);
+        assignPage.clickOrderButton().getReorder();
+        Assert.assertEquals(AssignPage.getRow(0), EXPECTED_RESULT_2);
+        Assert.assertEquals(AssignPage.getRow(1), EXPECTED_RESULT_1);
 
-        toggleAction(EntityAssignConstants.ASSIGN_TOGGLE_LIST_ACTION);
-
-        Assert.assertEquals(getIcon(EntityAssignConstants.ASSIGN_GET_ICON)
-                .getAttribute("class"), EntityAssignConstants.CLASS_ITEM_SAVE_DRAFT);
+        assignPage.clickToggle()
+                .getNewReorder();
+        Assert.assertEquals(AssignPage.getRows(0), EXPECTED_ORDER_RESULT_1);
+        Assert.assertEquals(AssignPage.getRows(1), EXPECTED_ORDER_RESULT_2);
     }
 
-    @Test
+    @Test(dependsOnMethods = "testReorderRecords")
     public void testSearchRecord() {
-        Map<By, String> locators1 = new HashMap<>();
-        locators1.put(stringField, "Notes");
-        locators1.put(decimalField, "0.10");
-        locators1.put(intField, "3");
+        AssignPage assignPage = new MainPage(getDriver())
+                .clickAssignMenu()
+                .clickNewButton()
+                .fillFields(STRING_VALUE_3, TEXT_VALUE_3, INT_VALUE_3, DECIMAL_VALUE_3)
+                .clickSave()
+                .searchInput(STRING_VALUE_3)
+                .getTextPaginationInfo(INFO_STR_1_OF_1);
+        Assert.assertEquals(ParentPage.getRow(0), EXPECTED_RESULT_3);
 
-        Map<By, String> locators2 = new HashMap<>();
-        locators2.put(textField, "Alphabet");
-        locators2.put(decimalField, "0.25");
-        locators2.put(intField, "9");
+        assignPage.searchInput("").getTextPaginationInfo(INFO_STR_3_OF_3);
+        Assert.assertEquals(ParentPage.getRowCount(), 3);
 
-        moveToAssignEntity();
+        assignPage.searchInput(TEXT_VALUE_2).getTextPaginationInfo(INFO_STR_1_OF_1);
+        Assert.assertEquals(ParentPage.getRow(0), EXPECTED_RESULT_2);
 
-        addNewCard(getDriver(), locators1, EntityAssignConstants.ASSIGN_BUTTON_SAVE);
-        addNewCard(getDriver(), locators2, EntityAssignConstants.ASSIGN_BUTTON_SAVE_DRAFT);
-
-        List<WebElement> records = findElements(EntityAssignConstants.ASSIGN_GET_LIST_ROW);
-        Assert.assertEquals(records.size(), 2);
-
-        findSearchField("alp");
-        getWait().until(ExpectedConditions.textToBePresentInElementLocated(EntityAssignConstants.ASSIGN_GET_TEXT_MESSAGE,
-                EntityAssignConstants.TEXT_MESSAGE_ONE));
-        List<WebElement> records1 = findElements(EntityAssignConstants.ASSIGN_GET_LIST_ROW);
-        Assert.assertEquals(records1.size(), 1);
-        Assert.assertEquals(findElement(By.xpath("//tbody/tr/td[3]/a")).getText(),"Alphabet");
-
-        clearSearchField();
-        getWait().until(ExpectedConditions.textToBePresentInElementLocated(EntityAssignConstants.ASSIGN_GET_TEXT_MESSAGE,
-                EntityAssignConstants.TEXT_MESSAGE_TWO));
-        findSearchField("note");
-        getWait().until(ExpectedConditions.textToBePresentInElementLocated(EntityAssignConstants.ASSIGN_GET_TEXT_MESSAGE,
-                EntityAssignConstants.TEXT_MESSAGE_ONE));
-        List<WebElement> records2 = findElements(EntityAssignConstants.ASSIGN_GET_LIST_ROW);
-        Assert.assertEquals(records2.size(), 1);
-        Assert.assertEquals(findElement(By.xpath("//tbody/tr/td[2]/a")).getText(),"Notes");
+        assignPage.searchInput("").getTextPaginationInfo(INFO_STR_3_OF_3);
+        assignPage.searchInput(INT_VALUE_1).getTextPaginationInfo(INFO_STR_1_OF_1);
+        Assert.assertEquals(ParentPage.getRow(0), EXPECTED_RESULT_1);
     }
 }
