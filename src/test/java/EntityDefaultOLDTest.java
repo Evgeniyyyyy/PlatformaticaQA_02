@@ -1,4 +1,7 @@
 import base.BaseTest;
+import model.DefaultEditPage;
+import model.DefaultPage;
+import model.MainPage;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -114,20 +117,22 @@ public class EntityDefaultOLDTest extends BaseTest {
 
     @Test(dependsOnMethods = "testCreateRecord")
     public void testCancelDefaultRecord () {
+        MainPage mainPage = new MainPage(getDriver());
+        mainPage.clickDefaultMenu();
 
-        getEntity(getDriver(), "Default");
-        clickCreateRecord(getDriver());
+        DefaultPage defaultPage = new DefaultPage(getDriver());
+        defaultPage.clickNewButton();
 
+        DefaultEditPage defaultEditPage = new DefaultEditPage(getDriver());
         Assert.assertFalse(findElement(STRING_FIELD).getAttribute("value").isEmpty());
         Assert.assertFalse(findElement(TEXT_FIELD).getText().isEmpty());
         Assert.assertFalse(findElement(INT_FIELD).getAttribute("value").isEmpty());
         Assert.assertFalse(findElement(DECIMAL_FIELD).getAttribute("value").isEmpty());
         Assert.assertFalse(findElement(DATE_FIELD).getAttribute("value").isEmpty());
         Assert.assertFalse(findElement(DATETIME_FIELD).getAttribute("value").isEmpty());
+        defaultEditPage.clickCancel();
 
-        clickCancel(getDriver());
-
-        Assert.assertNull(findElement(By.className("card-body")).getAttribute("value"));
+        Assert.assertEquals(DefaultPage.getRowCount(), 1);
     }
 
     @Test(dependsOnMethods = "testCancelDefaultRecord")
