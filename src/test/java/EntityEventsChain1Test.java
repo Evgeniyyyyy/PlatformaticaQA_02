@@ -21,7 +21,9 @@ public class EntityEventsChain1Test extends BaseTest {
     private static final By DROP_DOWN_MENU = By.xpath("//i[contains(., 'menu')]");
     private static final By EDIT_MENU = By.xpath("//a[contains(., 'edit')]");
     private static final By DELETE_MENU = By.xpath("//a[contains (text(), 'delete')]");
+    private static final By CANCEL = By.xpath("//button[text()='Cancel']");
     private static final By CARD_BODY = By.xpath("//div[@class = 'card-body ']");
+    private static final By TABLE = By.id("pa-all-entities-table");
     private static final By CELLS = By.xpath("//table[@id = 'pa-all-entities-table']/tbody/tr/td/a");
     private static final By ICON = By.xpath("//tbody/tr/td[1]/i");
     private static final By RECYCLE_BIN = By.xpath("//a[@href='index.php?action=recycle_bin']");
@@ -42,6 +44,15 @@ public class EntityEventsChain1Test extends BaseTest {
     private void clickSaveButton() {
         findElement(SAVE_BUTTON).click();
         getWait().until(ExpectedConditions.elementToBeClickable(findElement(CREATE_NEW_FOLDER)));
+    }
+
+    private void clickSaveDraftButton() {
+        findElement(SAVE_DRAFT_BUTTON).click();
+        getWait().until(ExpectedConditions.elementToBeClickable(findElement(CREATE_NEW_FOLDER)));
+    }
+
+    private void clickCancelButton() {
+        findElement(CANCEL).click();
     }
 
     private void clickDropDownMenu() {
@@ -247,8 +258,14 @@ public class EntityEventsChain1Test extends BaseTest {
         }
     }
 
-    private void clickSaveDraftButton() {
-        findElement(SAVE_DRAFT_BUTTON).click();
-        getWait().until(ExpectedConditions.elementToBeClickable(findElement(CREATE_NEW_FOLDER)));
+    @Test
+    public void setEventsChain1RecordCancel(){
+        clickEventsChain1Menu();
+        clickCreateNewFolderButton();
+        inputF1Value("1");
+        clickCancelButton();
+
+        Assert.assertTrue(getDriver().findElements(TABLE)
+                .isEmpty());
     }
 }
