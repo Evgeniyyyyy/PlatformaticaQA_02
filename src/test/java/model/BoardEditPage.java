@@ -60,9 +60,9 @@ public class BoardEditPage extends BaseModel {
 
     public BoardEditPage fillString(String value) {
         fieldString.click();
-        if(value == "Pending") {
+        if(value.equals("Pending")) {
             jsClick(getDriver(), valueStringPending);
-        }else if(value == "On track"){
+        }else if(value.equals("On track")){
             jsClick(getDriver(), valueStringOnTrack);
         }else {
             jsClick(getDriver(), valueStringDone);
@@ -105,6 +105,15 @@ public class BoardEditPage extends BaseModel {
     }
     public BoardEditPage clearDecimal() {
         fieldDecimal.clear();
+
+        return this;
+    }
+
+    public BoardEditPage fillFields(String string, String text, String int_, String decimal) {
+        fillString(string);
+        fillText(text);
+        fillInt(int_);
+        fillDecimal(decimal);
 
         return this;
     }

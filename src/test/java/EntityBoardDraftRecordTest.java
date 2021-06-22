@@ -102,10 +102,10 @@ public class EntityBoardDraftRecordTest extends BaseTest {
         BoardListPage boardPage = new MainPage(getDriver())
                 .clickBoardMenu()
                 .clickNewButton()
-                .fillString(STRING_INPUT_PENDING)
-                .fillText(TEXT_VALUE_PENDING)
-                .fillInt(INT_VALUE_PENDING)
-                .fillDecimal(DECIMAL_VALUE_PENDING)
+                .fillFields(STRING_INPUT_PENDING,
+                        TEXT_VALUE_PENDING,
+                        INT_VALUE_PENDING,
+                        DECIMAL_VALUE_PENDING)
                 .findUser(USER_NAME)
                 .clickSaveDraft()
                 .clickListButton();
@@ -137,13 +137,13 @@ public class EntityBoardDraftRecordTest extends BaseTest {
                 .clickListButton()
                 .clickActions()
                 .clickActionsEdit()
-                .fillString(STRING_INPUT_ONTRACK)
                 .clearText()
-                .fillText(EDIT_TEXT_VALUE)
                 .clearInt()
-                .fillInt(EDIT_INT_VALUE)
                 .clearDecimal()
-                .fillDecimal(EDIT_DECIMAL_VALUE)
+                .fillFields(STRING_INPUT_ONTRACK,
+                        EDIT_TEXT_VALUE,
+                        EDIT_INT_VALUE,
+                        EDIT_DECIMAL_VALUE)
                 .clickSaveDraft()
                 .clickListButton();
 
@@ -199,17 +199,17 @@ public class EntityBoardDraftRecordTest extends BaseTest {
         BoardListPage boardPage = new MainPage(getDriver())
                 .clickBoardMenu()
                 .clickNewButton()
-                .fillString(STRING_INPUT_PENDING)
-                .fillText(TEXT_VALUE_PENDING)
-                .fillInt(INT_VALUE_PENDING)
-                .fillDecimal(DECIMAL_VALUE_PENDING)
+                .fillFields(STRING_INPUT_PENDING,
+                        TEXT_VALUE_PENDING,
+                        INT_VALUE_PENDING,
+                        DECIMAL_VALUE_PENDING)
                 .findUser(USER_NAME)
                 .clickSaveDraft()
                 .clickNewButton()
-                .fillString(STRING_INPUT_ONTRACK)
-                .fillText(TEXT_VALUE_ONTRACK)
-                .fillInt(INT_VALUE_ONTRACK)
-                .fillDecimal(DECIMAL_VALUE_ONTRACK)
+                .fillFields(STRING_INPUT_ONTRACK,
+                        TEXT_VALUE_ONTRACK,
+                        INT_VALUE_ONTRACK,
+                        DECIMAL_VALUE_ONTRACK)
                 .findUser(USER_NAME)
                 .clickSaveDraft()
                 .clickListButton();
@@ -230,10 +230,10 @@ public class EntityBoardDraftRecordTest extends BaseTest {
         String textCardBodyBeforeCancel = BoardPage.getTextCardBody();
 
         boardPage.clickNewButton()
-                .fillString(STRING_INPUT_PENDING)
-                .fillText(TEXT_VALUE_PENDING)
-                .fillInt(INT_VALUE_PENDING)
-                .fillDecimal(DECIMAL_VALUE_PENDING)
+                .fillFields(STRING_INPUT_PENDING,
+                        TEXT_VALUE_PENDING,
+                        INT_VALUE_PENDING,
+                        DECIMAL_VALUE_PENDING)
                 .findUser(USER_NAME)
                 .clickCancel();
 
