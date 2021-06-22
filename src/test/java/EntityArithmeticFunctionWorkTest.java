@@ -8,7 +8,6 @@ import org.testng.annotations.Test;
 import java.util.Arrays;
 import java.util.List;
 
-import static model.ArithmeticFunctionEditPage.convertIntToString;
 
 public class EntityArithmeticFunctionWorkTest extends BaseTest {
     private static final Integer F1 = 10;
@@ -34,7 +33,7 @@ public class EntityArithmeticFunctionWorkTest extends BaseTest {
 
         Assert.assertEquals(arithmeticFunctionPage.getRowCount(),1);
         Assert.assertTrue(arithmeticFunctionPage.iconCheck(iconSave));
-        Assert.assertEquals(arithmeticFunctionPage.getRow(0), convertIntToString(CREATE_DATA));
+        Assert.assertEquals(arithmeticFunctionPage.getRow(0), arithmeticFunctionPage.wrapValues(CREATE_DATA));
     }
 
     @Test(dependsOnMethods = "testSaveDraftNewRecord")
@@ -57,7 +56,7 @@ public class EntityArithmeticFunctionWorkTest extends BaseTest {
                 .clickSaveDraft();
 
         Assert.assertEquals(arithmeticFunctionPage.getRowCount(),1);
-        Assert.assertEquals(arithmeticFunctionPage.getRow(0), convertIntToString(CREATE_DATA));
+        Assert.assertEquals(arithmeticFunctionPage.getRow(0), arithmeticFunctionPage.wrapValues(CREATE_DATA));
         Assert.assertTrue(arithmeticFunctionPage.iconCheck(iconDraft));
     }
 
@@ -89,7 +88,7 @@ public class EntityArithmeticFunctionWorkTest extends BaseTest {
                 .clickArithmeticFunctionMenu()
                 .clickViewButton();
 
-        Assert.assertEquals(arithmeticFunctionPage.viewData(), convertIntToString(CREATE_DATA));
+        Assert.assertEquals(arithmeticFunctionPage.viewData(), arithmeticFunctionPage.wrapValues(CREATE_DATA));
     }
 
     @Test(dependsOnMethods = "testDeleteRecord")

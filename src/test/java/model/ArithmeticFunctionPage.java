@@ -33,14 +33,8 @@ public class ArithmeticFunctionPage extends MainPage {
     @FindBy(xpath = "//tr[@data-index='0']//a[contains(text(),'view')]")
     private  WebElement actionMenuView;
 
-    @FindBy(xpath = "//tr[@data-index='0']//a[contains(text(),'edit')]")
-    private  WebElement actionMenuEdit;
-
     @FindBy(xpath = "//tr[@data-index='0']//a[contains(text(),'delete')]")
     private  WebElement actionMenuDelete;
-
-    @FindBy(xpath = "//i[@class='fa fa-pencil']")
-    private WebElement iconDraft;
 
     @FindBy(xpath = "//i[text()='delete_outline']")
     private WebElement recycleBinIcon;
@@ -69,13 +63,6 @@ public class ArithmeticFunctionPage extends MainPage {
         getDriver().findElement(By.xpath("//tr[@data-index='"+ row +"']//button/i[text()='menu']")).click();
         getWait().until(TestUtils.movingIsFinished(getDriver().
                 findElement(By.xpath("//tr[@data-index='"+ row +"']//a[text()='edit']")))).click();
-
-        return new ArithmeticFunctionEditPage(getDriver());
-    }
-
-    public ArithmeticFunctionEditPage clickEditButton() {
-        actionMenu.click();
-        getWait().until(TestUtils.movingIsFinished(actionMenuEdit)).click();
 
         return new ArithmeticFunctionEditPage(getDriver());
     }
@@ -115,10 +102,6 @@ public class ArithmeticFunctionPage extends MainPage {
 
     public String getTextEmptyBin(){
         return table.getText();
-    }
-
-    public String getClassIcon() {
-        return iconDraft.getAttribute("class");
     }
 
     public int getRowCount() {

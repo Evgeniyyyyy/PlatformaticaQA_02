@@ -61,7 +61,6 @@ public class ArithmeticFunctionEditPage extends BaseModel{
         sendKeysOneByOne(F1_FIELD, value1.toString());
         sendKeysOneByOne(F2_FIELD, value2.toString());
 
-        getWait().until(ExpectedConditions.attributeToBe(F2_FIELD, "value", String.valueOf(value2)));
         getWait().until(ExpectedConditions.attributeToBe(DIV, "value", String.valueOf(value1/value2)));
 
         return this;
@@ -79,13 +78,5 @@ public class ArithmeticFunctionEditPage extends BaseModel{
             element.sendKeys(String.valueOf(c));
             getWait().until(ExpectedConditions.attributeToBe(element, "value", String.valueOf(newString)));
         }
-    }
-
-    public static List<String> convertIntToString(List<Integer> actualElements) {
-        List<String> listValues = new ArrayList<>();
-        for (Integer element : actualElements) {
-            listValues.add(element.toString());
-        }
-        return listValues;
     }
 }
