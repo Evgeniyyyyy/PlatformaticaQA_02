@@ -8,13 +8,13 @@ import org.apache.commons.lang3.RandomUtils;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 public class EntityBoardDraftRecordTest extends BaseTest {
 
     private static final String STRING_INPUT_PENDING = "Pending";
     private static final String STRING_INPUT_ONTRACK = "On track";
+    private static final String STRING_INPUT_DONE = "Done";
     private static final String USER_NAME = "tester" + new Random().nextInt(299) + "@tester.test";
     private static final String DRAFT_ICON_CLASS_NAME = "fa fa-pencil";
     private static final String MESSAGE_EMPTY_RECYCLE_BIN = "Good job with housekeeping! Recycle bin is currently empty!";
@@ -22,6 +22,9 @@ public class EntityBoardDraftRecordTest extends BaseTest {
     private static final String TEXT_VALUE_PENDING = getRandomTextValue();
     private static final String INT_VALUE_PENDING = getRandomIntValue();
     private static final String DECIMAL_VALUE_PENDING = getRandomDecimalValue();
+    private static final String TEXT_VALUE_ONTRACK = getRandomTextValue();
+    private static final String INT_VALUE_ONTRACK = getRandomIntValue();
+    private static final String DECIMAL_VALUE_ONTRACK = getRandomDecimalValue();
     private static final String EDIT_TEXT_VALUE = "QWERTY";
     private static final String EDIT_INT_VALUE = "12345";
     private static final String EDIT_DECIMAL_VALUE = "33.55";
@@ -54,6 +57,23 @@ public class EntityBoardDraftRecordTest extends BaseTest {
             EDIT_DECIMAL_VALUE,
             "", "");
 
+    private static final List<String> EXPECTED_CREATED_ONTRACK_RECORD = List.of(
+            STRING_INPUT_ONTRACK,
+            TEXT_VALUE_ONTRACK,
+            INT_VALUE_ONTRACK,
+            DECIMAL_VALUE_ONTRACK,
+            "", "", "", USER_NAME);
+
+    private static final List<String> EXPECTED_CREATED_DONE_RECORD = List.of(
+            STRING_INPUT_DONE,
+            TEXT_VALUE_PENDING,
+            INT_VALUE_PENDING,
+            DECIMAL_VALUE_PENDING,
+            "", "", "", USER_NAME);
+
+    private static final List<List> ALL_RECORDS_TABLE = new ArrayList<>(List.of(EXPECTED_CREATED_PENDING_RECORD,
+            EXPECTED_CREATED_ONTRACK_RECORD));
+
     private static String getRandomTextValue() {
         return RandomStringUtils.randomAlphabetic(8);
     }
@@ -64,6 +84,16 @@ public class EntityBoardDraftRecordTest extends BaseTest {
 
     private static String getRandomDecimalValue() {
         return RandomUtils.nextInt(0, 10000) + "." + RandomStringUtils.randomNumeric(2);
+    }
+
+    static class CompareByText implements Comparator<List> {
+
+        @Override
+        public int compare(List r1, List r2) {
+            String text1 = r1.get(1).toString();
+            String text2 = r2.get(1).toString();
+            return text1.compareTo(text2);
+        }
     }
 
     @Test
@@ -153,6 +183,42 @@ public class EntityBoardDraftRecordTest extends BaseTest {
         boardPage.closeViewWindow().clickDeletedRecordPermanently();
 
         Assert.assertEquals(BoardPage.getTextCardBody(), MESSAGE_EMPTY_RECYCLE_BIN);
+    }
+
+    @Test
+    public void testSortRecords() {
+        List<String> expectedSortedRecords = new ArrayList<>();
+        Collections.sort(ALL_RECORDS_TABLE, new CompareByText());
+
+        for (List list : ALL_RECORDS_TABLE) {
+            for (Object el : list) {
+                expectedSortedRecords.add(String.valueOf(el));
+            }
+        }
+
+        BoardListPage boardPage = new MainPage(getDriver())
+                .clickBoardMenu()
+                .clickNewButton()
+                .fillString(STRING_INPUT_PENDING)
+                .fillText(TEXT_VALUE_PENDING)
+                .fillInt(INT_VALUE_PENDING)
+                .fillDecimal(DECIMAL_VALUE_PENDING)
+                .findUser(USER_NAME)
+                .clickSaveDraft()
+                .clickNewButton()
+                .fillString(STRING_INPUT_ONTRACK)
+                .fillText(TEXT_VALUE_ONTRACK)
+                .fillInt(INT_VALUE_ONTRACK)
+                .fillDecimal(DECIMAL_VALUE_ONTRACK)
+                .findUser(USER_NAME)
+                .clickSaveDraft()
+                .clickListButton();
+
+        Assert.assertEquals(boardPage.getRowCount(), ALL_RECORDS_TABLE.size());
+
+        boardPage.clickTextColumn();
+
+        Assert.assertEquals(boardPage.getListRecordsTable(), expectedSortedRecords);
     }
 
     @Test

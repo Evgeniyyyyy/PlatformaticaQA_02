@@ -7,6 +7,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import utils.TestUtils;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -17,6 +18,10 @@ public class BoardListPage extends MainPage {
 
     @FindBy(xpath = "//tbody/tr")
     private List<WebElement> rows;
+
+
+    @FindBy(xpath = "//td[@class='pa-list-table-th']")
+    private List<WebElement> recordsTable;
 
     @FindBy(xpath = "//tbody/tr/td/i")
     private WebElement icon;
@@ -35,6 +40,12 @@ public class BoardListPage extends MainPage {
 
     @FindBy(xpath = "//a/span[@class='notification']")
     private WebElement notificationRecycleBinIcon;
+
+    @FindBy(xpath = "//input[@placeholder = 'Search']")
+    private WebElement inputSearch;
+
+    @FindBy(xpath = "//th[@data-field='text']/div")
+    private static WebElement textColumn;
 
     public BoardListPage(WebDriver driver) {
         super(driver);
@@ -91,5 +102,30 @@ public class BoardListPage extends MainPage {
     public String getTextNotificationRecycleBin(){
 
         return notificationRecycleBinIcon.getText();
+    }
+
+    public BoardListPage searchInputValue(String value) {
+        inputSearch.clear();
+        inputSearch.sendKeys(value);
+
+        return this;
+    }
+
+    public BoardListPage clickTextColumn() {
+        textColumn.click();
+
+        return new BoardListPage(getDriver());
+    }
+
+    public  List<String> getActualValues(List<WebElement> actualElements) {
+        List<String> listValues = new ArrayList<>();
+        for (WebElement element : actualElements) {
+            listValues.add(element.getText());
+        }
+        return listValues;
+    }
+
+    public List<String> getListRecordsTable(){
+        return getActualValues(recordsTable);
     }
 }
