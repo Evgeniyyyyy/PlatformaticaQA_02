@@ -24,6 +24,9 @@ public class AssignPage extends MainPage {
     @FindBy(xpath = "//tbody/tr")
     private List<WebElement> rows;
 
+    @FindBy(xpath = "//tbody/tr/td/i")
+    private static WebElement icon;
+
     public AssignEditPage clickNewButton() {
         newButton.click();
 
@@ -46,5 +49,9 @@ public class AssignPage extends MainPage {
         } else {
             return rows.size();
         }
+    }
+
+    public String getClassIcon() {
+        return icon.getAttribute("class");
     }
 }

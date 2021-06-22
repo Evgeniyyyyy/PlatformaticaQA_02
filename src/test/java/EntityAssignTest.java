@@ -26,10 +26,12 @@ public class EntityAssignTest extends BaseTest {
     private static final String TEXT = "Create Record";
     private static final String INT = "666";
     private static final String DECIMAL = "666.66";
+    private static final String DATE = "02/06/2021";
+    private static final String DATETIME = "02/06/2021 22:00:28";
 
     private static final List<String> EXPECTED_RESULT = List.of(STRING, TEXT, INT, DECIMAL, "", "");
 
-    private static final By ICON = By.xpath("//tbody/tr/td/i");
+    private static final String ICON = "fa fa-check-square-o";
     private static final By ACTUAL_RESULT = By.xpath("//tbody/tr/td/a");
 
 
@@ -134,8 +136,7 @@ public class EntityAssignTest extends BaseTest {
                 .fillDecimal(DECIMAL)
                 .clickSave();
 
-        WebElement icon = findElement(ICON);
-        Assert.assertEquals(icon.getAttribute("class"), "fa fa-check-square-o");
+        Assert.assertEquals(assignPage.getClassIcon(), ICON);
         Assert.assertEquals(getActualValues(findElements(ACTUAL_RESULT)), EXPECTED_RESULT);
         Assert.assertEquals(assignPage.getRowCount(), 1);
     }
@@ -143,22 +144,16 @@ public class EntityAssignTest extends BaseTest {
     @Test
     public void testCancelRecord() {
 
-        moveToAssignEntity();
-        getWait().until(ExpectedConditions.elementToBeClickable(
-                findElement(By.xpath("//i[text()='create_new_folder']"))))
-                .click();
+        AssignPage assignPage = new MainPage(getDriver())
+                .clickAssignMenu()
+                .clickNewButton()
+                .fillTitle(STRING)
+                .fillComments(TEXT)
+                .fillInt(INT)
+                .fillDate(DATE)
+                .fillDateTime(DATETIME)
+                .clickCancel();
 
-        findElement(stringField).sendKeys("String");
-        findElement(textField).sendKeys("Text");
-        findElement(intField).sendKeys("7");
-        findElement(dateField).click();
-        findElement(dateField).clear();
-        findElement(dateField).sendKeys("02/06/2021");
-        findElement(datetimeField).click();
-        findElement(datetimeField).clear();
-        findElement(datetimeField).sendKeys("02/06/2021 22:00:28");
-
-        clickCancel(getDriver());
         Assert.assertEquals(findElement(EntityAssignConstants.ASSIGN_GET_CONTANER).getText(), "");
     }
 

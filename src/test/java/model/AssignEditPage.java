@@ -26,36 +26,75 @@ public class AssignEditPage extends BaseModel {
     @FindBy(id = "decimal")
     private WebElement fieldDecimal;
 
+    @FindBy(id = "date")
+    private WebElement fieldDate;
+
+    @FindBy(id = "datetime")
+    private WebElement fieldDateTime;
+
     @FindBy(id = "pa-entity-form-save-btn")
     private WebElement saveButton;
 
+    @FindBy(xpath = "//button[text()='Cancel']")
+    private WebElement cancelButton;
+
 
     public AssignEditPage fillTitle(String value) {
+        fieldString.click();
+        fieldString.clear();
         fieldString.sendKeys(value);
 
         return this;
     }
 
     public AssignEditPage fillComments(String value) {
+        fieldText.click();
+        fieldText.clear();
         fieldText.sendKeys(value);
 
         return this;
     }
 
     public AssignEditPage fillInt(String value) {
+        fieldInt.click();
+        fieldInt.clear();
         fieldInt.sendKeys(value);
 
         return this;
     }
 
     public AssignEditPage fillDecimal(String value) {
+        fieldDecimal.click();
+        fieldDecimal.clear();
         fieldDecimal.sendKeys(value);
+
+        return this;
+    }
+
+    public AssignEditPage fillDate(String value) {
+        fieldDate.click();
+        fieldDate.clear();
+        fieldDate.sendKeys(value);
+
+        return this;
+    }
+
+    public AssignEditPage fillDateTime(String value) {
+        fieldDateTime.click();
+        fieldDateTime.clear();
+        fieldDateTime.sendKeys(value);
 
         return this;
     }
 
     public AssignPage clickSave() {
         TestUtils.jsClick(getDriver(), saveButton);
+
+        return new AssignPage(getDriver());
+    }
+
+    public AssignPage clickCancel() {
+        TestUtils.jsClick(getDriver(), cancelButton);
 
         return new AssignPage(getDriver());
     }
