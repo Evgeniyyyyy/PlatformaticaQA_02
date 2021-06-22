@@ -17,21 +17,46 @@ import static utils.TestUtils.jsClick;
 
 public class EntityFieldsTest extends BaseTest {
 
-    private static final String TITLE_VALUE = RandomStringUtils.randomAlphabetic(20);
-    private static final String COMMENTS_VALUE = RandomStringUtils.randomAlphabetic(15);
-    private static final String INT_VALUE = String.valueOf(RandomUtils.nextInt());
-    private static final String DECIMAL_VALUE = String.format("%.2f", new Random().nextFloat());
-    private static final String DATE_VALUE = new SimpleDateFormat("dd/MM/yyyy").format(new Date());
-    private static final String DATE_TIME_VALUE = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(new Date());
-    private static final String TESTER_NAME = "tester" + new Random().nextInt(299) + "@tester.test";
-    private static final String EDIT_TITLE_VALUE = RandomStringUtils.randomAlphabetic(10);
-    private static final String EDIT_COMMENTS_VALUE = RandomStringUtils.randomAlphabetic(25);
-    private static final String EDIT_INT_VALUE = String.valueOf(RandomUtils.nextInt());
-    private static final String EDIT_DECIMAL_VALUE = String.format("%.2f", new Random().nextFloat());
+    private static final String TITLE_VALUE = getStringRandom(3);
+    private static final String COMMENTS_VALUE = getStringRandom(22);
+    private static final String INT_VALUE = getIntRandom();
+    private static final String DECIMAL_VALUE = getDoubleRandom();
+    private static final String DATE_VALUE = getDate();
+    private static final String DATE_TIME_VALUE = getDateTime();
+    private static final String TESTER_NAME = getUser();
+    private static final String EDIT_TESTER_NAME = getUser();
+    private static final String EDIT_TITLE_VALUE = getStringRandom(15);
+    private static final String EDIT_COMMENTS_VALUE = getStringRandom(12);
+    private static final String EDIT_INT_VALUE = getIntRandom();
+    private static final String EDIT_DECIMAL_VALUE = getDoubleRandom();
     private static final String EDIT_DATE_VALUE = "01/01/0001";
     private static final String EDIT_DATE_TIME_VALUE = "31/12/9999 23:59:59";
     private static final String INFO_TEXT = "Showing 1 to 1 of 1 rows";
     private static final String ICON = "fa fa-check-square-o";
+
+    private static String getStringRandom(Integer value) {
+        return  RandomStringUtils.randomAlphabetic(value);
+    }
+
+    private static String getIntRandom() {
+        return  String.valueOf(RandomUtils.nextInt());
+    }
+
+    private static String getDoubleRandom() {
+        return String.format("%.2f", new Random().nextFloat());
+    }
+
+    private static String getDate() {
+        return new SimpleDateFormat("dd/MM/yyyy").format(new Date());
+    }
+
+    private static String getDateTime() {
+        return new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(new Date());
+    }
+
+    private static String getUser() {
+        return "tester" + new Random().nextInt(299) + "@tester.test";
+    }
 
     private static final List<String> EXPECTED_RESULT = List.of(
             TITLE_VALUE,
@@ -49,7 +74,7 @@ public class EntityFieldsTest extends BaseTest {
             EDIT_DECIMAL_VALUE,
             EDIT_DATE_VALUE,
             EDIT_DATE_TIME_VALUE, "",
-            TESTER_NAME, "");
+            EDIT_TESTER_NAME, "");
 
     private static final List<String> ORDER_VIEW_RESULT = List.of(
             "", EDIT_TITLE_VALUE,
@@ -58,7 +83,7 @@ public class EntityFieldsTest extends BaseTest {
             EDIT_DECIMAL_VALUE,
             EDIT_DATE_VALUE,
             EDIT_DATE_TIME_VALUE,
-            TESTER_NAME);
+            EDIT_TESTER_NAME);
 
     @Test
     public void testCreateRecord() {
@@ -92,7 +117,7 @@ public class EntityFieldsTest extends BaseTest {
                 .fillComments(EDIT_COMMENTS_VALUE)
                 .fillInt(EDIT_INT_VALUE)
                 .fillDecimal(EDIT_DECIMAL_VALUE)
-                .findUser(TESTER_NAME)
+                .findUser(EDIT_TESTER_NAME)
                 .clickSave();
 
         Assert.assertEquals(fieldsPage.getRow(0), EDIT_RESULT);
