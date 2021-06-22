@@ -5,6 +5,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 import utils.TestUtils;
 
 import java.util.ArrayList;
@@ -46,6 +47,9 @@ public class BoardListPage extends MainPage {
 
     @FindBy(xpath = "//th[@data-field='text']/div")
     private static WebElement textColumn;
+
+    @FindBy(className = "pagination-info")
+    private WebElement paginationInfo;
 
     public BoardListPage(WebDriver driver) {
         super(driver);
@@ -127,5 +131,10 @@ public class BoardListPage extends MainPage {
 
     public List<String> getListRecordsTable(){
         return getActualValues(recordsTable);
+    }
+
+    public BoardListPage getTextPaginationInfo(String value) {
+        getWait().until(ExpectedConditions.textToBePresentInElement(paginationInfo, value));
+        return this;
     }
 }

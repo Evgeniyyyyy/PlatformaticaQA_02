@@ -17,6 +17,8 @@ public class EntityBoardDraftRecordTest extends BaseTest {
     private static final String STRING_INPUT_DONE = "Done";
     private static final String USER_NAME = "tester" + new Random().nextInt(299) + "@tester.test";
     private static final String DRAFT_ICON_CLASS_NAME = "fa fa-pencil";
+    private static final String PAGINATION_INFO_STR_1_OF_1 = "Showing 1 to 1 of 1 rows";
+    private static final String PAGINATION_INFO_STR_2_OF_2 = "Showing 1 to 2 of 2 rows";
     private static final String MESSAGE_EMPTY_RECYCLE_BIN = "Good job with housekeeping! Recycle bin is currently empty!";
 
     private static final String TEXT_VALUE_PENDING = getRandomTextValue();
@@ -186,7 +188,7 @@ public class EntityBoardDraftRecordTest extends BaseTest {
     }
 
     @Test
-    public void testSortRecords() {
+    public void testSortDraftRecords() {
         List<String> expectedSortedRecords = new ArrayList<>();
         Collections.sort(ALL_RECORDS_TABLE, new CompareByText());
 
@@ -219,6 +221,22 @@ public class EntityBoardDraftRecordTest extends BaseTest {
         boardPage.clickTextColumn();
 
         Assert.assertEquals(boardPage.getListRecordsTable(), expectedSortedRecords);
+    }
+
+    @Test(dependsOnMethods = "testSortDraftRecords")
+    public void testSearchDraftRecord() {
+
+        BoardListPage boardPage = new MainPage(getDriver())
+                .clickBoardMenu()
+                .clickListButton()
+                .searchInputValue(STRING_INPUT_PENDING)
+                .getTextPaginationInfo(PAGINATION_INFO_STR_1_OF_1);
+
+        Assert.assertEquals(boardPage.getRow(0), EXPECTED_CREATED_PENDING_RECORD);
+
+        boardPage.searchInputValue("")
+                .getTextPaginationInfo(PAGINATION_INFO_STR_2_OF_2);
+        Assert.assertEquals(boardPage.getRowCount(), ALL_RECORDS_TABLE.size());
     }
 
     @Test
