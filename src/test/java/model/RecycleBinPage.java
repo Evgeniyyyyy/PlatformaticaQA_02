@@ -32,6 +32,9 @@ public class RecycleBinPage extends MainPage{
     @FindBy(xpath = "//tr[@data-index='0']/td[2]")
     private static WebElement entityName;
 
+    @FindBy(xpath = "//a[@href='index.php?action=recycle_bin']")
+    private WebElement notificationRecycleBinIcon;
+
     public RecycleBinPage(WebDriver driver) {
         super(driver);
     }
@@ -95,4 +98,8 @@ public class RecycleBinPage extends MainPage{
         return rows.size();
     }
 
+    public String getTextNotificationRecycleBin(){
+
+        return notificationRecycleBinIcon.getText();
+    }
 }

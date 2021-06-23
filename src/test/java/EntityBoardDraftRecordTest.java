@@ -172,7 +172,32 @@ public class EntityBoardDraftRecordTest extends BaseTest {
     }
 
     @Test(dependsOnMethods = "testDeleteDraftRecord")
+    public void testRestoreDraftRecord(){
+
+        RecycleBinPage recycleBinPage = new MainPage(getDriver())
+                .clickRecycleBin();
+
+        String textRecycleBinNotificationBeforeRestore = recycleBinPage.getTextNotificationRecycleBin();
+
+                recycleBinPage.clickDeletedRestoreAsDraft();
+
+        Assert.assertEquals(recycleBinPage.getTextCardBody(), MESSAGE_EMPTY_RECYCLE_BIN);
+
+        BoardListPage boardListPage = new MainPage(getDriver())
+                .clickBoardMenu()
+                .clickListButton();
+
+        String textRecycleBinNotificationAfterRestore = recycleBinPage.getTextNotificationRecycleBin();
+
+        Assert.assertEquals(boardListPage.getRow(0),EXPECTED_EDITED_RECORD);
+        Assert.assertEquals(boardListPage.getIcon(), DRAFT_ICON_CLASS_NAME);
+        Assert.assertNotEquals(textRecycleBinNotificationBeforeRestore, textRecycleBinNotificationAfterRestore);
+    }
+
+    @Test(dependsOnMethods = "testRestoreDraftRecord")
     public void testDeleteRecordFromRecycleBin() {
+
+        testDeleteDraftRecord();
 
         RecycleBinPage recycleBinPage = new MainPage(getDriver())
                 .clickRecycleBin()
