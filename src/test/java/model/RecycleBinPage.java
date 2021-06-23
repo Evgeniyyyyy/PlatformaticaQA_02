@@ -35,6 +35,9 @@ public class RecycleBinPage extends MainPage{
     @FindBy(xpath = "//a[@href='index.php?action=recycle_bin']")
     private WebElement notificationRecycleBinIcon;
 
+    @FindBy(xpath = "//a/span[@class='notification']")
+    private WebElement notificationRowCount;
+
     public RecycleBinPage(WebDriver driver) {
         super(driver);
     }
@@ -101,5 +104,10 @@ public class RecycleBinPage extends MainPage{
     public String getTextNotificationRecycleBin(){
 
         return notificationRecycleBinIcon.getText();
+    }
+
+    public String getTextNotificationRowCount(){
+
+        return notificationRowCount.getText();
     }
 }

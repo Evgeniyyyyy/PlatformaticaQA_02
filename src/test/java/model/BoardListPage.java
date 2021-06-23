@@ -39,14 +39,11 @@ public class BoardListPage extends MainPage {
     @FindBy(xpath = "//a[text()='delete']")
     private WebElement actionsDeleteButton;
 
-    @FindBy(xpath = "//a/span[@class='notification']")
-    private WebElement notificationRecycleBinIcon;
-
     @FindBy(xpath = "//input[@placeholder = 'Search']")
     private WebElement inputSearch;
 
     @FindBy(xpath = "//th[@data-field='text']/div")
-    private static WebElement textColumn;
+    private WebElement textColumn;
 
     @FindBy(className = "pagination-info")
     private WebElement paginationInfo;
@@ -101,11 +98,6 @@ public class BoardListPage extends MainPage {
         actionsDeleteButton.click();
 
         return new BoardListPage(getDriver());
-    }
-
-    public String getTextNotificationRecycleBin(){
-
-        return notificationRecycleBinIcon.getText();
     }
 
     public BoardListPage searchInputValue(String value) {

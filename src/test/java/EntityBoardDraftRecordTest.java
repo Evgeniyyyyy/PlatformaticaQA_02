@@ -101,7 +101,7 @@ public class EntityBoardDraftRecordTest extends BaseTest {
     @Test
     public void testCreateDraftRecord() {
 
-        BoardListPage boardPage = new MainPage(getDriver())
+        BoardListPage boardListPage = new MainPage(getDriver())
                 .clickBoardMenu()
                 .clickNewButton()
                 .fillFields(STRING_INPUT_PENDING,
@@ -112,29 +112,29 @@ public class EntityBoardDraftRecordTest extends BaseTest {
                 .clickSaveDraft()
                 .clickListButton();
 
-        Assert.assertEquals(boardPage.getRowCount(), 1);
-        Assert.assertEquals(boardPage.getIcon(), DRAFT_ICON_CLASS_NAME);
-        Assert.assertEquals(boardPage.getRow(0), EXPECTED_CREATED_PENDING_RECORD);
+        Assert.assertEquals(boardListPage.getRowCount(), 1);
+        Assert.assertEquals(boardListPage.getIcon(), DRAFT_ICON_CLASS_NAME);
+        Assert.assertEquals(boardListPage.getRow(0), EXPECTED_CREATED_PENDING_RECORD);
     }
 
     @Test(dependsOnMethods = "testCreateDraftRecord")
     public void testViewDraftRecord() {
 
-        BoardViewPage boardPage = new MainPage(getDriver())
+        BoardViewPage boardViewPage = new MainPage(getDriver())
                 .clickBoardMenu()
                 .clickListButton()
                 .clickActions()
                 .clickActionsView();
 
-        Assert.assertEquals(boardPage.getActualRecordInViewMode(), EXPECTED_VIEW_PENDING_RECORD);
-        Assert.assertEquals(boardPage.getActualUserName(), USER_NAME);
+        Assert.assertEquals(boardViewPage.getActualRecordInViewMode(), EXPECTED_VIEW_PENDING_RECORD);
+        Assert.assertEquals(boardViewPage.getActualUserName(), USER_NAME);
 
     }
 
     @Test(dependsOnMethods = "testViewDraftRecord")
     public void testEditDraftRecord() {
 
-        BoardListPage boardPage = new MainPage(getDriver())
+        BoardListPage boardListPage = new MainPage(getDriver())
                 .clickBoardMenu()
                 .clickListButton()
                 .clickActions()
@@ -149,26 +149,26 @@ public class EntityBoardDraftRecordTest extends BaseTest {
                 .clickSaveDraft()
                 .clickListButton();
 
-        Assert.assertEquals(boardPage.getRowCount(), 1);
-        Assert.assertEquals(boardPage.getRow(0), EXPECTED_EDITED_RECORD);
+        Assert.assertEquals(boardListPage.getRowCount(), 1);
+        Assert.assertEquals(boardListPage.getRow(0), EXPECTED_EDITED_RECORD);
     }
 
     @Test(dependsOnMethods = "testEditDraftRecord")
     public void testDeleteDraftRecord() {
 
-        BoardListPage boardPage = new MainPage(getDriver())
+        BoardListPage boardListPage = new MainPage(getDriver())
                 .clickBoardMenu()
                 .clickListButton()
                 .clickActions()
                 .clickActionsDelete();
 
-        Assert.assertTrue(boardPage.isTableEmpty());
-        Assert.assertEquals(boardPage.getTextNotificationRecycleBin(), "1");
+        Assert.assertTrue(boardListPage.isTableEmpty());
 
-        RecycleBinPage boardRecycleBinPage = new MainPage(getDriver())
+        RecycleBinPage recycleBinPage = new MainPage(getDriver())
                 .clickRecycleBin();
 
-        Assert.assertEquals(boardRecycleBinPage.getRowCount(), 1);
+        Assert.assertEquals(recycleBinPage.getTextNotificationRowCount(), "1");
+        Assert.assertEquals(recycleBinPage.getRowCount(), 1);
     }
 
     @Test(dependsOnMethods = "testDeleteDraftRecord")
@@ -222,7 +222,7 @@ public class EntityBoardDraftRecordTest extends BaseTest {
             }
         }
 
-        BoardListPage boardPage = new MainPage(getDriver())
+        BoardListPage boardListPage = new MainPage(getDriver())
                 .clickBoardMenu()
                 .clickNewButton()
                 .fillFields(STRING_INPUT_PENDING,
@@ -240,27 +240,27 @@ public class EntityBoardDraftRecordTest extends BaseTest {
                 .clickSaveDraft()
                 .clickListButton();
 
-        Assert.assertEquals(boardPage.getRowCount(), ALL_RECORDS_TABLE.size());
+        Assert.assertEquals(boardListPage.getRowCount(), ALL_RECORDS_TABLE.size());
 
-        boardPage.clickTextColumn();
+        boardListPage.clickTextColumn();
 
-        Assert.assertEquals(boardPage.getListRecordsTable(), expectedSortedRecords);
+        Assert.assertEquals(boardListPage.getListRecordsTable(), expectedSortedRecords);
     }
 
     @Test(dependsOnMethods = "testSortDraftRecords")
     public void testSearchDraftRecord() {
 
-        BoardListPage boardPage = new MainPage(getDriver())
+        BoardListPage boardListPage = new MainPage(getDriver())
                 .clickBoardMenu()
                 .clickListButton()
                 .searchInputValue(STRING_INPUT_PENDING)
                 .getTextPaginationInfo(PAGINATION_INFO_STR_1_OF_1);
 
-        Assert.assertEquals(boardPage.getRow(0), EXPECTED_CREATED_PENDING_RECORD);
+        Assert.assertEquals(boardListPage.getRow(0), EXPECTED_CREATED_PENDING_RECORD);
 
-        boardPage.searchInputValue("")
+        boardListPage.searchInputValue("")
                 .getTextPaginationInfo(PAGINATION_INFO_STR_2_OF_2);
-        Assert.assertEquals(boardPage.getRowCount(), ALL_RECORDS_TABLE.size());
+        Assert.assertEquals(boardListPage.getRowCount(), ALL_RECORDS_TABLE.size());
     }
 
     @Test
@@ -269,7 +269,7 @@ public class EntityBoardDraftRecordTest extends BaseTest {
         BoardPage boardPage = new MainPage(getDriver())
                 .clickBoardMenu();
 
-        String textCardBodyBeforeCancel = BoardPage.getTextCardBody();
+        String textCardBodyBeforeCancel = boardPage.getTextCardBody();
 
         boardPage.clickNewButton()
                 .fillFields(STRING_INPUT_PENDING,
@@ -279,7 +279,7 @@ public class EntityBoardDraftRecordTest extends BaseTest {
                 .findUser(USER_NAME)
                 .clickCancel();
 
-        String textCardBodyAfterCancel = BoardPage.getTextCardBody();
+        String textCardBodyAfterCancel = boardPage.getTextCardBody();
         Assert.assertEquals(textCardBodyAfterCancel, textCardBodyBeforeCancel);
     }
 }
