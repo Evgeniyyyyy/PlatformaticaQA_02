@@ -6,6 +6,7 @@ import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static utils.TestUtils.*;
@@ -19,6 +20,7 @@ public class EntityEventsChain1Test extends BaseTest {
     private static final By SAVE_BUTTON = By.id("pa-entity-form-save-btn");
     private static final By SAVE_DRAFT_BUTTON = By.id("pa-entity-form-draft-btn");
     private static final By DROP_DOWN_MENU = By.xpath("//i[contains(., 'menu')]");
+    private static final By VIEW_MENU = By.xpath("//button[@class='btn btn-round btn-sm btn-primary dropdown-toggle']/..//a[text()='view']");
     private static final By EDIT_MENU = By.xpath("//a[contains(., 'edit')]");
     private static final By DELETE_MENU = By.xpath("//a[contains (text(), 'delete')]");
     private static final By CANCEL = By.xpath("//button[text()='Cancel']");
@@ -57,6 +59,9 @@ public class EntityEventsChain1Test extends BaseTest {
 
     private void clickDropDownMenu() {
         findElement(DROP_DOWN_MENU).click();
+    }
+    private void clickViewMenu() {
+        findElement(VIEW_MENU).click();
     }
 
     private void clickEditMenu() {
@@ -267,5 +272,24 @@ public class EntityEventsChain1Test extends BaseTest {
 
         Assert.assertTrue(getDriver().findElements(TABLE)
                 .isEmpty());
+    }
+
+    @Test
+    public void setEventsChain1RecordView(){
+        clickEventsChain1Menu();
+        clickCreateNewFolderButton();
+        inputF1Value("1");
+        clickSaveButton();
+        jsClick(getDriver(), getDriver().findElement(
+                By.xpath("//button[@class='btn btn-round btn-sm btn-primary dropdown-toggle']")));
+        clickViewMenu();
+        final List<String> exceptedValues = Arrays.asList("1", "2", "4", "8", "16", "32", "64", "128", "256", "512");
+        List<WebElement> cells = getDriver().findElements(By.xpath("//span[@class = 'pa-view-field']"));
+        List<String> actualValues = new ArrayList<>();
+        for(WebElement cell: cells){
+            actualValues.add(cell.getText());
+        }
+
+        Assert.assertEquals(actualValues, exceptedValues);
     }
 }
