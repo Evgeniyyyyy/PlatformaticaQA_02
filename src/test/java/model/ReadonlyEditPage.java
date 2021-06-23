@@ -1,10 +1,8 @@
 package model;
 
-        import org.openqa.selenium.By;
         import org.openqa.selenium.WebDriver;
         import org.openqa.selenium.WebElement;
         import org.openqa.selenium.support.FindBy;
-        import org.openqa.selenium.support.PageFactory;
         import utils.TestUtils;
 
 public class ReadonlyEditPage extends BaseModel {
@@ -26,6 +24,9 @@ public class ReadonlyEditPage extends BaseModel {
 
     @FindBy(id = "pa-entity-form-draft-btn")
     private WebElement saveDraftButton;
+
+    @FindBy(xpath = "//button[text()='Cancel']")
+    private WebElement cancelButton;
 
     public ReadonlyEditPage(WebDriver driver) {
         super(driver);
@@ -63,6 +64,12 @@ public class ReadonlyEditPage extends BaseModel {
 
     public ReadonlyPage clickSaveDraft(){
         TestUtils.jsClick(getDriver(), saveDraftButton);
+
+        return new ReadonlyPage(getDriver());
+    }
+
+    public ReadonlyPage clickCancel() {
+        TestUtils.jsClick(getDriver(), cancelButton);
 
         return new ReadonlyPage(getDriver());
     }
