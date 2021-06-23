@@ -17,6 +17,9 @@ public class MainPage extends BaseModel {
     @FindBy(xpath = "//p[text()= ' Readonly ']")
     private WebElement readonlyMenuItem;
 
+    @FindBy(xpath = "//p[text()= ' Calendar ']")
+    private WebElement calendarMenuItem;
+
     @FindBy(xpath = "//p[text()= ' Gantt ']")
     private WebElement ganttMenuItem;
 
@@ -49,6 +52,12 @@ public class MainPage extends BaseModel {
         TestUtils.jsClick(getDriver(), assignMenuItem);
 
         return new AssignPage(getDriver());
+    }
+
+    public CalendarPage clickCalendarMenu(){
+        TestUtils.jsClick(getDriver(), calendarMenuItem);
+
+        return new CalendarPage(getDriver());
     }
 
     public FieldsPage clickFieldsMenu() {
