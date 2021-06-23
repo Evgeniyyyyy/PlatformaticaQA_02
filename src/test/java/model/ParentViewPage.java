@@ -7,7 +7,7 @@ import org.openqa.selenium.support.FindBy;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ParentViewPage extends MainPage {
+public class ParentViewPage extends BaseViewPage<ParentPage> {
 
     public ParentViewPage(WebDriver driver) {
         super(driver);
@@ -28,5 +28,10 @@ public class ParentViewPage extends MainPage {
         listValues.add(user.getText());
 
         return listValues;
+    }
+
+    @Override
+    protected ParentPage createMasterPage() {
+        return new ParentPage(getDriver());
     }
 }

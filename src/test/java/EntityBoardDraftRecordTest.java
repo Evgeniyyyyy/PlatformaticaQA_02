@@ -174,17 +174,16 @@ public class EntityBoardDraftRecordTest extends BaseTest {
     @Test(dependsOnMethods = "testDeleteDraftRecord")
     public void testDeleteRecordFromRecycleBin() {
 
-        BoardViewPage boardPage = new MainPage(getDriver())
-                .clickBoardMenu()
+        RecycleBinPage recycleBinPage = new MainPage(getDriver())
                 .clickRecycleBin()
-                .clickDeletedRecord();
+                .clickDeletedRecord(BoardViewPage::new, viewPage -> {
 
-        Assert.assertEquals(boardPage.getActualRecordInViewMode(), EXPECTED_EDITED_VIEWMODE_RECORD);
-        Assert.assertEquals(boardPage.getActualUserName(), USER_NAME);
+                    Assert.assertEquals(viewPage.getActualRecordInViewMode(), EXPECTED_EDITED_VIEWMODE_RECORD);
+                    Assert.assertEquals(viewPage.getActualUserName(), USER_NAME);
 
-        boardPage.closeViewWindow().clickDeletedRecordPermanently();
+                }).clickDeletedRecordPermanently();
 
-        Assert.assertEquals(BoardPage.getTextCardBody(), MESSAGE_EMPTY_RECYCLE_BIN);
+        Assert.assertEquals(recycleBinPage.getTextCardBody(), MESSAGE_EMPTY_RECYCLE_BIN);
     }
 
     @Test

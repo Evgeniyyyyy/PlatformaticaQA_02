@@ -54,6 +54,13 @@ public class BoardEditPage extends BaseModel {
         for (char c : editKeys) {
             newString.append(c);
             element.sendKeys(String.valueOf(c));
+
+            try {
+                Thread.sleep(50);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+
             getWait().until(ExpectedConditions.attributeToBe(element, "value", String.valueOf(newString)));
         }
     }

@@ -7,7 +7,7 @@ import org.openqa.selenium.support.FindBy;
 import java.util.ArrayList;
 import java.util.List;
 
-public class BoardViewPage extends MainPage {
+public class BoardViewPage extends BaseViewPage<BoardListPage> {
 
     public BoardViewPage(WebDriver driver) {
         super(driver);
@@ -18,9 +18,6 @@ public class BoardViewPage extends MainPage {
 
     @FindBy(xpath = "//div[@class = 'form-group']/p")
     private WebElement user;
-
-    @FindBy(xpath = "//i[@class = 'material-icons'][text()='clear']")
-    private WebElement closeViewWindow;
 
     public List<String> getActualRecordInViewMode(){
         List<String> listValues = new ArrayList<>();
@@ -34,10 +31,8 @@ public class BoardViewPage extends MainPage {
         return user.getText();
     }
 
-    public RecycleBinPage closeViewWindow(){
-        closeViewWindow.click();
-
-        return new RecycleBinPage(getDriver());
-
+    @Override
+    protected BoardListPage createMasterPage(){
+        return new BoardListPage(getDriver());
     }
 }

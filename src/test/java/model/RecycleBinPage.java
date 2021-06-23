@@ -1,12 +1,13 @@
 package model;
 
-import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 
 import java.util.List;
+import java.util.function.Consumer;
+import java.util.function.Function;
 
 public class RecycleBinPage extends MainPage{
 
@@ -17,7 +18,7 @@ public class RecycleBinPage extends MainPage{
     private WebElement deletedRecordPermanently;
 
     @FindBy(className = "card-body")
-    private static WebElement table;
+    private WebElement table;
 
     @FindBy(xpath = "//a[contains(text(), 'restore as draft')]")
     private WebElement restoreAsDraft;
@@ -49,8 +50,7 @@ public class RecycleBinPage extends MainPage{
         return new RecycleBinPage(getDriver());
     }
 
-    public static String getTextCardBody() {
-
+    public String getTextCardBody() {
         return table.getText();
     }
 
@@ -63,11 +63,18 @@ public class RecycleBinPage extends MainPage{
         return entityName.getText();
     }
 
-    public BoardViewPage clickDeletedRecord(){
+    public <ViewPageType extends BaseViewPage> RecycleBinPage clickDeletedRecord(
+            Function<WebDriver, ViewPageType> constructor,
+            Consumer<ViewPageType> consumer)
+    {
         getWait().until(ExpectedConditions.elementToBeClickable(deletedRecord));
         deletedRecord.click();
 
-        return new BoardViewPage(getDriver());
+        ViewPageType viewPageType = constructor.apply(getDriver());
+        consumer.accept(viewPageType);
+        viewPageType.closeViewWindow();
+
+        return this;
     }
 
     public ParentViewPage clickDeletedRecordForParent(){

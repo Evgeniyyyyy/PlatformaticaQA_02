@@ -188,7 +188,7 @@ public class EntityDefaultTest extends BaseTest {
         Assert.assertEquals(RecycleBinPage.getTextPaginationInfo(), INFO_STR_1_OF_1);
 
         recycleBinPage.clickDeletedRestoreAsDraft();
-        Assert.assertEquals(RecycleBinPage.getTextCardBody(), CARD_BODY_TEXT_EMPTY);
+        Assert.assertEquals(recycleBinPage.getTextCardBody(), CARD_BODY_TEXT_EMPTY);
 
         DefaultPage defaultPage = new MainPage(getDriver())
                 .clickDefaultMenu();

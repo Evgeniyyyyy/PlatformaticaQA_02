@@ -110,12 +110,6 @@ public class DefaultPage extends MainPage{
         return icon.getAttribute("class");
     }
 
-    public RecycleBinPage clickRecycleBin(){
-        recycleBinIcon.click();
-
-        return new RecycleBinPage(getDriver());
-    }
-
     public DefaultPage clickActions() {
         actionsButton.click();
 
