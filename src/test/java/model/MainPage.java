@@ -44,6 +44,9 @@ public class MainPage extends BaseModel {
     @FindBy(xpath = "//p[text()= ' Chevron ']")
     private WebElement chevronMenuItem;
 
+    @FindBy(xpath = "//p[text()= ' Placeholder ']")
+    private WebElement placeholderMenuItem;
+
     public MainPage(WebDriver driver) {
         super(driver);
     }
@@ -118,5 +121,11 @@ public class MainPage extends BaseModel {
         TestUtils.jsClick(getDriver(), chevronMenuItem);
 
         return new ChevronPage(getDriver());
+    }
+
+    public PlaceholderPage clickPlaceholderMenu() {
+        TestUtils.jsClick(getDriver(), placeholderMenuItem);
+
+        return new PlaceholderPage(getDriver());
     }
 }
