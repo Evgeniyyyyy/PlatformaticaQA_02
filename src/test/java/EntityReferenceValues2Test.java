@@ -1,187 +1,149 @@
 import base.BaseTest;
+import model.MainPage;
+import model.RecycleBinPage;
+import model.ReferenceValuesPage;
 import org.apache.commons.lang3.time.DateUtils;
 import org.openqa.selenium.By;
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.testng.Assert;
 import org.testng.annotations.Test;
-import utils.ProjectUtils;
+
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
-import static utils.TestUtils.*;
 
 public class EntityReferenceValues2Test extends BaseTest {
 
-    private static final By TABLE_ROWS = By.xpath("//table[@id='pa-all-entities-table']/tbody/tr");
-    private static final By RECORDS_IN_BIN = By.xpath("//td[@class='pa-recycle-col']//span[contains(text(),'Label')]/b");
-
+    private ReferenceValuesPage referenceValuesPage;
     private static List<List<String>> ListOfAllCreatedRecords;
 
-    private void SetUpPage() {
-        ProjectUtils.getEntity(getDriver(), "Reference values");
-        getWait().until(ExpectedConditions.textToBe(By.xpath("//b[contains(text(),'Reference values')]"), "Reference values"));
+    private ReferenceValuesPage createFillRecord(List<String> list)
+    {
+        return new MainPage(getDriver())
+                .clickReferenceValueMenu()
+                .clickCreateButton()
+                .fillLabel(list.get(0))
+                .fillFilter_1(list.get(1))
+                .fillFilter_2(list.get(2))
+                .clickSaveButton();
     }
-
-    private void SetUpBinPage(){
-        scrollClick(getDriver(), findElement(By.xpath("//ul[@class='navbar-nav']/li[1]")));
-        getWait().until(ExpectedConditions.textToBe(By.xpath("//b[contains(text(),'Recycle Bin')]"),
-                "Recycle Bin"));
-    }
-
-    private void createNewRecords() {
-        SetUpPage();
-        Date Date = new Date();
-        ListOfAllCreatedRecords = List.of(
-                List.of("first record","45",new SimpleDateFormat("dd/MM/yyyy").format(Date)),
-                List.of("second record","",new SimpleDateFormat("dd/MM/yyyy").format(DateUtils.addDays(Date, 1))),
-                List.of("third record","day",new SimpleDateFormat("dd/MM/yyyy").format(DateUtils.addDays(Date, 2))));
-
-        for (int i = 0; i < ListOfAllCreatedRecords.size(); i++) {
-            getWait().until(ExpectedConditions.elementToBeClickable(By.xpath("//*[contains(text(),'create_new_folder')]")))
-                    .click();
-            List<String> CurrentList = ListOfAllCreatedRecords.get(i);
-            findElement(By.id("label")).sendKeys(CurrentList.get(0));
-            findElement(By.id("filter_1")).sendKeys(CurrentList.get(1));
-            findElement(By.id("filter_2")).sendKeys(CurrentList.get(2));
-            scrollClick(getDriver(), findElement(By.id("pa-entity-form-save-btn")));//save
-            getWait().until(ExpectedConditions.visibilityOfElementLocated(By
-                    .xpath("//table[@id='pa-all-entities-table']")));
-        }
-    }
-
-    private int DeleteVerifyGetCurrentListRecords(String NameOfRecord) {
-        scrollClick(getDriver(), By.xpath("//table[@id='pa-all-entities-table']/tbody/tr[contains(.,'" +
-                NameOfRecord + "')]//button"));
-        getWait().until(movingIsFinished(By.xpath("//tr[contains(.,'" +
-                NameOfRecord + "')]//a[contains (text(), 'delete')]"))).click();
-
-        if (!isTableAvailable()) return 0;
-
-        int isDeletedRecordIsLocatedInPageTable = findElements(By.xpath("//td[@class='pa-list-table-th']")).stream()
-                .map(el -> el.getText()).filter(el -> el.contains(NameOfRecord)).collect(Collectors.toList()).size();
-        Assert.assertEquals(isDeletedRecordIsLocatedInPageTable, 0);
-
-        return findElements(TABLE_ROWS).size();
-    }
-
-    private int PermanentlyDeleteVerifyGetCurrentListRecords(String NameOfRecord) {
-        if (!isTableAvailable()) Assert.fail("There is no records in the Recycle Bin!");
-
-        scrollClick(getDriver(),
-                By.xpath("//tr[contains(.,'Label') and contains(.,'" +
-                        NameOfRecord + "')]//a[text()='delete permanently']"));
-
-        if (!isTableAvailable()) return 0;
-
-        List<WebElement> ListRecordsInBin=findElements(RECORDS_IN_BIN);
-        int isDeletedRecordIsLocatedInBin = ListRecordsInBin.stream().map(el -> el.getText())
-                .filter(el -> el.contains(NameOfRecord)).collect(Collectors.toList()).size();
-        Assert.assertEquals(isDeletedRecordIsLocatedInBin, 0);
-
-        return ListRecordsInBin.size();
-    }
-
-    private boolean isTableAvailable() {
-        WebElement checkForTable = findElement(By.xpath("//div[contains(@class,'card-body')]"));
-        if (checkForTable.getText().trim().isBlank() || checkForTable.getText().trim().isEmpty()
-                || checkForTable.getText().contains("Recycle bin is currently empty"))
-            return false;
-        else return true;
-    }
-
-    private int getNumberOfNotification() {
-        if (getDriver().getPageSource().contains("<span class=\"notification\">"))
-            return Integer.parseInt(findElement(
-                    By.xpath("//span[@class='notification']/b")).getText());
-        else return 0;
+    private ReferenceValuesPage editExistingRecord(List<String> list, String NameRecordWantToChange)
+    {
+        return new MainPage(getDriver())
+                .clickReferenceValueMenu()
+                .editRecord(NameRecordWantToChange)
+                .clearFields()
+                .fillLabel(list.get(0))
+                .fillFilter_1(list.get(1))
+                .fillFilter_2(list.get(2))
+                .clickSaveButton();
     }
 
     @Test
-    public void testDeleteRecordAndValidateOnebyOne() {
-        createNewRecords();//create 3 records
-        int OriginalNumberOfRecords = findElements(TABLE_ROWS).size();
-        Assert.assertEquals(OriginalNumberOfRecords, ListOfAllCreatedRecords.size());
-        Assert.assertEquals(findElements(By.xpath("//td/i[@class='fa fa-check-square-o']")).size(),
+    public void testDeleteRecordAndValidate() {
+        ListOfAllCreatedRecords = List.of(
+                List.of("first record","45",new SimpleDateFormat("dd/MM/yyyy").format(new Date())),
+                List.of("second record","",new SimpleDateFormat("dd/MM/yyyy").format(DateUtils.addDays(new Date(), 1))),
+                List.of("third record","day",new SimpleDateFormat("dd/MM/yyyy").format(DateUtils.addDays(new Date(), 2))));
+
+        for(List<String> list: ListOfAllCreatedRecords)
+            referenceValuesPage=createFillRecord(list);
+
+        Assert.assertTrue(referenceValuesPage.isTableAvailable());
+        Assert.assertEquals(referenceValuesPage.getTableRowsCount(),ListOfAllCreatedRecords.size());
+        List<String> ExpectedResultList=new ArrayList<>();
+        ListOfAllCreatedRecords.stream().reduce(ExpectedResultList,(sum, el)->{sum.addAll(el); return sum;});
+        Assert.assertEquals(referenceValuesPage.getRowsValue(),ExpectedResultList);
+        Assert.assertEquals(referenceValuesPage.getRowsValue(By.xpath("//td/i[@class='fa fa-check-square-o']")).size(),
                 ListOfAllCreatedRecords.size());//verify left icon
 
-        List<String> ActualResultList =
-                findElements(By.xpath("//td[@class='pa-list-table-th']")).stream()
-                        .map(el -> el.getText()).collect(Collectors.toList());
-        List<String> ExpectedResultList=new ArrayList<>();
-        for(List<String> list: ListOfAllCreatedRecords)
-            ExpectedResultList.addAll(list);
-        Assert.assertEquals(ActualResultList,ExpectedResultList);
-
-        int CurrentNumberOfRecords = DeleteVerifyGetCurrentListRecords(ListOfAllCreatedRecords.get(1).get(0));
+        int OriginalNumberOfRecords=ListOfAllCreatedRecords.size();
+        referenceValuesPage=referenceValuesPage.deleteRecord(ListOfAllCreatedRecords.get(1).get(0));
         OriginalNumberOfRecords--;
-        Assert.assertEquals(CurrentNumberOfRecords, OriginalNumberOfRecords);
-        Assert.assertEquals(getNumberOfNotification(),ListOfAllCreatedRecords.size()
+        Assert.assertEquals(referenceValuesPage.getRowsValueWithFilter(ListOfAllCreatedRecords.get(1).get(0)),0);
+        Assert.assertEquals(referenceValuesPage.getTableRowsCount(), OriginalNumberOfRecords);
+        Assert.assertEquals(referenceValuesPage.getNumberOfNotification(),ListOfAllCreatedRecords.size()
                 - OriginalNumberOfRecords);
 
-        CurrentNumberOfRecords = DeleteVerifyGetCurrentListRecords(ListOfAllCreatedRecords.get(0).get(0));
+        referenceValuesPage=referenceValuesPage.deleteRecord(ListOfAllCreatedRecords.get(0).get(0));
         OriginalNumberOfRecords--;
-        Assert.assertEquals(CurrentNumberOfRecords, OriginalNumberOfRecords);
-        Assert.assertEquals(getNumberOfNotification(),ListOfAllCreatedRecords.size()
+        Assert.assertEquals(referenceValuesPage.getRowsValueWithFilter(ListOfAllCreatedRecords.get(0).get(0)),0);
+        Assert.assertEquals(referenceValuesPage.getTableRowsCount(), OriginalNumberOfRecords);
+        Assert.assertEquals(referenceValuesPage.getNumberOfNotification(),ListOfAllCreatedRecords.size()
                 - OriginalNumberOfRecords);
 
-        CurrentNumberOfRecords = DeleteVerifyGetCurrentListRecords(ListOfAllCreatedRecords.get(2).get(0));
+        referenceValuesPage=referenceValuesPage.deleteRecord(ListOfAllCreatedRecords.get(2).get(0));
         OriginalNumberOfRecords--;
-        Assert.assertEquals(CurrentNumberOfRecords, OriginalNumberOfRecords);
-        Assert.assertEquals(getNumberOfNotification(),ListOfAllCreatedRecords.size()
+        Assert.assertEquals(referenceValuesPage.getRowsValueWithFilter(ListOfAllCreatedRecords.get(2).get(0)),0);
+        Assert.assertEquals(referenceValuesPage.getTableRowsCount(), OriginalNumberOfRecords);
+        Assert.assertEquals(referenceValuesPage.getNumberOfNotification(),ListOfAllCreatedRecords.size()
                 - OriginalNumberOfRecords);
     }
 
-    @Test(dependsOnMethods = "testDeleteRecordAndValidateOnebyOne")
+    @Test(dependsOnMethods = "testDeleteRecordAndValidate")
     public void testVerifyDeletedRecordsInBin() {
-        SetUpBinPage();
+        RecycleBinPage recycleBinPage=new MainPage(getDriver()).clickRecycleBin();
+        Assert.assertTrue(referenceValuesPage.isTableAvailable());
+        Assert.assertEquals(recycleBinPage.getRowCount(), ListOfAllCreatedRecords.size());
+        Assert.assertEquals(recycleBinPage.getNumberOfNotification(),ListOfAllCreatedRecords.size());
 
-        Assert.assertTrue(isTableAvailable());
-
-        int ActualNumberOfRecordsInBin = findElements(By.xpath("//div[@class='fixed-table-body']//table/tbody/tr")).size();
-        Assert.assertEquals(ActualNumberOfRecordsInBin, ListOfAllCreatedRecords.size());
-
-        List<String> ActualResultList =
-                findElements(By.xpath("//tr//span[contains(text(),'Label')]/b"))
-                        .stream().map(el -> el.getText()).collect(Collectors.toList());
         List<String> ExpectedResultList = ListOfAllCreatedRecords.stream().map(el -> el.get(0)).collect(Collectors.toList());
-        Assert.assertTrue(ExpectedResultList.containsAll(ActualResultList));
+        Assert.assertTrue(ExpectedResultList.containsAll(recycleBinPage.getRowsValueByLabelOnly()));
     }
 
     @Test(dependsOnMethods = "testVerifyDeletedRecordsInBin")
-    public void testPermanentDeleteRecordAndValidateOnebyOn() {
-        if(!findElement(By.xpath("//a[@class='navbar-brand']")).getText().contains("Recycle Bin"))
-            SetUpBinPage();
+    public void testPermanentDeleteRecordAndValidate() {
+        RecycleBinPage recycleBinPage=new MainPage(getDriver()).clickRecycleBin();
+        Assert.assertTrue(referenceValuesPage.isTableAvailable());
 
-        if (!isTableAvailable()) Assert.fail("There is no records in the Recycle Bin!");
-
-        int OriginalValueOfRecordsInBin = findElements(RECORDS_IN_BIN).size();
-        int CurrentNumberOfRecordsInBin = PermanentlyDeleteVerifyGetCurrentListRecords(
-                ListOfAllCreatedRecords.get(1).get(0));
+        int OriginalValueOfRecordsInBin = recycleBinPage.getRowCount();
+        recycleBinPage = recycleBinPage.deleteRecord(ListOfAllCreatedRecords.get(1).get(0));
         OriginalValueOfRecordsInBin--;
-        Assert.assertEquals(CurrentNumberOfRecordsInBin, OriginalValueOfRecordsInBin);
-        Assert.assertEquals(getNumberOfNotification(),CurrentNumberOfRecordsInBin);
+        Assert.assertEquals(recycleBinPage.getRowsValuesWithFilter(ListOfAllCreatedRecords.get(1).get(0)),0);
+        Assert.assertEquals(recycleBinPage.getRowCount(), OriginalValueOfRecordsInBin);
+        Assert.assertEquals(recycleBinPage.getNumberOfNotification(),recycleBinPage.getRowCount());
 
-        CurrentNumberOfRecordsInBin = PermanentlyDeleteVerifyGetCurrentListRecords(
-                ListOfAllCreatedRecords.get(0).get(0));
+        recycleBinPage = recycleBinPage.deleteRecord(ListOfAllCreatedRecords.get(0).get(0));
         OriginalValueOfRecordsInBin--;
-        Assert.assertEquals(CurrentNumberOfRecordsInBin, OriginalValueOfRecordsInBin);
-        Assert.assertEquals(getNumberOfNotification(),CurrentNumberOfRecordsInBin);
+        Assert.assertEquals(recycleBinPage.getRowsValuesWithFilter(ListOfAllCreatedRecords.get(0).get(0)),0);
+        Assert.assertEquals(recycleBinPage.getRowCount(), OriginalValueOfRecordsInBin);
+        Assert.assertEquals(recycleBinPage.getNumberOfNotification(),recycleBinPage.getRowCount());
 
-        CurrentNumberOfRecordsInBin = PermanentlyDeleteVerifyGetCurrentListRecords(
-                ListOfAllCreatedRecords.get(2).get(0));
+        recycleBinPage = recycleBinPage.deleteRecord(ListOfAllCreatedRecords.get(2).get(0));
         OriginalValueOfRecordsInBin--;
-        Assert.assertEquals(CurrentNumberOfRecordsInBin, OriginalValueOfRecordsInBin);
-        Assert.assertEquals(getNumberOfNotification(),CurrentNumberOfRecordsInBin);
+        Assert.assertEquals(recycleBinPage.getRowsValuesWithFilter(ListOfAllCreatedRecords.get(2).get(0)),0);
+        Assert.assertEquals(recycleBinPage.getRowCount(), OriginalValueOfRecordsInBin);
+        Assert.assertEquals(recycleBinPage.getNumberOfNotification(),recycleBinPage.getRowCount());
     }
 
-    @Test(dependsOnMethods = "testPermanentDeleteRecordAndValidateOnebyOn")
+    @Test(dependsOnMethods = "testPermanentDeleteRecordAndValidate")
     public void testVerifyRecordsInReferencePageTable() {
-        SetUpPage();
-        Assert.assertTrue(!isTableAvailable());
+        referenceValuesPage=new MainPage(getDriver())
+                .clickReferenceValueMenu();
+        Assert.assertTrue(!referenceValuesPage.isTableAvailable());
+    }
+
+    @Test
+    public void testEditExistingRecord() {
+        String LABEL_VALUE_1="first edition";
+        String FIELD1_VALUE_1="35";
+        String FIELD2_VALUE_1=new SimpleDateFormat("dd/MM/yyyy").format(new Date());
+        String LABEL_VALUE_2="second edition";
+        String FIELD1_VALUE_2="";
+        String FIELD2_VALUE_2 = new SimpleDateFormat("dd/MM/yyyy").format(DateUtils.addDays(new Date(), 1));
+
+        List<String> firstEdition=List.of(LABEL_VALUE_1,FIELD1_VALUE_1,FIELD2_VALUE_1);
+        List<String> secondEdition=List.of(LABEL_VALUE_2,FIELD1_VALUE_2,FIELD2_VALUE_2);
+
+        ReferenceValuesPage referenceValuesPage=createFillRecord(firstEdition);
+        Assert.assertTrue(referenceValuesPage.isTableAvailable());
+        Assert.assertEquals(referenceValuesPage.getTableRowsCount(),1);
+        Assert.assertEquals(firstEdition,referenceValuesPage.getRowsValue(1));
+
+        referenceValuesPage=editExistingRecord(secondEdition,LABEL_VALUE_1);
+        Assert.assertTrue(referenceValuesPage.isTableAvailable());
+        Assert.assertEquals(referenceValuesPage.getTableRowsCount(),1);
+        Assert.assertEquals(secondEdition,referenceValuesPage.getRowsValue(1));
     }
 }

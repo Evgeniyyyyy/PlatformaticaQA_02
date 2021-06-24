@@ -1,5 +1,6 @@
 package model;
 
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -49,6 +50,9 @@ public class MainPage extends BaseModel {
 
     @FindBy(xpath = "//p[text()= ' Placeholder ']")
     private WebElement placeholderMenuItem;
+
+    @FindBy(xpath = "//p[text()= ' Reference values ']")
+    private WebElement referenceValuesMenuItem;
 
     public MainPage(WebDriver driver) {
         super(driver);
@@ -136,5 +140,25 @@ public class MainPage extends BaseModel {
         TestUtils.jsClick(getDriver(), placeholderMenuItem);
 
         return new PlaceholderPage(getDriver());
+    }
+    public ReferenceValuesPage clickReferenceValueMenu() {
+        TestUtils.jsClick(getDriver(), referenceValuesMenuItem);
+
+        return new ReferenceValuesPage(getDriver());
+    }
+
+    public boolean isTableAvailable() {
+        String table=getDriver().findElement(By.xpath("//div[contains(@class,'card-body')]"))
+                .getText();
+        if (table.trim().isBlank() || table.trim().isEmpty()
+                || table.contains("Recycle bin is currently empty"))
+            return false;
+        else return true;
+    }
+
+    public int getNumberOfNotification() {
+        if (getDriver().getPageSource().contains("<span class=\"notification\">"))
+            return  Integer.parseInt(getDriver().findElement(By.xpath("//span[@class='notification']/b")).getText());
+        else return 0;
     }
 }

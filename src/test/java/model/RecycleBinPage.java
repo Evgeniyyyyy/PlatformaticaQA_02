@@ -1,5 +1,6 @@
 package model;
 
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -8,6 +9,9 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.stream.Collectors;
+
+import static utils.TestUtils.scrollClick;
 
 public class RecycleBinPage extends MainPage{
 
@@ -37,6 +41,12 @@ public class RecycleBinPage extends MainPage{
 
     @FindBy(xpath = "//a/span[@class='notification']")
     private WebElement notificationRowCount;
+
+    @FindBy (xpath="//tr//span[contains(text(),'Label')]/b")
+    private List<WebElement> rowsValueByLabelOnly;
+
+    @FindBy (xpath="//td[@class='pa-recycle-col']//span[contains(text(),'Label')]/b")
+    private static List<WebElement> tableColumns;
 
     public RecycleBinPage(WebDriver driver) {
         super(driver);
@@ -98,7 +108,9 @@ public class RecycleBinPage extends MainPage{
     }
 
     public int getRowCount() {
-        return rows.size();
+        if(isTableAvailable())
+            return rows.size();
+        else return 0;
     }
 
     public String getTextNotificationRecycleBin(){
@@ -109,5 +121,26 @@ public class RecycleBinPage extends MainPage{
     public String getTextNotificationRowCount(){
 
         return notificationRowCount.getText();
+    }
+    
+    public int getRowsValuesWithFilter(String filterWord)
+    {
+        if(isTableAvailable())
+            return rowsValueByLabelOnly.stream().map(el -> el.getText()).filter(el -> el.contains(filterWord))
+                    .collect(Collectors.toList()).size();
+        else return 0;
+    }
+
+    public RecycleBinPage deleteRecord(String NameOfRecord) {
+        scrollClick(getDriver(), By.xpath("//tr[contains(.,'Label') and contains(.,'" +
+                NameOfRecord + "')]//a[text()='delete permanently']"));
+        return new RecycleBinPage(getDriver());
+    }
+
+    public List<String> getRowsValueByLabelOnly()
+    {
+        if(isTableAvailable())
+            return rowsValueByLabelOnly.stream().map(el -> el.getText()).collect(Collectors.toList());
+        else return null;
     }
 }
