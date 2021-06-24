@@ -5,6 +5,7 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.ui.ExpectedConditions;
+import utils.ProjectUtils;
 import utils.TestUtils;
 
 import java.util.List;
@@ -50,23 +51,6 @@ public class BoardEditPage extends BaseModel {
         super(driver);
     }
 
-    private void sendKeysOneByOne(WebElement element, String input) {
-        char[] editKeys = input.toCharArray();
-        StringBuilder newString = new StringBuilder();
-        for (char c : editKeys) {
-            newString.append(c);
-            element.sendKeys(String.valueOf(c));
-
-            try {
-                Thread.sleep(50);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-
-            getWait().until(ExpectedConditions.attributeToBe(element, "value", String.valueOf(newString)));
-        }
-    }
-
     public BoardEditPage fillString(String value) {
         fieldString.click();
         if(value.equals("Pending")) {
@@ -83,7 +67,7 @@ public class BoardEditPage extends BaseModel {
 
         getWait().until(ExpectedConditions.elementToBeClickable(fieldText));
 
-        sendKeysOneByOne(fieldText,value);
+        ProjectUtils.sendKeysOneByOne(fieldText,value);
 
         return this;
     }
@@ -95,7 +79,7 @@ public class BoardEditPage extends BaseModel {
     }
 
     public BoardEditPage fillInt(String value) {
-        sendKeysOneByOne(fieldInt,value);
+        ProjectUtils.sendKeysOneByOne(fieldInt,value);
 
         return this;
     }
@@ -108,7 +92,7 @@ public class BoardEditPage extends BaseModel {
 
     public BoardEditPage fillDecimal(String value) {
 
-        sendKeysOneByOne(fieldDecimal,value);
+        ProjectUtils.sendKeysOneByOne(fieldDecimal,value);
 
         return this;
     }

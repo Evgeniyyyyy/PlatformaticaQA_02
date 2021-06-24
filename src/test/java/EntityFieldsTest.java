@@ -12,16 +12,16 @@ import static utils.TestUtils.jsClick;
 
 public class EntityFieldsTest extends BaseTest {
 
-    private static final String TITLE_VALUE = getStringRandom(3);
-    private static final String COMMENTS_VALUE = getStringRandom(22);
+    private static final String TITLE_VALUE = getTextRandom(3);
+    private static final String COMMENTS_VALUE = getTextRandom(22);
     private static final String INT_VALUE = getIntRandom();
     private static final String DECIMAL_VALUE = getDoubleRandom();
     private static final String DATE_VALUE = getDate(0);
     private static final String DATE_TIME_VALUE = getDateTime(0);
     private static final String TESTER_NAME = getUser();
     private static final String EDIT_TESTER_NAME = getUser();
-    private static final String EDIT_TITLE_VALUE = getStringRandom(15);
-    private static final String EDIT_COMMENTS_VALUE = getStringRandom(12);
+    private static final String EDIT_TITLE_VALUE = getTextRandom(15);
+    private static final String EDIT_COMMENTS_VALUE = getTextRandom(12);
     private static final String EDIT_INT_VALUE = getIntRandom();
     private static final String EDIT_DECIMAL_VALUE = getDoubleRandom();
     private static final String EDIT_DATE_VALUE = getDate(getRandom(2555000));

@@ -107,8 +107,8 @@ public class ProjectUtils {
         clickActionsDelete(wait, driver, 0);
     }
 
-    public static String getStringRandom(Integer value) {
-        return  RandomStringUtils.randomAlphabetic(value);
+    public static String getTextRandom(Integer value) {
+        return RandomStringUtils.randomAlphabetic(value);
     }
 
     public static String getIntRandom() {
@@ -133,5 +133,20 @@ public class ProjectUtils {
 
     public static Integer getRandom(Integer value) {
         return new Random().nextInt(value);
+    }
+
+    public static void sendKeysOneByOne(WebElement element, String input) {
+
+        char[] editKeys = input.toCharArray();
+
+        for (char c : editKeys) {
+            element.sendKeys(String.valueOf(c));
+
+            try {
+                Thread.sleep(50);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
     }
 }

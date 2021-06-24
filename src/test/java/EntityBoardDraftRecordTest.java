@@ -10,6 +10,9 @@ import org.testng.annotations.Test;
 
 import java.util.*;
 
+import static utils.ProjectUtils.getIntRandom;
+import static utils.ProjectUtils.getTextRandom;
+
 public class EntityBoardDraftRecordTest extends BaseTest {
 
     private static final String STRING_INPUT_PENDING = "Pending";
@@ -22,14 +25,14 @@ public class EntityBoardDraftRecordTest extends BaseTest {
     private static final String PAGINATION_INFO_STR_2_OF_2 = "Showing 1 to 2 of 2 rows";
     private static final String MESSAGE_EMPTY_RECYCLE_BIN = "Good job with housekeeping! Recycle bin is currently empty!";
 
-    private static final String TEXT_VALUE_PENDING = getRandomTextValue();
-    private static final String INT_VALUE_PENDING = getRandomIntValue();
+    private static final String TEXT_VALUE_PENDING = getTextRandom(8);
+    private static final String INT_VALUE_PENDING = getIntRandom();
     private static final String DECIMAL_VALUE_PENDING = getRandomDecimalValue();
-    private static final String TEXT_VALUE_ONTRACK = getRandomTextValue();
-    private static final String INT_VALUE_ONTRACK = getRandomIntValue();
+    private static final String TEXT_VALUE_ONTRACK = getTextRandom(8);
+    private static final String INT_VALUE_ONTRACK = getIntRandom();
     private static final String DECIMAL_VALUE_ONTRACK = getRandomDecimalValue();
-    private static final String TEXT_VALUE_DONE = getRandomTextValue();
-    private static final String INT_VALUE_DONE = getRandomIntValue();
+    private static final String TEXT_VALUE_DONE = getTextRandom(8);
+    private static final String INT_VALUE_DONE = getIntRandom();
     private static final String DECIMAL_VALUE_DONE = getRandomDecimalValue();
     private static final String EDIT_TEXT_VALUE = "QWERTY";
     private static final String EDIT_INT_VALUE = "12345";
@@ -79,14 +82,6 @@ public class EntityBoardDraftRecordTest extends BaseTest {
 
     private static final List<List> ALL_RECORDS_TABLE = new ArrayList<>(List.of(EXPECTED_CREATED_PENDING_RECORD,
             EXPECTED_CREATED_ONTRACK_RECORD));
-
-    private static String getRandomTextValue() {
-        return RandomStringUtils.randomAlphabetic(8);
-    }
-
-    private static String getRandomIntValue() {
-        return String.valueOf(RandomUtils.nextInt(0, 100000));
-    }
 
     private static String getRandomDecimalValue() {
         return RandomUtils.nextInt(0, 10000) + "." + RandomStringUtils.randomNumeric(2);
@@ -155,7 +150,6 @@ public class EntityBoardDraftRecordTest extends BaseTest {
 
         Assert.assertEquals(boardViewPage.getActualRecordInViewMode(), EXPECTED_VIEW_PENDING_RECORD);
         Assert.assertEquals(boardViewPage.getActualUserName(), USER_NAME);
-
     }
 
     @Test(dependsOnMethods = "testView")
