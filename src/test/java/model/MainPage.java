@@ -14,6 +14,9 @@ public class MainPage extends BaseModel {
     @FindBy(xpath = "//p[text()= ' Fields ']")
     private WebElement fieldsMenuItem;
 
+    @FindBy(xpath = "//p[text()= ' Import ']")
+    private WebElement importMenuItem;
+
     @FindBy(xpath = "//p[text()= ' Readonly ']")
     private WebElement readonlyMenuItem;
 
@@ -109,6 +112,12 @@ public class MainPage extends BaseModel {
         TestUtils.jsClick(getDriver(), defaultMenuItem);
 
         return new DefaultPage(getDriver());
+    }
+
+    public ImportPage clickImportMenu() {
+        TestUtils.jsClick(getDriver(), importMenuItem);
+
+        return new ImportPage(getDriver());
     }
 
     public RecycleBinPage clickRecycleBin(){
