@@ -4,7 +4,6 @@ import com.beust.jcommander.Strings;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.interactions.Action;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -93,28 +92,16 @@ public class FieldsPage extends MainPage {
         return new FieldsPage(getDriver());
     }
 
-    public FieldsPage getReorder() {
-        actions.moveToElement(row)
+    public void getReorder(Integer value) {
+         actions.moveToElement(row)
                 .clickAndHold(row)
-                .dragAndDropBy(row, 0, 20)
+                .dragAndDropBy(row, 0, value)
                 .build()
                 .perform();
-
-        return new FieldsPage(getDriver());
     }
 
     public FieldsPage clickToggle() {
         toggle.click();
-
-        return this;
-    }
-
-    public FieldsPage getNewReorder() {
-        actions.moveToElement(card)
-                .clickAndHold(card)
-                .dragAndDropBy(card, 0, 140)
-                .build()
-                .perform();
 
         return this;
     }

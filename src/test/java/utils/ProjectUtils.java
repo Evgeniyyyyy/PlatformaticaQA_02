@@ -1,21 +1,16 @@
 package utils;
 
-import base.BaseTest;
+import org.apache.commons.lang3.RandomStringUtils;
+import org.apache.commons.lang3.RandomUtils;
+import org.apache.commons.lang3.time.DateUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Properties;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 import static utils.TestUtils.jsClick;
 
@@ -110,5 +105,33 @@ public class ProjectUtils {
 
     public static void clickActionsDelete(WebDriverWait wait, WebDriver driver) {
         clickActionsDelete(wait, driver, 0);
+    }
+
+    public static String getStringRandom(Integer value) {
+        return  RandomStringUtils.randomAlphabetic(value);
+    }
+
+    public static String getIntRandom() {
+        return  String.valueOf(RandomUtils.nextInt());
+    }
+
+    public static String getDoubleRandom() {
+        return String.format("%.2f", new Random().nextFloat());
+    }
+
+    public static String getDate(Integer value) {
+        return new SimpleDateFormat("dd/MM/yyyy").format(DateUtils.addDays(new Date(), value));
+    }
+
+    public static String getDateTime(Integer value) {
+        return new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(DateUtils.addDays(new Date(), value));
+    }
+
+    public static String getUser() {
+        return "tester" + getRandom(299) + "@tester.test";
+    }
+
+    public static Integer getRandom(Integer value) {
+        return new Random().nextInt(value);
     }
 }

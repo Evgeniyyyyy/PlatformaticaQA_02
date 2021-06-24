@@ -1,16 +1,11 @@
 import base.BaseTest;
 import model.FieldsPage;
 import model.MainPage;
-import org.apache.commons.lang3.RandomStringUtils;
-import org.apache.commons.lang3.RandomUtils;
 import org.openqa.selenium.By;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
-import java.util.Random;
 
 import static utils.ProjectUtils.*;
 import static utils.TestUtils.jsClick;
@@ -21,42 +16,18 @@ public class EntityFieldsTest extends BaseTest {
     private static final String COMMENTS_VALUE = getStringRandom(22);
     private static final String INT_VALUE = getIntRandom();
     private static final String DECIMAL_VALUE = getDoubleRandom();
-    private static final String DATE_VALUE = getDate();
-    private static final String DATE_TIME_VALUE = getDateTime();
+    private static final String DATE_VALUE = getDate(0);
+    private static final String DATE_TIME_VALUE = getDateTime(0);
     private static final String TESTER_NAME = getUser();
     private static final String EDIT_TESTER_NAME = getUser();
     private static final String EDIT_TITLE_VALUE = getStringRandom(15);
     private static final String EDIT_COMMENTS_VALUE = getStringRandom(12);
     private static final String EDIT_INT_VALUE = getIntRandom();
     private static final String EDIT_DECIMAL_VALUE = getDoubleRandom();
-    private static final String EDIT_DATE_VALUE = "01/01/0001";
-    private static final String EDIT_DATE_TIME_VALUE = "31/12/9999 23:59:59";
+    private static final String EDIT_DATE_VALUE = getDate(getRandom(2555000));
+    private static final String EDIT_DATE_TIME_VALUE = getDateTime(getRandom(2555000));
     private static final String INFO_TEXT = "Showing 1 to 1 of 1 rows";
     private static final String ICON = "fa fa-check-square-o";
-
-    private static String getStringRandom(Integer value) {
-        return  RandomStringUtils.randomAlphabetic(value);
-    }
-
-    private static String getIntRandom() {
-        return  String.valueOf(RandomUtils.nextInt());
-    }
-
-    private static String getDoubleRandom() {
-        return String.format("%.2f", new Random().nextFloat());
-    }
-
-    private static String getDate() {
-        return new SimpleDateFormat("dd/MM/yyyy").format(new Date());
-    }
-
-    private static String getDateTime() {
-        return new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(new Date());
-    }
-
-    private static String getUser() {
-        return "tester" + new Random().nextInt(299) + "@tester.test";
-    }
 
     private static final List<String> EXPECTED_RESULT = List.of(
             TITLE_VALUE,
@@ -142,11 +113,11 @@ public class EntityFieldsTest extends BaseTest {
 
         Assert.assertEquals(fieldsPage.getRow(0), EDIT_RESULT);
 
-        fieldsPage.getReorder();
+        fieldsPage.getReorder(20);
         Assert.assertEquals(fieldsPage.getRow(0), EXPECTED_RESULT);
 
         fieldsPage.clickToggle()
-                .getNewReorder();
+                  .getReorder(140);
         Assert.assertEquals(fieldsPage.getOrderToggleRow(0), ORDER_VIEW_RESULT);
     }
 
