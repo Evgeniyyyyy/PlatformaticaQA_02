@@ -6,9 +6,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import utils.TestUtils;
 
-import java.text.SimpleDateFormat;
-
-public class ParentEditPage extends BaseModel {
+public class ParentEditPage extends BasePage {
 
     @FindBy(id = "string")
     private WebElement fieldString;

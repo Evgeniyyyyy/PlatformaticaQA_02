@@ -3,11 +3,13 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.testng.Assert;
+import org.testng.annotations.Ignore;
 import org.testng.annotations.Test;
 import utils.TestUtils;
 
 import java.util.List;
 
+@Ignore
 public class EntityCalendar2Test extends BaseTest {
 
     private void createCalendarDraftRecord(String str, String text, String in, String decimal) {
@@ -23,7 +25,6 @@ public class EntityCalendar2Test extends BaseTest {
 
         TestUtils.scrollClick(getDriver(), findElement(By.id("pa-entity-form-draft-btn")));
     }
-
 
     @Test
     public void testEditSaveDraftRecord() {

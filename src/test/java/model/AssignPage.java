@@ -95,14 +95,14 @@ public class AssignPage extends MainPage {
 
     Actions actions = new Actions(getDriver());
 
-    public ParentPage getReorder() {
+    public AssignPage getReorder() {
         actions.moveToElement(row)
                 .clickAndHold(row)
                 .dragAndDropBy(row, 0, 20)
                 .build()
                 .perform();
 
-        return new ParentPage(getDriver());
+        return new AssignPage(getDriver());
     }
 
     public AssignPage getNewReorder() {

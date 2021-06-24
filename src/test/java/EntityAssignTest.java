@@ -2,7 +2,6 @@ import base.BaseTest;
 import constants.EntityAssignConstants;
 import model.AssignPage;
 import model.MainPage;
-import model.ParentPage;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -338,16 +337,16 @@ public class EntityAssignTest extends BaseTest {
                 .clickSave()
                 .searchInput(STRING_VALUE_3)
                 .getTextPaginationInfo(INFO_STR_1_OF_1);
-        Assert.assertEquals(ParentPage.getRow(0), EXPECTED_RESULT_3);
+        Assert.assertEquals(assignPage.getRow(0), EXPECTED_RESULT_3);
 
         assignPage.searchInput("").getTextPaginationInfo(INFO_STR_3_OF_3);
-        Assert.assertEquals(ParentPage.getRowCount(), 3);
+        Assert.assertEquals(assignPage.getRowCount(), 3);
 
         assignPage.searchInput(TEXT_VALUE_2).getTextPaginationInfo(INFO_STR_1_OF_1);
-        Assert.assertEquals(ParentPage.getRow(0), EXPECTED_RESULT_2);
+        Assert.assertEquals(assignPage.getRow(0), EXPECTED_RESULT_2);
 
         assignPage.searchInput("").getTextPaginationInfo(INFO_STR_3_OF_3);
         assignPage.searchInput(INT_VALUE_1).getTextPaginationInfo(INFO_STR_1_OF_1);
-        Assert.assertEquals(ParentPage.getRow(0), EXPECTED_RESULT_1);
+        Assert.assertEquals(assignPage.getRow(0), EXPECTED_RESULT_1);
     }
 }

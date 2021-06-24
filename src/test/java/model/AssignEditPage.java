@@ -7,7 +7,7 @@ import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 import utils.TestUtils;
 
-public class AssignEditPage extends BaseModel {
+public class AssignEditPage extends BasePage {
 
     public AssignEditPage(WebDriver driver) {
 

@@ -12,7 +12,8 @@ import utils.TestUtils;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class ParentPage extends MainPage{
+public class ParentPage extends BasePage {
+
     @FindBy(xpath = "//i[text()='create_new_folder']")
     private static WebElement newButton;
 
@@ -77,27 +78,6 @@ public class ParentPage extends MainPage{
         return new ParentEditPage(getDriver());
     }
 
-    public static boolean isTableEmpty() {
-        return Strings.isStringEmpty(table.getText());
-    }
-
-    public static List<String> getRow(int number) {
-        return rows.get(number).findElements(By.className("pa-list-table-th"))
-                .stream().map(WebElement::getText).collect(Collectors.toList());
-    }
-
-    public static int getRowCount() {
-        if (isTableEmpty()) {
-            return 0;
-        } else {
-            return rows.size();
-        }
-    }
-
-    public static String getClassIcon() {
-        return icon.getAttribute("class");
-    }
-
     public RecycleBinPage clickRecycleBin(){
         recycleBinIcon.click();
 
@@ -129,11 +109,6 @@ public class ParentPage extends MainPage{
         actionsDeleteButton.click();
 
         return new ParentPage(getDriver());
-    }
-
-    public static int getTextNotificationRecycleBin(){
-
-        return Integer.parseInt(notificationRecycleBinIcon.getText());
     }
 
     public ParentPage clickListButton() {
@@ -176,7 +151,7 @@ public class ParentPage extends MainPage{
         return this;
     }
 
-    public static List<String> getRows(int number) {
+    public List<String> getRows(int number) {
         return rows.get(number).findElements(By.className("card-view-value"))
                 .stream().map(WebElement::getText).collect(Collectors.toList());
     }

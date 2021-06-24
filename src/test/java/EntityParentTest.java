@@ -65,9 +65,9 @@ public class EntityParentTest extends BaseTest {
                 .fillDecimal(DECIMAL_INPUT_VALUE)
                 .clickSave();
 
-        Assert.assertEquals(ParentPage.getRowCount(), 1);
-        Assert.assertEquals(ParentPage.getRow(0), NEW_EXPECTED_RESULT);
-        Assert.assertEquals(ParentPage.getClassIcon(), CLASS_ICON_SAVE);
+        Assert.assertEquals(parentPage.getRowCount(), 1);
+        Assert.assertEquals(parentPage.getRow(0), NEW_EXPECTED_RESULT);
+        Assert.assertEquals(parentPage.getClassIcon(), CLASS_ICON_SAVE);
     }
 
     @Test(dependsOnMethods = "testCreateRecord")
@@ -96,8 +96,8 @@ public class EntityParentTest extends BaseTest {
                 .fillDecimal(EDIT_DECIMAL_VALUE)
                 .clickSaveDraft();
 
-        Assert.assertEquals(ParentPage.getRowCount(), 1);
-        Assert.assertEquals(ParentPage.getRow(0), EDIT_RESULT);
+        Assert.assertEquals(parentPage.getRowCount(), 1);
+        Assert.assertEquals(parentPage.getRow(0), EDIT_RESULT);
     }
 
     @Test(dependsOnMethods = "testReorderRecord")
@@ -106,13 +106,13 @@ public class EntityParentTest extends BaseTest {
                 .clickParentMenu()
                 .searchInput(STRING_INPUT_VALUE)
                 .getTextPaginationInfo(INFO_STR_1_OF_1);
-        Assert.assertEquals(ParentPage.getRow(0), NEW_EXPECTED_RESULT);
+        Assert.assertEquals(parentPage.getRow(0), NEW_EXPECTED_RESULT);
 
         parentPage.searchInput("").getTextPaginationInfo(INFO_STR_2_OF_2);
-        Assert.assertEquals(ParentPage.getRowCount(), 2);
+        Assert.assertEquals(parentPage.getRowCount(), 2);
 
         parentPage.searchInput(EDIT_TEXT_VALUE).getTextPaginationInfo(INFO_STR_1_OF_1);
-        Assert.assertEquals(ParentPage.getRow(0), EDIT_RESULT);
+        Assert.assertEquals(parentPage.getRow(0), EDIT_RESULT);
     }
 
     @Test(dependsOnMethods = "testEditRecord")
@@ -129,14 +129,14 @@ public class EntityParentTest extends BaseTest {
                 .fillDecimal(DECIMAL_INPUT_VALUE)
                 .clickSave()
                 .clickOrder();
-        Assert.assertEquals(ParentPage.getRow(0), EDIT_RESULT);
+        Assert.assertEquals(parentPage.getRow(0), EDIT_RESULT);
 
         parentPage.getReorder();
-        Assert.assertEquals(ParentPage.getRow(0), NEW_EXPECTED_RESULT);
+        Assert.assertEquals(parentPage.getRow(0), NEW_EXPECTED_RESULT);
 
         parentPage.clickToggle()
                   .getNewReorder();
-        Assert.assertEquals(ParentPage.getRows(0), VIEW_RESULT);
+        Assert.assertEquals(parentPage.getRows(0), VIEW_RESULT);
     }
 
     @Test
@@ -151,7 +151,7 @@ public class EntityParentTest extends BaseTest {
                 .fillDecimal(DECIMAL_INPUT_VALUE)
                 .clickCancel();
 
-        Assert.assertTrue(ParentPage.isTableEmpty());
+        Assert.assertTrue(parentPage.isTableEmpty());
     }
 
     @Test(dependsOnMethods = "testCancelRecord")
@@ -168,9 +168,9 @@ public class EntityParentTest extends BaseTest {
                 .fillDecimal(DECIMAL_INPUT_VALUE)
                 .clickSaveDraft();
 
-        Assert.assertEquals(ParentPage.getRowCount(), 1);
-        Assert.assertEquals(ParentPage.getRow(0), NEW_EXPECTED_RESULT);
-        Assert.assertEquals(ParentPage.getClassIcon(), CLASS_ICON_SAVE_DRAFT);
+        Assert.assertEquals(parentPage.getRowCount(), 1);
+        Assert.assertEquals(parentPage.getRow(0), NEW_EXPECTED_RESULT);
+        Assert.assertEquals(parentPage.getClassIcon(), CLASS_ICON_SAVE_DRAFT);
     }
 
     @Test(dependsOnMethods = "testCreateNewDraftRecord")
@@ -180,7 +180,7 @@ public class EntityParentTest extends BaseTest {
                 .clickParentMenu()
                 .clickActions()
                 .clickActionsDelete();
-        Assert.assertTrue(ParentPage.isTableEmpty());
-        Assert.assertEquals(ParentPage.getTextNotificationRecycleBin(), 1);
+        Assert.assertTrue(parentPage.isTableEmpty());
+        Assert.assertEquals(parentPage.getTextNotificationRecycleBin(), 1);
     }
 }
