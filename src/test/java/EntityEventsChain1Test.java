@@ -25,6 +25,7 @@ public class EntityEventsChain1Test extends BaseTest {
     private static final By DELETE_MENU = By.xpath("//a[contains (text(), 'delete')]");
     private static final By CANCEL = By.xpath("//button[text()='Cancel']");
     private static final By CARD_BODY = By.xpath("//div[@class = 'card-body ']");
+    private static final By CARD_BODY_VIEW = By.xpath ("//div[@class = 'card-body']") ;
     private static final By TABLE = By.id("pa-all-entities-table");
     private static final By CELLS = By.xpath("//table[@id = 'pa-all-entities-table']/tbody/tr/td/a");
     private static final By ICON = By.xpath("//tbody/tr/td[1]/i");
@@ -55,13 +56,17 @@ public class EntityEventsChain1Test extends BaseTest {
 
     private void clickCancelButton() {
         findElement(CANCEL).click();
+        getWait().until(ExpectedConditions.elementToBeClickable(findElement(CREATE_NEW_FOLDER)));
     }
 
     private void clickDropDownMenu() {
         findElement(DROP_DOWN_MENU).click();
     }
     private void clickViewMenu() {
-        findElement(VIEW_MENU).click();
+        clickDropDownMenu();
+        getWait().until(movingIsFinished(VIEW_MENU)).click();
+        getWait().until(
+                ExpectedConditions.presenceOfElementLocated(CARD_BODY_VIEW));
     }
 
     private void clickEditMenu() {
@@ -116,6 +121,11 @@ public class EntityEventsChain1Test extends BaseTest {
         return findElement(CARD_BODY).getText();
     }
 
+     private String getCardBodyTextView() {
+
+         return findElement(CARD_BODY_VIEW).getText();
+     }
+     
     private String getRecycleBinText() {
 
         return findElement(RECYCLE_BIN).getText();
@@ -280,8 +290,6 @@ public class EntityEventsChain1Test extends BaseTest {
         clickCreateNewFolderButton();
         inputF1Value("1");
         clickSaveButton();
-        jsClick(getDriver(), getDriver().findElement(
-                By.xpath("//button[@class='btn btn-round btn-sm btn-primary dropdown-toggle']")));
         clickViewMenu();
         final List<String> exceptedValues = Arrays.asList("1", "2", "4", "8", "16", "32", "64", "128", "256", "512");
         List<WebElement> cells = getDriver().findElements(By.xpath("//span[@class = 'pa-view-field']"));
@@ -291,5 +299,24 @@ public class EntityEventsChain1Test extends BaseTest {
         }
 
         Assert.assertEquals(actualValues, exceptedValues);
+    }
+    @Test
+    public void deletePermanentlyEventsChain1Record(){
+        clickEventsChain1Menu();
+        clickCreateNewFolderButton();
+        inputF1Value("1");
+        clickSaveButton();
+        jsClick(getDriver(), getDriver().findElement(
+                By.xpath("//button[@class='btn btn-round btn-sm btn-primary dropdown-toggle']")));
+        jsClick(getDriver(), getDriver().findElement(
+                By.xpath("//a[text()='delete']")));
+        jsClick(getDriver(), getDriver().findElement(
+                By.xpath("//i[contains(text(),'delete_outline')]")));
+        jsClick(getDriver(), getDriver().findElement(
+                By.xpath("//a[text()='delete permanently']")));
+
+        Assert.assertEquals(getDriver().findElement(
+                By.xpath("//div[@class ='card-body']")).getText(),
+                "Good job with housekeeping! Recycle bin is currently empty!");
     }
 }
