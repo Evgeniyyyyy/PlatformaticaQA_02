@@ -16,7 +16,8 @@ public class EntityBoardDraftRecordTest extends BaseTest {
     private static final String STRING_INPUT_ONTRACK = "On track";
     private static final String STRING_INPUT_DONE = "Done";
     private static final String USER_NAME = "tester" + new Random().nextInt(299) + "@tester.test";
-    private static final String DRAFT_ICON_CLASS_NAME = "fa fa-pencil";
+    private static final String DRAFT_RECORD_ICON_CLASS_NAME = "fa fa-pencil";
+    private static final String NON_DRAFT_RECORD_ICON_CLASS_NAME = "fa fa-check-square-o";
     private static final String PAGINATION_INFO_STR_1_OF_1 = "Showing 1 to 1 of 1 rows";
     private static final String PAGINATION_INFO_STR_2_OF_2 = "Showing 1 to 2 of 2 rows";
     private static final String MESSAGE_EMPTY_RECYCLE_BIN = "Good job with housekeeping! Recycle bin is currently empty!";
@@ -27,6 +28,9 @@ public class EntityBoardDraftRecordTest extends BaseTest {
     private static final String TEXT_VALUE_ONTRACK = getRandomTextValue();
     private static final String INT_VALUE_ONTRACK = getRandomIntValue();
     private static final String DECIMAL_VALUE_ONTRACK = getRandomDecimalValue();
+    private static final String TEXT_VALUE_DONE = getRandomTextValue();
+    private static final String INT_VALUE_DONE = getRandomIntValue();
+    private static final String DECIMAL_VALUE_DONE = getRandomDecimalValue();
     private static final String EDIT_TEXT_VALUE = "QWERTY";
     private static final String EDIT_INT_VALUE = "12345";
     private static final String EDIT_DECIMAL_VALUE = "33.55";
@@ -68,9 +72,9 @@ public class EntityBoardDraftRecordTest extends BaseTest {
 
     private static final List<String> EXPECTED_CREATED_DONE_RECORD = List.of(
             STRING_INPUT_DONE,
-            TEXT_VALUE_PENDING,
-            INT_VALUE_PENDING,
-            DECIMAL_VALUE_PENDING,
+            TEXT_VALUE_DONE,
+            INT_VALUE_DONE,
+            DECIMAL_VALUE_DONE,
             "", "", "", USER_NAME);
 
     private static final List<List> ALL_RECORDS_TABLE = new ArrayList<>(List.of(EXPECTED_CREATED_PENDING_RECORD,
@@ -88,6 +92,35 @@ public class EntityBoardDraftRecordTest extends BaseTest {
         return RandomUtils.nextInt(0, 10000) + "." + RandomStringUtils.randomNumeric(2);
     }
 
+    BoardEditPage boardEditPage;
+    BoardListPage boardListPage;
+
+    private BoardEditPage fillNewRecordFields(List<String> list) {
+        return new MainPage(getDriver())
+                .clickBoardMenu()
+                .clickNewButton()
+                .fillFields(list)
+                .findUser(USER_NAME);
+    }
+
+    private BoardListPage goToBoardListPage() {
+        return new MainPage(getDriver())
+                .clickBoardMenu()
+                .clickListButton();
+    }
+
+    private BoardEditPage editRecord(List<String> list){
+        return new MainPage(getDriver())
+                .clickBoardMenu()
+                .clickListButton()
+                .clickActions()
+                .clickActionsEdit()
+                .clearText()
+                .clearInt()
+                .clearDecimal()
+                .fillFields(list);
+    }
+
     static class CompareByText implements Comparator<List> {
 
         @Override
@@ -101,24 +134,18 @@ public class EntityBoardDraftRecordTest extends BaseTest {
     @Test
     public void testCreateDraftRecord() {
 
-        BoardListPage boardListPage = new MainPage(getDriver())
-                .clickBoardMenu()
-                .clickNewButton()
-                .fillFields(STRING_INPUT_PENDING,
-                        TEXT_VALUE_PENDING,
-                        INT_VALUE_PENDING,
-                        DECIMAL_VALUE_PENDING)
-                .findUser(USER_NAME)
-                .clickSaveDraft()
-                .clickListButton();
+        boardEditPage = fillNewRecordFields(EXPECTED_CREATED_PENDING_RECORD);
+        boardEditPage.clickSaveDraft();
+
+        boardListPage = goToBoardListPage();
 
         Assert.assertEquals(boardListPage.getRowCount(), 1);
-        Assert.assertEquals(boardListPage.getIcon(), DRAFT_ICON_CLASS_NAME);
+        Assert.assertEquals(boardListPage.getIcon(), DRAFT_RECORD_ICON_CLASS_NAME);
         Assert.assertEquals(boardListPage.getRow(0), EXPECTED_CREATED_PENDING_RECORD);
     }
 
     @Test(dependsOnMethods = "testCreateDraftRecord")
-    public void testViewDraftRecord() {
+    public void testView() {
 
         BoardViewPage boardViewPage = new MainPage(getDriver())
                 .clickBoardMenu()
@@ -131,21 +158,11 @@ public class EntityBoardDraftRecordTest extends BaseTest {
 
     }
 
-    @Test(dependsOnMethods = "testViewDraftRecord")
+    @Test(dependsOnMethods = "testView")
     public void testEditDraftRecord() {
 
-        BoardListPage boardListPage = new MainPage(getDriver())
-                .clickBoardMenu()
-                .clickListButton()
-                .clickActions()
-                .clickActionsEdit()
-                .clearText()
-                .clearInt()
-                .clearDecimal()
-                .fillFields(STRING_INPUT_ONTRACK,
-                        EDIT_TEXT_VALUE,
-                        EDIT_INT_VALUE,
-                        EDIT_DECIMAL_VALUE)
+        editRecord(EXPECTED_EDITED_RECORD);
+        boardEditPage
                 .clickSaveDraft()
                 .clickListButton();
 
@@ -154,11 +171,10 @@ public class EntityBoardDraftRecordTest extends BaseTest {
     }
 
     @Test(dependsOnMethods = "testEditDraftRecord")
-    public void testDeleteDraftRecord() {
+    public void testDelete() {
 
-        BoardListPage boardListPage = new MainPage(getDriver())
-                .clickBoardMenu()
-                .clickListButton()
+        boardListPage = goToBoardListPage();
+        boardListPage
                 .clickActions()
                 .clickActionsDelete();
 
@@ -171,33 +187,31 @@ public class EntityBoardDraftRecordTest extends BaseTest {
         Assert.assertEquals(recycleBinPage.getRowCount(), 1);
     }
 
-    @Test(dependsOnMethods = "testDeleteDraftRecord")
-    public void testRestoreDraftRecord(){
+    @Test(dependsOnMethods = "testDelete")
+    public void testRestoreDraftRecord() {
 
         RecycleBinPage recycleBinPage = new MainPage(getDriver())
                 .clickRecycleBin();
 
         String textRecycleBinNotificationBeforeRestore = recycleBinPage.getTextNotificationRecycleBin();
 
-                recycleBinPage.clickDeletedRestoreAsDraft();
+        recycleBinPage.clickDeletedRestoreAsDraft();
 
         Assert.assertEquals(recycleBinPage.getTextCardBody(), MESSAGE_EMPTY_RECYCLE_BIN);
 
-        BoardListPage boardListPage = new MainPage(getDriver())
-                .clickBoardMenu()
-                .clickListButton();
+        boardListPage = goToBoardListPage();
 
         String textRecycleBinNotificationAfterRestore = recycleBinPage.getTextNotificationRecycleBin();
 
-        Assert.assertEquals(boardListPage.getRow(0),EXPECTED_EDITED_RECORD);
-        Assert.assertEquals(boardListPage.getIcon(), DRAFT_ICON_CLASS_NAME);
+        Assert.assertEquals(boardListPage.getRow(0), EXPECTED_EDITED_RECORD);
+        Assert.assertEquals(boardListPage.getIcon(), DRAFT_RECORD_ICON_CLASS_NAME);
         Assert.assertNotEquals(textRecycleBinNotificationBeforeRestore, textRecycleBinNotificationAfterRestore);
     }
 
     @Test(dependsOnMethods = "testRestoreDraftRecord")
     public void testDeleteRecordFromRecycleBin() {
 
-        testDeleteDraftRecord();
+        testDelete();
 
         RecycleBinPage recycleBinPage = new MainPage(getDriver())
                 .clickRecycleBin()
@@ -221,38 +235,23 @@ public class EntityBoardDraftRecordTest extends BaseTest {
                 expectedSortedRecords.add(String.valueOf(el));
             }
         }
+        boardEditPage = fillNewRecordFields(EXPECTED_CREATED_PENDING_RECORD);
+        boardEditPage.clickSaveDraft();
+        boardEditPage = fillNewRecordFields(EXPECTED_CREATED_ONTRACK_RECORD);
+        boardEditPage.clickSaveDraft();
 
-        BoardListPage boardListPage = new MainPage(getDriver())
-                .clickBoardMenu()
-                .clickNewButton()
-                .fillFields(STRING_INPUT_PENDING,
-                        TEXT_VALUE_PENDING,
-                        INT_VALUE_PENDING,
-                        DECIMAL_VALUE_PENDING)
-                .findUser(USER_NAME)
-                .clickSaveDraft()
-                .clickNewButton()
-                .fillFields(STRING_INPUT_ONTRACK,
-                        TEXT_VALUE_ONTRACK,
-                        INT_VALUE_ONTRACK,
-                        DECIMAL_VALUE_ONTRACK)
-                .findUser(USER_NAME)
-                .clickSaveDraft()
-                .clickListButton();
-
+        boardListPage = goToBoardListPage();
         Assert.assertEquals(boardListPage.getRowCount(), ALL_RECORDS_TABLE.size());
 
         boardListPage.clickTextColumn();
-
         Assert.assertEquals(boardListPage.getListRecordsTable(), expectedSortedRecords);
     }
 
     @Test(dependsOnMethods = "testSortDraftRecords")
-    public void testSearchDraftRecord() {
+    public void testSearch() {
 
-        BoardListPage boardListPage = new MainPage(getDriver())
-                .clickBoardMenu()
-                .clickListButton()
+        boardListPage = goToBoardListPage();
+        boardListPage
                 .searchInputValue(STRING_INPUT_PENDING)
                 .getTextPaginationInfo(PAGINATION_INFO_STR_1_OF_1);
 
@@ -271,15 +270,76 @@ public class EntityBoardDraftRecordTest extends BaseTest {
 
         String textCardBodyBeforeCancel = boardPage.getTextCardBody();
 
-        boardPage.clickNewButton()
-                .fillFields(STRING_INPUT_PENDING,
-                        TEXT_VALUE_PENDING,
-                        INT_VALUE_PENDING,
-                        DECIMAL_VALUE_PENDING)
-                .findUser(USER_NAME)
+        boardEditPage = fillNewRecordFields(EXPECTED_CREATED_PENDING_RECORD);
+        boardEditPage
                 .clickCancel();
 
         String textCardBodyAfterCancel = boardPage.getTextCardBody();
         Assert.assertEquals(textCardBodyAfterCancel, textCardBodyBeforeCancel);
+    }
+
+    @Test
+    public void testCreateRecord() {
+
+        boardEditPage = fillNewRecordFields(EXPECTED_CREATED_PENDING_RECORD);
+        boardEditPage.clickSave();
+
+        boardListPage = goToBoardListPage();
+
+        Assert.assertEquals(boardListPage.getRowCount(), 1);
+        Assert.assertEquals(boardListPage.getIcon(), NON_DRAFT_RECORD_ICON_CLASS_NAME);
+        Assert.assertEquals(boardListPage.getRow(0), EXPECTED_CREATED_PENDING_RECORD);
+    }
+
+    @Test(dependsOnMethods = "testCreateRecord")
+    public void testViewRecord() {
+
+        testView();
+    }
+
+    @Test(dependsOnMethods = "testViewRecord")
+    public void testEditRecord() {
+
+        editRecord(EXPECTED_EDITED_RECORD);
+        boardEditPage
+                .clickSave()
+                .clickListButton();
+
+        Assert.assertEquals(boardListPage.getRowCount(), 1);
+        Assert.assertEquals(boardListPage.getRow(0), EXPECTED_EDITED_RECORD);
+    }
+
+    @Test(dependsOnMethods = "testEditRecord")
+    public void testDeleteRecord() {
+
+        testDelete();
+    }
+
+    @Test
+    public void testSortRecords() {
+        List<String> expectedSortedRecords = new ArrayList<>();
+        Collections.sort(ALL_RECORDS_TABLE, new CompareByText());
+
+        for (List list : ALL_RECORDS_TABLE) {
+            for (Object el : list) {
+                expectedSortedRecords.add(String.valueOf(el));
+            }
+        }
+        boardEditPage = fillNewRecordFields(EXPECTED_CREATED_PENDING_RECORD);
+        boardEditPage.clickSave();
+        boardEditPage = fillNewRecordFields(EXPECTED_CREATED_ONTRACK_RECORD);
+        boardEditPage.clickSave();
+
+        boardListPage = goToBoardListPage();
+        Assert.assertEquals(boardListPage.getRowCount(), ALL_RECORDS_TABLE.size());
+
+        boardListPage.clickTextColumn();
+        Assert.assertEquals(boardListPage.getListRecordsTable(), expectedSortedRecords);
+    }
+
+    @Test(dependsOnMethods = "testSortRecords")
+    public void testSearchRecord() {
+
+        testSearch();
     }
 }

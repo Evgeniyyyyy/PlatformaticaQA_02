@@ -7,6 +7,8 @@ import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import utils.TestUtils;
 
+import java.util.List;
+
 import static utils.TestUtils.jsClick;
 
 public class BoardEditPage extends BaseModel {
@@ -80,7 +82,7 @@ public class BoardEditPage extends BaseModel {
     public BoardEditPage fillText(String value) {
 
         getWait().until(ExpectedConditions.elementToBeClickable(fieldText));
-        fieldText.click();
+
         sendKeysOneByOne(fieldText,value);
 
         return this;
@@ -116,11 +118,20 @@ public class BoardEditPage extends BaseModel {
         return this;
     }
 
-    public BoardEditPage fillFields(String string, String text, String int_, String decimal) {
-        fillString(string);
-        fillText(text);
-        fillInt(int_);
-        fillDecimal(decimal);
+    public BoardEditPage fillFields(List<String> list) {
+
+        fillText(list.get(1));
+        fillInt(list.get(2));
+        fillDecimal(list.get(3));
+        fillString(list.get(0));
+
+        return this;
+    }
+
+    public BoardEditPage clearFields(){
+        clearText();
+        clearInt();
+        clearDecimal();
 
         return this;
     }

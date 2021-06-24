@@ -6,9 +6,9 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.ui.ExpectedConditions;
+import utils.ProjectUtils;
 import utils.TestUtils;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -19,7 +19,6 @@ public class BoardListPage extends MainPage {
 
     @FindBy(xpath = "//tbody/tr")
     private List<WebElement> rows;
-
 
     @FindBy(xpath = "//td[@class='pa-list-table-th']")
     private List<WebElement> recordsTable;
@@ -113,16 +112,8 @@ public class BoardListPage extends MainPage {
         return new BoardListPage(getDriver());
     }
 
-    public  List<String> getActualValues(List<WebElement> actualElements) {
-        List<String> listValues = new ArrayList<>();
-        for (WebElement element : actualElements) {
-            listValues.add(element.getText());
-        }
-        return listValues;
-    }
-
     public List<String> getListRecordsTable(){
-        return getActualValues(recordsTable);
+        return ProjectUtils.getActualValues(recordsTable);
     }
 
     public BoardListPage getTextPaginationInfo(String value) {
