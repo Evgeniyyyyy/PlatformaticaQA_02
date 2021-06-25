@@ -9,6 +9,7 @@ import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static utils.ProjectUtils.getIntRandom;
 import static utils.ProjectUtils.getTextRandom;
@@ -80,7 +81,7 @@ public class EntityBoardDraftRecordTest extends BaseTest {
             DECIMAL_VALUE_DONE,
             "", "", "", USER_NAME);
 
-    private static final List<List> ALL_RECORDS_TABLE = new ArrayList<>(List.of(EXPECTED_CREATED_PENDING_RECORD,
+    private static final List<List<String>> ALL_RECORDS_TABLE = new ArrayList<>(List.of(EXPECTED_CREATED_PENDING_RECORD,
             EXPECTED_CREATED_ONTRACK_RECORD));
 
     private static String getRandomDecimalValue() {
@@ -104,7 +105,7 @@ public class EntityBoardDraftRecordTest extends BaseTest {
                 .clickListButton();
     }
 
-    private BoardEditPage editRecord(List<String> list){
+    private BoardEditPage editRecord(List<String> list) {
         return new MainPage(getDriver())
                 .clickBoardMenu()
                 .clickListButton()
@@ -116,7 +117,7 @@ public class EntityBoardDraftRecordTest extends BaseTest {
                 .fillFields(list);
     }
 
-    static class CompareByText implements Comparator<List> {
+    static class CompareByText implements Comparator<List<String>> {
 
         @Override
         public int compare(List r1, List r2) {
@@ -221,14 +222,13 @@ public class EntityBoardDraftRecordTest extends BaseTest {
 
     @Test
     public void testSortDraftRecords() {
-        List<String> expectedSortedRecords = new ArrayList<>();
-        Collections.sort(ALL_RECORDS_TABLE, new CompareByText());
 
-        for (List list : ALL_RECORDS_TABLE) {
-            for (Object el : list) {
-                expectedSortedRecords.add(String.valueOf(el));
-            }
-        }
+        ALL_RECORDS_TABLE.sort(new CompareByText());
+
+        List<String> expectedSortedRecords = ALL_RECORDS_TABLE.stream()
+                .flatMap(Collection::stream)
+                .collect(Collectors.toList());
+
         boardEditPage = fillNewRecordFields(EXPECTED_CREATED_PENDING_RECORD);
         boardEditPage.clickSaveDraft();
         boardEditPage = fillNewRecordFields(EXPECTED_CREATED_ONTRACK_RECORD);
@@ -311,14 +311,13 @@ public class EntityBoardDraftRecordTest extends BaseTest {
 
     @Test
     public void testSortRecords() {
-        List<String> expectedSortedRecords = new ArrayList<>();
-        Collections.sort(ALL_RECORDS_TABLE, new CompareByText());
 
-        for (List list : ALL_RECORDS_TABLE) {
-            for (Object el : list) {
-                expectedSortedRecords.add(String.valueOf(el));
-            }
-        }
+        ALL_RECORDS_TABLE.sort(new CompareByText());
+
+        List<String> expectedSortedRecords = ALL_RECORDS_TABLE.stream()
+                .flatMap(Collection::stream)
+                .collect(Collectors.toList());
+
         boardEditPage = fillNewRecordFields(EXPECTED_CREATED_PENDING_RECORD);
         boardEditPage.clickSave();
         boardEditPage = fillNewRecordFields(EXPECTED_CREATED_ONTRACK_RECORD);
