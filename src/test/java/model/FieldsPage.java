@@ -23,9 +23,6 @@ public class FieldsPage extends MainPage {
     @FindBy(xpath = "//tbody/tr")
     private List<WebElement> rows;
 
-    @FindBy(xpath = "//tbody/tr")
-    private WebElement row;
-
     @FindBy(xpath = "//div[@class='dropdown pull-left']")
     private WebElement actionMenu;
 
@@ -93,9 +90,9 @@ public class FieldsPage extends MainPage {
     }
 
     public void getReorder(Integer value) {
-         actions.moveToElement(row)
-                .clickAndHold(row)
-                .dragAndDropBy(row, 0, value)
+         actions.moveToElement(rows.get(0))
+                .clickAndHold(rows.get(0))
+                .dragAndDropBy(rows.get(0), 0, value)
                 .build()
                 .perform();
     }
