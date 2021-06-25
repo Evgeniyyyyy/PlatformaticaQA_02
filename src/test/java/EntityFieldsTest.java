@@ -134,6 +134,24 @@ public class EntityFieldsTest extends BaseTest {
     }
 
     @Test
+    public void testCancelRecord() {
+
+        FieldsPage fieldsPage = new MainPage(getDriver())
+                .clickFieldsMenu()
+                .clickNewButton()
+                .fillDateTime(DATE_TIME_VALUE)
+                .fillTitle(TITLE_VALUE)
+                .fillDate(DATE_VALUE)
+                .fillComments(COMMENTS_VALUE)
+                .fillInt(INT_VALUE)
+                .fillDecimal(DECIMAL_VALUE)
+                .findUser(TESTER_NAME)
+                .clickCancel();
+
+        Assert.assertTrue(fieldsPage.isTableEmpty());
+    }
+
+    @Test
     public void deletePermanentlyRecordFromRecycleBin() {
         jsClick(getDriver(), getDriver().findElement(By.xpath("//p[text()=' Fields ']")));
         clickCreateRecord(getDriver());

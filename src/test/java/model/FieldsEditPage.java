@@ -32,6 +32,9 @@ public class FieldsEditPage extends BaseModel {
     @FindBy(className = "filter-option-inner-inner")
     private WebElement fieldUserName;
 
+    @FindBy(xpath = "//button[text()='Cancel']")
+    private WebElement cancelButton;
+
     public FieldsEditPage(WebDriver driver) {
         super(driver);
     }
@@ -92,5 +95,11 @@ public class FieldsEditPage extends BaseModel {
                 "//span[text()='" + value + "']")));
 
         return this;
+    }
+
+    public FieldsPage clickCancel() {
+        TestUtils.jsClick(getDriver(), cancelButton);
+
+        return new FieldsPage(getDriver());
     }
 }
