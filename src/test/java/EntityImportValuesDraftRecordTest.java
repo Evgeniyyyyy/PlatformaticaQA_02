@@ -1,4 +1,6 @@
 import base.BaseTest;
+import model.ImportValuesPage;
+import model.MainPage;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -35,6 +37,7 @@ public class EntityImportValuesDraftRecordTest extends BaseTest {
     private static final String DECIMAL_INPUT2 = "0.20";
     private static final String DATE_INPUT2 = "18/07/2021";
     private static final String DATETIME_INPUT2 = "18/07/2021 17:07:07";
+    private static final String PENCIL_ICON = "fa fa-pencil";
 
     private final static List<String> EXPECTED_VALUES = Arrays.asList(STRING_INPUT, TEXT_INPUT,
             INT_INPUT, DECIMAL_INPUT, DATE_INPUT, DATETIME_INPUT, FILE_INPUT, USERNAME_INPUT);
@@ -97,22 +100,19 @@ public class EntityImportValuesDraftRecordTest extends BaseTest {
     @Test
     public void testCreateDraftRecord() {
 
-        getEntity(getDriver(), IMPORT_VALUES);
-        clickCreateRecord(getDriver());
-        fillForm();
-        clickSaveDraft(getDriver());
+        ImportValuesPage importValuesPage = new MainPage(getDriver())
+                .clickImportValuesMenu()
+                .clickNewButton()
+                .fillString(STRING_INPUT)
+                .fillText(TEXT_INPUT)
+                .fillInt(INT_INPUT)
+                .fillDecimal(DECIMAL_INPUT)
+                .fillDate(DATE_INPUT)
+                .fillDateTime(DATETIME_INPUT)
+                .clickSaveDraft();
 
-        List<WebElement> tds = findElements(By.xpath("//tbody/tr/td[@class = 'pa-list-table-th']"));
-
-        WebElement pencilIcon = getDriver().findElement(By.xpath("//tbody/tr/td[1]/i"));
-
-        List<String> actualValues = new ArrayList<>();
-        for (WebElement td : tds) {
-            actualValues.add(td.getText());
-        }
-
-        Assert.assertEquals(pencilIcon.getAttribute("class"), "fa fa-pencil");
-        Assert.assertEquals(actualValues, EXPECTED_VALUES);
+        Assert.assertEquals(importValuesPage.getClassIcon(), PENCIL_ICON);
+        Assert.assertEquals(importValuesPage.getRow(0), EXPECTED_VALUES);
     }
 
     @Test

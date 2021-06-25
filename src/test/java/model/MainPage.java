@@ -54,6 +54,9 @@ public class MainPage extends BaseModel {
     @FindBy(xpath = "//p[text()= ' Reference values ']")
     private WebElement referenceValuesMenuItem;
 
+    @FindBy(xpath = "//p[text()= ' Import values ']")
+    private WebElement importValuesMenuItem;
+
     public MainPage(WebDriver driver) {
         super(driver);
     }
@@ -122,6 +125,12 @@ public class MainPage extends BaseModel {
         TestUtils.jsClick(getDriver(), importMenuItem);
 
         return new ImportPage(getDriver());
+    }
+
+    public ImportValuesPage clickImportValuesMenu() {
+        TestUtils.jsClick(getDriver(), importValuesMenuItem);
+
+        return new ImportValuesPage(getDriver());
     }
 
     public RecycleBinPage clickRecycleBin(){
