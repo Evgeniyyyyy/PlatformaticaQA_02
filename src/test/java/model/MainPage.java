@@ -4,7 +4,6 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
-import org.openqa.selenium.support.PageFactory;
 import utils.TestUtils;
 
 public class MainPage extends BaseModel {
@@ -56,6 +55,9 @@ public class MainPage extends BaseModel {
 
     @FindBy(xpath = "//p[text()= ' Import values ']")
     private WebElement importValuesMenuItem;
+
+    @FindBy(xpath = "//p[text()= ' Tag ']")
+    private WebElement tagMenuItem;
 
     public MainPage(WebDriver driver) {
         super(driver);
@@ -150,6 +152,13 @@ public class MainPage extends BaseModel {
 
         return new PlaceholderPage(getDriver());
     }
+
+    public TagPage clickTagMenu(){
+        TestUtils.jsClick(getDriver(), tagMenuItem);
+
+        return new TagPage(getDriver());
+    }
+
     public ReferenceValuesPage clickReferenceValueMenu() {
         TestUtils.jsClick(getDriver(), referenceValuesMenuItem);
 
