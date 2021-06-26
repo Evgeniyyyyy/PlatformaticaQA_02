@@ -6,6 +6,8 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import utils.TestUtils;
 
+import static utils.TestUtils.scrollClick;
+
 public class MainPage extends BaseModel {
 
     @FindBy(xpath = "//p[text()= ' Assign ']")
@@ -52,6 +54,9 @@ public class MainPage extends BaseModel {
 
     @FindBy(xpath = "//p[text()= ' Reference values ']")
     private WebElement referenceValuesMenuItem;
+
+    @FindBy(xpath = "//p[text()= ' Placeholder ']")
+    private WebElement placeholderDifMenuItem;
 
     @FindBy(xpath = "//p[text()= ' Import values ']")
     private WebElement importValuesMenuItem;
@@ -158,6 +163,14 @@ public class MainPage extends BaseModel {
 
         return new TagPage(getDriver());
     }
+
+
+    public PlaceholderDifPage clickPlaceholderDifMenu() {
+        scrollClick(getDriver(), placeholderDifMenuItem);
+
+        return new PlaceholderDifPage(getDriver());
+    }
+
 
     public ReferenceValuesPage clickReferenceValueMenu() {
         TestUtils.jsClick(getDriver(), referenceValuesMenuItem);
