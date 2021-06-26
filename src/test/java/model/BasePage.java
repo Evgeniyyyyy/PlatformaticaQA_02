@@ -4,6 +4,7 @@ import com.beust.jcommander.Strings;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.FindBy;
 
 import java.util.List;
@@ -16,9 +17,6 @@ public class BasePage extends MainPage {
 
     @FindBy(xpath = "//tbody/tr")
     private List<WebElement> rows;
-
-    @FindBy(xpath = "//tbody/tr")
-    private WebElement row;
 
     @FindBy(xpath = "//tbody/tr/td/i")
     private WebElement icon;
@@ -33,6 +31,7 @@ public class BasePage extends MainPage {
         super(driver);
     }
 
+    protected Actions actions = new Actions(getDriver());
 
     public boolean isTableEmpty() {
         return Strings.isStringEmpty(table.getText());
@@ -43,7 +42,7 @@ public class BasePage extends MainPage {
                 .stream().map(WebElement::getText).collect(Collectors.toList());
     }
 
-    public List<String> getRows(int number) {
+    public List<String> getOrderToggleRow(int number) {
         return rows.get(number).findElements(By.className("card-view-value"))
                 .stream().map(WebElement::getText).collect(Collectors.toList());
     }
@@ -60,14 +59,16 @@ public class BasePage extends MainPage {
         return icon.getAttribute("class");
     }
 
-    public RecycleBinPage clickRecycleBin(){
-        recycleBinIcon.click();
-
-        return new RecycleBinPage(getDriver());
-    }
-
     public int getTextNotificationRecycleBin(){
 
         return Integer.parseInt(notificationRecycleBinIcon.getText());
+    }
+
+    public void getReorder(Integer value) {
+        actions.moveToElement(rows.get(0))
+                .clickAndHold(rows.get(0))
+                .dragAndDropBy(rows.get(0), 0, value)
+                .build()
+                .perform();
     }
 }

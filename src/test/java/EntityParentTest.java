@@ -1,33 +1,29 @@
 import base.BaseTest;
-import org.apache.commons.lang3.RandomStringUtils;
-import org.apache.commons.lang3.RandomUtils;
-import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import java.text.SimpleDateFormat;
 import java.util.*;
 import model.*;
 
+import static utils.ProjectUtils.*;
+
 public class EntityParentTest extends BaseTest {
 
-    private static final String STRING_INPUT_VALUE = RandomStringUtils.randomAlphabetic(20);
-    private static final String TEXT_INPUT_VALUE = RandomStringUtils.randomAlphabetic(15);
-    private static final String INT_INPUT_VALUE = String.valueOf(RandomUtils.nextInt());
-    private static final String DECIMAL_INPUT_VALUE = String.format("%.2f", new Random().nextFloat());
-    private static final String DATE_VALUE = new SimpleDateFormat("dd/MM/yyyy").format(new Date());
-    private static final String DATE_TIME_VALUE = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(new Date());
-    private static final String USER_DEFAULT_NAME = "apptester1@tester.test";
-    private static final String USER_NAME = "apptester10@tester.test";
+    private static final String STRING_INPUT_VALUE = getTextRandom(20);
+    private static final String TEXT_INPUT_VALUE = getTextRandom(15);
+    private static final String INT_INPUT_VALUE = getIntRandom();
+    private static final String DECIMAL_INPUT_VALUE = getDoubleRandom();
+    private static final String DATE_VALUE = getDate(0);
+    private static final String DATE_TIME_VALUE = getDateTime(0);
+    private static final String USER_NAME = getUser();
+    private static final String EDIT_USER_NAME = getUser();
     private static final String EMPTY_FIELD = "";
-    private static final String EDIT_STRING_VALUE = RandomStringUtils.randomAlphabetic(20);
-    private static final String EDIT_TEXT_VALUE = RandomStringUtils.randomAlphabetic(15);
-    private static final String EDIT_INT_VALUE = String.valueOf(RandomUtils.nextInt());
-    private static final String EDIT_DECIMAL_VALUE = String.format("%.2f", new Random().nextFloat());
-    private static final String EDIT_DATE_VALUE = "31/12/1000";
-    private static final String EDIT_DATE_TIME_VALUE = "31/12/3000 23:59:59";
+    private static final String EDIT_STRING_VALUE = getTextRandom(20);
+    private static final String EDIT_TEXT_VALUE = getTextRandom(15);
+    private static final String EDIT_INT_VALUE = getIntRandom();
+    private static final String EDIT_DECIMAL_VALUE = getDoubleRandom();
+    private static final String EDIT_DATE_VALUE = getDate(350000);
+    private static final String EDIT_DATE_TIME_VALUE = getDateTime(53000);
     private static final String INFO_STR_1_OF_1 = "Showing 1 to 1 of 1 rows";
     private static final String INFO_STR_2_OF_2 = "Showing 1 to 2 of 2 rows";
     private static final String CLASS_ICON_SAVE = "fa fa-check-square-o";
@@ -35,21 +31,15 @@ public class EntityParentTest extends BaseTest {
 
     private static final List<String> NEW_EXPECTED_RESULT = List.of(
             STRING_INPUT_VALUE, TEXT_INPUT_VALUE, INT_INPUT_VALUE, DECIMAL_INPUT_VALUE,
-            DATE_VALUE, DATE_TIME_VALUE, EMPTY_FIELD, USER_DEFAULT_NAME);
-
-    private static List<WebElement> RECORD(WebDriver driver) {
-        return List.of(driver.findElement(By.xpath("//div/span/a")));
-    }
+            DATE_VALUE, DATE_TIME_VALUE, EMPTY_FIELD, USER_NAME);
 
     private static final List<String> EDIT_RESULT = List.of(
             EDIT_STRING_VALUE, EDIT_TEXT_VALUE, EDIT_INT_VALUE,
-            EDIT_DECIMAL_VALUE, EDIT_DATE_VALUE, EDIT_DATE_TIME_VALUE, EMPTY_FIELD, USER_DEFAULT_NAME);
+            EDIT_DECIMAL_VALUE, EDIT_DATE_VALUE, EDIT_DATE_TIME_VALUE, EMPTY_FIELD, EDIT_USER_NAME);
 
     private static final List<String> VIEW_RESULT = List.of(
             EMPTY_FIELD, EDIT_STRING_VALUE, EDIT_TEXT_VALUE, EDIT_INT_VALUE,
-            EDIT_DECIMAL_VALUE, EDIT_DATE_VALUE, EDIT_DATE_TIME_VALUE, USER_DEFAULT_NAME);
-
-    private static final By ACTUAL_RESULT = By.xpath("//tbody/tr/td/a");
+            EDIT_DECIMAL_VALUE, EDIT_DATE_VALUE, EDIT_DATE_TIME_VALUE, EDIT_USER_NAME);
 
     @Test
     public void testCreateRecord() {
@@ -63,6 +53,7 @@ public class EntityParentTest extends BaseTest {
                 .fillText(TEXT_INPUT_VALUE)
                 .fillInt(INT_INPUT_VALUE)
                 .fillDecimal(DECIMAL_INPUT_VALUE)
+                .findUser(USER_NAME)
                 .clickSave();
 
         Assert.assertEquals(parentPage.getRowCount(), 1);
@@ -94,6 +85,7 @@ public class EntityParentTest extends BaseTest {
                 .fillText(EDIT_TEXT_VALUE)
                 .fillInt(EDIT_INT_VALUE)
                 .fillDecimal(EDIT_DECIMAL_VALUE)
+                .findUser(EDIT_USER_NAME)
                 .clickSaveDraft();
 
         Assert.assertEquals(parentPage.getRowCount(), 1);
@@ -127,16 +119,17 @@ public class EntityParentTest extends BaseTest {
                 .fillText(TEXT_INPUT_VALUE)
                 .fillInt(INT_INPUT_VALUE)
                 .fillDecimal(DECIMAL_INPUT_VALUE)
+                .findUser(USER_NAME)
                 .clickSave()
                 .clickOrder();
         Assert.assertEquals(parentPage.getRow(0), EDIT_RESULT);
 
-        parentPage.getReorder();
+        parentPage.getReorder(20);
         Assert.assertEquals(parentPage.getRow(0), NEW_EXPECTED_RESULT);
 
         parentPage.clickToggle()
-                  .getNewReorder();
-        Assert.assertEquals(parentPage.getRows(0), VIEW_RESULT);
+                  .getReorder(140);
+        Assert.assertEquals(parentPage.getOrderToggleRow(0), VIEW_RESULT);
     }
 
     @Test
@@ -149,6 +142,7 @@ public class EntityParentTest extends BaseTest {
                 .fillText(TEXT_INPUT_VALUE)
                 .fillInt(INT_INPUT_VALUE)
                 .fillDecimal(DECIMAL_INPUT_VALUE)
+                .findUser(USER_NAME)
                 .clickCancel();
 
         Assert.assertTrue(parentPage.isTableEmpty());
@@ -166,6 +160,7 @@ public class EntityParentTest extends BaseTest {
                 .fillText(TEXT_INPUT_VALUE)
                 .fillInt(INT_INPUT_VALUE)
                 .fillDecimal(DECIMAL_INPUT_VALUE)
+                .findUser(USER_NAME)
                 .clickSaveDraft();
 
         Assert.assertEquals(parentPage.getRowCount(), 1);

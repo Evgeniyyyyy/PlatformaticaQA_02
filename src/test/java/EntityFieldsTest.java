@@ -12,15 +12,15 @@ import static utils.TestUtils.jsClick;
 
 public class EntityFieldsTest extends BaseTest {
 
-    private static final String TITLE_VALUE = getTextRandom(3);
+    private static final String TITLE_VALUE = getTextRandom(15);
     private static final String COMMENTS_VALUE = getTextRandom(22);
     private static final String INT_VALUE = getIntRandom();
     private static final String DECIMAL_VALUE = getDoubleRandom();
     private static final String DATE_VALUE = getDate(0);
     private static final String DATE_TIME_VALUE = getDateTime(0);
-    private static final String TESTER_NAME = getUser();
-    private static final String EDIT_TESTER_NAME = getUser();
-    private static final String EDIT_TITLE_VALUE = getTextRandom(15);
+    private static final String USER_NAME = getUser();
+    private static final String EDIT_USER_NAME = getUser();
+    private static final String EDIT_TITLE_VALUE = getTextRandom(3);
     private static final String EDIT_COMMENTS_VALUE = getTextRandom(12);
     private static final String EDIT_INT_VALUE = getIntRandom();
     private static final String EDIT_DECIMAL_VALUE = getDoubleRandom();
@@ -36,7 +36,7 @@ public class EntityFieldsTest extends BaseTest {
             DECIMAL_VALUE,
             DATE_VALUE,
             DATE_TIME_VALUE, "",
-            TESTER_NAME, "");
+            USER_NAME, "");
 
     private static final List<String> EDIT_RESULT = List.of(
             EDIT_TITLE_VALUE,
@@ -45,7 +45,7 @@ public class EntityFieldsTest extends BaseTest {
             EDIT_DECIMAL_VALUE,
             EDIT_DATE_VALUE,
             EDIT_DATE_TIME_VALUE, "",
-            EDIT_TESTER_NAME, "");
+            EDIT_USER_NAME, "");
 
     private static final List<String> ORDER_VIEW_RESULT = List.of(
             "", EDIT_TITLE_VALUE,
@@ -54,7 +54,7 @@ public class EntityFieldsTest extends BaseTest {
             EDIT_DECIMAL_VALUE,
             EDIT_DATE_VALUE,
             EDIT_DATE_TIME_VALUE,
-            EDIT_TESTER_NAME);
+            EDIT_USER_NAME);
 
     @Test
     public void testCreateRecord() {
@@ -68,7 +68,7 @@ public class EntityFieldsTest extends BaseTest {
                 .fillComments(COMMENTS_VALUE)
                 .fillInt(INT_VALUE)
                 .fillDecimal(DECIMAL_VALUE)
-                .findUser(TESTER_NAME)
+                .findUser(USER_NAME)
                 .clickSave();
 
         Assert.assertEquals(fieldsPage.getRowCount(), 1);
@@ -88,7 +88,7 @@ public class EntityFieldsTest extends BaseTest {
                 .fillComments(EDIT_COMMENTS_VALUE)
                 .fillInt(EDIT_INT_VALUE)
                 .fillDecimal(EDIT_DECIMAL_VALUE)
-                .findUser(EDIT_TESTER_NAME)
+                .findUser(EDIT_USER_NAME)
                 .clickSave();
 
         Assert.assertEquals(fieldsPage.getRow(0), EDIT_RESULT);
@@ -107,7 +107,7 @@ public class EntityFieldsTest extends BaseTest {
                 .fillComments(COMMENTS_VALUE)
                 .fillInt(INT_VALUE)
                 .fillDecimal(DECIMAL_VALUE)
-                .findUser(TESTER_NAME)
+                .findUser(USER_NAME)
                 .clickSave()
                 .clickOrder();
 
@@ -145,7 +145,7 @@ public class EntityFieldsTest extends BaseTest {
                 .fillComments(COMMENTS_VALUE)
                 .fillInt(INT_VALUE)
                 .fillDecimal(DECIMAL_VALUE)
-                .findUser(TESTER_NAME)
+                .findUser(USER_NAME)
                 .clickCancel();
 
         Assert.assertTrue(fieldsPage.isTableEmpty());

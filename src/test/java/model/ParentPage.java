@@ -1,16 +1,10 @@
 package model;
 
-import com.beust.jcommander.Strings;
-import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import utils.TestUtils;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 public class ParentPage extends BasePage {
 
@@ -19,12 +13,6 @@ public class ParentPage extends BasePage {
 
     @FindBy(className = "card-body")
     private static WebElement table;
-
-    @FindBy(xpath = "//tbody/tr")
-    private static List<WebElement> rows;
-
-    @FindBy(xpath = "//tbody/tr")
-    private WebElement row;
 
     @FindBy(xpath = "//tbody/tr/td/i")
     private static WebElement icon;
@@ -78,12 +66,6 @@ public class ParentPage extends BasePage {
         return new ParentEditPage(getDriver());
     }
 
-    public RecycleBinPage clickRecycleBin(){
-        recycleBinIcon.click();
-
-        return new RecycleBinPage(getDriver());
-    }
-
     public ParentPage clickActions() {
         actionsButton.click();
 
@@ -123,37 +105,10 @@ public class ParentPage extends BasePage {
         return new ParentPage(getDriver());
     }
 
-    Actions actions = new Actions(getDriver());
-
-    public ParentPage getReorder() {
-        actions.moveToElement(row)
-               .clickAndHold(row)
-               .dragAndDropBy(row, 0, 20)
-               .build()
-               .perform();
-
-        return new ParentPage(getDriver());
-    }
-
     public ParentPage clickToggle() {
         toggle.click();
 
         return this;
-    }
-
-    public ParentPage getNewReorder() {
-        actions.moveToElement(card)
-               .clickAndHold(card)
-               .dragAndDropBy(card, 0, 140)
-               .build()
-               .perform();
-
-        return this;
-    }
-
-    public List<String> getRows(int number) {
-        return rows.get(number).findElements(By.className("card-view-value"))
-                .stream().map(WebElement::getText).collect(Collectors.toList());
     }
 
     public ParentPage searchInput(String value) {

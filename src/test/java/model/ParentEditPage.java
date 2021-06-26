@@ -26,9 +26,6 @@ public class ParentEditPage extends BasePage {
     @FindBy(id = "datetime")
     private WebElement fieldDateTime;
 
-    @FindBy(css = "div.filter-option-inner-inner")
-    private WebElement fieldUser;
-
     @FindBy(xpath = "//div[contains(text(),'apptester10@tester.test')]")
     private WebElement chooseUser;
 
@@ -40,6 +37,9 @@ public class ParentEditPage extends BasePage {
 
     @FindBy(className = "btn-dark")
     private WebElement cancelButton;
+
+    @FindBy(className = "filter-option-inner-inner")
+    private WebElement fieldUserName;
 
     public ParentEditPage(WebDriver driver) {
         super(driver);
@@ -90,6 +90,14 @@ public class ParentEditPage extends BasePage {
         return this;
     }
 
+    public ParentEditPage findUser(String value) {
+        TestUtils.jsClick(getDriver(), fieldUserName);
+        TestUtils.jsClick(getDriver(), getDriver().findElement(By.xpath(
+                "//span[text()='" + value + "']")));
+
+        return this;
+    }
+
     public ParentEditPage clearElement(WebElement element) {
         element.clear();
 
@@ -100,12 +108,6 @@ public class ParentEditPage extends BasePage {
         WebElement element = driver.findElement(by);
         element.clear();
 
-        return this;
-    }
-
-    public ParentEditPage fillUser(String value) {
-        fieldUser.click();
-        TestUtils.jsClick(getDriver(), chooseUser);
         return this;
     }
 

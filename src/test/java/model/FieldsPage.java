@@ -1,27 +1,18 @@
 package model;
 
-import com.beust.jcommander.Strings;
-import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import utils.TestUtils;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
-public class FieldsPage extends MainPage {
+public class FieldsPage extends BasePage {
 
     @FindBy(xpath = "//i[text()='create_new_folder']")
     private WebElement newButton;
 
     @FindBy(className = "card-body")
     private WebElement table;
-
-    @FindBy(xpath = "//tbody/tr")
-    private List<WebElement> rows;
 
     @FindBy(xpath = "//div[@class='dropdown pull-left']")
     private WebElement actionMenu;
@@ -51,29 +42,10 @@ public class FieldsPage extends MainPage {
         super(driver);
     }
 
-    protected Actions actions = new Actions(getDriver());
-
     public FieldsEditPage clickNewButton() {
         newButton.click();
 
         return new FieldsEditPage(getDriver());
-    }
-
-    public boolean isTableEmpty() {
-        return Strings.isStringEmpty(table.getText());
-    }
-
-    public List<String> getRow(int number) {
-        return rows.get(number).findElements(By.className("pa-list-table-th"))
-                .stream().map(WebElement::getText).collect(Collectors.toList());
-    }
-
-    public int getRowCount() {
-        if (isTableEmpty()) {
-            return 0;
-        } else {
-            return rows.size();
-        }
     }
 
     public FieldsEditPage clickEdit() {
@@ -89,23 +61,10 @@ public class FieldsPage extends MainPage {
         return new FieldsPage(getDriver());
     }
 
-    public void getReorder(Integer value) {
-         actions.moveToElement(rows.get(0))
-                .clickAndHold(rows.get(0))
-                .dragAndDropBy(rows.get(0), 0, value)
-                .build()
-                .perform();
-    }
-
     public FieldsPage clickToggle() {
         toggle.click();
 
         return this;
-    }
-
-    public List<String> getOrderToggleRow(int number) {
-        return rows.get(number).findElements(By.className("card-view-value"))
-                .stream().map(WebElement::getText).collect(Collectors.toList());
     }
 
     public FieldsPage searchInput(String value) {
@@ -118,9 +77,5 @@ public class FieldsPage extends MainPage {
         getWait().until(ExpectedConditions.textToBePresentInElement(text, value));
 
         return this;
-    }
-
-    public String getClassIcon() {
-        return icon.getAttribute("class");
     }
 }
