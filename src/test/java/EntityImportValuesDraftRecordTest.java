@@ -118,12 +118,18 @@ public class EntityImportValuesDraftRecordTest extends BaseTest {
     @Test
     public void testCancelRecord() {
 
-        getEntity(getDriver(), IMPORT_VALUES);
-        clickCreateRecord(getDriver());
-        fillForm();
-        clickCancel(getDriver());
+        ImportValuesPage importValuesPage = new MainPage(getDriver())
+                .clickImportValuesMenu()
+                .clickNewButton()
+                .fillString(STRING_INPUT)
+                .fillText(TEXT_INPUT)
+                .fillInt(INT_INPUT)
+                .fillDecimal(DECIMAL_INPUT)
+                .fillDate(DATE_INPUT)
+                .fillDateTime(DATETIME_INPUT)
+                .clickCancel();
 
-        Assert.assertNull(findElement(By.className("card-body")).getAttribute("value"));
+        Assert.assertTrue(importValuesPage.isTableEmpty());
     }
 
     @Test(dependsOnMethods = "testCreateDraftRecord")
