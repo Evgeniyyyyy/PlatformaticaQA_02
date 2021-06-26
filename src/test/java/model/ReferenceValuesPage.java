@@ -11,16 +11,13 @@ import java.util.stream.Collectors;
 
 import static utils.TestUtils.*;
 
-public class ReferenceValuesPage  extends MainPage{
+public class ReferenceValuesPage  extends BasePage{
 
     @FindBy(xpath = "//*[contains(text(),'create_new_folder')]")
     private WebElement referenceValuesCreateRecord;
 
     @FindBy(xpath = "//table[@id='pa-all-entities-table']/tbody/tr")
     private List<WebElement> tableRows;
-
-    @FindBy (xpath="//td/i[@class='fa fa-check-square-o']")
-    private static List<WebElement> tableRowsOnlyIcon;
 
     @FindBy (xpath="//td[@class='pa-list-table-th']")
     private static List<WebElement> tableColumns;
@@ -43,11 +40,20 @@ public class ReferenceValuesPage  extends MainPage{
 
     public List<String> getRowsValue(int RowNumber)
     {
-        RowNumber--; //because List starts with 0
         if(isTableAvailable())
-            return tableRows.get(RowNumber).findElements(By.xpath("//td[@class='pa-list-table-th']")).stream()
+            return getDriver().findElements(By.xpath("//tr["+RowNumber+"]//td[@class='pa-list-table-th']")).stream()
                     .map(el -> el.getText()).collect(Collectors.toList());
         else return null;
+    }
+
+    public boolean isSearchValuePresent(List<String> searchingRecord) {
+        if (isTableAvailable()) {
+            for (int i = 1; i <= tableRows.size(); i++)
+                if (getRowsValue(i).equals(searchingRecord))
+                    return true;
+            return false;
+        }
+        else return false;
     }
 
     public List<String> getRowsValue()
@@ -62,14 +68,6 @@ public class ReferenceValuesPage  extends MainPage{
         if(isTableAvailable())
             return getDriver().findElements(by).stream().map(el -> el.getText()).collect(Collectors.toList());
         else return null;
-    }
-
-    public int getRowsValueWithFilter(String filterWord)
-    {
-        if(isTableAvailable())
-            return tableColumns.stream().map(el -> el.getText()).filter(el -> el.contains(filterWord))
-                    .collect(Collectors.toList()).size();
-        else return 0;
     }
 
     public ReferenceValuesPage deleteRecord(String NameOfRecord) {

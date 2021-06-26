@@ -5,7 +5,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import utils.TestUtils;
 
-public class ReferenceValuesEditPage extends MainPage{
+public class ReferenceValuesEditPage extends BasePage{
 
     @FindBy(id="label")
     WebElement fieldLabel;

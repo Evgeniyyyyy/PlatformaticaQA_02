@@ -42,8 +42,8 @@ public class RecycleBinPage extends MainPage{
     @FindBy(xpath = "//a/span[@class='notification']")
     private WebElement notificationRowCount;
 
-    @FindBy (xpath="//tr//span[contains(text(),'Label')]/b")
-    private List<WebElement> rowsValueByLabelOnly;
+    @FindBy (xpath="//tr//b")
+    private List<WebElement> rowsValues;
 
     @FindBy (xpath="//td[@class='pa-recycle-col']//span[contains(text(),'Label')]/b")
     private static List<WebElement> tableColumns;
@@ -123,24 +123,30 @@ public class RecycleBinPage extends MainPage{
         return notificationRowCount.getText();
     }
     
-    public int getRowsValuesWithFilter(String filterWord)
+    public boolean isSearchValuePresent(List<String> whatWeAreLooking)
     {
-        if(isTableAvailable())
-            return rowsValueByLabelOnly.stream().map(el -> el.getText()).filter(el -> el.contains(filterWord))
-                    .collect(Collectors.toList()).size();
-        else return 0;
+        if (isTableAvailable()) {
+            for (int i = 1; i <= rows.size(); i++)
+                if(getDriver().findElements(By.xpath("//tr["+i+"]//td[@class='pa-recycle-col']//span//b")).stream()
+                        .map(el -> el.getText()).collect(Collectors.toList()).equals(whatWeAreLooking))
+                    return true;
+            return false;
+        }
+        else return false;
     }
 
     public RecycleBinPage deleteRecord(String NameOfRecord) {
-        scrollClick(getDriver(), By.xpath("//tr[contains(.,'Label') and contains(.,'" +
-                NameOfRecord + "')]//a[text()='delete permanently']"));
+        if(isTableAvailable()) {
+            scrollClick(getDriver(), By.xpath("//tr[contains(.,'Label') and contains(.,'" +
+                    NameOfRecord + "')]//a[text()='delete permanently']"));
+        }
         return new RecycleBinPage(getDriver());
     }
 
-    public List<String> getRowsValueByLabelOnly()
+    public List<String> getValuesCount()
     {
         if(isTableAvailable())
-            return rowsValueByLabelOnly.stream().map(el -> el.getText()).collect(Collectors.toList());
+            return rowsValues.stream().map(el -> el.getText()).collect(Collectors.toList());
         else return null;
     }
 }
