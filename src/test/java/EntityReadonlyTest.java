@@ -1,7 +1,5 @@
 import base.BaseTest;
-import model.MainPage;
-import model.ReadonlyPage;
-import model.ReadonlyViewPage;
+import model.*;
 import org.openqa.selenium.By;
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -43,6 +41,23 @@ public class EntityReadonlyTest extends BaseTest {
         Assert.assertEquals(readonlyPage.getRow(0), EXPECTED_VALUES);
     }
 
+    @Test(dependsOnMethods = "testCreateRecord")
+    public void testEditRecord() {
+
+        ReadonlyPage readonlyPage = new MainPage(getDriver())
+                .clickReadonlyMenu()
+                .clickActionButton()
+                .clickActionEdit()
+                .fillString("EditString")
+                .fillText("New Text")
+                .fillInt("555")
+                .fillDecimal("55.55")
+                .clickSave();
+
+        Assert.assertEquals(getAttributeClass(), "fa fa-check-square-o");
+        Assert.assertEquals(readonlyPage.getRow(0), EXPECTED_VALUES);
+    }
+
     @Test
     public void testCreateDraftRecord() {
 
@@ -62,10 +77,11 @@ public class EntityReadonlyTest extends BaseTest {
     @Test(dependsOnMethods = "testCreateDraftRecord")
     public void testViewDraftRecord() {
 
-        ReadonlyViewPage readonlyViewPage = new MainPage(getDriver())
+        ReadonlyPage readonlyPage = new MainPage(getDriver())
                 .clickReadonlyMenu()
-                .clickRecord();
+                .clickActionButton()
+                .clickActionView();
 
-        Assert.assertEquals(readonlyViewPage.getRecordInViewMode(), EXPECTED_VALUES);
+        Assert.assertEquals(readonlyPage.getRecordInViewMode(), EXPECTED_VALUES);
     }
 }
