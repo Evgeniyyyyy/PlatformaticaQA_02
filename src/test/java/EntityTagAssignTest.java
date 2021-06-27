@@ -1,6 +1,7 @@
 import base.BaseTest;
 import org.openqa.selenium.By;
 import org.testng.Assert;
+import org.testng.annotations.Ignore;
 import org.testng.annotations.Test;
 
 import static utils.ProjectUtils.*;
@@ -42,6 +43,7 @@ public class EntityTagAssignTest extends BaseTest {
         findElement(By.xpath("//button[contains(text(), 'Assign tags')]")).click();
     }
 
+    @Ignore
     @Test
     public void testTagAssignToRecord(){
 
