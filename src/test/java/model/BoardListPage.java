@@ -12,19 +12,10 @@ import utils.TestUtils;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class BoardListPage extends MainPage {
-
-    @FindBy(className = "card-body")
-    private WebElement table;
-
-    @FindBy(xpath = "//tbody/tr")
-    private List<WebElement> rows;
+public class BoardListPage extends BasePage {
 
     @FindBy(xpath = "//td[@class='pa-list-table-th']")
     private List<WebElement> recordsTable;
-
-    @FindBy(xpath = "//tbody/tr/td/i")
-    private WebElement icon;
 
     @FindBy(xpath = "//button/i[text()='menu']")
     private WebElement actionsButton;
@@ -47,29 +38,11 @@ public class BoardListPage extends MainPage {
     @FindBy(className = "pagination-info")
     private WebElement paginationInfo;
 
+    @FindBy(xpath = "//i[@class='fa fa-toggle-off']")
+    private WebElement toggle;
+
     public BoardListPage(WebDriver driver) {
         super(driver);
-    }
-
-    public boolean isTableEmpty() {
-        return Strings.isStringEmpty(table.getText());
-    }
-
-    public List<String> getRow(int number) {
-        return rows.get(number).findElements(By.className("pa-list-table-th"))
-                .stream().map(WebElement::getText).collect(Collectors.toList());
-    }
-
-    public int getRowCount() {
-        if (isTableEmpty()) {
-            return 0;
-        } else {
-            return rows.size();
-        }
-    }
-
-    public String getIcon() {
-        return icon.getAttribute("class");
     }
 
     public BoardListPage clickActions() {
@@ -106,10 +79,10 @@ public class BoardListPage extends MainPage {
         return this;
     }
 
-    public BoardListPage clickTextColumn() {
+    public void clickTextColumn() {
         textColumn.click();
 
-        return new BoardListPage(getDriver());
+        new BoardListPage(getDriver());
     }
 
     public List<String> getListRecordsTable(){
@@ -118,6 +91,12 @@ public class BoardListPage extends MainPage {
 
     public BoardListPage getTextPaginationInfo(String value) {
         getWait().until(ExpectedConditions.textToBePresentInElement(paginationInfo, value));
+        return this;
+    }
+
+    public BoardListPage clickToggle(){
+        toggle.click();
+
         return this;
     }
 }

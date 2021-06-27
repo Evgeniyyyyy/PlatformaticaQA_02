@@ -55,6 +55,20 @@ public class EntityBoardDraftRecordTest extends BaseTest {
             DECIMAL_VALUE_ONTRACK,
             "", "", "", USER_NAME);
 
+    private static final List<String> EXPECTED_ORDERED_PENDING_RECORD = List.of(
+            "", STRING_INPUT_PENDING,
+            TEXT_VALUE_PENDING,
+            INT_VALUE_PENDING,
+            DECIMAL_VALUE_PENDING,
+            "", "", USER_NAME);
+
+    private static final List<String> EXPECTED_ORDERED_ONTRACK_RECORD = List.of(
+            "", STRING_INPUT_ONTRACK,
+            TEXT_VALUE_ONTRACK,
+            INT_VALUE_ONTRACK,
+            DECIMAL_VALUE_ONTRACK,
+            "", "", USER_NAME);
+
     private static final List<List<String>> ALL_RECORDS_TABLE = new ArrayList<>(List.of(EXPECTED_CREATED_PENDING_RECORD,
             EXPECTED_CREATED_ONTRACK_RECORD));
 
@@ -79,14 +93,14 @@ public class EntityBoardDraftRecordTest extends BaseTest {
                 .clickListButton();
     }
 
-    private BoardEditPage editRecord(List<String> list) {
-        return new MainPage(getDriver())
+    private void editRecord() {
+        new MainPage(getDriver())
                 .clickBoardMenu()
                 .clickListButton()
                 .clickActions()
                 .clickActionsEdit()
                 .clearFields()
-                .fillFields(list);
+                .fillFields(EntityBoardDraftRecordTest.EXPECTED_EDITED_RECORD);
     }
 
     static class CompareByText implements Comparator<List<String>> {
@@ -108,7 +122,7 @@ public class EntityBoardDraftRecordTest extends BaseTest {
         boardListPage = goToBoardListPage();
 
         Assert.assertEquals(boardListPage.getRowCount(), 1);
-        Assert.assertEquals(boardListPage.getIcon(), DRAFT_RECORD_ICON_CLASS_NAME);
+        Assert.assertEquals(boardListPage.getClassIcon(), DRAFT_RECORD_ICON_CLASS_NAME);
         Assert.assertEquals(boardListPage.getRow(0), EXPECTED_CREATED_PENDING_RECORD);
     }
 
@@ -127,7 +141,7 @@ public class EntityBoardDraftRecordTest extends BaseTest {
     @Test(dependsOnMethods = "testView")
     public void testEditDraftRecord() {
 
-        editRecord(EXPECTED_EDITED_RECORD);
+        editRecord();
         boardEditPage
                 .clickSaveDraft()
                 .clickListButton();
@@ -170,7 +184,7 @@ public class EntityBoardDraftRecordTest extends BaseTest {
         String textRecycleBinNotificationAfterRestore = recycleBinPage.getTextNotificationRecycleBin();
 
         Assert.assertEquals(boardListPage.getRow(0), EXPECTED_EDITED_RECORD);
-        Assert.assertEquals(boardListPage.getIcon(), DRAFT_RECORD_ICON_CLASS_NAME);
+        Assert.assertEquals(boardListPage.getClassIcon(), DRAFT_RECORD_ICON_CLASS_NAME);
         Assert.assertNotEquals(textRecycleBinNotificationBeforeRestore, textRecycleBinNotificationAfterRestore);
     }
 
@@ -227,6 +241,28 @@ public class EntityBoardDraftRecordTest extends BaseTest {
         Assert.assertEquals(boardListPage.getRowCount(), ALL_RECORDS_TABLE.size());
     }
 
+    @Test(dependsOnMethods = "testSortDraftRecords")
+    public void testReorderRecords(){
+
+        BoardListPage boardListPage = new MainPage(getDriver())
+                .clickBoardMenu()
+                .clickOrderButton();
+
+        Assert.assertEquals(boardListPage.getRow(0), EXPECTED_CREATED_PENDING_RECORD);
+        Assert.assertEquals(boardListPage.getRow(1), EXPECTED_CREATED_ONTRACK_RECORD);
+
+        boardListPage.getReorder(20);
+
+        Assert.assertEquals(boardListPage.getRow(0), EXPECTED_CREATED_ONTRACK_RECORD);
+        Assert.assertEquals(boardListPage.getRow(1), EXPECTED_CREATED_PENDING_RECORD);
+
+        boardListPage.clickToggle()
+                .getReorder(140);
+
+        Assert.assertEquals(boardListPage.getOrderToggleRow(0), EXPECTED_ORDERED_PENDING_RECORD);
+        Assert.assertEquals(boardListPage.getOrderToggleRow(1), EXPECTED_ORDERED_ONTRACK_RECORD);
+    }
+
     @Test
     public void testCancelRecord() {
 
@@ -252,7 +288,7 @@ public class EntityBoardDraftRecordTest extends BaseTest {
         boardListPage = goToBoardListPage();
 
         Assert.assertEquals(boardListPage.getRowCount(), 1);
-        Assert.assertEquals(boardListPage.getIcon(), NON_DRAFT_RECORD_ICON_CLASS_NAME);
+        Assert.assertEquals(boardListPage.getClassIcon(), NON_DRAFT_RECORD_ICON_CLASS_NAME);
         Assert.assertEquals(boardListPage.getRow(0), EXPECTED_CREATED_PENDING_RECORD);
     }
 
@@ -265,7 +301,7 @@ public class EntityBoardDraftRecordTest extends BaseTest {
     @Test(dependsOnMethods = "testViewRecord")
     public void testEditRecord() {
 
-        editRecord(EXPECTED_EDITED_RECORD);
+        editRecord();
         boardEditPage
                 .clickSave()
                 .clickListButton();

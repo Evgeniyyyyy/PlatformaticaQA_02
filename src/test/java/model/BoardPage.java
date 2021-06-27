@@ -12,6 +12,9 @@ public class BoardPage extends MainPage {
     @FindBy(xpath = "//a[@href='index.php?action=action_list&list_type=table&entity_id=31']")
     private WebElement listButton;
 
+    @FindBy(xpath = "//i[text()='format_line_spacing']")
+    private WebElement orderButton;
+
     @FindBy(className = "card-body")
     private WebElement table;
 
@@ -27,6 +30,12 @@ public class BoardPage extends MainPage {
 
     public BoardListPage clickListButton() {
         listButton.click();
+
+        return new BoardListPage(getDriver());
+    }
+
+    public BoardListPage clickOrderButton() {
+        orderButton.click();
 
         return new BoardListPage(getDriver());
     }
