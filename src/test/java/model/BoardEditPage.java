@@ -5,7 +5,6 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.ui.ExpectedConditions;
-import utils.ProjectUtils;
 import utils.TestUtils;
 
 import java.util.List;
@@ -53,13 +52,17 @@ public class BoardEditPage extends BaseModel {
 
     public BoardEditPage fillString(String value) {
         fieldString.click();
+
         if(value.equals("Pending")) {
             jsClick(getDriver(), valueStringPending);
+
         }else if(value.equals("On track")){
             jsClick(getDriver(), valueStringOnTrack);
+
         }else {
             jsClick(getDriver(), valueStringDone);
         }
+
         return this;
     }
 
@@ -67,39 +70,35 @@ public class BoardEditPage extends BaseModel {
 
         getWait().until(ExpectedConditions.elementToBeClickable(fieldText));
 
-        ProjectUtils.sendKeysOneByOne(fieldText,value);
+        fieldText.sendKeys(value);
 
         return this;
     }
 
-    public BoardEditPage clearText() {
+    public void clearText() {
         fieldText.clear();
 
-        return this;
     }
 
     public BoardEditPage fillInt(String value) {
-        ProjectUtils.sendKeysOneByOne(fieldInt,value);
+       fieldInt.sendKeys(value);
 
         return this;
     }
 
-    public BoardEditPage clearInt() {
+    public void clearInt() {
         fieldInt.clear();
 
-        return this;
     }
 
     public BoardEditPage fillDecimal(String value) {
-
-        ProjectUtils.sendKeysOneByOne(fieldDecimal,value);
+        fieldDecimal.sendKeys(value);
 
         return this;
     }
-    public BoardEditPage clearDecimal() {
+    public void clearDecimal() {
         fieldDecimal.clear();
 
-        return this;
     }
 
     public BoardEditPage fillFields(List<String> list) {

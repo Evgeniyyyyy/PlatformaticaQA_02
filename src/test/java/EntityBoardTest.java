@@ -90,14 +90,14 @@ public class EntityBoardTest extends BaseTest {
     }
 
     private String getStringInputRecord(List<String> list) {
-        String stringInputRecord = "";
+        StringBuilder stringInputRecord = new StringBuilder();
 
         for (String s : list) {
             if (!s.equals("")) {
-                stringInputRecord += s + " ";
+                stringInputRecord.append(s).append(" ");
             }
         }
-        return stringInputRecord.trim();
+        return stringInputRecord.toString().trim();
     }
 
     static class CompareByText implements Comparator<List<String>> {
@@ -127,7 +127,7 @@ public class EntityBoardTest extends BaseTest {
     }
 
     @Test(dependsOnMethods = "testCreateDraftRecord")
-    public void testView() {
+    public void testViewRecord() {
 
         BoardViewPage boardViewPage = new MainPage(getDriver())
                 .clickBoardMenu()
@@ -138,7 +138,7 @@ public class EntityBoardTest extends BaseTest {
         Assert.assertEquals(boardViewPage.getRecordInViewMode(), EXPECTED_CREATED_PENDING_RECORD);
     }
 
-    @Test(dependsOnMethods = "testView")
+    @Test(dependsOnMethods = "testViewRecord")
     public void testEditDraftRecord() {
 
         BoardListPage boardListPage = new MainPage(getDriver())
@@ -156,7 +156,7 @@ public class EntityBoardTest extends BaseTest {
     }
 
     @Test(dependsOnMethods = "testEditDraftRecord")
-    public void testDelete() {
+    public void testDeleteRecord() {
 
         BoardListPage boardListPage = new MainPage(getDriver())
                 .clickBoardMenu()
@@ -173,8 +173,8 @@ public class EntityBoardTest extends BaseTest {
         Assert.assertEquals(recycleBinPage.getRowCount(), 1);
     }
 
-    @Test(dependsOnMethods = "testDelete")
-    public void testRestoreDraftRecord() {
+    @Test(dependsOnMethods = "testDeleteRecord")
+    public void testRestoreRecord() {
 
         RecycleBinPage recycleBinPage = new MainPage(getDriver())
                 .clickRecycleBin();
@@ -196,10 +196,10 @@ public class EntityBoardTest extends BaseTest {
         Assert.assertNotEquals(textRecycleBinNotificationBeforeRestore, textRecycleBinNotificationAfterRestore);
     }
 
-    @Test(dependsOnMethods = "testRestoreDraftRecord")
+    @Test(dependsOnMethods = "testRestoreRecord")
     public void testDeleteRecordFromRecycleBin() {
 
-        testDelete();
+        testDeleteRecord();
 
         RecycleBinPage recycleBinPage = new MainPage(getDriver())
                 .clickRecycleBin()
@@ -233,10 +233,11 @@ public class EntityBoardTest extends BaseTest {
 
         boardListPage.clickTextColumn();
         Assert.assertEquals(boardListPage.getRow(0), ALL_RECORDS_TABLE.get(0));
+        Assert.assertEquals(boardListPage.getRow(1), ALL_RECORDS_TABLE.get(1));
     }
 
     @Test(dependsOnMethods = "testSortRecords")
-    public void testSearch() {
+    public void testSearchRecord() {
 
         BoardListPage boardListPage = new MainPage(getDriver())
                 .clickBoardMenu()
@@ -274,7 +275,7 @@ public class EntityBoardTest extends BaseTest {
     }
 
     @Test
-    public void testCreateRecord() {
+    public void testCreateNonDraftRecord() {
 
         BoardListPage boardListPage = new MainPage(getDriver())
                 .clickBoardMenu()
@@ -289,14 +290,14 @@ public class EntityBoardTest extends BaseTest {
         Assert.assertEquals(boardListPage.getRow(0), EXPECTED_CREATED_PENDING_RECORD);
     }
 
-    @Test(dependsOnMethods = "testCreateRecord")
-    public void testViewRecord() {
+    @Test(dependsOnMethods = "testCreateNonDraftRecord")
+    public void testViewNonDraftRecord() {
 
-        testView();
+        testViewRecord();
     }
 
-    @Test(dependsOnMethods = "testViewRecord")
-    public void testEditRecord() {
+    @Test(dependsOnMethods = "testViewNonDraftRecord")
+    public void testEditNonDraftRecord() {
 
         BoardListPage boardListPage = new MainPage(getDriver())
                 .clickBoardMenu()
@@ -312,10 +313,10 @@ public class EntityBoardTest extends BaseTest {
         Assert.assertEquals(boardListPage.getRow(0), EXPECTED_EDITED_RECORD);
     }
 
-    @Test(dependsOnMethods = "testEditRecord")
-    public void testDeleteRecord() {
+    @Test(dependsOnMethods = "testEditNonDraftRecord")
+    public void testDeleteNonDraftRecord() {
 
-        testDelete();
+        testDeleteRecord();
     }
 
     @Test
