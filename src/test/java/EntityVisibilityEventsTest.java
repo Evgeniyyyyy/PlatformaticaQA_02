@@ -3,6 +3,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.testng.Assert;
+import org.testng.annotations.Ignore;
 import org.testng.annotations.Test;
 
 import static constants.EntityAssignConstants.*;
@@ -107,6 +108,7 @@ public class EntityVisibilityEventsTest extends BaseTest {
         Assert.assertEquals(getValue(), NEW_RECORD);
     }
 
+    @Ignore
     @Test(dependsOnMethods = "testEditCreatedRecord")
     public void testViewRecord() {
 

@@ -2,6 +2,7 @@ import base.BaseTest;
 import org.openqa.selenium.By;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.testng.Assert;
+import org.testng.annotations.Ignore;
 import org.testng.annotations.Test;
 import utils.TestUtils;
 import constants.EntityArithmeticInlineConstants;
@@ -28,6 +29,7 @@ public class EntityDestinationCreateRecordSaveAsDraftTest extends BaseTest {
 
     }
 
+    @Ignore
     @Test
     public void testCreateDraftRecord() {
         TestUtils.jsClick(getDriver(), findElement(By.xpath("//p[contains(text(),'Export destination')]")));

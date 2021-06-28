@@ -3,6 +3,7 @@ import model.*;
 import org.openqa.selenium.By;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.testng.Assert;
+import org.testng.annotations.Ignore;
 import org.testng.annotations.Test;
 import utils.TestUtils;
 import constants.EntityArithmeticInlineConstants;
@@ -55,6 +56,7 @@ public class EntityArithmeticInlineTest extends BaseTest {
         }
     }
 
+    @Ignore
     @Test //test by PRoman-86
     public void testCreateAndSaveNewRecord() throws InterruptedException {
 
