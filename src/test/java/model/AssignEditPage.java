@@ -41,6 +41,9 @@ public class AssignEditPage extends BasePage {
     @FindBy(xpath = "//button[text()='Cancel']")
     private WebElement cancelButton;
 
+    @FindBy(className = "filter-option-inner-inner")
+    private WebElement fieldUserName;
+
 
     public AssignEditPage fillTitle(String value) {
         fieldString.click();
@@ -115,5 +118,13 @@ public class AssignEditPage extends BasePage {
         TestUtils.jsClick(getDriver(), cancelButton);
 
         return new AssignPage(getDriver());
+    }
+
+    public AssignEditPage findUser(String value) {
+        TestUtils.jsClick(getDriver(), fieldUserName);
+        TestUtils.jsClick(getDriver(), getDriver().findElement(By.xpath(
+                "//span[text()='" + value + "']")));
+
+        return this;
     }
 }

@@ -7,6 +7,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.ui.ExpectedConditions;
+import utils.TestUtils;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -52,6 +53,18 @@ public class AssignPage extends MainPage {
 
     @FindBy(className = "pagination-info")
     private static WebElement paginationInfo;
+
+    @FindBy(xpath = "//div[@class='dropdown pull-left']")
+    private WebElement actionMenu;
+
+    @FindBy(xpath = "//a[text()='view']")
+    private WebElement view;
+
+    @FindBy(xpath = "//a[text()='edit']")
+    private WebElement edit;
+
+    @FindBy(xpath = "//a[text()='delete']")
+    private WebElement delete;
 
     public AssignEditPage clickNewButton() {
         newButton.click();
@@ -136,5 +149,26 @@ public class AssignPage extends MainPage {
     public AssignPage getTextPaginationInfo(String value) {
         getWait().until(ExpectedConditions.textToBePresentInElement(paginationInfo, value));
         return this;
+    }
+
+    public AssignViewPage clickView() {
+        actionMenu.click();
+        TestUtils.jsClick(getDriver(), view);
+
+        return new AssignViewPage(getDriver());
+    }
+
+    public AssignEditPage clickEdit() {
+        actionMenu.click();
+        TestUtils.jsClick(getDriver(), edit);
+
+        return new AssignEditPage(getDriver());
+    }
+
+    public AssignPage clickDelete() {
+        actionMenu.click();
+        TestUtils.jsClick(getDriver(), delete);
+
+        return new AssignPage(getDriver());
     }
 }
