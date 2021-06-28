@@ -2,9 +2,12 @@ package model;
 
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.FindBy;
 
-public class BoardPage extends MainPage {
+import java.util.List;
+
+public class BoardPage extends BasePage {
 
     @FindBy(xpath = "//i[text()='create_new_folder']")
     private WebElement newButton;
@@ -17,6 +20,9 @@ public class BoardPage extends MainPage {
 
     @FindBy(className = "card-body")
     private WebElement table;
+
+    @FindBy(xpath = "//div[@class='kanban-item']")
+    private List<WebElement> colomn;
 
     public BoardPage(WebDriver driver) {
         super(driver);
@@ -43,5 +49,33 @@ public class BoardPage extends MainPage {
     public String getTextCardBody(){
 
         return table.getText();
+    }
+
+    public String getTextPendingRecord(){
+
+        return colomn.get(0).getText();
+    }
+
+    public String getTextOnTrackRecord(){
+
+        return colomn.get(1).getText();
+    }
+
+    protected Actions actions = new Actions(getDriver());
+
+    public void moveRecord(WebElement element, Integer gorizont, Integer vertical) {
+        actions.moveToElement(element)
+                .clickAndHold(element)
+                .dragAndDropBy(element, gorizont, vertical)
+                .build()
+                .perform();
+    }
+
+    public void movePendingToOnTrack(){
+        moveRecord(colomn.get(0), 200,0);
+    }
+
+    public void moveOnTrackToPending(){
+        moveRecord(colomn.get(1), -200,0);
     }
 }

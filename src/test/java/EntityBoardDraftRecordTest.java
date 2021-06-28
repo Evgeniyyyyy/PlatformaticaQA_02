@@ -41,6 +41,13 @@ public class EntityBoardDraftRecordTest extends BaseTest {
             DECIMAL_VALUE_PENDING,
             "", "", "", USER_NAME);
 
+    private static final List<String> EXPECTED_EDITED_PENDING_RECORD = List.of(
+            STRING_INPUT_ONTRACK,
+            TEXT_VALUE_PENDING,
+            INT_VALUE_PENDING,
+            DECIMAL_VALUE_PENDING,
+            "", "", "", USER_NAME);
+
     private static final List<String> EXPECTED_EDITED_RECORD = List.of(
             STRING_INPUT_ONTRACK,
             EDIT_TEXT_VALUE,
@@ -50,6 +57,13 @@ public class EntityBoardDraftRecordTest extends BaseTest {
 
     private static final List<String> EXPECTED_CREATED_ONTRACK_RECORD = List.of(
             STRING_INPUT_ONTRACK,
+            TEXT_VALUE_ONTRACK,
+            INT_VALUE_ONTRACK,
+            DECIMAL_VALUE_ONTRACK,
+            "", "", "", USER_NAME);
+
+    private static final List<String> EXPECTED_EDITED_ONTRACK_RECORD = List.of(
+            STRING_INPUT_PENDING,
             TEXT_VALUE_ONTRACK,
             INT_VALUE_ONTRACK,
             DECIMAL_VALUE_ONTRACK,
@@ -101,6 +115,17 @@ public class EntityBoardDraftRecordTest extends BaseTest {
                 .clickActionsEdit()
                 .clearFields()
                 .fillFields(EntityBoardDraftRecordTest.EXPECTED_EDITED_RECORD);
+    }
+
+    private String getStringInputRecord(List<String> list){
+        String stringInputRecord = "";
+
+        for (String s : list) {
+            if (!s.equals("")) {
+                stringInputRecord += s + " ";
+            }
+        }
+        return stringInputRecord.trim();
     }
 
     static class CompareByText implements Comparator<List<String>> {
@@ -342,5 +367,33 @@ public class EntityBoardDraftRecordTest extends BaseTest {
     public void testSearchRecord() {
 
         testSearch();
+    }
+
+    @Test
+    public void testDragAndDropRecords() {
+
+        BoardPage boardPage = new MainPage(getDriver())
+                .clickBoardMenu()
+                .clickNewButton()
+                .fillFields(EXPECTED_CREATED_PENDING_RECORD)
+                .findUser(USER_NAME)
+                .clickSaveDraft()
+                .clickNewButton()
+                .fillFields(EXPECTED_CREATED_ONTRACK_RECORD)
+                .findUser(USER_NAME)
+                .clickSave();
+
+        final String pendingRecord = getStringInputRecord(EXPECTED_CREATED_PENDING_RECORD);
+        final String onTrackRecord = getStringInputRecord(EXPECTED_CREATED_ONTRACK_RECORD);
+
+        Assert.assertEquals(boardPage.getTextPendingRecord(), pendingRecord);
+        Assert.assertEquals(boardPage.getTextOnTrackRecord(), onTrackRecord);
+
+        boardPage.movePendingToOnTrack();
+        boardPage.moveOnTrackToPending();
+        boardPage.clickListButton();
+
+        Assert.assertEquals(boardPage.getRow(0), EXPECTED_EDITED_PENDING_RECORD);
+        Assert.assertEquals(boardPage.getRow(1), EXPECTED_EDITED_ONTRACK_RECORD);
     }
 }
