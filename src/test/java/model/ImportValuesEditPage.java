@@ -42,24 +42,28 @@ public class ImportValuesEditPage extends BaseModel{
     }
 
     public ImportValuesEditPage fillString(String value) {
+        fieldString.clear();
         fieldString.sendKeys(value);
 
         return this;
     }
 
     public ImportValuesEditPage fillText(String value) {
+        fieldText.clear();
         fieldText.sendKeys(value);
 
         return this;
     }
 
     public ImportValuesEditPage fillInt(String value) {
+        fieldInt.clear();
         fieldInt.sendKeys(value);
 
         return this;
     }
 
     public ImportValuesEditPage fillDecimal(String value) {
+        fieldDecimal.clear();
         fieldDecimal.sendKeys(value);
 
         return this;
