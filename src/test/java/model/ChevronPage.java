@@ -41,6 +41,9 @@ public class ChevronPage extends MainPage {
     @FindBy(xpath = "//a[text()='delete']")
     private WebElement delete;
 
+    @FindBy(xpath = "//button[text()='Sent']")
+    private WebElement sentButton;
+
     @FindBy(xpath = "//a[text()='All']")
     private WebElement allButton;
 
@@ -83,21 +86,27 @@ public class ChevronPage extends MainPage {
 
     public ChevronViewPage clickView() {
         actionMenu.click();
-        TestUtils.jsClick(getDriver(), view);
+        getWait().until(TestUtils.movingIsFinished(view)).click();
 
         return new ChevronViewPage(getDriver());
     }
 
     public ChevronEditPage clickEdit() {
         actionMenu.click();
-        TestUtils.jsClick(getDriver(), edit);
+        getWait().until(TestUtils.movingIsFinished(edit)).click();
 
         return new ChevronEditPage(getDriver());
     }
 
     public ChevronPage clickDelete() {
         actionMenu.click();
-        TestUtils.jsClick(getDriver(), delete);
+        getWait().until(TestUtils.movingIsFinished(delete)).click();
+
+        return this;
+    }
+
+    public ChevronPage clickSent() {
+        sentButton.click();
 
         return this;
     }
@@ -160,6 +169,20 @@ public class ChevronPage extends MainPage {
         public String dateTimeValue;
         public String userValue;
 
+        public ChevronPageDto(ChevronPageDto data) {
+            stringDropDownValue = data.stringDropDownValue;
+            formTextValue = data.formTextValue;
+            formIntValue = data.formIntValue;
+            formDecimalValue = data.formDecimalValue;
+            dateValue = data.dateValue;
+            dateTimeValue = data.dateTimeValue;
+            userValue = data.userValue;
+        }
+
+        public ChevronPageDto() {
+
+        }
+
         @Override
         public boolean equals(Object o) {
             if (this == o) return true;
@@ -198,5 +221,12 @@ public class ChevronPage extends MainPage {
         data.userValue = "apptester1@tester.test";
 
         return data;
+    }
+
+    public static ChevronPageDto makeSentRecord(ChevronPageDto data){
+        ChevronPageDto data1 = new ChevronPageDto(data);
+        data1.stringDropDownValue = "Sent";
+
+        return data1;
     }
 }
