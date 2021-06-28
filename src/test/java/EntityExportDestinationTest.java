@@ -11,14 +11,14 @@ import java.util.List;
 import static utils.ProjectUtils.*;
 import static utils.TestUtils.scrollClick;
 
-public class EntityExportDestinationSaveRecordTest extends BaseTest {
+public class EntityExportDestinationTest extends BaseTest {
 
     private final static List<String> EXPECTED_VALUES = Arrays.asList(
             "Some string", "Export destination text.", "457", "27.35",
             "01/06/2021", "01/06/2021 13:07:06", "", "apptester1@tester.test");
 
     @Test
-    public void testSaveRecord() {
+    public void testCreateRecord() {
 
         scrollClick(getDriver(), findElement(By.xpath("//p[contains(text(), ' Export destination ')]")));
         clickCreateRecord(getDriver());
