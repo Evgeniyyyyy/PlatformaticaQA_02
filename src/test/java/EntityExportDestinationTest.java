@@ -1,5 +1,6 @@
 import base.BaseTest;
 import model.ExportDestinationPage;
+import model.ExportDestinationViewPage;
 import model.MainPage;
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -39,5 +40,16 @@ public class EntityExportDestinationTest extends BaseTest {
 
         Assert.assertEquals(exportDestinationPage.getClassIcon(), CHECK_SQUARE_ICON);
         Assert.assertEquals(exportDestinationPage.getRow(0), EXPECTED_VALUES);
+    }
+
+    @Test(dependsOnMethods = "testCreateRecord")
+    public void testViewRecord() {
+
+        ExportDestinationViewPage exportDestinationViewPage = new MainPage(getDriver())
+                .clickExportDestinationMenu()
+                .clickActions()
+                .clickActionsView();
+
+        Assert.assertEquals(exportDestinationViewPage.getRecordInViewMode(), EXPECTED_VALUES);
     }
 }

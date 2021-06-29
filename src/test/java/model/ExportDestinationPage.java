@@ -5,6 +5,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
+import utils.TestUtils;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -23,6 +24,12 @@ public class ExportDestinationPage extends MainPage{
     @FindBy(xpath = "//tbody/tr/td[1]/i")
     private static WebElement icon;
 
+    @FindBy(xpath = "//button/i[text()='menu']")
+    private WebElement actionsButton;
+
+    @FindBy(xpath = "//a[text()='view']")
+    private WebElement actionsViewButton;
+
     public ExportDestinationPage(WebDriver driver) {
         super(driver);
     }
@@ -31,6 +38,16 @@ public class ExportDestinationPage extends MainPage{
         newButton.click();
 
         return new ExportDestinationEditPage(getDriver());
+    }
+
+    public ExportDestinationPage clickActions() {
+        actionsButton.click();
+        return new ExportDestinationPage(getDriver());
+    }
+    public ExportDestinationViewPage clickActionsView() {
+        getWait().until(TestUtils.movingIsFinished(actionsViewButton));
+        actionsViewButton.click();
+        return new ExportDestinationViewPage(getDriver());
     }
 
     public boolean isTableEmpty() {
