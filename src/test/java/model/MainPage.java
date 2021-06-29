@@ -71,7 +71,7 @@ public class MainPage extends BaseModel {
         super(driver);
     }
 
-    public AssignPage clickAssignMenu(){
+    public AssignPage clickAssignMenu() {
         TestUtils.jsClick(getDriver(), assignMenuItem);
 
         return new AssignPage(getDriver());
@@ -89,13 +89,13 @@ public class MainPage extends BaseModel {
         return new FieldsPage(getDriver());
     }
 
-    public ReadonlyPage clickReadonlyMenu(){
+    public ReadonlyPage clickReadonlyMenu() {
         TestUtils.jsClick(getDriver(), readonlyMenuItem);
 
         return new ReadonlyPage(getDriver());
     }
 
-    public GanttPage clickGanttMenu(){
+    public GanttPage clickGanttMenu() {
         TestUtils.jsClick(getDriver(), ganttMenuItem);
 
         return new GanttPage(getDriver());
@@ -149,7 +149,7 @@ public class MainPage extends BaseModel {
         return new ExportDestinationPage(getDriver());
     }
 
-    public RecycleBinPage clickRecycleBin(){
+    public RecycleBinPage clickRecycleBin() {
         recycleBinIcon.click();
 
         return new RecycleBinPage(getDriver());
@@ -200,5 +200,11 @@ public class MainPage extends BaseModel {
         if (getDriver().getPageSource().contains("<span class=\"notification\">"))
             return  Integer.parseInt(getDriver().findElement(By.xpath("//span[@class='notification']/b")).getText());
         else return 0;
+    }
+
+    public ReferenceValuesPage1 clickReferenceValuesMenu() {
+        TestUtils.jsClick(getDriver(), referenceValuesMenuItem);
+
+        return new ReferenceValuesPage1(getDriver());
     }
 }
