@@ -8,6 +8,9 @@ import java.util.List;
 
 public class EntityReadonlyTest extends BaseTest {
 
+    private static final String RECORD_ICON = "fa fa-check-square-o";
+    private static final String DRAFT_RECORD_ICON = "fa fa-pencil";
+
     private final List<String> EXPECTED_VALUES = List.of("", "", "0", "0.00", "", "");
 
     private String getAttributeClass() {
@@ -41,7 +44,7 @@ public class EntityReadonlyTest extends BaseTest {
                 .fillDecimal("20.55")
                 .clickSave();
 
-        Assert.assertEquals(getAttributeClass(), "fa fa-check-square-o");
+        Assert.assertEquals(getAttributeClass(), RECORD_ICON);
         Assert.assertEquals(readonlyPage.getRow(0), EXPECTED_VALUES);
     }
 
@@ -57,14 +60,14 @@ public class EntityReadonlyTest extends BaseTest {
                 .fillDecimal("55.55")
                 .clickSave();
 
-        Assert.assertEquals(getAttributeClass(), "fa fa-check-square-o");
+        Assert.assertEquals(getAttributeClass(), RECORD_ICON);
         Assert.assertEquals(readonlyPage.getRow(0), EXPECTED_VALUES);
     }
 
     @Test(dependsOnMethods = "testEditRecord")
     public void testDeleteRecord() {
 
-        ReadonlyPage readonlyPage = new ReadonlyPage(getDriver()).clickReadonlyMenu()
+        ReadonlyPage readonlyPage = new ReadonlyPage(getDriver())
                 .clickReadonlyMenu()
                 .clickActionDelete();
 
@@ -74,6 +77,23 @@ public class EntityReadonlyTest extends BaseTest {
         Assert.assertEquals(recycleBinPage.getTextNotificationRowCount(), "1");
         Assert.assertEquals(recycleBinPage.getRowCount(), 1);
         Assert.assertEquals(getRecordInBin(), "Decimal: 0.00");
+    }
+
+    @Test(dependsOnMethods = "testDeleteRecord")
+    public void testRestoreRecord() {
+
+        RecycleBinPage recycleBinPage = new MainPage(getDriver())
+                .clickRecycleBin()
+                .clickDeletedRestoreAsDraft();
+
+        Assert.assertEquals(recycleBinPage.getTextCardBody(),
+                "Good job with housekeeping! Recycle bin is currently empty!");
+
+        ReadonlyPage readonlyPage = new ReadonlyPage(getDriver())
+                .clickReadonlyMenu();
+
+        Assert.assertEquals(getAttributeClass(), DRAFT_RECORD_ICON);
+        Assert.assertEquals(readonlyPage.getRow(0), EXPECTED_VALUES);
     }
 
     @Test
@@ -88,7 +108,7 @@ public class EntityReadonlyTest extends BaseTest {
                 .fillDecimal("")
                 .clickSaveDraft();
 
-        Assert.assertEquals(getAttributeClass(), "fa fa-pencil");
+        Assert.assertEquals(getAttributeClass(), DRAFT_RECORD_ICON);
         Assert.assertEquals(readonlyPage.getRow(0), EXPECTED_VALUES);
     }
 
