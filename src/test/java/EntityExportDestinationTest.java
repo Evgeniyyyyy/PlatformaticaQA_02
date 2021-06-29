@@ -1,55 +1,43 @@
 import base.BaseTest;
-import org.openqa.selenium.By;
-import org.openqa.selenium.WebElement;
+import model.ExportDestinationPage;
+import model.MainPage;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static utils.ProjectUtils.*;
-import static utils.TestUtils.scrollClick;
-
 public class EntityExportDestinationTest extends BaseTest {
 
+    private static final String STRING_VALUE = "Some string";
+    private static final String TEXT_VALUE = "Export destination text.";
+    private static final String INT_VALUE = "457";
+    private static final String DECIMAL_VALUE = "27.35";
+    private static final String DATE_VALUE = "01/06/2021";
+    private static final String DATETIME_VALUE = "01/06/2021 13:07:06";
+    private static final String USERNAME_VALUE = "apptester1@tester.test";
+    private static final String FILE_VALUE = "";
+    private static final String CHECK_SQUARE_ICON = "fa fa-check-square-o";
+
     private final static List<String> EXPECTED_VALUES = Arrays.asList(
-            "Some string", "Export destination text.", "457", "27.35",
-            "01/06/2021", "01/06/2021 13:07:06", "", "apptester1@tester.test");
+            STRING_VALUE, TEXT_VALUE, INT_VALUE, DECIMAL_VALUE,
+            DATE_VALUE, DATETIME_VALUE, FILE_VALUE, USERNAME_VALUE);
 
     @Test
     public void testCreateRecord() {
 
-        scrollClick(getDriver(), findElement(By.xpath("//p[contains(text(), ' Export destination ')]")));
-        clickCreateRecord(getDriver());
+        ExportDestinationPage exportDestinationPage = new MainPage(getDriver())
+                .clickExportDestinationMenu()
+                .clickNewButton()
+                .fillString(STRING_VALUE)
+                .fillText(TEXT_VALUE)
+                .fillInt(INT_VALUE)
+                .fillDecimal(DECIMAL_VALUE)
+                .fillDate(DATE_VALUE)
+                .fillDateTime(DATETIME_VALUE)
+                .clickSave();
 
-        findElement(By.id("string")).sendKeys("Some string");
-        findElement(By.id("text")).sendKeys("Export destination text.");
-        findElement(By.id("int")).sendKeys("457");
-        findElement(By.id("decimal")).sendKeys("27.35");
-
-        WebElement date = findElement(By.id("date"));
-        date.click();
-        date.clear();
-        date.sendKeys("01/06/2021");
-
-        WebElement dateTime = findElement(By.id("datetime"));
-        dateTime.click();
-        dateTime.clear();
-        dateTime.sendKeys("01/06/2021 13:07:06");
-
-        clickSave(getDriver());
-
-        List<WebElement> tds = findElements(By.xpath("//tbody/tr/td[@class = 'pa-list-table-th']"));
-
-        WebElement checkSquareIcon = findElement(By.xpath("//i[@class='fa fa-check-square-o']"));
-
-        List<String> actualValues = new ArrayList<>();
-        for(int i = 0; i < tds.size(); i++) {
-            actualValues.add(tds.get(i).getText());
-        }
-
-        Assert.assertEquals(checkSquareIcon.getAttribute("class"), "fa fa-check-square-o");
-        Assert.assertEquals(actualValues, EXPECTED_VALUES);
+        Assert.assertEquals(exportDestinationPage.getClassIcon(), CHECK_SQUARE_ICON);
+        Assert.assertEquals(exportDestinationPage.getRow(0), EXPECTED_VALUES);
     }
 }

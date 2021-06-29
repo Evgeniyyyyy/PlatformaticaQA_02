@@ -64,6 +64,9 @@ public class MainPage extends BaseModel {
     @FindBy(xpath = "//p[text()= ' Tag ']")
     private WebElement tagMenuItem;
 
+    @FindBy(xpath = "//p[text()= ' Export destination ']")
+    private WebElement exportDestinationMenuItem;
+
     public MainPage(WebDriver driver) {
         super(driver);
     }
@@ -138,6 +141,12 @@ public class MainPage extends BaseModel {
         TestUtils.jsClick(getDriver(), importValuesMenuItem);
 
         return new ImportValuesPage(getDriver());
+    }
+
+    public ExportDestinationPage clickExportDestinationMenu() {
+        TestUtils.jsClick(getDriver(), exportDestinationMenuItem);
+
+        return new ExportDestinationPage(getDriver());
     }
 
     public RecycleBinPage clickRecycleBin(){
