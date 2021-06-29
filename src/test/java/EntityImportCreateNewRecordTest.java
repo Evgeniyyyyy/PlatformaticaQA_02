@@ -8,6 +8,7 @@ import utils.ProjectUtils;
 import utils.TestUtils;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -31,7 +32,7 @@ public class EntityImportCreateNewRecordTest extends BaseTest {
                 By.xpath("//i[text() = 'create_new_folder']"))));
     }
 
-    private void clickCreateNewFolderButten() {
+    private void clickCreateNewFolderButton() {
         getDriver().findElement(By.xpath("//i[text() = 'create_new_folder']")).click();
     }
 
@@ -75,7 +76,7 @@ public class EntityImportCreateNewRecordTest extends BaseTest {
                 STRING_INPUT, TEXT_INPUT, INT_INPUT, DECIMAL_INPUT, DATA_INPUT, DATA_TIME_INPUT, EMPTY, USER_DEFAULT);
 
         clickImportMenu();
-        clickCreateNewFolderButten();
+        clickCreateNewFolderButton();
         inputValue();
         jsClick(getDriver(), getDriver().findElement(By.id("pa-entity-form-save-btn")));
 
@@ -119,5 +120,41 @@ public class EntityImportCreateNewRecordTest extends BaseTest {
         Assert.assertTrue(textCardBodyAfterDelete.isEmpty());
         Assert.assertNotEquals(textRecycleBinBeforeDelete, textRecycleBinAfterDelete);
         Assert.assertEquals(textRecycleBinAfterDelete, expectedTextRecycleBinAfterDelete);
+    }
+
+    @Test
+    public void testSearchCreatedRecordImport() {
+        clickImportMenu();
+        completeNewFields("Milk");
+        completeNewFields("Cow");
+        completeNewFields("Milk2");
+        putInSearch("mIlK");
+
+        getWait().until(ExpectedConditions.textToBePresentInElementLocated(
+                By.xpath("//span[@class='pagination-info']"),
+                "Showing 1 to 2 of 2 rows"));
+        Assert.assertEquals(findElement(
+                By.xpath("//span[@class='pagination-info']")).getText(),
+                "Showing 1 to 2 of 2 rows");
+
+        List<String> results = findElements(By.xpath("//tbody/tr/td[2]/a"))
+                .stream()
+                .map(x -> x.getText())
+                .collect(Collectors.toList());
+        Assert.assertEquals(results, List.of("Milk", "Milk2"));
+    }
+
+    public void completeNewFields(String str1) {
+        clickCreateNewFolderButton();
+        getDriver().findElement(By.id("string")).sendKeys(str1);
+        getWait().until(ExpectedConditions.attributeToBe(
+                By.id("string"), "value", str1));
+        getDriver().findElement(By.id("text")).sendKeys(str1);
+        jsClick(getDriver(), getDriver().findElement(
+                By.id("pa-entity-form-save-btn")));
+    }
+
+    public void putInSearch(String str1) {
+        getDriver().findElement(By.xpath("//input[@placeholder='Search']")).sendKeys(str1);
     }
 }
