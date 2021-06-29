@@ -1,5 +1,4 @@
 import base.BaseTest;
-import model.FieldsEditPage;
 import model.FieldsPage;
 import model.MainPage;
 import org.openqa.selenium.By;
@@ -21,10 +20,10 @@ public class EntityFieldsTest extends BaseTest {
     private static final String DATE_TIME_VALUE = getDateTime(0);
     private static final String USER_NAME = getUser();
     private static final String EDIT_USER_NAME = getUser();
-    private static final String EDIT_TITLE_VALUE = getTextRandom(3);
-    private static final String EDIT_COMMENTS_VALUE = getTextRandom(12);
-    private static final String EDIT_INT_VALUE = getIntRandom();
-    private static final String EDIT_DECIMAL_VALUE = getDoubleRandom();
+    private static final String EDIT_TITLE_VALUE = "Hello world";
+    private static final String EDIT_COMMENTS_VALUE = "Abstract class";
+    private static final String EDIT_INT_VALUE = "-2147483648";
+    private static final String EDIT_DECIMAL_VALUE = "-323232.32";
     private static final String EDIT_DATE_VALUE = getDate(getRandom(2555000));
     private static final String EDIT_DATE_TIME_VALUE = getDateTime(getRandom(2555000));
     private static final String INFO_TEXT = "Showing 1 to 1 of 1 rows";
