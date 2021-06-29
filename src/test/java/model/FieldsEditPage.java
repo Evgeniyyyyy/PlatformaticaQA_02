@@ -35,6 +35,9 @@ public class FieldsEditPage extends BaseModel {
     @FindBy(xpath = "//button[text()='Cancel']")
     private WebElement cancelButton;
 
+    @FindBy(id = "pa-entity-form-draft-btn")
+    private WebElement draftButton;
+
     public FieldsEditPage(WebDriver driver) {
         super(driver);
     }
@@ -99,6 +102,12 @@ public class FieldsEditPage extends BaseModel {
 
     public FieldsPage clickCancel() {
         TestUtils.jsClick(getDriver(), cancelButton);
+
+        return new FieldsPage(getDriver());
+    }
+
+    public FieldsPage clickDraft() {
+        TestUtils.jsClick(getDriver(), draftButton);
 
         return new FieldsPage(getDriver());
     }

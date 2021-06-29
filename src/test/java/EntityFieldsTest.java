@@ -1,4 +1,5 @@
 import base.BaseTest;
+import model.FieldsEditPage;
 import model.FieldsPage;
 import model.MainPage;
 import org.openqa.selenium.By;
@@ -131,6 +132,29 @@ public class EntityFieldsTest extends BaseTest {
 
         Assert.assertEquals(fieldsPage.getRow(0), EXPECTED_RESULT);
         Assert.assertEquals(fieldsPage.getClassIcon(), ICON);
+    }
+
+    @Test
+    public void testSortRecords() {
+
+        testCreateRecord();
+
+        FieldsPage fieldsPage = new MainPage(getDriver())
+                .clickFieldsMenu()
+                .clickNewButton()
+                .fillDateTime(EDIT_DATE_TIME_VALUE)
+                .fillTitle(EDIT_TITLE_VALUE)
+                .fillDate(EDIT_DATE_VALUE)
+                .fillComments(EDIT_COMMENTS_VALUE)
+                .fillInt(EDIT_INT_VALUE)
+                .fillDecimal(EDIT_DECIMAL_VALUE)
+                .findUser(EDIT_USER_NAME)
+                .clickDraft();
+        Assert.assertEquals(fieldsPage.getRowCount(), 2);
+        Assert.assertEquals(fieldsPage.getRow(0), EXPECTED_RESULT);
+
+        fieldsPage.clickSortTitle();
+        Assert.assertEquals(fieldsPage.getRow(0), EDIT_RESULT);
     }
 
     @Test

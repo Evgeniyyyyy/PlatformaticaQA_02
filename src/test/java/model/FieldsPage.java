@@ -42,6 +42,9 @@ public class FieldsPage extends BasePage {
     @FindBy(xpath = "//*[contains(text(), 'besttextever')]/../../td[11]/div/button")
     private WebElement exactViewButton;
 
+    @FindBy(xpath = "//div[text()='Comments']")
+    private WebElement titleSort;
+
     public FieldsPage(WebDriver driver) {
         super(driver);
     }
@@ -94,5 +97,9 @@ public class FieldsPage extends BasePage {
                 "//*[contains(text(), 'besttextever')]/../../td[11]/div/ul/li[1]/a")).click();
 
         return new FieldsPage(getDriver());
+    }
+
+    public void clickSortTitle() {
+        titleSort.click();
     }
 }
