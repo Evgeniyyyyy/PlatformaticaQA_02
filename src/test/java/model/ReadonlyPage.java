@@ -25,6 +25,9 @@ public class ReadonlyPage extends MainPage {
     @FindBy(xpath = "//a[text()='edit']")
     private WebElement actionsEditButton;
 
+    @FindBy(xpath = "//a[text()='delete']")
+    private WebElement actionsDeleteButton;
+
     @FindBy(className = "card-body")
     private WebElement table;
 
@@ -47,29 +50,31 @@ public class ReadonlyPage extends MainPage {
         return new ReadonlyEditPage(getDriver());
     }
 
-    public ReadonlyPage clickActionButton() {
-        actionsButton.click();
-
-        return new ReadonlyPage(getDriver());
-    }
-
     public ReadonlyPage clickActionView() {
-        getWait().until(TestUtils.movingIsFinished(actionsViewButton));
+        actionsButton.click();
         actionsViewButton.click();
 
         return new ReadonlyPage(getDriver());
     }
 
     public ReadonlyEditPage clickActionEdit() {
+        actionsButton.click();
         getWait().until(TestUtils.movingIsFinished(actionsEditButton));
         actionsEditButton.click();
 
         return new ReadonlyEditPage(getDriver());
     }
 
+    public ReadonlyPage clickActionDelete() {
+        actionsButton.click();
+        getWait().until(TestUtils.movingIsFinished(actionsDeleteButton));
+        actionsDeleteButton.click();
+
+        return new ReadonlyPage(getDriver());
+    }
+
     public ReadonlyPage clickRecord() {
         TestUtils.jsClick(getDriver(), record);
-
         return new ReadonlyPage(getDriver());
     }
 

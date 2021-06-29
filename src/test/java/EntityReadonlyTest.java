@@ -14,6 +14,10 @@ public class EntityReadonlyTest extends BaseTest {
         return getDriver().findElement(By.xpath("//tbody/tr/td[1]/i")).getAttribute("class");
     }
 
+    private String getRecordInBin(){
+        return findElement(By.xpath("//tbody/tr//span")).getText();
+    }
+
     @Test
     public void testCancelRecord() {
 
@@ -46,7 +50,6 @@ public class EntityReadonlyTest extends BaseTest {
 
         ReadonlyPage readonlyPage = new MainPage(getDriver())
                 .clickReadonlyMenu()
-                .clickActionButton()
                 .clickActionEdit()
                 .fillString("EditString")
                 .fillText("New Text")
@@ -56,6 +59,21 @@ public class EntityReadonlyTest extends BaseTest {
 
         Assert.assertEquals(getAttributeClass(), "fa fa-check-square-o");
         Assert.assertEquals(readonlyPage.getRow(0), EXPECTED_VALUES);
+    }
+
+    @Test(dependsOnMethods = "testEditRecord")
+    public void testDeleteRecord() {
+
+        ReadonlyPage readonlyPage = new ReadonlyPage(getDriver()).clickReadonlyMenu()
+                .clickReadonlyMenu()
+                .clickActionDelete();
+
+        RecycleBinPage recycleBinPage = new MainPage(getDriver())
+                .clickRecycleBin();
+
+        Assert.assertEquals(recycleBinPage.getTextNotificationRowCount(), "1");
+        Assert.assertEquals(recycleBinPage.getRowCount(), 1);
+        Assert.assertEquals(getRecordInBin(), "Decimal: 0.00");
     }
 
     @Test
@@ -79,7 +97,6 @@ public class EntityReadonlyTest extends BaseTest {
 
         ReadonlyPage readonlyPage = new MainPage(getDriver())
                 .clickReadonlyMenu()
-                .clickActionButton()
                 .clickActionView();
 
         Assert.assertEquals(readonlyPage.getRecordInViewMode(), EXPECTED_VALUES);
