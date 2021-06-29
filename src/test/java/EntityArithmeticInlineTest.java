@@ -56,12 +56,8 @@ public class EntityArithmeticInlineTest extends BaseTest {
         }
     }
 
-    @Ignore
     @Test //test by PRoman-86
-    public void testCreateAndSaveNewRecord() throws InterruptedException {
-
-        ProjectUtils.start(getDriver());
-
+    public void testCreateAndSaveNewRecord() {
         TestUtils.jsClick(getDriver(), findElement(EntityArithmeticInlineConstants.LINK_ENTITY));
         TestUtils.jsClick(getDriver(), findElement(EntityArithmeticInlineConstants.ADD_CARD));
         findElement(By.xpath("//input[@id='f1']")).sendKeys(Integer.toString(F1));
@@ -76,9 +72,9 @@ public class EntityArithmeticInlineTest extends BaseTest {
         TestUtils.jsClick(getDriver(), findElement(EntityArithmeticInlineConstants.ACTION_BUTTON));
         TestUtils.jsClick(getDriver(), findElement(EntityArithmeticInlineConstants.ACTION_VIEW));
 
-        Assert.assertEquals(findElement(By.xpath("//div[3]//div[1]")).getText(), String.valueOf(SUM));
-        Assert.assertEquals(findElement(By.xpath("//div[4]//div[1]")).getText(), String.valueOf(SUB));
-        Assert.assertEquals(findElement(By.xpath("//div[5]//div[1]")).getText(), String.valueOf(MUL));
-        Assert.assertEquals(findElement(By.xpath("//div[6]//div[1]")).getText(), String.valueOf(DIV));
+        Assert.assertEquals(findElement(By.xpath("/html[1]/body[1]/div[1]/div[2]/div[1]/div[1]/div[1]/div[1]/div[1]/div[2]/div[1]/div[1]/div[1]/div[6]/div[1]")).getText(), String.valueOf(SUM));
+        Assert.assertEquals(findElement(By.xpath("/html[1]/body[1]/div[1]/div[2]/div[1]/div[1]/div[1]/div[1]/div[1]/div[2]/div[1]/div[1]/div[1]/div[8]/div[1]")).getText(), String.valueOf(SUB));
+        Assert.assertEquals(findElement(By.xpath("/html[1]/body[1]/div[1]/div[2]/div[1]/div[1]/div[1]/div[1]/div[1]/div[2]/div[1]/div[1]/div[1]/div[10]/div[1]")).getText(), String.valueOf(MUL));
+        Assert.assertEquals(findElement(By.xpath("/html[1]/body[1]/div[1]/div[2]/div[1]/div[1]/div[1]/div[1]/div[1]/div[2]/div[1]/div[1]/div[1]/div[12]/div[1]")).getText(), String.valueOf(DIV));
     }
 }

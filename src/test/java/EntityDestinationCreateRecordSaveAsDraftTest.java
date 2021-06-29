@@ -29,8 +29,7 @@ public class EntityDestinationCreateRecordSaveAsDraftTest extends BaseTest {
 
     }
 
-    @Ignore
-    @Test
+    @Test //test by PRoman-86
     public void testCreateDraftRecord() {
         TestUtils.jsClick(getDriver(), findElement(By.xpath("//p[contains(text(),'Export destination')]")));
         TestUtils.jsClick(getDriver(), findElement(By.cssSelector(".card-icon")));
@@ -49,13 +48,13 @@ public class EntityDestinationCreateRecordSaveAsDraftTest extends BaseTest {
         getWait().until(TestUtils.movingIsFinished(findElement(EntityArithmeticInlineConstants.ACTION_VIEW)));
         TestUtils.jsClick(getDriver(), findElement(EntityArithmeticInlineConstants.ACTION_VIEW));
 
-        Assert.assertEquals(findElement(By.xpath("/html[1]/body[1]/div[1]/div[2]/div[1]/div[1]/div[1]/div[1]/div[1]/div[2]/div[1]/div[1]/div[1]/div[1]/div[1]")).getText(), STRING_INPUT_VALUE);
-        Assert.assertEquals(findElement(By.xpath("/html[1]/body[1]/div[1]/div[2]/div[1]/div[1]/div[1]/div[1]/div[1]/div[2]/div[1]/div[1]/div[1]/div[2]/div[1]")).getText(), TEXT_INPUT_VALUE);
-        Assert.assertEquals(findElement(By.xpath("/html[1]/body[1]/div[1]/div[2]/div[1]/div[1]/div[1]/div[1]/div[1]/div[2]/div[1]/div[1]/div[1]/div[3]/div[1]")).getText(), INT_INPUT_VALUE);
-        Assert.assertEquals(findElement(By.xpath("/html[1]/body[1]/div[1]/div[2]/div[1]/div[1]/div[1]/div[1]/div[1]/div[2]/div[1]/div[1]/div[1]/div[4]/div[1]")).getText(), DECIMAL_INPUT_VALUE);
-        Assert.assertNotEquals(findElement(By.xpath("/html[1]/body[1]/div[1]/div[2]/div[1]/div[1]/div[1]/div[1]/div[1]/div[2]/div[1]/div[1]/div[1]/div[5]/div[1]")), "");
-        Assert.assertNotEquals(findElement(By.xpath("/html[1]/body[1]/div[1]/div[2]/div[1]/div[1]/div[1]/div[1]/div[1]/div[2]/div[1]/div[1]/div[1]/div[6]/div[1]")), "");
-        Assert.assertEquals(findElement(By.xpath("/html[1]/body[1]/div[1]/div[2]/div[1]/div[1]/div[1]/div[1]/div[1]/div[2]/div[1]/div[1]/div[1]/div[7]/p[1]")).getText(), CURRENT_USER);
+        Assert.assertEquals(findElement(By.xpath("/html[1]/body[1]/div[1]/div[2]/div[1]/div[1]/div[1]/div[1]/div[1]/div[2]/div[1]/div[1]/div[1]/div[2]/div[1]")).getText(), STRING_INPUT_VALUE);
+        Assert.assertEquals(findElement(By.xpath("/html[1]/body[1]/div[1]/div[2]/div[1]/div[1]/div[1]/div[1]/div[1]/div[2]/div[1]/div[1]/div[1]/div[4]/div[1]")).getText(), TEXT_INPUT_VALUE);
+        Assert.assertEquals(findElement(By.xpath("/html[1]/body[1]/div[1]/div[2]/div[1]/div[1]/div[1]/div[1]/div[1]/div[2]/div[1]/div[1]/div[1]/div[6]/div[1]")).getText(), INT_INPUT_VALUE);
+        Assert.assertEquals(findElement(By.xpath("/html[1]/body[1]/div[1]/div[2]/div[1]/div[1]/div[1]/div[1]/div[1]/div[2]/div[1]/div[1]/div[1]/div[8]/div[1]")).getText(), DECIMAL_INPUT_VALUE);
+        Assert.assertNotEquals(findElement(By.xpath("/html[1]/body[1]/div[1]/div[2]/div[1]/div[1]/div[1]/div[1]/div[1]/div[2]/div[1]/div[1]/div[1]/div[10]/div[1]")), "");
+        Assert.assertNotEquals(findElement(By.xpath("/html[1]/body[1]/div[1]/div[2]/div[1]/div[1]/div[1]/div[1]/div[1]/div[2]/div[1]/div[1]/div[1]/div[12]/div[1]")), "");
+        Assert.assertEquals(findElement(By.xpath("/html[1]/body[1]/div[1]/div[2]/div[1]/div[1]/div[1]/div[1]/div[1]/div[2]/div[1]/div[1]/div[1]/div[13]/p[1]")).getText(), CURRENT_USER);
 
     }
 
