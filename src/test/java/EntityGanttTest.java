@@ -14,7 +14,6 @@ import java.util.Date;
 import java.util.List;
 
 import static utils.ProjectUtils.*;
-import static utils.TestUtils.*;
 
 public class EntityGanttTest extends BaseTest {
 
@@ -41,10 +40,6 @@ public class EntityGanttTest extends BaseTest {
     private static final Date DATE = new Date();
     private static final SimpleDateFormat FORMATTER = new SimpleDateFormat("dd/MM/yyyy");
 
-    private static final List<Object> EXPECTED_RESULT = Arrays
-            .asList(STRING_INPUT_VALUE, TEXT_INPUT_VALUE, INT_INPUT_VALUE, DECIMAL_INPUT_VALUE,
-                    FORMATTER.format(DATE), EMPTY_FIELD, EMPTY_FIELD, USER_NAME);
-
     private static final List<Object> NEW_EXPECTED_RESULT = Arrays
             .asList(STRING_INPUT_VALUE, TEXT_INPUT_VALUE, INT_INPUT_VALUE, DECIMAL_INPUT_VALUE,
                     FORMATTER.format(DATE), EMPTY_FIELD, EMPTY_FIELD, NEW_USER_NAME);
@@ -57,18 +52,6 @@ public class EntityGanttTest extends BaseTest {
         getWait().until(ExpectedConditions.elementToBeClickable(getDriver()
                 .findElement(By.xpath("//a[@href=\"index.php?action=action_list&list_type=table&entity_id=35\"]"))))
                 .click();
-    }
-
-    private void fillForm() {
-        clickCreateRecord(getDriver());
-        findElement(STRING_FIELD).sendKeys(STRING_INPUT_VALUE);
-        findElement(TEXT_FIELD).sendKeys(TEXT_INPUT_VALUE);
-        findElement(INT_FIELD).sendKeys(INT_INPUT_VALUE);
-        findElement(DECIMAL_FIELD).sendKeys(DECIMAL_INPUT_VALUE);
-        findElement(By.id("date")).click();
-        findElement(By.xpath("//div[contains(text(),'apptester1@tester.test')]")).click();
-
-        jsClick(getDriver(), findElement(By.xpath("//span[text()='tester100@tester.test']")));
     }
 
     @Test
@@ -168,13 +151,19 @@ public class EntityGanttTest extends BaseTest {
     @Test
     public void testCreateDraftRecord() {
 
-        getEntity(getDriver(), "Gantt");
-        fillForm();
-        clickSaveDraft(getDriver());
-        clickListButton();
+        GanttListPage ganttListPage = new MainPage(getDriver())
+                .clickGanttMenu()
+                .clickNewButton()
+                .fillString(STRING_INPUT_VALUE)
+                .fillText(TEXT_INPUT_VALUE)
+                .fillInt(INT_INPUT_VALUE)
+                .fillDecimal(DECIMAL_INPUT_VALUE)
+                .fillDate(FORMATTER)
+                .clickSaveDraft()
+                .clickListButton();
 
-        WebElement icon2 = findElement(CHECK_ICON);
-        Assert.assertEquals(icon2.getAttribute("class"), "fa fa-pencil");
-        Assert.assertEquals(getActualValues(findElements(ACTUAL_RESULT)), EXPECTED_RESULT);
+        Assert.assertEquals(ganttListPage.getRowCount(), 1);
+        Assert.assertEquals(ganttListPage.getRow(0), NEW_EXPECTED_RESULT);
+        Assert.assertEquals(ganttListPage.getIcon(), "fa fa-pencil");
     }
 }

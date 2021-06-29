@@ -30,6 +30,9 @@ public class GanttEditPage extends BaseModel{
     @FindBy(id = "pa-entity-form-save-btn")
     private WebElement saveButton;
 
+    @FindBy(id = "pa-entity-form-draft-btn")
+    private WebElement saveDraftButton;
+
     public GanttEditPage(WebDriver driver) {
         super(driver);
     }
@@ -66,6 +69,12 @@ public class GanttEditPage extends BaseModel{
 
     public GanttPage clickSave() {
         TestUtils.jsClick(getDriver(), saveButton);
+
+        return new GanttPage(getDriver());
+    }
+
+    public GanttPage clickSaveDraft() {
+        TestUtils.jsClick(getDriver(), saveDraftButton);
 
         return new GanttPage(getDriver());
     }
