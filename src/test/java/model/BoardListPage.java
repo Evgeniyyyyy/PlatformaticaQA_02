@@ -1,21 +1,13 @@
 package model;
 
-import com.beust.jcommander.Strings;
-import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.ui.ExpectedConditions;
-import utils.ProjectUtils;
+
 import utils.TestUtils;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
 public class BoardListPage extends BasePage {
-
-    @FindBy(xpath = "//td[@class='pa-list-table-th']")
-    private List<WebElement> recordsTable;
 
     @FindBy(xpath = "//button/i[text()='menu']")
     private WebElement actionsButton;
@@ -83,10 +75,6 @@ public class BoardListPage extends BasePage {
         textColumn.click();
 
         new BoardListPage(getDriver());
-    }
-
-    public List<String> getListRecordsTable(){
-        return ProjectUtils.getActualValues(recordsTable);
     }
 
     public BoardListPage getTextPaginationInfo(String value) {
