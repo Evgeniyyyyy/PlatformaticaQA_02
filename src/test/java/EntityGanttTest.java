@@ -1,5 +1,6 @@
 import base.BaseTest;
 import model.GanttListPage;
+import model.GanttViewPage;
 import model.MainPage;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
@@ -22,7 +23,6 @@ public class EntityGanttTest extends BaseTest {
     private static final By INT_FIELD = By.id("int");
     private static final By DECIMAL_FIELD = By.id("decimal");
     private static final By CHECK_ICON = By.xpath("//tbody/tr[1]/td[1]/i[1]");
-    private static final By ROWS_ELEMENT = By.xpath("//div[@class='fixed-table-body']//table[@id='pa-all-entities-table']/tbody/tr");
     private static final By ACTUAL_RESULT = By.xpath("//tbody/tr/td[@class = 'pa-list-table-th']");
 
     private static final String STRING_INPUT_VALUE = "Test";
@@ -93,19 +93,13 @@ public class EntityGanttTest extends BaseTest {
     @Test(dependsOnMethods = "testCreateRecord")
     public void testViewRecord() {
 
-        getEntity(getDriver(), "Gantt");
-        clickListButton();
+        GanttViewPage ganttViewPage = new MainPage(getDriver())
+                .clickGanttMenu()
+                .clickListButton()
+                .clickActions()
+                .clickActionsView();
 
-        List<WebElement> rows = getDriver().findElements(ROWS_ELEMENT);
-        Assert.assertEquals(rows.size(), 1);
-
-        clickActionsView(getWait(), getDriver());
-
-        List<Object> expectedRecords = Arrays.asList(STRING_INPUT_VALUE, TEXT_INPUT_VALUE, INT_INPUT_VALUE,
-                DECIMAL_INPUT_VALUE, FORMATTER.format(DATE), EMPTY_FIELD);
-
-        Assert.assertEquals(getActualValues(findElements(By.xpath("//span [@class = 'pa-view-field']"))), expectedRecords);
-        Assert.assertEquals(findElement(By.xpath("//div [@class = 'form-group']/p")).getText(), NEW_USER_NAME);
+        Assert.assertEquals(ganttViewPage.getRecordInViewMode(), NEW_EXPECTED_RESULT);
     }
 
     @Test(dependsOnMethods = "testViewRecord")
