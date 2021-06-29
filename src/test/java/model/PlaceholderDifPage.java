@@ -130,4 +130,12 @@ public class PlaceholderDifPage extends MainPage {
         return recycleBinCountNotification.getText();
     }
 
+    public PlaceholderDifPage deletePlaceholderRecord() {
+        return this
+                .clickPlaceholderDifMenu()
+                .clickButtonList()
+                .clickActionsMenu()
+                .clickButtonDelete();
+    }
+
 }

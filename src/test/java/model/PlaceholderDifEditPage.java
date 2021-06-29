@@ -32,6 +32,9 @@ public class PlaceholderDifEditPage extends BaseModel {
     @FindBy(id = "pa-entity-form-draft-btn")
     private WebElement saveDraftButton;
 
+    @FindBy(xpath = "//button[text()='Cancel']")
+    private WebElement cancelButton;
+
     public PlaceholderDifEditPage(WebDriver driver) {
 
         super(driver);
@@ -120,6 +123,12 @@ public class PlaceholderDifEditPage extends BaseModel {
         fieldInt.sendKeys(value);
 
         return this;
+    }
+
+    public  PlaceholderDifEditPage clickCancel() {
+        TestUtils.jsClick(getDriver(), cancelButton);
+
+        return new  PlaceholderDifEditPage(getDriver());
     }
 }
 

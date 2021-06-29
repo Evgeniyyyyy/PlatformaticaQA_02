@@ -1,31 +1,30 @@
 import base.BaseTest;
-import model.PlaceholderDifPage;
-import model.PlaceholderDifViewPage;
-import model.RecycleBinPage;
+import model.*;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.RandomUtils;
 import org.openqa.selenium.WebElement;
 import org.testng.Assert;
 import org.testng.annotations.Test;
-import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.stream.Collectors;
-import static utils.ProjectUtils.getUser;
+import static utils.ProjectUtils.*;
+import static utils.ProjectUtils.getRandom;
 
 public class EntityPlaceholderDraftTest extends BaseTest {
 
-    private static final String STRING_VALUE = UUID.randomUUID().toString();
-    private static final String STRING_NEW_VALUE = UUID.randomUUID().toString();
-    private static final String TEXT_VALUE = UUID.randomUUID().toString();
-    private static final String TEXT_NEW_VALUE = UUID.randomUUID().toString();
+    private static final String STRING_VALUE = getTextRandom(17);
+    private static final String STRING_NEW_VALUE = getTextRandom(17);
+    private static final String TEXT_VALUE = getTextRandom(20);
+    private static final String TEXT_NEW_VALUE = getTextRandom(20);
     private static final String INT_VALUE = getRandomIntValue();
     private static final String INT_NEW_VALUE = getRandomIntValue();
     private static final String DECIMAL_VALUE = getRandomDecimalValue();
-    private static final String DATE_VALUE = new SimpleDateFormat("dd/MM/yyyy").format(new Date());
-    private static final String DATETIME_VALUE = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(new Date());
+    private static final String DATE_VALUE = getDate(getRandom(2555000));
+    private static final String DATETIME_VALUE = getDateTime(getRandom(2555000));
+    private static final String USER_NAME = getUser();
     private static final String PENCIL_ICON_CLASS = "fa fa-pencil";
     private static final String EMPTY_RECYCLE_BIN_MESSAGE = "Good job with housekeeping! Recycle bin is currently empty!";
-    private static final String USER_NAME = getUser();
+
     private static final List<String> EXPECTED_RESULT_EDIT = Arrays.asList(STRING_NEW_VALUE, TEXT_NEW_VALUE, INT_NEW_VALUE, DECIMAL_VALUE, DATE_VALUE, DATETIME_VALUE, "", "", USER_NAME);
     private static final List<String> EXPECTED_RESULT_VIEW_PAGE = List
             .of(STRING_NEW_VALUE, TEXT_NEW_VALUE, INT_NEW_VALUE, DECIMAL_VALUE, DATE_VALUE, DATETIME_VALUE);
@@ -48,7 +47,7 @@ public class EntityPlaceholderDraftTest extends BaseTest {
     @Test
     public void testCreateNewPlaceholderDraftRecord() {
 
-        PlaceholderDifPage placeholderDifPage = new PlaceholderDifPage(getDriver())
+        PlaceholderDifPage placeholderDifPage = new MainPage(getDriver())
                 .clickPlaceholderDifMenu()
                 .clickNewButton()
                 .fillString(STRING_VALUE)
@@ -72,7 +71,7 @@ public class EntityPlaceholderDraftTest extends BaseTest {
     @Test(dependsOnMethods = "testCreateNewPlaceholderDraftRecord")
     public void testEditPlaceholderDraftRecord() {
 
-        PlaceholderDifPage placeholderDifPage = new PlaceholderDifPage(getDriver())
+        PlaceholderDifPage placeholderDifPage = new MainPage(getDriver())
                 .clickPlaceholderDifMenu()
                 .clickButtonList()
                 .clickActionsMenu()
@@ -90,7 +89,7 @@ public class EntityPlaceholderDraftTest extends BaseTest {
     @Test(dependsOnMethods = "testEditPlaceholderDraftRecord")
     public void testViewDraftRecord() {
 
-        PlaceholderDifViewPage placeholderDifViewPage = new PlaceholderDifViewPage(getDriver())
+        PlaceholderDifViewPage placeholderDifViewPage = new MainPage(getDriver())
                 .clickPlaceholderDifMenu()
                 .clickButtonList()
                 .clickActionsMenu()
@@ -108,26 +107,66 @@ public class EntityPlaceholderDraftTest extends BaseTest {
     public void testDeletePlaceholderDraftRecord() {
 
         PlaceholderDifPage placeholderDifPage = new PlaceholderDifPage(getDriver())
-                .clickPlaceholderDifMenu()
-                .clickButtonList()
-                .clickActionsMenu()
-                .clickButtonDelete();
+                .deletePlaceholderRecord();
 
         Assert.assertEquals(placeholderDifPage.getRowCount(), 0);
         Assert.assertEquals(placeholderDifPage.getRecycleBinCountNotification(), "1");
     }
 
     @Test(dependsOnMethods = "testDeletePlaceholderDraftRecord")
+    public void testRestorePlaceholderDraftRecord() throws InterruptedException {
+
+        RecycleBinPage recycleBinPage = new MainPage(getDriver())
+                .clickRecycleBin();
+        Assert.assertEquals(recycleBinPage.getTextPaginationInfo(), "Showing 1 to 1 of 1 rows");
+
+        recycleBinPage.clickDeletedRestoreAsDraft();
+        Assert.assertEquals(recycleBinPage.getTextCardBody(), EMPTY_RECYCLE_BIN_MESSAGE);
+
+        PlaceholderDifPage placeholderDifPage = new PlaceholderDifPage(getDriver())
+                .clickPlaceholderDifMenu();
+
+        Assert.assertEquals(placeholderDifPage.getClassIcon(), PENCIL_ICON_CLASS);
+
+        List<WebElement> columnList = placeholderDifPage.getPlaceholderTableColumns();
+        Assert.assertEquals(columnList.size(), EXPECTED_RESULT_EDIT.size());
+        Assert.assertEquals(getListOfValues(columnList), EXPECTED_RESULT_EDIT);
+    }
+
+    @Test(dependsOnMethods = "testRestorePlaceholderDraftRecord")
     public void testDeleteRecycleBinDraftRecord() {
 
-        RecycleBinPage recycleBinPage = new RecycleBinPage(getDriver())
+        new PlaceholderDifPage(getDriver())
+                .deletePlaceholderRecord();
+
+        RecycleBinPage recycleBinPage = new MainPage(getDriver())
                 .clickPlaceholderDifMenu()
                 .clickIconRecycleBin();
+
         Assert.assertEquals(recycleBinPage.getTextPaginationInfo(), "Showing 1 to 1 of 1 rows");
         Assert.assertEquals(recycleBinPage.getRowCount(), 1);
 
         recycleBinPage.clickDeletedRecordPermanently();
         Assert.assertEquals(recycleBinPage.getTextCardBody(), EMPTY_RECYCLE_BIN_MESSAGE);
+    }
+
+    @Test
+    public void testCancelCreatePlaceholderAction() {
+
+        PlaceholderDifEditPage placeholderDifEditPage = new MainPage(getDriver())
+                .clickPlaceholderDifMenu()
+                .clickNewButton()
+                .fillString(STRING_VALUE)
+                .fillText(TEXT_VALUE)
+                .fillInt(INT_VALUE)
+                .fillDecimal(DECIMAL_VALUE)
+                .fillDate(DATE_VALUE)
+                .fillDateTime(DATETIME_VALUE)
+                .fillUserField(USER_NAME)
+                .clickCancel();
+
+        PlaceholderDifPage placeholderDifPage = new PlaceholderDifPage(getDriver());
+        Assert.assertTrue(placeholderDifPage.isTableEmpty());
     }
 }
 
