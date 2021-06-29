@@ -24,6 +24,8 @@ public class EntityImportValuesDraftRecordTest extends BaseTest {
     private static final String DATETIME_INPUT2 = "18/07/2021 17:07:07";
     private static final String PENCIL_ICON = "fa fa-pencil";
     private static final String EMPTY_RECYCLE_BIN_MESSAGE = "Good job with housekeeping! Recycle bin is currently empty!";
+    private static final String SEARCH_INPUT = "Som";
+    private static final String TEXT_INFORMATION = "Showing 1 to 1 of 1 rows";
 
     private final static List<String> EXPECTED_VALUES = Arrays.asList(STRING_INPUT, TEXT_INPUT,
             INT_INPUT, DECIMAL_INPUT, DATE_INPUT, DATETIME_INPUT, FILE_INPUT, USERNAME_INPUT);
@@ -120,5 +122,36 @@ public class EntityImportValuesDraftRecordTest extends BaseTest {
                 }).clickDeletedRecordPermanently();
 
         Assert.assertEquals(recycleBinPage.getTextCardBody(), EMPTY_RECYCLE_BIN_MESSAGE);
+    }
+
+    @Test
+    public void testSearchRecord() {
+
+        ImportValuesPage importValuesPage = new MainPage(getDriver())
+                .clickImportValuesMenu()
+                .clickNewButton()
+                .fillString(STRING_INPUT)
+                .fillText(TEXT_INPUT)
+                .fillInt(INT_INPUT)
+                .fillDecimal(DECIMAL_INPUT)
+                .fillDate(DATE_INPUT)
+                .fillDateTime(DATETIME_INPUT)
+                .clickSaveDraft();
+
+        importValuesPage.clickNewButton()
+                .fillString(STRING_INPUT2)
+                .fillText(TEXT_INPUT2)
+                .fillInt(INT_INPUT2)
+                .fillDecimal(DECIMAL_INPUT2)
+                .fillDate(DATE_INPUT2)
+                .fillDateTime(DATETIME_INPUT2)
+                .clickSave();
+
+        importValuesPage.clickImportValuesMenu()
+                .searchInput(SEARCH_INPUT)
+                .findTextInfo(TEXT_INFORMATION);
+
+        Assert.assertEquals(importValuesPage.getRowCount(), 1);
+        Assert.assertEquals(importValuesPage.getRow(0), EXPECTED_VALUES);
     }
 }

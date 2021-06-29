@@ -5,12 +5,13 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 import utils.TestUtils;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class ImportValuesPage extends MainPage {
+public class ImportValuesPage extends BasePage {
 
     @FindBy(xpath = "//i[text()='create_new_folder']")
     private WebElement newButton;
@@ -41,6 +42,12 @@ public class ImportValuesPage extends MainPage {
 
     @FindBy(xpath = "//i[text()='delete_outline']")
     private WebElement recycleBinIcon;
+
+    @FindBy(xpath = "//input[@placeholder = 'Search']")
+    private WebElement input;
+
+    @FindBy(xpath = "//span[@class='pagination-info']")
+    private WebElement text;
 
     public ImportValuesPage(WebDriver driver) {
         super(driver);
@@ -79,9 +86,22 @@ public class ImportValuesPage extends MainPage {
         return new ImportValuesPage(getDriver());
     }
 
-    public int getTextNotificationRecycleBin(){
+    public int getTextNotificationRecycleBin() {
 
         return Integer.parseInt(recycleBinNotification.getText());
+    }
+
+
+    public ImportValuesPage searchInput(String value) {
+        input.sendKeys(value);
+
+        return this;
+    }
+
+    public ImportValuesPage findTextInfo(String value) {
+        getWait().until(ExpectedConditions.textToBePresentInElement(text, value));
+
+        return this;
     }
 
     public boolean isTableEmpty() {
