@@ -10,6 +10,9 @@ import utils.TestUtils;
 import java.util.ArrayList;
 import java.util.List;
 
+import static utils.ProjectUtils.clickCreateRecord;
+import static utils.ProjectUtils.clickSave;
+
 public class ArithmeticFunctionEditPage extends BaseModel{
 
     @FindBy(id = "f1")

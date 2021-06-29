@@ -5,6 +5,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 import utils.TestUtils;
 
 import java.util.List;
@@ -26,6 +27,18 @@ public class ArithmeticFunctionPage extends MainPage {
 
     @FindBy(xpath = "//tbody/tr/td[1]/i")
     private WebElement icon;
+
+    @FindBy(xpath = "//a[@aria-label='to page 2']")
+    private WebElement pagination2;
+
+    @FindBy(xpath = "//a[@aria-label='to page 1']")
+    private WebElement pagination1;
+
+    @FindBy(xpath = "//button[@class='btn btn-secondary dropdown-toggle']")
+    private WebElement size;
+
+    @FindBy(xpath = "//a[normalize-space()='25']")
+    private WebElement size25;
 
     @FindBy(css = "tr:nth-child(1) .material-icons")
     private  WebElement actionMenu;
@@ -93,6 +106,30 @@ public class ArithmeticFunctionPage extends MainPage {
     public List<String> getRow(int number) {
         return rows.get(number).findElements(By.className("pa-list-table-th"))
                 .stream().map(WebElement::getText).collect(Collectors.toList());
+    }
+
+    public ArithmeticFunctionPage clickPaginationButton(int value) {
+        if (value==1){
+            TestUtils.jsClick(getDriver(), pagination1);
+        } else if (value==2) {
+            TestUtils.jsClick(getDriver(), pagination2);
+        }
+        return new ArithmeticFunctionPage(getDriver());
+    }
+
+    public List<WebElement> getCells() {
+        List<WebElement> tableRecords = getDriver().findElements(By.xpath("//div[@ class = 'card-body ']//table/tbody/tr"));
+        return tableRecords;
+    }
+
+    public ArithmeticFunctionPage clickSizeButton() {
+      size.click();
+       return new ArithmeticFunctionPage(getDriver());
+    }
+
+    public ArithmeticFunctionPage clickSize25Button() {
+        size25.click();
+        return new ArithmeticFunctionPage(getDriver());
     }
 
     public List<String> viewData(){
