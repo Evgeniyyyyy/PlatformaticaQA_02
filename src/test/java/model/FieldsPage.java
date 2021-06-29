@@ -1,5 +1,6 @@
 package model;
 
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -37,6 +38,9 @@ public class FieldsPage extends BasePage {
 
     @FindBy(xpath = "//tbody/tr/td/i")
     private static WebElement icon;
+
+    @FindBy(xpath = "//*[contains(text(), 'besttextever')]/../../td[11]/div/button")
+    private WebElement exactViewButton;
 
     public FieldsPage(WebDriver driver) {
         super(driver);
@@ -77,5 +81,18 @@ public class FieldsPage extends BasePage {
         getWait().until(ExpectedConditions.textToBePresentInElement(text, value));
 
         return this;
+    }
+
+    public FieldsPage clickExactViewRecord() {
+        TestUtils.jsClick(getDriver(), exactViewButton);
+
+        getWait().until(ExpectedConditions.elementToBeClickable(
+                getDriver().findElement(By.xpath(
+                        "//*[contains(text(), 'besttextever')]/../../td[11]/div/ul/li[1]/a"))));
+
+        getDriver().findElement(By.xpath(
+                "//*[contains(text(), 'besttextever')]/../../td[11]/div/ul/li[1]/a")).click();
+
+        return new FieldsPage(getDriver());
     }
 }
