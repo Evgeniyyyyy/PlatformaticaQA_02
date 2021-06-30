@@ -50,6 +50,9 @@ public class ImportValuesPage extends BaseListMasterPage<ImportValuesEditPage, I
     @FindBy(xpath = "//span[@class='pagination-info']")
     private WebElement text;
 
+    @FindBy(xpath = "//th[@data-field='text']/div")
+    private WebElement sortText;
+
     public ImportValuesPage(WebDriver driver) {
         super(driver);
     }
@@ -107,6 +110,10 @@ public class ImportValuesPage extends BaseListMasterPage<ImportValuesEditPage, I
         getWait().until(ExpectedConditions.textToBePresentInElement(text, value));
 
         return this;
+    }
+
+    public void clickSortText() {
+        sortText.click();
     }
 
     public boolean isTableEmpty() {

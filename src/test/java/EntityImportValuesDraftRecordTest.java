@@ -9,7 +9,7 @@ import java.util.List;
 public class EntityImportValuesDraftRecordTest extends BaseTest {
 
     private static final String STRING_INPUT = "Some string";
-    private static final String TEXT_INPUT = "Import values text.";
+    private static final String TEXT_INPUT = "New text.";
     private static final String INT_INPUT = "457";
     private static final String DECIMAL_INPUT = "27.35";
     private static final String DATE_INPUT = "01/06/2021";
@@ -17,7 +17,7 @@ public class EntityImportValuesDraftRecordTest extends BaseTest {
     private static final String USERNAME_INPUT = "apptester1@tester.test";
     private static final String FILE_INPUT = "";
     private static final String STRING_INPUT2 = "New string";
-    private static final String TEXT_INPUT2 = "New text.";
+    private static final String TEXT_INPUT2 = "Import values text.";
     private static final String INT_INPUT2 = "12";
     private static final String DECIMAL_INPUT2 = "0.20";
     private static final String DATE_INPUT2 = "18/07/2021";
@@ -153,5 +153,19 @@ public class EntityImportValuesDraftRecordTest extends BaseTest {
 
         Assert.assertEquals(importValuesPage.getRowCount(), 1);
         Assert.assertEquals(importValuesPage.getRow(0), EXPECTED_VALUES);
+    }
+
+    @Test(dependsOnMethods = "testSearchRecord")
+    public void testSortRecords() {
+
+        ImportValuesPage importValuesPage = new MainPage(getDriver())
+                .clickImportValuesMenu();
+
+        Assert.assertEquals(importValuesPage.getRowCount(), 2);
+        Assert.assertEquals(importValuesPage.getRow(0), EXPECTED_VALUES);
+
+        importValuesPage.clickSortText();
+
+        Assert.assertEquals(importValuesPage.getRow(0), EXPECTED_VALUES2);
     }
 }
