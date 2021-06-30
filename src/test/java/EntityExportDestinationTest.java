@@ -19,6 +19,7 @@ public class EntityExportDestinationTest extends BaseTest {
     private static final String USERNAME_VALUE = "apptester1@tester.test";
     private static final String FILE_VALUE = "";
     private static final String CHECK_SQUARE_ICON = "fa fa-check-square-o";
+    private static final String PENCIL_ICON = "fa fa-pencil";
 
     private final static List<String> EXPECTED_VALUES = Arrays.asList(
             STRING_VALUE, TEXT_VALUE, INT_VALUE, DECIMAL_VALUE,
@@ -51,5 +52,21 @@ public class EntityExportDestinationTest extends BaseTest {
                 .clickActionsView();
 
         Assert.assertEquals(exportDestinationViewPage.getRecordInViewMode(), EXPECTED_VALUES);
+    }
+
+    @Test
+    public void testCreateDraftRecord() {
+        ExportDestinationPage exportDestinationPage = new MainPage(getDriver())
+                .clickExportDestinationMenu()
+                .clickNewButton()
+                .fillString(STRING_VALUE)
+                .fillText(TEXT_VALUE)
+                .fillInt(INT_VALUE)
+                .fillDecimal(DECIMAL_VALUE)
+                .fillDate(DATE_VALUE)
+                .fillDateTime(DATETIME_VALUE)
+                .clickSaveDraft();
+        Assert.assertEquals(exportDestinationPage.getClassIcon(), PENCIL_ICON);
+        Assert.assertEquals(exportDestinationPage.getRow(0), EXPECTED_VALUES);
     }
 }
