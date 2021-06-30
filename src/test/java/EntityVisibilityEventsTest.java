@@ -6,12 +6,15 @@ import org.testng.Assert;
 import org.testng.annotations.Ignore;
 import org.testng.annotations.Test;
 
-import static constants.EntityAssignConstants.*;
 import static utils.ProjectUtils.*;
 import static utils.TestUtils.movingIsFinished;
 import static utils.TestUtils.scrollClick;
 
 public class EntityVisibilityEventsTest extends BaseTest {
+
+    public static final String CLASS_ITEM_SAVE = "fa fa-check-square-o";
+    public static final String TEXT_MESSAGE_ONE = "Showing 1 to 1 of 1 rows";
+    public static final By ASSIGN_GET_ICON = By.xpath("//tbody/tr[1]/td[1]/i");
 
     final static String NEW_RECORD = "New modified record";
     final static String ENTITY_NAME = "Visibility events";
