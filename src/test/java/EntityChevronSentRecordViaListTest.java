@@ -11,10 +11,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static utils.ProjectUtils.clickSave;
+import static utils.TestUtils.jsClick;
+import static utils.TestUtils.scrollClick;
 
 public class EntityChevronSentRecordViaListTest extends BaseTest {
 
     private static final String ENTERED_DATA = "firstExample";
+    private static final By CHEVRON = By.xpath("//p[contains(text(),' Chevron ')]");
+    private static final By CREATE_NEW_FOLDER = By.xpath("//i[text() = 'create_new_folder']");
+    private static final By TEXT = By.id("text");
+    private static final By SAVE_BUTTON = By.id("pa-entity-form-save-btn");
+    private static final By TOGGLE = By.xpath("//i[@class ='fa fa-toggle-off']");
 
     private void createNewRecord() {
         getWait().until(ExpectedConditions.elementToBeClickable(getDriver()
@@ -75,5 +82,50 @@ public class EntityChevronSentRecordViaListTest extends BaseTest {
         newValues.addAll(getLastTwoCellsValues());
 
         Assert.assertEquals(newValues, oldValues);
+    }
+
+    @Test
+    public void testSentRecordWithActivatedToggle() {
+        clickChevronMenu();
+        clickCreateNewFolderButton();
+        inputF1Value("Mail");
+        clickSaveButton();
+        clickToggle();
+        jsClick(getDriver(), getDriver().findElement(
+                By.xpath("//button[text()='Sent']")));
+        jsClick(getDriver(), getDriver().findElement(
+                By.xpath("//a[contains(@href,'index.php?action=action_list&list_type=table&entity_id=36&stage=Sent')]")));
+
+
+        getWait().until(ExpectedConditions.textToBePresentInElementLocated(
+                By.xpath("//span[@class='pagination-info']"),
+                "Showing 1 to 1 of 1 rows"));
+        Assert.assertEquals(findElement(
+                By.xpath("//span[@class='pagination-info']")).getText(),
+                "Showing 1 to 1 of 1 rows");
+
+    }
+
+    private void clickChevronMenu() {
+        scrollClick(getDriver(), findElement(CHEVRON));
+        getWait().until(ExpectedConditions.elementToBeClickable(findElement(CREATE_NEW_FOLDER)));
+    }
+
+    private void clickCreateNewFolderButton() {
+        findElement(CREATE_NEW_FOLDER).click();
+        getWait().until(ExpectedConditions.presenceOfElementLocated(TEXT));
+    }
+
+    private void inputF1Value(String mail) {
+        findElement(TEXT).sendKeys(mail);
+    }
+
+    private void clickSaveButton() {
+        findElement(SAVE_BUTTON).click();
+        getWait().until(ExpectedConditions.elementToBeClickable(findElement(CREATE_NEW_FOLDER)));
+    }
+
+    private void clickToggle() {
+        findElement(TOGGLE).click();
     }
 }
