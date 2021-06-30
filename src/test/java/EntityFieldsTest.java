@@ -21,6 +21,7 @@ public class EntityFieldsTest extends BaseTest {
     private static final String USER_NAME = getUser();
     private static final String EDIT_USER_NAME = getUser();
     private static final String EDIT_TITLE_VALUE = "Hello world";
+    private static final String SORT_COMMENTS_VALUE = "Exact sort";
     private static final String EDIT_COMMENTS_VALUE = "Abstract class";
     private static final String EDIT_INT_VALUE = "-2147483648";
     private static final String EDIT_DECIMAL_VALUE = "-323232.32";
@@ -55,6 +56,16 @@ public class EntityFieldsTest extends BaseTest {
             EDIT_DATE_VALUE,
             EDIT_DATE_TIME_VALUE,
             EDIT_USER_NAME);
+
+    private static final List<String> SORTED_RESULT = List.of(
+            TITLE_VALUE,
+            SORT_COMMENTS_VALUE,
+            INT_VALUE,
+            DECIMAL_VALUE,
+            DATE_VALUE,
+            DATE_TIME_VALUE, "",
+            USER_NAME, "");
+
 
     @Test
     public void testCreateRecord() {
@@ -136,10 +147,17 @@ public class EntityFieldsTest extends BaseTest {
     @Test
     public void testSortRecords() {
 
-        testCreateRecord();
-
         FieldsPage fieldsPage = new MainPage(getDriver())
                 .clickFieldsMenu()
+                .clickNewButton()
+                .fillDateTime(DATE_TIME_VALUE)
+                .fillTitle(TITLE_VALUE)
+                .fillDate(DATE_VALUE)
+                .fillComments(SORT_COMMENTS_VALUE)
+                .fillInt(INT_VALUE)
+                .fillDecimal(DECIMAL_VALUE)
+                .findUser(USER_NAME)
+                .clickSave()
                 .clickNewButton()
                 .fillDateTime(EDIT_DATE_TIME_VALUE)
                 .fillTitle(EDIT_TITLE_VALUE)
@@ -150,12 +168,11 @@ public class EntityFieldsTest extends BaseTest {
                 .findUser(EDIT_USER_NAME)
                 .clickDraft();
         Assert.assertEquals(fieldsPage.getRowCount(), 2);
-        Assert.assertEquals(fieldsPage.getRow(0), EXPECTED_RESULT);
+        Assert.assertEquals(fieldsPage.getRow(0), SORTED_RESULT);
 
         fieldsPage.clickSortTitle();
         Assert.assertEquals(fieldsPage.getRow(0), EDIT_RESULT);
     }
-
     @Test
     public void testCancelRecord() {
 
