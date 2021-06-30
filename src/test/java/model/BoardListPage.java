@@ -1,5 +1,6 @@
 package model;
 
+import model.base.BaseListMasterPage;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -7,7 +8,7 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 
 import utils.TestUtils;
 
-public class BoardListPage extends BasePage {
+public class BoardListPage extends BaseListMasterPage<BoardBaseEditPage, BoardViewPage> {
 
     @FindBy(xpath = "//button/i[text()='menu']")
     private WebElement actionsButton;
@@ -37,6 +38,16 @@ public class BoardListPage extends BasePage {
         super(driver);
     }
 
+    @Override
+    protected BoardViewPage createViewPage() {
+        return new BoardViewPage(getDriver());
+    }
+
+    @Override
+    protected BoardListEditPage createEditPage() {
+        return new BoardListEditPage(getDriver());
+    }
+
     public BoardListPage clickActions() {
         actionsButton.click();
 
@@ -50,11 +61,11 @@ public class BoardListPage extends BasePage {
         return new BoardViewPage(getDriver());
     }
 
-    public BoardEditPage clickActionsEdit() {
+    public BoardListEditPage clickActionsEdit() {
         getWait().until(TestUtils.movingIsFinished(actionsEditButton));
         actionsEditButton.click();
 
-        return new BoardEditPage(getDriver());
+        return new BoardListEditPage(getDriver());
     }
 
     public BoardListPage clickActionsDelete() {

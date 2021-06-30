@@ -1,11 +1,14 @@
 package model;
 
+import model.base.BaseEditPage;
+import model.base.BaseListMasterPage;
+import model.base.BaseViewPage;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import utils.TestUtils;
 
-public class ReferenceValuesEditPage extends BasePage{
+public class ReferenceValuesEditPage extends BaseEditPage<ReferenceValuesPage> {
 
     @FindBy(id="label")
     WebElement fieldLabel;
@@ -21,6 +24,11 @@ public class ReferenceValuesEditPage extends BasePage{
 
     public ReferenceValuesEditPage(WebDriver driver) {
         super(driver);
+    }
+
+    @Override
+    protected ReferenceValuesPage createMasterPage() {
+        return new ReferenceValuesPage(getDriver());
     }
 
     public ReferenceValuesPage clickSaveButton()

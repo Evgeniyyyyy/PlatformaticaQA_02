@@ -1,5 +1,6 @@
 package model;
 
+import model.base.BaseMasterPage;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
@@ -7,7 +8,7 @@ import org.openqa.selenium.support.FindBy;
 
 import java.util.List;
 
-public class BoardPage extends BasePage {
+public class BoardPage extends BaseMasterPage<BoardEditPage> {
 
     @FindBy(xpath = "//i[text()='create_new_folder']")
     private WebElement newButton;
@@ -28,9 +29,8 @@ public class BoardPage extends BasePage {
         super(driver);
     }
 
-    public BoardEditPage clickNewButton() {
-        newButton.click();
-
+    @Override
+    protected BoardEditPage createEditPage() {
         return new BoardEditPage(getDriver());
     }
 

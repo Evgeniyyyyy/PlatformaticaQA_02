@@ -1,19 +1,13 @@
 package model;
 
-import org.openqa.selenium.By;
+import model.base.BaseModel;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import utils.TestUtils;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import static utils.ProjectUtils.clickCreateRecord;
-import static utils.ProjectUtils.clickSave;
-
-public class ArithmeticFunctionEditPage extends BaseModel{
+public class ArithmeticFunctionEditPage extends BaseModel {
 
     @FindBy(id = "f1")
     private WebElement F1_FIELD;

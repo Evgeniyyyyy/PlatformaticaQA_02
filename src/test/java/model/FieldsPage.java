@@ -1,5 +1,6 @@
 package model;
 
+import model.base.BaseListMasterPage;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -7,7 +8,7 @@ import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import utils.TestUtils;
 
-public class FieldsPage extends BasePage {
+public class FieldsPage extends BaseListMasterPage<FieldsEditPage, FieldsViewPage> {
 
     @FindBy(xpath = "//i[text()='create_new_folder']")
     private WebElement newButton;
@@ -49,10 +50,14 @@ public class FieldsPage extends BasePage {
         super(driver);
     }
 
-    public FieldsEditPage clickNewButton() {
-        newButton.click();
-
+    @Override
+    protected FieldsEditPage createEditPage() {
         return new FieldsEditPage(getDriver());
+    }
+
+    @Override
+    protected FieldsViewPage createViewPage() {
+        return new FieldsViewPage(getDriver());
     }
 
     public FieldsEditPage clickEdit() {

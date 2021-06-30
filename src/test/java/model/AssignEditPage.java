@@ -1,17 +1,23 @@
 package model;
 
+import model.base.BaseEditPage;
+import model.base.BaseListMasterPage;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
-import org.openqa.selenium.support.PageFactory;
 import utils.TestUtils;
 
-public class AssignEditPage extends BasePage {
+public class AssignEditPage extends BaseEditPage<AssignPage> {
 
     public AssignEditPage(WebDriver driver) {
 
         super(driver);
+    }
+
+    @Override
+    protected AssignPage createMasterPage() {
+        return new AssignPage(getDriver());
     }
 
     @FindBy(id = "string")

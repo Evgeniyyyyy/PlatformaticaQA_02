@@ -1,5 +1,6 @@
 package model;
 
+import model.base.BaseModel;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -11,7 +12,7 @@ import utils.TestUtils;
 
 import static utils.TestUtils.jsClick;
 
-public class ChevronEditPage extends BaseModel{
+public class ChevronEditPage extends BaseModel {
     @FindBy(xpath = "//button[@data-id='string']")
     private WebElement fieldString;
 

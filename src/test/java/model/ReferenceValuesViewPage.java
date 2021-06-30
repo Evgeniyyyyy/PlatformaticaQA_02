@@ -1,5 +1,6 @@
 package model;
 
+import model.base.BaseViewPage;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -9,17 +10,25 @@ import java.util.stream.Collectors;
 
 import static utils.TestUtils.scrollClick;
 
-public class ReferenceValuesViewPage extends BasePage {
+public class ReferenceValuesViewPage extends BaseViewPage<ReferenceValuesPage> {
 
-    public ReferenceValuesViewPage(WebDriver driver) {
-        super(driver);
-    }
+    @FindBy(xpath = "//span [@class = 'pa-view-field']")
+    private List<WebElement> viewModeRecord;
 
     @FindBy (xpath="//i[@class='material-icons' and text()='clear']")
     private static WebElement closeButton;
 
     @FindBy (xpath="//div[@class='card-body']//*[self:: p or self::span[@class='pa-view-field']]")
     private List<WebElement> values;
+
+    public ReferenceValuesViewPage(WebDriver driver) {
+        super(driver);
+    }
+
+    @Override
+    protected ReferenceValuesPage createMasterPage() {
+        return new ReferenceValuesPage(getDriver());
+    }
 
     public ReferenceValuesPage clickClose()
     {

@@ -170,16 +170,16 @@ public class EntityAssignTest extends BaseTest {
                 .clickNewButton()
                 .fillFields(STRING_VALUE_1, TEXT_VALUE_1, INT_VALUE_1, DECIMAL_VALUE_1)
                 .clickSave();
-        Assert.assertEquals(AssignPage.getRow(0), EXPECTED_RESULT_1);
+        Assert.assertEquals(assignPage.getRow(0), EXPECTED_RESULT_1);
 
         assignPage.clickNewButton()
                 .fillFields(STRING_VALUE_2, TEXT_VALUE_2, INT_VALUE_2, DECIMAL_VALUE_2)
                 .clickSaveDraft();
-        Assert.assertEquals(AssignPage.getRow(1), EXPECTED_RESULT_2);
+        Assert.assertEquals(assignPage.getRow(1), EXPECTED_RESULT_2);
 
         assignPage.clickOrderButton().getReorder();
-        Assert.assertEquals(AssignPage.getRow(0), EXPECTED_RESULT_2);
-        Assert.assertEquals(AssignPage.getRow(1), EXPECTED_RESULT_1);
+        Assert.assertEquals(assignPage.getRow(0), EXPECTED_RESULT_2);
+        Assert.assertEquals(assignPage.getRow(1), EXPECTED_RESULT_1);
 
         assignPage.clickToggle()
                 .getNewReorder();

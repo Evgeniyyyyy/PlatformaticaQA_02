@@ -1,5 +1,6 @@
-package model;
+package model.base;
 
+import model.MainPage;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -7,7 +8,7 @@ import org.openqa.selenium.support.FindBy;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class BaseViewPage<MasterPage> extends MainPage {
+public abstract class BaseViewPage<MasterPage extends BaseListMasterPage> extends MainPage {
 
     @FindBy(xpath = "//i[@class = 'material-icons'][text()='clear']")
     private WebElement closeViewWindow;

@@ -1,5 +1,6 @@
 package model;
 
+import model.base.BaseViewPage;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -7,7 +8,7 @@ import org.openqa.selenium.support.FindBy;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ExportDestinationViewPage extends BaseViewPage<ExportDestinationPage>{
+public class ExportDestinationViewPage extends BaseViewPage<ExportDestinationPage> {
 
     public ExportDestinationViewPage(WebDriver driver) {
         super(driver);

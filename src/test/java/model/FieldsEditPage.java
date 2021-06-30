@@ -1,12 +1,14 @@
 package model;
 
+import model.base.BaseEditPage;
+import model.base.BaseModel;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import utils.TestUtils;
 
-public class FieldsEditPage extends BaseModel {
+public class FieldsEditPage extends BaseEditPage<FieldsPage> {
 
     @FindBy(id = "title")
     private WebElement fieldTitle;
@@ -20,9 +22,6 @@ public class FieldsEditPage extends BaseModel {
     @FindBy(id = "decimal")
     private WebElement fieldDecimal;
 
-    @FindBy(id = "pa-entity-form-save-btn")
-    private WebElement saveButton;
-
     @FindBy(id = "date")
     private WebElement fieldDate;
 
@@ -32,14 +31,13 @@ public class FieldsEditPage extends BaseModel {
     @FindBy(className = "filter-option-inner-inner")
     private WebElement fieldUserName;
 
-    @FindBy(xpath = "//button[text()='Cancel']")
-    private WebElement cancelButton;
-
-    @FindBy(id = "pa-entity-form-draft-btn")
-    private WebElement draftButton;
-
     public FieldsEditPage(WebDriver driver) {
         super(driver);
+    }
+
+    @Override
+    protected FieldsPage createMasterPage() {
+        return new FieldsPage(getDriver());
     }
 
     public FieldsEditPage fillTitle(String value) {
@@ -70,12 +68,6 @@ public class FieldsEditPage extends BaseModel {
         return this;
     }
 
-    public FieldsPage clickSave() {
-        TestUtils.jsClick(getDriver(), saveButton);
-
-        return new FieldsPage(getDriver());
-    }
-
     public FieldsEditPage fillDate(String value) {
         fieldDate.click();
         fieldDate.clear();
@@ -98,17 +90,5 @@ public class FieldsEditPage extends BaseModel {
                 "//span[text()='" + value + "']")));
 
         return this;
-    }
-
-    public FieldsPage clickCancel() {
-        TestUtils.jsClick(getDriver(), cancelButton);
-
-        return new FieldsPage(getDriver());
-    }
-
-    public FieldsPage clickDraft() {
-        TestUtils.jsClick(getDriver(), draftButton);
-
-        return new FieldsPage(getDriver());
     }
 }

@@ -1,6 +1,8 @@
-package model;
+package model.base;
 
 import com.beust.jcommander.Strings;
+import model.FieldsEditPage;
+import model.MainPage;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -10,7 +12,7 @@ import org.openqa.selenium.support.FindBy;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class BasePage extends MainPage {
+public abstract class BaseListMasterPage<EditPage extends BaseEditPage, ViewPage extends BaseViewPage> extends BaseMasterPage<EditPage> {
 
     @FindBy(className = "card-body")
     private WebElement table;
@@ -27,7 +29,7 @@ public class BasePage extends MainPage {
     @FindBy(xpath = "//i[text()='delete_outline']")
     private WebElement recycleBinIcon;
 
-    public BasePage(WebDriver driver) {
+    public BaseListMasterPage(WebDriver driver) {
         super(driver);
     }
 
@@ -71,4 +73,14 @@ public class BasePage extends MainPage {
                 .build()
                 .perform();
     }
+
+    protected abstract ViewPage createViewPage();
+
+    public ViewPage clickViewButton(int rowNumber) {
+
+        // todo click view by number
+
+        return createViewPage();
+    }
+
 }

@@ -1,5 +1,7 @@
 package model;
 
+import model.base.BaseEditPage;
+import model.base.BaseModel;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -7,7 +9,7 @@ import utils.TestUtils;
 
 import java.text.SimpleDateFormat;
 
-public class GanttEditPage extends BaseModel{
+public class GanttEditPage extends BaseEditPage<GanttListPage> {
 
     @FindBy(id = "string")
     private WebElement ganttString;
@@ -35,6 +37,11 @@ public class GanttEditPage extends BaseModel{
 
     public GanttEditPage(WebDriver driver) {
         super(driver);
+    }
+
+    @Override
+    protected GanttListPage createMasterPage() {
+        return new GanttListPage(getDriver());
     }
 
     public GanttEditPage fillString(String value) {
@@ -81,18 +88,6 @@ public class GanttEditPage extends BaseModel{
         ganttDate.click();
 
         return this;
-    }
-
-    public GanttPage clickSave() {
-        TestUtils.jsClick(getDriver(), saveButton);
-
-        return new GanttPage(getDriver());
-    }
-
-    public GanttPage clickSaveDraft() {
-        TestUtils.jsClick(getDriver(), saveDraftButton);
-
-        return new GanttPage(getDriver());
     }
 
     public GanttEditPage clearFields(){

@@ -166,7 +166,7 @@ public class EntityFieldsTest extends BaseTest {
                 .fillInt(EDIT_INT_VALUE)
                 .fillDecimal(EDIT_DECIMAL_VALUE)
                 .findUser(EDIT_USER_NAME)
-                .clickDraft();
+                .clickSaveDraft();
         Assert.assertEquals(fieldsPage.getRowCount(), 2);
         Assert.assertEquals(fieldsPage.getRow(0), SORTED_RESULT);
 

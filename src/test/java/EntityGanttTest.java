@@ -62,8 +62,7 @@ public class EntityGanttTest extends BaseTest {
                 .fillInt(INT_INPUT_VALUE)
                 .fillDecimal(DECIMAL_INPUT_VALUE)
                 .fillDate(FORMATTER)
-                .clickSave()
-                .clickListButton();
+                .clickSave();
 
         Assert.assertEquals(ganttListPage.getRowCount(), 1);
         Assert.assertEquals(ganttListPage.getRow(0), NEW_EXPECTED_RESULT);
@@ -95,8 +94,7 @@ public class EntityGanttTest extends BaseTest {
                 .fillText(TEXT_INPUT_VALUE2)
                 .fillInt(INT_INPUT_VALUE2)
                 .fillDecimal(DECIMAL_INPUT_VALUE2)
-                .clickSave()
-                .clickListButton();
+                .clickSave();
 
         Assert.assertEquals(ganttListPage.getRowCount(), 1);
         Assert.assertEquals(ganttListPage.getRow(0), NEW_EXPECTED_RESULT2);
@@ -153,8 +151,7 @@ public class EntityGanttTest extends BaseTest {
                 .fillInt(INT_INPUT_VALUE)
                 .fillDecimal(DECIMAL_INPUT_VALUE)
                 .fillDate(FORMATTER)
-                .clickSaveDraft()
-                .clickListButton();
+                .clickSaveDraft();
 
         Assert.assertEquals(ganttListPage.getRowCount(), 1);
         Assert.assertEquals(ganttListPage.getRow(0), NEW_EXPECTED_RESULT);

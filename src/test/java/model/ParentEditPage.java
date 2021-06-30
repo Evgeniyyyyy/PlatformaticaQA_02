@@ -1,12 +1,14 @@
 package model;
 
+import model.base.BaseEditPage;
+import model.base.BaseListMasterPage;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import utils.TestUtils;
 
-public class ParentEditPage extends BasePage {
+public class ParentEditPage extends BaseEditPage<ParentPage> {
 
     @FindBy(id = "string")
     private WebElement fieldString;
@@ -43,6 +45,11 @@ public class ParentEditPage extends BasePage {
 
     public ParentEditPage(WebDriver driver) {
         super(driver);
+    }
+
+    @Override
+    protected ParentPage createMasterPage() {
+        return new ParentPage(getDriver());
     }
 
     public ParentEditPage fillString(String value) {

@@ -1,5 +1,6 @@
 package model;
 
+import model.base.BaseModel;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -9,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class ChevronViewPage  extends BaseModel{
+public class ChevronViewPage  extends BaseModel {
 
     @FindBy(xpath = "//span [@class = 'pa-view-field']")
     private List<WebElement> viewModeRecord;

@@ -1,6 +1,8 @@
 package model;
 
 import com.beust.jcommander.Strings;
+import model.base.BaseListMasterPage;
+import model.base.BaseMasterPage;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -12,7 +14,7 @@ import utils.TestUtils;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class AssignPage extends MainPage {
+public class AssignPage extends BaseListMasterPage<AssignEditPage, AssignViewPage> {
 
     public AssignPage(WebDriver driver) {
         super(driver);
@@ -66,6 +68,16 @@ public class AssignPage extends MainPage {
     @FindBy(xpath = "//a[text()='delete']")
     private WebElement delete;
 
+    @Override
+    protected AssignViewPage createViewPage() {
+        return new AssignViewPage(getDriver());
+    }
+
+    @Override
+    protected AssignEditPage createEditPage() {
+        return new AssignEditPage(getDriver());
+    }
+
     public AssignEditPage clickNewButton() {
         newButton.click();
 
@@ -75,11 +87,6 @@ public class AssignPage extends MainPage {
     public boolean isTableEmpty() {
 
         return Strings.isStringEmpty(table.getText());
-    }
-
-    public static List<String> getRow(int number) {
-        return rows.get(number).findElements(By.className("pa-list-table-th"))
-                .stream().map(WebElement::getText).collect(Collectors.toList());
     }
 
     public static List<String> getRows(int number) {

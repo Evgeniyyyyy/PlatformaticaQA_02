@@ -1,14 +1,11 @@
 package model;
 
+import model.base.BaseModel;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import utils.TestUtils;
-
-import java.util.List;
-
-import static utils.TestUtils.jsClick;
 
 public class DefaultEditPage extends BaseModel {
 

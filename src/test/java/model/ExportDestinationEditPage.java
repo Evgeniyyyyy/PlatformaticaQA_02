@@ -1,11 +1,13 @@
 package model;
 
+import model.base.BaseEditPage;
+import model.base.BaseModel;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import utils.TestUtils;
 
-public class ExportDestinationEditPage extends BaseModel{
+public class ExportDestinationEditPage extends BaseEditPage<ExportDestinationPage> {
 
     @FindBy(id = "string")
     private WebElement fieldString;
@@ -39,6 +41,11 @@ public class ExportDestinationEditPage extends BaseModel{
 
     public ExportDestinationEditPage(WebDriver driver) {
         super(driver);
+    }
+
+    @Override
+    protected ExportDestinationPage createMasterPage() {
+        return new ExportDestinationPage(getDriver());
     }
 
     public ExportDestinationEditPage fillString(String value) {

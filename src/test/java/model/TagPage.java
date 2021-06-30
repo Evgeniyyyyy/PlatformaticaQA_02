@@ -1,11 +1,12 @@
 package model;
 
+import model.base.BaseListMasterPage;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import utils.TestUtils;
 
-public class TagPage extends BasePage{
+public class TagPage extends BaseListMasterPage<TagEditPage, TagViewPage> {
 
     @FindBy(xpath = "//i[text()='create_new_folder']")
     private WebElement newButton;
@@ -26,9 +27,13 @@ public class TagPage extends BasePage{
         super(driver);
     }
 
-    public TagEditPage clickNewButton() {
-        newButton.click();
+    @Override
+    protected TagViewPage createViewPage() {
+        return new TagViewPage(getDriver());
+    }
 
+    @Override
+    protected TagEditPage createEditPage() {
         return new TagEditPage(getDriver());
     }
 

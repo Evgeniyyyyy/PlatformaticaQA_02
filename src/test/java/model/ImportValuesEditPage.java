@@ -1,11 +1,13 @@
 package model;
 
+import model.base.BaseEditPage;
+import model.base.BaseModel;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import utils.TestUtils;
 
-public class ImportValuesEditPage extends BaseModel{
+public class ImportValuesEditPage extends BaseEditPage<ImportValuesPage> {
 
     @FindBy(id = "string")
     private WebElement fieldString;
@@ -39,6 +41,11 @@ public class ImportValuesEditPage extends BaseModel{
 
     public ImportValuesEditPage(WebDriver driver) {
         super(driver);
+    }
+
+    @Override
+    protected ImportValuesPage createMasterPage() {
+        return new ImportValuesPage(getDriver());
     }
 
     public ImportValuesEditPage fillString(String value) {

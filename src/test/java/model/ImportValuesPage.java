@@ -1,6 +1,7 @@
 package model;
 
 import com.beust.jcommander.Strings;
+import model.base.BaseListMasterPage;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -11,7 +12,7 @@ import utils.TestUtils;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class ImportValuesPage extends BasePage {
+public class ImportValuesPage extends BaseListMasterPage<ImportValuesEditPage, ImportValuesViewPage> {
 
     @FindBy(xpath = "//i[text()='create_new_folder']")
     private WebElement newButton;
@@ -53,9 +54,13 @@ public class ImportValuesPage extends BasePage {
         super(driver);
     }
 
-    public ImportValuesEditPage clickNewButton() {
-        newButton.click();
+    @Override
+    protected ImportValuesViewPage createViewPage() {
+        return new ImportValuesViewPage(getDriver());
+    }
 
+    @Override
+    protected ImportValuesEditPage createEditPage() {
         return new ImportValuesEditPage(getDriver());
     }
 

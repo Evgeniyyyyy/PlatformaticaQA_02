@@ -1,6 +1,8 @@
 package model;
 
 import com.beust.jcommander.Strings;
+import model.base.BaseListMasterPage;
+import model.base.BaseModel;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -10,7 +12,7 @@ import utils.TestUtils;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class GanttListPage extends BaseModel {
+public class GanttListPage extends BaseListMasterPage<GanttEditPage, GanttViewPage> {
 
     @FindBy(className = "card-body")
     private WebElement table;
@@ -32,6 +34,16 @@ public class GanttListPage extends BaseModel {
 
     public GanttListPage(WebDriver driver) {
         super(driver);
+    }
+
+    @Override
+    protected GanttViewPage createViewPage() {
+        return new GanttViewPage(getDriver());
+    }
+
+    @Override
+    protected GanttEditPage createEditPage() {
+        return new GanttEditPage(getDriver());
     }
 
     public boolean isTableEmpty() {

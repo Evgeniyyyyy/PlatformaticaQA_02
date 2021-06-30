@@ -1,6 +1,7 @@
 package model;
 
 import com.beust.jcommander.Strings;
+import model.base.BaseListMasterPage;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -10,7 +11,7 @@ import utils.TestUtils;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class ExportDestinationPage extends MainPage{
+public class ExportDestinationPage extends BaseListMasterPage<ExportDestinationEditPage, ExportDestinationViewPage> {
 
     @FindBy(xpath = "//i[text()='create_new_folder']")
     private WebElement newButton;
@@ -34,9 +35,13 @@ public class ExportDestinationPage extends MainPage{
         super(driver);
     }
 
-    public ExportDestinationEditPage clickNewButton() {
-        newButton.click();
+    @Override
+    protected ExportDestinationViewPage createViewPage() {
+        return new ExportDestinationViewPage(getDriver());
+    }
 
+    @Override
+    protected ExportDestinationEditPage createEditPage() {
         return new ExportDestinationEditPage(getDriver());
     }
 

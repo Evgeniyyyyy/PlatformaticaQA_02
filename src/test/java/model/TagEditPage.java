@@ -1,12 +1,14 @@
 package model;
 
+import model.base.BaseEditPage;
+import model.base.BaseModel;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import utils.TestUtils;
 
-public class TagEditPage extends BaseModel{
+public class TagEditPage extends BaseEditPage<TagPage> {
 
     @FindBy(id = "string")
     private WebElement fieldString;
@@ -40,6 +42,11 @@ public class TagEditPage extends BaseModel{
 
     public TagEditPage(WebDriver driver) {
         super(driver);
+    }
+
+    @Override
+    protected TagPage createMasterPage() {
+        return new TagPage(getDriver());
     }
 
     public TagEditPage fillString(String value) {

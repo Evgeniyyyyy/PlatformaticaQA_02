@@ -1,5 +1,6 @@
 package model;
 
+import model.base.BaseListMasterPage;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -14,7 +15,7 @@ import java.util.stream.Collectors;
 
 import static utils.TestUtils.*;
 
-public class ReferenceValuesPage  extends BasePage{
+public class ReferenceValuesPage  extends BaseListMasterPage<ReferenceValuesEditPage, ReferenceValuesViewPage> {
 
     @FindBy(xpath = "//*[contains(text(),'create_new_folder')]")
     private static WebElement referenceValuesCreateRecord;
@@ -39,6 +40,16 @@ public class ReferenceValuesPage  extends BasePage{
 
     public ReferenceValuesPage(WebDriver driver) {
         super(driver);
+    }
+
+    @Override
+    protected ReferenceValuesViewPage createViewPage() {
+        return new ReferenceValuesViewPage(getDriver());
+    }
+
+    @Override
+    protected ReferenceValuesEditPage createEditPage() {
+        return new ReferenceValuesEditPage(getDriver());
     }
 
     public ReferenceValuesEditPage clickCreateButton() {

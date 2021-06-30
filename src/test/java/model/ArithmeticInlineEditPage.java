@@ -1,13 +1,13 @@
 package model;
 
-import org.openqa.selenium.By;
+import model.base.BaseModel;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import utils.TestUtils;
 
-public class ArithmeticInlineEditPage extends BaseModel{
+public class ArithmeticInlineEditPage extends BaseModel {
 
     @FindBy(id = "f1")
     private WebElement F1_FIELD;
