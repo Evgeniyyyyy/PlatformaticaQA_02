@@ -1,7 +1,5 @@
 import base.BaseTest;
-import model.GanttListPage;
-import model.GanttViewPage;
-import model.MainPage;
+import model.*;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -17,10 +15,6 @@ import static utils.ProjectUtils.*;
 
 public class EntityGanttTest extends BaseTest {
 
-    private static final By STRING_FIELD = By.id("string");
-    private static final By TEXT_FIELD = By.id("text");
-    private static final By INT_FIELD = By.id("int");
-    private static final By DECIMAL_FIELD = By.id("decimal");
     private static final By CHECK_ICON = By.xpath("//tbody/tr[1]/td[1]/i[1]");
     private static final By ACTUAL_RESULT = By.xpath("//tbody/tr/td[@class = 'pa-list-table-th']");
 
@@ -44,7 +38,7 @@ public class EntityGanttTest extends BaseTest {
             .asList(STRING_INPUT_VALUE, TEXT_INPUT_VALUE, INT_INPUT_VALUE, DECIMAL_INPUT_VALUE,
                     FORMATTER.format(DATE), EMPTY_FIELD, EMPTY_FIELD, NEW_USER_NAME);
 
-    private static final List<Object> EXPECTED_RESULT2 = Arrays
+    private static final List<Object> NEW_EXPECTED_RESULT2 = Arrays
             .asList(STRING_INPUT_VALUE2, TEXT_INPUT_VALUE2, INT_INPUT_VALUE2, DECIMAL_INPUT_VALUE2,
                     FORMATTER.format(DATE), EMPTY_FIELD, EMPTY_FIELD, NEW_USER_NAME);
 
@@ -88,26 +82,22 @@ public class EntityGanttTest extends BaseTest {
     @Test(dependsOnMethods = "testViewRecord")
     public void testEditRecord() {
 
-        getEntity(getDriver(), "Gantt");
-        clickListButton();
-        clickActionsEdit(getWait(), getDriver());
+        GanttListPage ganttListPage = new MainPage(getDriver())
+                .clickGanttMenu()
+                .clickListButton()
+                .clickActions()
+                .clickActionsEdit()
+                .clearFields()
+                .fillString(STRING_INPUT_VALUE2)
+                .fillText(TEXT_INPUT_VALUE2)
+                .fillInt(INT_INPUT_VALUE2)
+                .fillDecimal(DECIMAL_INPUT_VALUE2)
+                .clickSave()
+                .clickListButton();
 
-        findElement(STRING_FIELD).clear();
-        findElement(TEXT_FIELD).clear();
-        findElement(INT_FIELD).clear();
-        findElement(DECIMAL_FIELD).clear();
-
-        findElement(STRING_FIELD).sendKeys(STRING_INPUT_VALUE2);
-        findElement(TEXT_FIELD).sendKeys(TEXT_INPUT_VALUE2);
-        findElement(INT_FIELD).sendKeys(INT_INPUT_VALUE2);
-        findElement(DECIMAL_FIELD).sendKeys(DECIMAL_INPUT_VALUE2);
-
-        clickSave(getDriver());
-        clickListButton();
-
-        WebElement icon1 = findElement(CHECK_ICON);
-        Assert.assertEquals(icon1.getAttribute("class"), "fa fa-check-square-o");
-        Assert.assertEquals(getActualValues(findElements(ACTUAL_RESULT)), EXPECTED_RESULT2);
+        Assert.assertEquals(ganttListPage.getRowCount(), 1);
+        Assert.assertEquals(ganttListPage.getRow(0), NEW_EXPECTED_RESULT2);
+        Assert.assertEquals(ganttListPage.getIcon(), "fa fa-check-square-o");
     }
 
     @Test(dependsOnMethods = "testEditRecord")
@@ -145,7 +135,7 @@ public class EntityGanttTest extends BaseTest {
 
         WebElement icon2 = findElement(CHECK_ICON);
         Assert.assertEquals(icon2.getAttribute("class"), "fa fa-pencil");
-        Assert.assertEquals(getActualValues(findElements(ACTUAL_RESULT)), EXPECTED_RESULT2);
+        Assert.assertEquals(getActualValues(findElements(ACTUAL_RESULT)), NEW_EXPECTED_RESULT2);
     }
 
     @Test

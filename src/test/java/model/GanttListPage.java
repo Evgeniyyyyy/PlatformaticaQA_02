@@ -27,6 +27,9 @@ public class GanttListPage extends BaseModel {
     @FindBy(xpath = "//a[text()='view']")
     private WebElement actionsViewButton;
 
+    @FindBy(xpath = "//a[text()='edit']")
+    private WebElement actionsEditButton;
+
     public GanttListPage(WebDriver driver) {
         super(driver);
     }
@@ -63,5 +66,12 @@ public class GanttListPage extends BaseModel {
         actionsViewButton.click();
 
         return new GanttViewPage(getDriver());
+    }
+
+    public GanttEditPage clickActionsEdit() {
+        getWait().until(TestUtils.movingIsFinished(actionsEditButton));
+        actionsEditButton.click();
+
+        return new GanttEditPage(getDriver());
     }
 }

@@ -43,10 +43,18 @@ public class GanttEditPage extends BaseModel{
         return this;
     }
 
+    public void clearString() {
+        ganttString.clear();
+    }
+
     public GanttEditPage fillText(String value) {
         ganttText.sendKeys(value);
 
         return this;
+    }
+
+    public void clearText() {
+        ganttText.clear();
     }
 
     public GanttEditPage fillInt(String value) {
@@ -55,10 +63,18 @@ public class GanttEditPage extends BaseModel{
         return this;
     }
 
+    public void clearInt() {
+        ganttInt.clear();
+    }
+
     public GanttEditPage fillDecimal(String value) {
         ganttDecimal.sendKeys(value);
 
         return this;
+    }
+
+    public void clearDecimal() {
+        ganttDecimal.clear();
     }
 
     public GanttEditPage fillDate(SimpleDateFormat value) {
@@ -77,5 +93,14 @@ public class GanttEditPage extends BaseModel{
         TestUtils.jsClick(getDriver(), saveDraftButton);
 
         return new GanttPage(getDriver());
+    }
+
+    public GanttEditPage clearFields(){
+        clearString();
+        clearText();
+        clearInt();
+        clearDecimal();
+
+        return this;
     }
 }
