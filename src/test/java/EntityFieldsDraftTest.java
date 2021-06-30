@@ -2,6 +2,7 @@ import base.BaseTest;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.testng.Assert;
+import org.testng.annotations.Ignore;
 import org.testng.annotations.Test;
 import utils.TestUtils;
 
@@ -13,6 +14,7 @@ import java.util.List;
 import static utils.ProjectUtils.*;
 import static utils.TestUtils.jsClick;
 
+@Ignore
 public class EntityFieldsDraftTest extends BaseTest {
 
     private static final By TITLE_FIELD = By.id("title");
@@ -57,6 +59,7 @@ public class EntityFieldsDraftTest extends BaseTest {
         findElement(DATETIME_FIELD).clear();
     }
 
+    @Ignore
     @Test
     public void testCreateDraftRecord() {
 

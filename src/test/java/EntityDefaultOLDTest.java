@@ -16,6 +16,7 @@ import java.util.List;
 import static utils.ProjectUtils.*;
 import static utils.TestUtils.jsClick;
 
+@Ignore
 public class EntityDefaultOLDTest extends BaseTest {
 
     private static final By STRING_FIELD = By.id("string");
@@ -101,6 +102,7 @@ public class EntityDefaultOLDTest extends BaseTest {
                 .click();
     }
 
+    @Ignore
     @Test
     public void testCreateRecord() {
 
@@ -214,6 +216,7 @@ public class EntityDefaultOLDTest extends BaseTest {
         Assert.assertEquals(getActualValues(findElements(ACTUAL_RESULT)), EXPECTED_RESULT2);
     }
 
+    @Ignore
     @Test
     public void testCreateDraftRecord() {
 

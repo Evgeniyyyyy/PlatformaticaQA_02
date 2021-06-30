@@ -8,6 +8,9 @@ import org.apache.commons.lang3.RandomUtils;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 import static utils.ProjectUtils.*;
@@ -28,59 +31,78 @@ public class EntityBoardTest extends BaseTest {
     private static final String TEXT_VALUE_ONTRACK = getTextRandom(8);
     private static final String INT_VALUE_ONTRACK = getIntRandom();
     private static final String DECIMAL_VALUE_ONTRACK = getRandomDecimalValue();
+    private static final String DATA_VALUE = LocalDate.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+    private static final String DATA_TIME_VALUE = LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss"));
     private static final String USER_NAME = getUser();
     private static final String EDIT_TEXT_VALUE = "QWERTY";
     private static final String EDIT_INT_VALUE = "12345";
     private static final String EDIT_DECIMAL_VALUE = "33.55";
+    private static final String EDIT_DATA_VALUE = "01/12/2000";
+    private static final String EDIT_DATA_TIME_VALUE = "31/01/2100 00:59:01";
+    private static final String EDIT_USER_NAME = "tester299@tester.test";
 
     private static final List<String> EXPECTED_CREATED_PENDING_RECORD = List.of(
             STRING_INPUT_PENDING,
             TEXT_VALUE_PENDING,
             INT_VALUE_PENDING,
             DECIMAL_VALUE_PENDING,
-            "", "", "", USER_NAME);
+            DATA_VALUE,
+            DATA_TIME_VALUE,
+            "", USER_NAME);
 
-    private static final List<String> EXPECTED_EDITED_PENDING_RECORD = List.of(
+    private static final List<String> EXPECTED_SWAPPED_PENDING_RECORD = List.of(
             STRING_INPUT_ONTRACK,
             TEXT_VALUE_PENDING,
             INT_VALUE_PENDING,
             DECIMAL_VALUE_PENDING,
-            "", "", "", USER_NAME);
+            DATA_VALUE,
+            DATA_TIME_VALUE,
+            "", USER_NAME);
 
     private static final List<String> EXPECTED_EDITED_RECORD = List.of(
             STRING_INPUT_ONTRACK,
             EDIT_TEXT_VALUE,
             EDIT_INT_VALUE,
             EDIT_DECIMAL_VALUE,
-            "", "", "", USER_NAME);
+            EDIT_DATA_VALUE,
+            EDIT_DATA_TIME_VALUE,
+            "", EDIT_USER_NAME);
 
     private static final List<String> EXPECTED_CREATED_ONTRACK_RECORD = List.of(
             STRING_INPUT_ONTRACK,
             TEXT_VALUE_ONTRACK,
             INT_VALUE_ONTRACK,
             DECIMAL_VALUE_ONTRACK,
-            "", "", "", USER_NAME);
+            DATA_VALUE,
+            DATA_TIME_VALUE,
+            "", USER_NAME);
 
-    private static final List<String> EXPECTED_EDITED_ONTRACK_RECORD = List.of(
+    private static final List<String> EXPECTED_SWAPPED_ONTRACK_RECORD = List.of(
             STRING_INPUT_PENDING,
             TEXT_VALUE_ONTRACK,
             INT_VALUE_ONTRACK,
             DECIMAL_VALUE_ONTRACK,
-            "", "", "", USER_NAME);
+            DATA_VALUE,
+            DATA_TIME_VALUE,
+            "", USER_NAME);
 
     private static final List<String> EXPECTED_ORDERED_PENDING_RECORD = List.of(
             "", STRING_INPUT_PENDING,
             TEXT_VALUE_PENDING,
             INT_VALUE_PENDING,
             DECIMAL_VALUE_PENDING,
-            "", "", USER_NAME);
+            DATA_VALUE,
+            DATA_TIME_VALUE,
+            USER_NAME);
 
     private static final List<String> EXPECTED_ORDERED_ONTRACK_RECORD = List.of(
             "", STRING_INPUT_ONTRACK,
             TEXT_VALUE_ONTRACK,
             INT_VALUE_ONTRACK,
             DECIMAL_VALUE_ONTRACK,
-            "", "", USER_NAME);
+            DATA_VALUE,
+            DATA_TIME_VALUE,
+            USER_NAME);
 
     private static final List<List<String>> ALL_RECORDS_TABLE = new ArrayList<>(List.of(EXPECTED_CREATED_PENDING_RECORD,
             EXPECTED_CREATED_ONTRACK_RECORD));
@@ -89,7 +111,7 @@ public class EntityBoardTest extends BaseTest {
         return RandomUtils.nextInt(0, 10000) + "." + RandomStringUtils.randomNumeric(2);
     }
 
-    private String getStringInputRecord(List<String> list) {
+    private String getExpectedListToString(List<String> list) {
         StringBuilder stringInputRecord = new StringBuilder();
 
         for (String s : list) {
@@ -148,6 +170,7 @@ public class EntityBoardTest extends BaseTest {
                 .clickActionsEdit()
                 .clearFields()
                 .fillFields(EntityBoardTest.EXPECTED_EDITED_RECORD)
+                .findUser(EDIT_USER_NAME)
                 .clickSaveDraft()
                 .clickListButton();
 
@@ -306,6 +329,7 @@ public class EntityBoardTest extends BaseTest {
                 .clickActionsEdit()
                 .clearFields()
                 .fillFields(EntityBoardTest.EXPECTED_EDITED_RECORD)
+                .findUser(EDIT_USER_NAME)
                 .clickSave()
                 .clickListButton();
 
@@ -350,8 +374,8 @@ public class EntityBoardTest extends BaseTest {
                 .findUser(USER_NAME)
                 .clickSave();
 
-        final String pendingRecord = getStringInputRecord(EXPECTED_CREATED_PENDING_RECORD);
-        final String onTrackRecord = getStringInputRecord(EXPECTED_CREATED_ONTRACK_RECORD);
+        final String pendingRecord = getExpectedListToString(EXPECTED_CREATED_PENDING_RECORD);
+        final String onTrackRecord = getExpectedListToString(EXPECTED_CREATED_ONTRACK_RECORD);
 
         Assert.assertEquals(boardPage.getTextPendingRecord(), pendingRecord);
         Assert.assertEquals(boardPage.getTextOnTrackRecord(), onTrackRecord);
@@ -360,7 +384,7 @@ public class EntityBoardTest extends BaseTest {
         boardPage.moveOnTrackToPending();
         boardPage.clickListButton();
 
-        Assert.assertEquals(boardPage.getRow(0), EXPECTED_EDITED_PENDING_RECORD);
-        Assert.assertEquals(boardPage.getRow(1), EXPECTED_EDITED_ONTRACK_RECORD);
+        Assert.assertEquals(boardPage.getRow(0), EXPECTED_SWAPPED_PENDING_RECORD);
+        Assert.assertEquals(boardPage.getRow(1), EXPECTED_SWAPPED_ONTRACK_RECORD);
     }
 }

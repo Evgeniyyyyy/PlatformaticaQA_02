@@ -4,6 +4,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.testng.Assert;
+import org.testng.annotations.Ignore;
 import org.testng.annotations.Test;
 
 import java.text.SimpleDateFormat;
@@ -13,6 +14,7 @@ import java.util.List;
 
 import static utils.ProjectUtils.*;
 
+@Ignore
 public class EntityGanttTest extends BaseTest {
 
     private static final By CHECK_ICON = By.xpath("//tbody/tr[1]/td[1]/i[1]");
@@ -48,6 +50,7 @@ public class EntityGanttTest extends BaseTest {
                 .click();
     }
 
+    @Ignore
     @Test
     public void testCreateRecord() {
 
@@ -138,6 +141,7 @@ public class EntityGanttTest extends BaseTest {
         Assert.assertEquals(getActualValues(findElements(ACTUAL_RESULT)), NEW_EXPECTED_RESULT2);
     }
 
+    @Ignore
     @Test
     public void testCreateDraftRecord() {
 

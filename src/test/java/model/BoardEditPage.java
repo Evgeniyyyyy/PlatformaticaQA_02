@@ -5,6 +5,7 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.testng.Assert;
 import utils.TestUtils;
 
 import java.util.List;
@@ -34,6 +35,12 @@ public class BoardEditPage extends BaseModel {
     @FindBy(id = "decimal")
     private WebElement fieldDecimal;
 
+    @FindBy(id = "date")
+    private WebElement fieldDate;
+
+    @FindBy(id = "datetime")
+    private WebElement fieldDateTime;
+
     @FindBy(id = "pa-entity-form-save-btn")
     private WebElement saveButton;
 
@@ -53,15 +60,12 @@ public class BoardEditPage extends BaseModel {
     public BoardEditPage fillString(String value) {
         fieldString.click();
 
-        if(value.equals("Pending")) {
-            jsClick(getDriver(), valueStringPending);
+        jsClick(getDriver(), getDriver().findElement(
+                By.xpath("//ul[@class='dropdown-menu inner show']//span[contains(.,'"+value+"')]")));
+        getWait().until(ExpectedConditions.invisibilityOf(getDriver().findElement(
+                By.xpath("//div[@class='dropdown-menu']"))));
 
-        }else if(value.equals("On track")){
-            jsClick(getDriver(), valueStringOnTrack);
-
-        }else {
-            jsClick(getDriver(), valueStringDone);
-        }
+        Assert.assertEquals(fieldString.getAttribute("title"), value);
 
         return this;
     }
@@ -101,8 +105,26 @@ public class BoardEditPage extends BaseModel {
 
     }
 
+    public BoardEditPage fillDate(String value) {
+        fieldDate.click();
+        fieldDate.clear();
+        fieldDate.sendKeys(value);
+
+        return this;
+    }
+
+    public BoardEditPage fillDateTime(String value) {
+        fieldDateTime.click();
+        fieldDateTime.clear();
+        fieldDateTime.sendKeys(value);
+
+        return this;
+    }
+
     public BoardEditPage fillFields(List<String> list) {
 
+        fillDateTime(list.get(5));
+        fillDate(list.get(4));
         fillText(list.get(1));
         fillInt(list.get(2));
         fillDecimal(list.get(3));
