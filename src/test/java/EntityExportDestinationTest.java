@@ -20,10 +20,20 @@ public class EntityExportDestinationTest extends BaseTest {
     private static final String FILE_VALUE = "";
     private static final String CHECK_SQUARE_ICON = "fa fa-check-square-o";
     private static final String PENCIL_ICON = "fa fa-pencil";
+    private static final String STRING_EDIT_VALUE = "New string";
+    private static final String TEXT_EDIT_VALUE = "New text.";
+    private static final String INT_EDIT_VALUE = "12";
+    private static final String DECIMAL_EDIT_VALUE = "0.20";
+    private static final String DATE_EDIT_VALUE = "18/07/2021";
+    private static final String DATETIME_EDIT_VALUE = "18/07/2021 17:07:07";
 
     private final static List<String> EXPECTED_VALUES = Arrays.asList(
             STRING_VALUE, TEXT_VALUE, INT_VALUE, DECIMAL_VALUE,
             DATE_VALUE, DATETIME_VALUE, FILE_VALUE, USERNAME_VALUE);
+
+    private final static List<String> EXPECTED_EDIT_VALUES = Arrays.asList(
+            STRING_EDIT_VALUE, TEXT_EDIT_VALUE, INT_EDIT_VALUE, DECIMAL_EDIT_VALUE,
+            DATE_EDIT_VALUE, DATETIME_EDIT_VALUE, FILE_VALUE, USERNAME_VALUE);
 
     @Test
     public void testCreateRecord() {
@@ -79,5 +89,24 @@ public class EntityExportDestinationTest extends BaseTest {
                 .clickActionsView();
 
         Assert.assertEquals(exportDestinationViewPage.getRecordInViewMode(), EXPECTED_VALUES);
+    }
+
+    @Test(dependsOnMethods = "testViewDraftRecord")
+    public void testEditDraftRecord() {
+
+        ExportDestinationPage exportDestinationPage = new MainPage(getDriver())
+                .clickExportDestinationMenu()
+                .clickActions()
+                .clickActionsEdit()
+                .fillString(STRING_EDIT_VALUE)
+                .fillText(TEXT_EDIT_VALUE)
+                .fillInt(INT_EDIT_VALUE)
+                .fillDecimal(DECIMAL_EDIT_VALUE)
+                .fillDate(DATE_EDIT_VALUE)
+                .fillDateTime(DATETIME_EDIT_VALUE)
+                .clickSaveDraft();
+
+        Assert.assertEquals(exportDestinationPage.getClassIcon(), PENCIL_ICON);
+        Assert.assertEquals(exportDestinationPage.getRow(0), EXPECTED_EDIT_VALUES);
     }
 }

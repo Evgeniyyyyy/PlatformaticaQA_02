@@ -6,6 +6,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 import utils.TestUtils;
 
 import java.util.List;
@@ -31,6 +32,24 @@ public class ExportDestinationPage extends BaseListMasterPage<ExportDestinationE
     @FindBy(xpath = "//a[text()='view']")
     private WebElement actionsViewButton;
 
+    @FindBy(xpath = "//a[text()='edit']")
+    private WebElement actionsEditButton;
+
+    @FindBy(xpath = "//a[text()='delete']")
+    private WebElement actionsDeleteButton;
+
+    @FindBy(xpath = "//a/span[@class='notification']")
+    private static WebElement recycleBinNotification;
+
+    @FindBy(xpath = "//i[text()='delete_outline']")
+    private WebElement recycleBinIcon;
+
+    @FindBy(xpath = "//input[@placeholder = 'Search']")
+    private WebElement input;
+
+    @FindBy(xpath = "//span[@class='pagination-info']")
+    private WebElement text;
+
     public ExportDestinationPage(WebDriver driver) {
         super(driver);
     }
@@ -53,6 +72,36 @@ public class ExportDestinationPage extends BaseListMasterPage<ExportDestinationE
         getWait().until(TestUtils.movingIsFinished(actionsViewButton));
         actionsViewButton.click();
         return new ExportDestinationViewPage(getDriver());
+    }
+
+    public ExportDestinationEditPage clickActionsEdit() {
+        actionsButton.click();
+        TestUtils.jsClick(getDriver(), actionsEditButton);
+
+        return new ExportDestinationEditPage(getDriver());
+    }
+
+    public ExportDestinationPage clickActionsDelete() {
+        getWait().until(TestUtils.movingIsFinished(actionsDeleteButton));
+        actionsDeleteButton.click();
+
+        return new ExportDestinationPage(getDriver());
+    }
+
+    public int getTextNotificationRecycleBin() {
+
+        return Integer.parseInt(recycleBinNotification.getText());
+    }
+
+    public ExportDestinationPage searchInput(String value) {
+        input.sendKeys(value);
+
+        return this;
+    }
+    public ExportDestinationPage findTextInfo(String value) {
+        getWait().until(ExpectedConditions.textToBePresentInElement(text, value));
+
+        return this;
     }
 
     public boolean isTableEmpty() {
