@@ -3,11 +3,8 @@ import model.*;
 import org.openqa.selenium.By;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.testng.Assert;
-import org.testng.annotations.Ignore;
 import org.testng.annotations.Test;
 import utils.TestUtils;
-import constants.EntityArithmeticInlineConstants;
-import utils.ProjectUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,6 +27,12 @@ public class EntityArithmeticInlineTest extends BaseTest {
     private static final String CLASS_ICON_SAVE = "fa fa-check-square-o";
     private static final String CLASS_ICON_SAVE_DRAFT = "fa fa-pencil";
     private static List<String> ACTUAL_LIST = new ArrayList<>();
+
+    public static final By LINK_ENTITY = By.xpath("//p[contains(text(),'Arithmetic Inline')]");
+    public static final By ADD_CARD = By.xpath("//div[@class=\"card-icon\"]");
+    public static final By BUTTON_SAVE = By.id("pa-entity-form-save-btn");
+    public static final By ACTION_BUTTON = By.className("btn-primary");
+    public static final By ACTION_VIEW = By.xpath("//div[@class=\"dropdown pull-left show\"]/ul/li[1]/a");
 
     @Test
     public void testViewRecord() {
@@ -58,8 +61,8 @@ public class EntityArithmeticInlineTest extends BaseTest {
 
     @Test //test by PRoman-86
     public void testCreateAndSaveNewRecord() {
-        TestUtils.jsClick(getDriver(), findElement(EntityArithmeticInlineConstants.LINK_ENTITY));
-        TestUtils.jsClick(getDriver(), findElement(EntityArithmeticInlineConstants.ADD_CARD));
+        TestUtils.jsClick(getDriver(), findElement(LINK_ENTITY));
+        TestUtils.jsClick(getDriver(), findElement(ADD_CARD));
         findElement(By.xpath("//input[@id='f1']")).sendKeys(Integer.toString(F1));
         findElement(By.xpath("//input[@id='f2']")).sendKeys(Integer.toString(F2));
 
@@ -68,9 +71,9 @@ public class EntityArithmeticInlineTest extends BaseTest {
         getWait().until(ExpectedConditions.textToBePresentInElementValue(By.xpath("//input[@id='sub']"), String.valueOf(SUB)));
         getWait().until(ExpectedConditions.textToBePresentInElementValue(By.xpath("//input[@id='sum']"), String.valueOf(SUM)));
 
-        TestUtils.scrollClick(getDriver(), findElement(EntityArithmeticInlineConstants.BUTTON_SAVE));
-        TestUtils.jsClick(getDriver(), findElement(EntityArithmeticInlineConstants.ACTION_BUTTON));
-        TestUtils.jsClick(getDriver(), findElement(EntityArithmeticInlineConstants.ACTION_VIEW));
+        TestUtils.scrollClick(getDriver(), findElement(BUTTON_SAVE));
+        TestUtils.jsClick(getDriver(), findElement(ACTION_BUTTON));
+        TestUtils.jsClick(getDriver(), findElement(ACTION_VIEW));
 
         Assert.assertEquals(findElement(By.xpath("/html[1]/body[1]/div[1]/div[2]/div[1]/div[1]/div[1]/div[1]/div[1]/div[2]/div[1]/div[1]/div[1]/div[6]/div[1]")).getText(), String.valueOf(SUM));
         Assert.assertEquals(findElement(By.xpath("/html[1]/body[1]/div[1]/div[2]/div[1]/div[1]/div[1]/div[1]/div[1]/div[2]/div[1]/div[1]/div[1]/div[8]/div[1]")).getText(), String.valueOf(SUB));

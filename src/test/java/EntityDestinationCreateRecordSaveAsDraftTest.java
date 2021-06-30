@@ -2,10 +2,8 @@ import base.BaseTest;
 import org.openqa.selenium.By;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.testng.Assert;
-import org.testng.annotations.Ignore;
 import org.testng.annotations.Test;
 import utils.TestUtils;
-import constants.EntityArithmeticInlineConstants;
 
 public class EntityDestinationCreateRecordSaveAsDraftTest extends BaseTest {
 
@@ -22,6 +20,10 @@ public class EntityDestinationCreateRecordSaveAsDraftTest extends BaseTest {
     private static final String INT_INPUT_VALUE = "100";
     private static final String DECIMAL_INPUT_VALUE = "0.10";
     private static final String CURRENT_USER = "tester33@tester.test";
+
+    public static final By BUTTON_SAVE_DRAFT = By.id("pa-entity-form-draft-btn");
+    public static final By ACTION_BUTTON = By.className("btn-primary");
+    public static final By ACTION_VIEW = By.xpath("//div[@class=\"dropdown pull-left show\"]/ul/li[1]/a");
 
     private void fillFieldAndWait(By by, String value) {
         findElement(by).sendKeys(value);
@@ -43,10 +45,10 @@ public class EntityDestinationCreateRecordSaveAsDraftTest extends BaseTest {
         TestUtils.jsClick(getDriver(), findElement(USER_FIELD));
         TestUtils.jsClick(getDriver(), getWait().until
                 (ExpectedConditions.elementToBeClickable(By.cssSelector("li:nth-child(237) a:nth-child(1) span:nth-child(2)"))));
-        TestUtils.jsClick(getDriver(), findElement(EntityArithmeticInlineConstants.BUTTON_SAVE_DRAFT));
-        TestUtils.jsClick(getDriver(), findElement(EntityArithmeticInlineConstants.ACTION_BUTTON));
-        getWait().until(TestUtils.movingIsFinished(findElement(EntityArithmeticInlineConstants.ACTION_VIEW)));
-        TestUtils.jsClick(getDriver(), findElement(EntityArithmeticInlineConstants.ACTION_VIEW));
+        TestUtils.jsClick(getDriver(), findElement(BUTTON_SAVE_DRAFT));
+        TestUtils.jsClick(getDriver(), findElement(ACTION_BUTTON));
+        getWait().until(TestUtils.movingIsFinished(findElement(ACTION_VIEW)));
+        TestUtils.jsClick(getDriver(), findElement(ACTION_VIEW));
 
         Assert.assertEquals(findElement(By.xpath("/html[1]/body[1]/div[1]/div[2]/div[1]/div[1]/div[1]/div[1]/div[1]/div[2]/div[1]/div[1]/div[1]/div[2]/div[1]")).getText(), STRING_INPUT_VALUE);
         Assert.assertEquals(findElement(By.xpath("/html[1]/body[1]/div[1]/div[2]/div[1]/div[1]/div[1]/div[1]/div[1]/div[2]/div[1]/div[1]/div[1]/div[4]/div[1]")).getText(), TEXT_INPUT_VALUE);
