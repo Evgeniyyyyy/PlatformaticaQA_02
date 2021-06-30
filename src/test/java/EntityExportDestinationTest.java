@@ -69,4 +69,15 @@ public class EntityExportDestinationTest extends BaseTest {
         Assert.assertEquals(exportDestinationPage.getClassIcon(), PENCIL_ICON);
         Assert.assertEquals(exportDestinationPage.getRow(0), EXPECTED_VALUES);
     }
+
+    @Test(dependsOnMethods = "testCreateDraftRecord")
+    public void testViewDraftRecord() {
+
+        ExportDestinationViewPage exportDestinationViewPage = new MainPage(getDriver())
+                .clickExportDestinationMenu()
+                .clickActions()
+                .clickActionsView();
+
+        Assert.assertEquals(exportDestinationViewPage.getRecordInViewMode(), EXPECTED_VALUES);
+    }
 }
