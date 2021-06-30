@@ -4,6 +4,9 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
+import org.openqa.selenium.support.PageFactory;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 import utils.TestUtils;
 
 import java.util.List;
@@ -14,13 +17,25 @@ import static utils.TestUtils.*;
 public class ReferenceValuesPage  extends BasePage{
 
     @FindBy(xpath = "//*[contains(text(),'create_new_folder')]")
-    private WebElement referenceValuesCreateRecord;
+    private static WebElement referenceValuesCreateRecord;
 
     @FindBy(xpath = "//table[@id='pa-all-entities-table']/tbody/tr")
     private List<WebElement> tableRows;
 
     @FindBy (xpath="//td[@class='pa-list-table-th']")
-    private static List<WebElement> tableColumns;
+    private List<WebElement> tableColumns;
+
+    @FindBy (xpath="//button[@name='toggle']/i")
+    private static WebElement realResult;
+
+    @FindBy (xpath="//div[@class='card-view'][span[text()!='Actions']]//a")
+    private List<WebElement> tableValuesToggleOn;
+
+    @FindBy (xpath="//input[@type='text'][@placeholder='Search']")
+    private static WebElement searchButton;
+
+    @FindBy (xpath="//table[@id='pa-all-entities-table']//tbody")
+    private WebElement valuesOfTable;
 
     public ReferenceValuesPage(WebDriver driver) {
         super(driver);
@@ -40,9 +55,13 @@ public class ReferenceValuesPage  extends BasePage{
 
     public List<String> getRowsValue(int RowNumber)
     {
-        if(isTableAvailable())
-            return getDriver().findElements(By.xpath("//tr["+RowNumber+"]//td[@class='pa-list-table-th']")).stream()
-                    .map(el -> el.getText()).collect(Collectors.toList());
+        if(isTableAvailable()) {
+            String xpathRowNumber = (!isToggleOn()) ? "//tr[" + RowNumber + "]//td[@class='pa-list-table-th']" :
+                    "//tr[" + RowNumber + "]//div[@class='card-view'][span[text()!='Actions']]//a";
+
+            return getDriver().findElements(By.xpath(xpathRowNumber)).stream().map(el -> el.getText())
+                    .collect(Collectors.toList());
+        }
         else return null;
     }
 
@@ -59,7 +78,7 @@ public class ReferenceValuesPage  extends BasePage{
     public List<String> getRowsValue()
     {
         if(isTableAvailable())
-            return tableColumns.stream().map(el -> el.getText()).collect(Collectors.toList());
+            return (!isToggleOn() ? tableColumns : tableValuesToggleOn).stream().map(el -> el.getText()).collect(Collectors.toList());
         else return null;
     }
 
@@ -82,5 +101,36 @@ public class ReferenceValuesPage  extends BasePage{
         getWait().until(movingIsFinished(By.xpath("//tr[contains(.,'" +NameOfRecord + "')]//a[contains(@href, 'action_edit')]")))
                 .click();
         return new ReferenceValuesEditPage(getDriver());
+    }
+
+    public ReferenceValuesViewPage viewRecord(String NameOfRecord) {
+        scrollClick(getDriver(), By.xpath("//tbody/tr[contains(.,'"+NameOfRecord + "')]//button"));
+        getWait().until(movingIsFinished(By.xpath("//tr[contains(.,'" +NameOfRecord + "')]//a[contains(@href, 'action_view')]")))
+                .click();
+        return new ReferenceValuesViewPage(getDriver());
+    }
+
+    public boolean isToggleOn()
+    {
+        return realResult.getAttribute("class").contains("toggle-on");
+    }
+
+    public ReferenceValuesPage clickToggle()
+    {
+        scrollClick(getDriver(), realResult);
+
+        return new ReferenceValuesPage(getDriver());
+    }
+
+    public ReferenceValuesPage fillSearch(String searchWord) {
+        searchButton.clear();
+        searchButton.sendKeys(searchWord);
+
+        return new ReferenceValuesPage(getDriver());
+    }
+
+    public WebElement getWebElementOfTable() {
+
+        return valuesOfTable;
     }
 }
