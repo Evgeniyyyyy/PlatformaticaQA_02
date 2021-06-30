@@ -26,6 +26,8 @@ public class EntityExportDestinationTest extends BaseTest {
     private static final String DECIMAL_EDIT_VALUE = "0.20";
     private static final String DATE_EDIT_VALUE = "18/07/2021";
     private static final String DATETIME_EDIT_VALUE = "18/07/2021 17:07:07";
+    private static final String SEARCH_INPUT = "Som";
+    private static final String TEXT_INFORMATION = "Showing 1 to 1 of 1 rows";
 
     private final static List<String> EXPECTED_VALUES = Arrays.asList(
             STRING_VALUE, TEXT_VALUE, INT_VALUE, DECIMAL_VALUE,
@@ -108,5 +110,35 @@ public class EntityExportDestinationTest extends BaseTest {
 
         Assert.assertEquals(exportDestinationPage.getClassIcon(), PENCIL_ICON);
         Assert.assertEquals(exportDestinationPage.getRow(0), EXPECTED_EDIT_VALUES);
+    }
+
+    @Test
+    public void testSearchRecord() {
+        ExportDestinationPage exportDestinationPage = new MainPage(getDriver())
+                .clickExportDestinationMenu()
+                .clickNewButton()
+                .fillString(STRING_VALUE)
+                .fillText(TEXT_VALUE)
+                .fillInt(INT_VALUE)
+                .fillDecimal(DECIMAL_VALUE)
+                .fillDate(DATE_VALUE)
+                .fillDateTime(DATETIME_VALUE)
+                .clickSaveDraft();
+
+        exportDestinationPage.clickNewButton()
+                .fillString(STRING_EDIT_VALUE)
+                .fillText(TEXT_EDIT_VALUE)
+                .fillInt(INT_EDIT_VALUE)
+                .fillDecimal(DECIMAL_EDIT_VALUE)
+                .fillDate(DATE_EDIT_VALUE)
+                .fillDateTime(DATETIME_EDIT_VALUE)
+                .clickSave();
+
+        exportDestinationPage.clickExportDestinationMenu()
+                .searchInput(SEARCH_INPUT)
+                .findTextInfo(TEXT_INFORMATION);
+
+        Assert.assertEquals(exportDestinationPage.getRowCount(), 1);
+        Assert.assertEquals(exportDestinationPage.getRow(0), EXPECTED_VALUES);
     }
 }
