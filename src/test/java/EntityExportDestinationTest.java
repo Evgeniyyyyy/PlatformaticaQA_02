@@ -113,6 +113,18 @@ public class EntityExportDestinationTest extends BaseTest {
         Assert.assertEquals(exportDestinationPage.getRow(0), EXPECTED_EDIT_VALUES);
     }
 
+    @Test(dependsOnMethods = "testEditDraftRecord")
+    public void testDeleteDraftRecord() {
+
+        ExportDestinationPage exportDestinationPage = new MainPage(getDriver())
+                .clickExportDestinationMenu()
+                .clickActions()
+                .clickActionsDelete();
+
+        Assert.assertTrue(exportDestinationPage.isTableEmpty());
+        Assert.assertEquals(exportDestinationPage.getTextNotificationRecycleBin(), 1);
+    }
+
     @Test
     public void testSearchRecord() {
 
