@@ -50,6 +50,9 @@ public class ExportDestinationPage extends BaseListMasterPage<ExportDestinationE
     @FindBy(xpath = "//span[@class='pagination-info']")
     private WebElement text;
 
+    @FindBy(xpath = "//th[@data-field='text']/div")
+    private WebElement sortText;
+
     public ExportDestinationPage(WebDriver driver) {
         super(driver);
     }
@@ -102,6 +105,10 @@ public class ExportDestinationPage extends BaseListMasterPage<ExportDestinationE
         getWait().until(ExpectedConditions.textToBePresentInElement(text, value));
 
         return this;
+    }
+
+    public void clickSortText() {
+        sortText.click();
     }
 
     public boolean isTableEmpty() {

@@ -11,7 +11,7 @@ import java.util.List;
 public class EntityExportDestinationTest extends BaseTest {
 
     private static final String STRING_VALUE = "Some string";
-    private static final String TEXT_VALUE = "Export destination text.";
+    private static final String TEXT_VALUE = "New text.";
     private static final String INT_VALUE = "457";
     private static final String DECIMAL_VALUE = "27.35";
     private static final String DATE_VALUE = "01/06/2021";
@@ -21,7 +21,7 @@ public class EntityExportDestinationTest extends BaseTest {
     private static final String CHECK_SQUARE_ICON = "fa fa-check-square-o";
     private static final String PENCIL_ICON = "fa fa-pencil";
     private static final String STRING_EDIT_VALUE = "New string";
-    private static final String TEXT_EDIT_VALUE = "New text.";
+    private static final String TEXT_EDIT_VALUE = "Input text.";
     private static final String INT_EDIT_VALUE = "12";
     private static final String DECIMAL_EDIT_VALUE = "0.20";
     private static final String DATE_EDIT_VALUE = "18/07/2021";
@@ -68,6 +68,7 @@ public class EntityExportDestinationTest extends BaseTest {
 
     @Test
     public void testCreateDraftRecord() {
+
         ExportDestinationPage exportDestinationPage = new MainPage(getDriver())
                 .clickExportDestinationMenu()
                 .clickNewButton()
@@ -114,6 +115,7 @@ public class EntityExportDestinationTest extends BaseTest {
 
     @Test
     public void testSearchRecord() {
+
         ExportDestinationPage exportDestinationPage = new MainPage(getDriver())
                 .clickExportDestinationMenu()
                 .clickNewButton()
@@ -140,5 +142,19 @@ public class EntityExportDestinationTest extends BaseTest {
 
         Assert.assertEquals(exportDestinationPage.getRowCount(), 1);
         Assert.assertEquals(exportDestinationPage.getRow(0), EXPECTED_VALUES);
+    }
+
+    @Test(dependsOnMethods = "testSearchRecord")
+    public void testSortRecords() {
+
+        ExportDestinationPage exportDestinationPage = new MainPage(getDriver())
+                .clickExportDestinationMenu();
+
+        Assert.assertEquals(exportDestinationPage.getRowCount(), 2);
+        Assert.assertEquals(exportDestinationPage.getRow(0), EXPECTED_VALUES);
+
+        exportDestinationPage.clickSortText();
+
+        Assert.assertEquals(exportDestinationPage.getRow(0), EXPECTED_EDIT_VALUES);
     }
 }
