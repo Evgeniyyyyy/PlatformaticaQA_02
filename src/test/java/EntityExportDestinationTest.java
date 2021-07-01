@@ -2,6 +2,7 @@ import base.BaseTest;
 import model.ExportDestinationPage;
 import model.ExportDestinationViewPage;
 import model.MainPage;
+import model.RecycleBinPage;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -28,6 +29,7 @@ public class EntityExportDestinationTest extends BaseTest {
     private static final String DATETIME_EDIT_VALUE = "18/07/2021 17:07:07";
     private static final String SEARCH_INPUT = "Som";
     private static final String TEXT_INFORMATION = "Showing 1 to 1 of 1 rows";
+    private static final String EMPTY_RECYCLE_BIN_MESSAGE = "Good job with housekeeping! Recycle bin is currently empty!";
 
     private final static List<String> EXPECTED_VALUES = Arrays.asList(
             STRING_VALUE, TEXT_VALUE, INT_VALUE, DECIMAL_VALUE,
@@ -123,6 +125,19 @@ public class EntityExportDestinationTest extends BaseTest {
 
         Assert.assertTrue(exportDestinationPage.isTableEmpty());
         Assert.assertEquals(exportDestinationPage.getTextNotificationRecycleBin(), 1);
+    }
+
+    @Test(dependsOnMethods = "testDeleteDraftRecord")
+    public void testDeleteDraftRecordFromRecycleBin() {
+
+        RecycleBinPage recycleBinPage = new MainPage(getDriver())
+                .clickRecycleBin()
+                .clickDeletedRecord(ExportDestinationViewPage::new, viewPage -> {
+
+                    Assert.assertEquals(viewPage.getRecordInViewMode(), EXPECTED_EDIT_VALUES);
+                }).clickDeletedRecordPermanently();
+
+        Assert.assertEquals(recycleBinPage.getTextCardBody(), EMPTY_RECYCLE_BIN_MESSAGE);
     }
 
     @Test
