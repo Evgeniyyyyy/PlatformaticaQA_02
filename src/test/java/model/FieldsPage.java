@@ -25,9 +25,6 @@ public class FieldsPage extends BaseListMasterPage<FieldsEditPage, FieldsViewPag
     @FindBy(xpath = "//i[text()='format_line_spacing']")
     private WebElement order;
 
-    @FindBy(xpath = "//i[@class='fa fa-toggle-off']")
-    private WebElement toggle;
-
     @FindBy(id = "customId_0")
     private WebElement card;
 
@@ -67,16 +64,10 @@ public class FieldsPage extends BaseListMasterPage<FieldsEditPage, FieldsViewPag
         return new FieldsEditPage(getDriver());
     }
 
-    public FieldsPage clickOrder() {
+    public FieldsOrderPage clickOrder() {
         order.click();
 
-        return new FieldsPage(getDriver());
-    }
-
-    public FieldsPage clickToggle() {
-        toggle.click();
-
-        return this;
+        return new FieldsOrderPage(getDriver());
     }
 
     public FieldsPage searchInput(String value) {
@@ -104,7 +95,9 @@ public class FieldsPage extends BaseListMasterPage<FieldsEditPage, FieldsViewPag
         return new FieldsPage(getDriver());
     }
 
-    public void clickSortTitle() {
+    public FieldsPage clickSort() {
         titleSort.click();
+
+        return new FieldsPage(getDriver());
     }
 }

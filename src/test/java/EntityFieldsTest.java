@@ -21,14 +21,15 @@ public class EntityFieldsTest extends BaseTest {
     private static final String USER_NAME = getUser();
     private static final String EDIT_USER_NAME = getUser();
     private static final String EDIT_TITLE_VALUE = "Hello world";
-    private static final String SORT_COMMENTS_VALUE = "Exact sort";
-    private static final String EDIT_COMMENTS_VALUE = "Abstract class";
+    private static final String SORT_COMMENTS_VALUE = "Abstract sort";
+    private static final String EDIT_COMMENTS_VALUE = "Exact word";
     private static final String EDIT_INT_VALUE = "-2147483648";
     private static final String EDIT_DECIMAL_VALUE = "-323232.32";
     private static final String EDIT_DATE_VALUE = getDate(getRandom(2555000));
     private static final String EDIT_DATE_TIME_VALUE = getDateTime(getRandom(2555000));
     private static final String INFO_TEXT = "Showing 1 to 1 of 1 rows";
-    private static final String ICON = "fa fa-check-square-o";
+    private static final String SAVE_ICON = "fa fa-check-square-o";
+    private static final String DRAFT_ICON = "fa fa-pencil";
 
     private static final List<String> EXPECTED_RESULT = List.of(
             TITLE_VALUE,
@@ -48,25 +49,6 @@ public class EntityFieldsTest extends BaseTest {
             EDIT_DATE_TIME_VALUE, "",
             EDIT_USER_NAME, "");
 
-    private static final List<String> ORDER_VIEW_RESULT = List.of(
-            "", EDIT_TITLE_VALUE,
-            EDIT_COMMENTS_VALUE,
-            EDIT_INT_VALUE,
-            EDIT_DECIMAL_VALUE,
-            EDIT_DATE_VALUE,
-            EDIT_DATE_TIME_VALUE,
-            EDIT_USER_NAME);
-
-    private static final List<String> SORTED_RESULT = List.of(
-            TITLE_VALUE,
-            SORT_COMMENTS_VALUE,
-            INT_VALUE,
-            DECIMAL_VALUE,
-            DATE_VALUE,
-            DATE_TIME_VALUE, "",
-            USER_NAME, "");
-
-
     @Test
     public void testCreateRecord() {
 
@@ -82,9 +64,9 @@ public class EntityFieldsTest extends BaseTest {
                 .findUser(USER_NAME)
                 .clickSave();
 
+        Assert.assertEquals(fieldsPage.getClassIcon(), SAVE_ICON);
         Assert.assertEquals(fieldsPage.getRowCount(), 1);
         Assert.assertEquals(fieldsPage.getRow(0), EXPECTED_RESULT);
-        Assert.assertEquals(fieldsPage.getClassIcon(), ICON);
     }
 
     @Test(dependsOnMethods = "testCreateRecord")
@@ -103,7 +85,6 @@ public class EntityFieldsTest extends BaseTest {
                 .clickSave();
 
         Assert.assertEquals(fieldsPage.getRow(0), EDIT_RESULT);
-        Assert.assertEquals(fieldsPage.getClassIcon(), ICON);
     }
 
     @Test(dependsOnMethods = "testEditRecord")
@@ -120,19 +101,33 @@ public class EntityFieldsTest extends BaseTest {
                 .fillDecimal(DECIMAL_VALUE)
                 .findUser(USER_NAME)
                 .clickSave()
-                .clickOrder();
+                .clickOrder()
+                .movingRecord();
 
-        Assert.assertEquals(fieldsPage.getRow(0), EDIT_RESULT);
-
-        fieldsPage.getReorder(20);
         Assert.assertEquals(fieldsPage.getRow(0), EXPECTED_RESULT);
-
-        fieldsPage.clickToggle()
-                  .getReorder(140);
-        Assert.assertEquals(fieldsPage.getOrderToggleRow(0), ORDER_VIEW_RESULT);
     }
 
     @Test(dependsOnMethods = "testReorderRecord")
+    public void testReorderAfterToggle() {
+
+        final List<String> ORDER_VIEW_RESULT = List.of(
+                "", EDIT_TITLE_VALUE,
+                EDIT_COMMENTS_VALUE,
+                EDIT_INT_VALUE,
+                EDIT_DECIMAL_VALUE,
+                EDIT_DATE_VALUE,
+                EDIT_DATE_TIME_VALUE,
+                EDIT_USER_NAME);
+
+        FieldsPage fieldsPage = new MainPage(getDriver())
+                .clickFieldsMenu()
+                .clickOrder()
+                .clickToggleOrder()
+                .movingBlockRecord();
+                Assert.assertEquals(fieldsPage.getOrderToggleRow(0), ORDER_VIEW_RESULT);
+    }
+
+    @Test(dependsOnMethods = "testReorderAfterToggle")
     public void testSearchCreatedRecord() {
 
         FieldsPage fieldsPage = new MainPage(getDriver())
@@ -140,24 +135,24 @@ public class EntityFieldsTest extends BaseTest {
                 .searchInput(TITLE_VALUE)
                 .findInfoText(INFO_TEXT);
 
+        Assert.assertEquals(fieldsPage.getClassIcon(), SAVE_ICON);
         Assert.assertEquals(fieldsPage.getRow(0), EXPECTED_RESULT);
-        Assert.assertEquals(fieldsPage.getClassIcon(), ICON);
     }
 
     @Test
     public void testSortRecords() {
 
+        final List<String> SORTED_RESULT = List.of(
+                TITLE_VALUE,
+                SORT_COMMENTS_VALUE,
+                INT_VALUE,
+                DECIMAL_VALUE,
+                DATE_VALUE,
+                DATE_TIME_VALUE, "",
+                USER_NAME, "");
+
         FieldsPage fieldsPage = new MainPage(getDriver())
                 .clickFieldsMenu()
-                .clickNewButton()
-                .fillDateTime(DATE_TIME_VALUE)
-                .fillTitle(TITLE_VALUE)
-                .fillDate(DATE_VALUE)
-                .fillComments(SORT_COMMENTS_VALUE)
-                .fillInt(INT_VALUE)
-                .fillDecimal(DECIMAL_VALUE)
-                .findUser(USER_NAME)
-                .clickSave()
                 .clickNewButton()
                 .fillDateTime(EDIT_DATE_TIME_VALUE)
                 .fillTitle(EDIT_TITLE_VALUE)
@@ -166,13 +161,22 @@ public class EntityFieldsTest extends BaseTest {
                 .fillInt(EDIT_INT_VALUE)
                 .fillDecimal(EDIT_DECIMAL_VALUE)
                 .findUser(EDIT_USER_NAME)
-                .clickSaveDraft();
-        Assert.assertEquals(fieldsPage.getRowCount(), 2);
-        Assert.assertEquals(fieldsPage.getRow(0), SORTED_RESULT);
+                .clickSave()
+                .clickNewButton()
+                .fillDateTime(DATE_TIME_VALUE)
+                .fillTitle(TITLE_VALUE)
+                .fillDate(DATE_VALUE)
+                .fillComments(SORT_COMMENTS_VALUE)
+                .fillInt(INT_VALUE)
+                .fillDecimal(DECIMAL_VALUE)
+                .findUser(USER_NAME)
+                .clickSaveDraft()
+                .clickSort();
 
-        fieldsPage.clickSortTitle();
-        Assert.assertEquals(fieldsPage.getRow(0), EDIT_RESULT);
+        Assert.assertEquals(fieldsPage.getClassIcon(), DRAFT_ICON);
+        Assert.assertEquals(fieldsPage.getRow(0), SORTED_RESULT);
     }
+
     @Test
     public void testCancelRecord() {
 
