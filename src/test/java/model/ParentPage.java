@@ -45,9 +45,6 @@ public class ParentPage extends BaseListMasterPage<ParentEditPage, ParentViewPag
     @FindBy(xpath = "//i[text()='format_line_spacing']")
     private WebElement order;
 
-    @FindBy(xpath = "//i[contains(@class,'fa fa-toggle')]")
-    private WebElement toggle;
-
     @FindBy(id = "customId_0")
     private WebElement card;
 
@@ -104,16 +101,10 @@ public class ParentPage extends BaseListMasterPage<ParentEditPage, ParentViewPag
         return new ParentPage(getDriver());
     }
 
-    public ParentPage clickOrder() {
+    public ParentOrderPage clickOrder() {
         order.click();
 
-        return new ParentPage(getDriver());
-    }
-
-    public ParentPage clickToggle() {
-        toggle.click();
-
-        return this;
+        return new ParentOrderPage(getDriver());
     }
 
     public ParentPage searchInput(String value) {

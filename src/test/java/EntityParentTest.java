@@ -25,7 +25,6 @@ public class EntityParentTest extends BaseTest {
     private static final String EDIT_DATE_VALUE = getDate(350000);
     private static final String EDIT_DATE_TIME_VALUE = getDateTime(53000);
     private static final String INFO_STR_1_OF_1 = "Showing 1 to 1 of 1 rows";
-    private static final String INFO_STR_2_OF_2 = "Showing 1 to 2 of 2 rows";
     private static final String CLASS_ICON_SAVE = "fa fa-check-square-o";
     private static final String CLASS_ICON_SAVE_DRAFT = "fa fa-pencil";
 
@@ -36,10 +35,6 @@ public class EntityParentTest extends BaseTest {
     private static final List<String> EDIT_RESULT = List.of(
             EDIT_STRING_VALUE, EDIT_TEXT_VALUE, EDIT_INT_VALUE,
             EDIT_DECIMAL_VALUE, EDIT_DATE_VALUE, EDIT_DATE_TIME_VALUE, EMPTY_FIELD, EDIT_USER_NAME);
-
-    private static final List<String> VIEW_RESULT = List.of(
-            EMPTY_FIELD, EDIT_STRING_VALUE, EDIT_TEXT_VALUE, EDIT_INT_VALUE,
-            EDIT_DECIMAL_VALUE, EDIT_DATE_VALUE, EDIT_DATE_TIME_VALUE, EDIT_USER_NAME);
 
     @Test
     public void testCreateRecord() {
@@ -56,9 +51,9 @@ public class EntityParentTest extends BaseTest {
                 .findUser(USER_NAME)
                 .clickSave();
 
+        Assert.assertEquals(parentPage.getClassIcon(), CLASS_ICON_SAVE);
         Assert.assertEquals(parentPage.getRowCount(), 1);
         Assert.assertEquals(parentPage.getRow(0), NEW_EXPECTED_RESULT);
-        Assert.assertEquals(parentPage.getClassIcon(), CLASS_ICON_SAVE);
     }
 
     @Test(dependsOnMethods = "testCreateRecord")
@@ -94,17 +89,13 @@ public class EntityParentTest extends BaseTest {
 
     @Test(dependsOnMethods = "testReorderRecord")
     public void testSearchRecord() {
+
         ParentPage parentPage = new MainPage(getDriver())
                 .clickParentMenu()
                 .searchInput(STRING_INPUT_VALUE)
                 .getTextPaginationInfo(INFO_STR_1_OF_1);
+
         Assert.assertEquals(parentPage.getRow(0), NEW_EXPECTED_RESULT);
-
-        parentPage.searchInput("").getTextPaginationInfo(INFO_STR_2_OF_2);
-        Assert.assertEquals(parentPage.getRowCount(), 2);
-
-        parentPage.searchInput(EDIT_TEXT_VALUE).getTextPaginationInfo(INFO_STR_1_OF_1);
-        Assert.assertEquals(parentPage.getRow(0), EDIT_RESULT);
     }
 
     @Test(dependsOnMethods = "testEditRecord")
@@ -121,14 +112,25 @@ public class EntityParentTest extends BaseTest {
                 .fillDecimal(DECIMAL_INPUT_VALUE)
                 .findUser(USER_NAME)
                 .clickSave()
-                .clickOrder();
-        Assert.assertEquals(parentPage.getRow(0), EDIT_RESULT);
+                .clickOrder()
+                .movingRecord();
 
-        parentPage.getReorder(20);
         Assert.assertEquals(parentPage.getRow(0), NEW_EXPECTED_RESULT);
+    }
 
-        parentPage.clickToggle()
-                  .getReorder(140);
+    @Test(dependsOnMethods = "testReorderRecord")
+    public void testReorderAfterMovingToggle() {
+
+        final List<String> VIEW_RESULT = List.of(
+                EMPTY_FIELD, EDIT_STRING_VALUE, EDIT_TEXT_VALUE, EDIT_INT_VALUE,
+                EDIT_DECIMAL_VALUE, EDIT_DATE_VALUE, EDIT_DATE_TIME_VALUE, EDIT_USER_NAME);
+
+        ParentPage parentPage = new MainPage(getDriver())
+                .clickParentMenu()
+                .clickOrder()
+                .clickToggleOrder()
+                .movingBlockRecord();
+
         Assert.assertEquals(parentPage.getOrderToggleRow(0), VIEW_RESULT);
     }
 
@@ -175,6 +177,7 @@ public class EntityParentTest extends BaseTest {
                 .clickParentMenu()
                 .clickActions()
                 .clickActionsDelete();
+
         Assert.assertTrue(parentPage.isTableEmpty());
         Assert.assertEquals(parentPage.getTextNotificationRecycleBin(), 1);
     }
