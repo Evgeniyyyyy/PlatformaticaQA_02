@@ -128,7 +128,7 @@ public class ArithmeticFunctionPage extends MainPage {
     }
 
     public ArithmeticFunctionPage clickSize25Button() {
-        size25.click();
+        getWait().until(TestUtils.movingIsFinished(size25)).click();
         return new ArithmeticFunctionPage(getDriver());
     }
 
