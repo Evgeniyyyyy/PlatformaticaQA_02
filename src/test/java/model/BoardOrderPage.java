@@ -6,7 +6,7 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 
-public class BoardOrderPage extends BaseOrderPage<BoardListPage> {
+public class BoardOrderPage extends BaseOrderPage<BoardOrderPage> {
 
     @FindBy(xpath = "//i[@class='fa fa-toggle-off']")
     private WebElement toggle;
@@ -26,8 +26,8 @@ public class BoardOrderPage extends BaseOrderPage<BoardListPage> {
     }
 
     @Override
-    protected BoardListPage createMasterPage() {
-        return new BoardListPage(getDriver());
+    protected BoardOrderPage createMasterPage() {
+        return new BoardOrderPage(getDriver());
     }
 
     public BoardOrderPage clickToggleOrder() {

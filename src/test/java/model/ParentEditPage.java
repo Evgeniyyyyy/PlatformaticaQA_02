@@ -31,15 +31,6 @@ public class ParentEditPage extends BaseEditPage<ParentPage> {
     @FindBy(xpath = "//div[contains(text(),'apptester10@tester.test')]")
     private WebElement chooseUser;
 
-    @FindBy(id = "pa-entity-form-save-btn")
-    private WebElement saveButton;
-
-    @FindBy(id = "pa-entity-form-draft-btn")
-    private WebElement saveDraftButton;
-
-    @FindBy(className = "btn-dark")
-    private WebElement cancelButton;
-
     @FindBy(className = "filter-option-inner-inner")
     private WebElement fieldUserName;
 
@@ -116,23 +107,5 @@ public class ParentEditPage extends BaseEditPage<ParentPage> {
         element.clear();
 
         return this;
-    }
-
-    public ParentPage clickSave() {
-        TestUtils.jsClick(getDriver(), saveButton);
-
-        return new ParentPage(getDriver());
-    }
-
-    public ParentPage clickSaveDraft(){
-        TestUtils.jsClick(getDriver(), saveDraftButton);
-
-        return new ParentPage(getDriver());
-    }
-
-    public ParentPage clickCancel(){
-        TestUtils.jsClick(getDriver(), cancelButton);
-
-        return new ParentPage(getDriver());
     }
 }

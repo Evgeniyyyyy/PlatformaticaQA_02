@@ -57,11 +57,6 @@ public abstract class BaseListMasterPage<EditPage extends BaseEditPage, ViewPage
                 .map(list -> list.stream().map(WebElement::getText).collect(Collectors.toList())).collect(Collectors.toList());
     }
 
-    public List<String> getOrderedRows(int number) {
-        return rows.get(number).findElements(By.className("card-view-value"))
-                .stream().map(WebElement::getText).collect(Collectors.toList());
-    }
-
     public int getRowCount() {
         if (isTableEmpty()) {
             return 0;

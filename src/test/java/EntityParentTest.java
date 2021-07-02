@@ -101,7 +101,7 @@ public class EntityParentTest extends BaseTest {
     @Test(dependsOnMethods = "testEditRecord")
     public void testReorderRecord() {
 
-        ParentPage parentPage = new MainPage(getDriver())
+        ParentOrderPage parentOrderPage = new MainPage(getDriver())
                 .clickParentMenu()
                 .clickNewButton()
                 .fillDateTime(DATE_TIME_VALUE)
@@ -115,7 +115,7 @@ public class EntityParentTest extends BaseTest {
                 .clickOrderButton()
                 .movingRecord();
 
-        Assert.assertEquals(parentPage.getRow(0), NEW_EXPECTED_RESULT);
+        Assert.assertEquals(parentOrderPage.getRow(0), NEW_EXPECTED_RESULT);
     }
 
     @Test(dependsOnMethods = "testReorderRecord")
@@ -125,13 +125,13 @@ public class EntityParentTest extends BaseTest {
                 EMPTY_FIELD, EDIT_STRING_VALUE, EDIT_TEXT_VALUE, EDIT_INT_VALUE,
                 EDIT_DECIMAL_VALUE, EDIT_DATE_VALUE, EDIT_DATE_TIME_VALUE, EDIT_USER_NAME);
 
-        ParentPage parentPage = new MainPage(getDriver())
+        ParentOrderPage parentOrderPage = new MainPage(getDriver())
                 .clickParentMenu()
                 .clickOrderButton()
                 .clickToggleOrder()
                 .movingBlockRecord();
 
-        Assert.assertEquals(parentPage.getOrderedRows(0), VIEW_RESULT);
+        Assert.assertEquals(parentOrderPage.getOrderedRows(0), VIEW_RESULT);
     }
 
     @Test

@@ -1,7 +1,6 @@
 package model;
 
 import model.base.BaseEditPage;
-import model.base.BaseModel;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -30,15 +29,6 @@ public class TagEditPage extends BaseEditPage<TagPage> {
 
     @FindBy(className = "filter-option-inner-inner")
     private WebElement fieldUserName;
-
-    @FindBy(id = "pa-entity-form-save-btn")
-    private WebElement saveButton;
-
-    @FindBy(id = "pa-entity-form-draft-btn")
-    private WebElement saveDraftButton;
-
-    @FindBy(xpath = "//button[@class='btn btn-dark']")
-    private WebElement cancelButton;
 
     public TagEditPage(WebDriver driver) {
         super(driver);
@@ -99,23 +89,5 @@ public class TagEditPage extends BaseEditPage<TagPage> {
                 "//span[text()='" + value + "']")));
 
         return this;
-    }
-
-    public TagPage clickSave() {
-        TestUtils.jsClick(getDriver(), saveButton);
-
-        return new TagPage(getDriver());
-    }
-
-    public TagPage clickDraft() {
-        TestUtils.jsClick(getDriver(), saveDraftButton);
-
-        return new TagPage(getDriver());
-    }
-
-    public TagPage clickCancel() {
-        TestUtils.jsClick(getDriver(), cancelButton);
-
-        return new TagPage(getDriver());
     }
 }

@@ -1,4 +1,5 @@
 import base.BaseTest;
+import model.FieldsOrderPage;
 import model.FieldsPage;
 import model.MainPage;
 import org.openqa.selenium.By;
@@ -90,7 +91,7 @@ public class EntityFieldsTest extends BaseTest {
     @Test(dependsOnMethods = "testEditRecord")
     public void testReorderRecord() {
 
-        FieldsPage fieldsPage = new MainPage(getDriver())
+        FieldsOrderPage fieldsOrderPage = new MainPage(getDriver())
                 .clickFieldsMenu()
                 .clickNewButton()
                 .fillDateTime(DATE_TIME_VALUE)
@@ -104,7 +105,7 @@ public class EntityFieldsTest extends BaseTest {
                 .clickOrderButton()
                 .movingRecord();
 
-        Assert.assertEquals(fieldsPage.getRow(0), EXPECTED_RESULT);
+        Assert.assertEquals(fieldsOrderPage.getRow(0), EXPECTED_RESULT);
     }
 
     @Test(dependsOnMethods = "testReorderRecord")
@@ -119,13 +120,13 @@ public class EntityFieldsTest extends BaseTest {
                 EDIT_DATE_TIME_VALUE,
                 EDIT_USER_NAME);
 
-        FieldsPage fieldsPage = new MainPage(getDriver())
+        FieldsOrderPage fieldsOrderPage = new MainPage(getDriver())
                 .clickFieldsMenu()
                 .clickOrderButton()
                 .clickToggleOrder()
                 .movingBlockRecord();
 
-        Assert.assertEquals(fieldsPage.getOrderedRows(0), ORDER_VIEW_RESULT);
+        Assert.assertEquals(fieldsOrderPage.getOrderedRows(0), ORDER_VIEW_RESULT);
     }
 
     @Test(dependsOnMethods = "testReorderAfterToggle")

@@ -95,13 +95,9 @@ public class EntityTagTest extends BaseTest{
     @Test(dependsOnMethods = "testViewRecord")
     public void testDeleteRecord() {
 
-        TagPage tagPage = new MainPage(getDriver())
-                .clickTagMenu()
-                .clickDelete();
-
-        Assert.assertTrue(tagPage.isTableEmpty());
-
         RecycleBinPage recycleBinPage = new MainPage(getDriver())
+                .clickTagMenu()
+                .clickDelete()
                 .clickRecycleBin();
 
         Assert.assertEquals(recycleBinPage.getTextNotificationRowCount(), "1");
@@ -121,7 +117,7 @@ public class EntityTagTest extends BaseTest{
                 .fillInt(INT_VALUE)
                 .fillDecimal(DECIMAL_VALUE)
                 .findUser(TESTER_NAME)
-                .clickDraft();
+                .clickSaveDraft();
 
         Assert.assertEquals(tagPage.getRowCount(), 1);
         Assert.assertEquals(tagPage.getRow(0), EXPECTED_RESULT);

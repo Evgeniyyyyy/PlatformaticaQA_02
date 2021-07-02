@@ -310,27 +310,27 @@ public class EntityBoardTest extends BaseTest {
     @Test(dependsOnMethods = "testSortRecords")
     public void testReorderRecords() {
 
-        BoardListPage boardListPage  = new MainPage(getDriver())
+        BoardOrderPage boardOrderPage  = new MainPage(getDriver())
                 .clickBoardMenu()
                 .clickOrderButton()
                 .movingRecord();
 
 
-        Assert.assertEquals(boardListPage.getRow(0), EXPECTED_CREATED_ONTRACK_RECORD);
-        Assert.assertEquals(boardListPage.getRow(1), EXPECTED_CREATED_PENDING_RECORD);
+        Assert.assertEquals(boardOrderPage.getRow(0), EXPECTED_CREATED_ONTRACK_RECORD);
+        Assert.assertEquals(boardOrderPage.getRow(1), EXPECTED_CREATED_PENDING_RECORD);
     }
 
     @Test(dependsOnMethods = "testReorderRecords")
     public void testReorderAfterToggle() {
 
-        BoardListPage boardListPage = new MainPage(getDriver())
+        BoardOrderPage boardOrderPage = new MainPage(getDriver())
                 .clickBoardMenu()
                 .clickOrderButton()
                 .clickToggleOrder()
                 .movingBlockRecord();
 
-        Assert.assertEquals(boardListPage.getOrderedRows(0), EXPECTED_ORDERED_PENDING_RECORD);
-        Assert.assertEquals(boardListPage.getOrderedRows(1), EXPECTED_ORDERED_ONTRACK_RECORD);
+        Assert.assertEquals(boardOrderPage.getOrderedRows(0), EXPECTED_ORDERED_PENDING_RECORD);
+        Assert.assertEquals(boardOrderPage.getOrderedRows(1), EXPECTED_ORDERED_ONTRACK_RECORD);
     }
 
     @Test
