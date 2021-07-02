@@ -1,13 +1,13 @@
 package model;
 
-import model.base.BaseModel;
+import model.base.BaseEditPage;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import utils.TestUtils;
 
-public class ArithmeticInlineEditPage extends BaseModel {
+public class ArithmeticInlineEditPage extends BaseEditPage<ArithmeticInlinePage> {
 
     @FindBy(id = "f1")
     private WebElement F1_FIELD;
@@ -38,6 +38,11 @@ public class ArithmeticInlineEditPage extends BaseModel {
 
     public ArithmeticInlineEditPage(WebDriver driver) {
         super(driver);
+    }
+
+    @Override
+    protected ArithmeticInlinePage createMasterPage() {
+        return new ArithmeticInlinePage(getDriver());
     }
 
     public ArithmeticInlineEditPage fillF1_Field(String value) {

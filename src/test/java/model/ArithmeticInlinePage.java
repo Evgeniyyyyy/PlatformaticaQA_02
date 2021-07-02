@@ -1,6 +1,6 @@
 package model;
 
-import com.beust.jcommander.Strings;
+import model.base.BaseListMasterPage;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -10,19 +10,7 @@ import utils.TestUtils;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class ArithmeticInlinePage extends MainPage {
-
-    @FindBy(xpath = "//i[text()='create_new_folder']")
-    private WebElement newButton;
-
-    @FindBy(className = "card-body")
-    private static WebElement table;
-
-    @FindBy(xpath = "//tbody/tr")
-    private static List<WebElement> rows;
-
-    @FindBy(xpath = "//tbody/tr/td/i")
-    private static WebElement icon;
+public class ArithmeticInlinePage extends BaseListMasterPage<ArithmeticInlineEditPage, ArithmeticInlineViewPage> {
 
     @FindBy(xpath = "//button/i[text()='menu']")
     private WebElement actionsButton;
@@ -34,9 +22,13 @@ public class ArithmeticInlinePage extends MainPage {
         super(driver);
     }
 
-    public ArithmeticInlineEditPage clickNewButton() {
-        newButton.click();
+    @Override
+    protected ArithmeticInlineViewPage createViewPage() {
+        return new ArithmeticInlineViewPage(getDriver());
+    }
 
+    @Override
+    protected ArithmeticInlineEditPage createEditPage() {
         return new ArithmeticInlineEditPage(getDriver());
     }
 
@@ -59,27 +51,6 @@ public class ArithmeticInlinePage extends MainPage {
         actionsViewButton.click();
 
         return new ArithmeticInlineViewPage(getDriver());
-    }
-
-    public static boolean isTableEmpty() {
-        return Strings.isStringEmpty(table.getText());
-    }
-
-    public static List<String> getRow(int number) {
-        return rows.get(number).findElements(By.className("pa-list-table-th"))
-                .stream().map(WebElement::getText).collect(Collectors.toList());
-    }
-
-    public static int getRowCount() {
-        if (isTableEmpty()) {
-            return 0;
-        } else {
-            return rows.size();
-        }
-    }
-
-    public static boolean iconCheck(String cssClass) {
-        return icon.getAttribute("class").contains(cssClass);
     }
 
     public List<String> wrapValues(List<Integer> expectedValues) {
