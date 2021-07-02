@@ -41,14 +41,7 @@ public class EntityBoardTest extends BaseTest {
     private static final String EDIT_DATA_TIME_VALUE = "31/01/2100 00:59:01";
     private static final String EDIT_USER_NAME = "tester299@tester.test";
 
-    private static final List<String> EXPECTED_CREATED_PENDING_RECORD = List.of(
-            STRING_INPUT_PENDING,
-            TEXT_VALUE_PENDING,
-            INT_VALUE_PENDING,
-            DECIMAL_VALUE_PENDING,
-            DATA_VALUE,
-            DATA_TIME_VALUE,
-            "", USER_NAME);
+    private static List<String> EXPECTED_CREATED_PENDING_RECORD;
 
     private static final List<String> EXPECTED_SWAPPED_PENDING_RECORD = List.of(
             STRING_INPUT_ONTRACK,
@@ -59,23 +52,9 @@ public class EntityBoardTest extends BaseTest {
             DATA_TIME_VALUE,
             "", USER_NAME);
 
-    private static final List<String> EXPECTED_EDITED_RECORD = List.of(
-            STRING_INPUT_ONTRACK,
-            EDIT_TEXT_VALUE,
-            EDIT_INT_VALUE,
-            EDIT_DECIMAL_VALUE,
-            EDIT_DATA_VALUE,
-            EDIT_DATA_TIME_VALUE,
-            "", EDIT_USER_NAME);
+    private static List<String> EXPECTED_EDITED_RECORD;
 
-    private static final List<String> EXPECTED_CREATED_ONTRACK_RECORD = List.of(
-            STRING_INPUT_ONTRACK,
-            TEXT_VALUE_ONTRACK,
-            INT_VALUE_ONTRACK,
-            DECIMAL_VALUE_ONTRACK,
-            DATA_VALUE,
-            DATA_TIME_VALUE,
-            "", USER_NAME);
+    private static List<String> EXPECTED_CREATED_ONTRACK_RECORD;
 
     private static final List<String> EXPECTED_SWAPPED_ONTRACK_RECORD = List.of(
             STRING_INPUT_PENDING,
@@ -104,8 +83,7 @@ public class EntityBoardTest extends BaseTest {
             DATA_TIME_VALUE,
             USER_NAME);
 
-    private static final List<List<String>> ALL_RECORDS_TABLE = new ArrayList<>(List.of(EXPECTED_CREATED_PENDING_RECORD,
-            EXPECTED_CREATED_ONTRACK_RECORD));
+    private static  List<List<String>> ALL_RECORDS_TABLE;
 
     private static String getRandomDecimalValue() {
         return RandomUtils.nextInt(0, 10000) + "." + RandomStringUtils.randomNumeric(2);
@@ -122,29 +100,33 @@ public class EntityBoardTest extends BaseTest {
         return stringInputRecord.toString().trim();
     }
 
-    static class CompareByText implements Comparator<List<String>> {
-
-        @Override
-        public int compare(List r1, List r2) {
-            String text1 = r1.get(1).toString();
-            String text2 = r2.get(1).toString();
-            return text1.compareTo(text2);
-        }
-    }
-
     @Test
     public void testCreateDraftRecord() {
+
+        EXPECTED_CREATED_PENDING_RECORD = List.of(
+                STRING_INPUT_PENDING,
+                TEXT_VALUE_PENDING,
+                INT_VALUE_PENDING,
+                DECIMAL_VALUE_PENDING,
+                DATA_VALUE,
+                DATA_TIME_VALUE,
+                "", USER_NAME);
 
         BoardListPage boardListPage = new MainPage(getDriver())
                 .clickBoardMenu()
                 .clickNewButton()
-                .fillFields(EXPECTED_CREATED_PENDING_RECORD)
+                .fillFields(STRING_INPUT_PENDING,
+                        TEXT_VALUE_PENDING,
+                        INT_VALUE_PENDING,
+                        DECIMAL_VALUE_PENDING,
+                        DATA_VALUE,
+                        DATA_TIME_VALUE)
                 .findUser(USER_NAME)
                 .clickSaveDraft()
                 .clickListButton();
 
-        Assert.assertEquals(boardListPage.getRowCount(), 1);
         Assert.assertEquals(boardListPage.getClassIcon(), DRAFT_RECORD_ICON_CLASS_NAME);
+        Assert.assertEquals(boardListPage.getRowCount(), 1);
         Assert.assertEquals(boardListPage.getRow(0), EXPECTED_CREATED_PENDING_RECORD);
     }
 
@@ -163,13 +145,27 @@ public class EntityBoardTest extends BaseTest {
     @Test(dependsOnMethods = "testViewRecord")
     public void testEditDraftRecord() {
 
+        EXPECTED_EDITED_RECORD = List.of(
+                STRING_INPUT_ONTRACK,
+                EDIT_TEXT_VALUE,
+                EDIT_INT_VALUE,
+                EDIT_DECIMAL_VALUE,
+                EDIT_DATA_VALUE,
+                EDIT_DATA_TIME_VALUE,
+                "", EDIT_USER_NAME);
+
         BoardListPage boardListPage = new MainPage(getDriver())
                 .clickBoardMenu()
                 .clickListButton()
                 .clickActions()
                 .clickActionsEdit()
                 .clearFields()
-                .fillFields(EntityBoardTest.EXPECTED_EDITED_RECORD)
+                .fillFields(STRING_INPUT_ONTRACK,
+                        EDIT_TEXT_VALUE,
+                        EDIT_INT_VALUE,
+                        EDIT_DECIMAL_VALUE,
+                        EDIT_DATA_VALUE,
+                        EDIT_DATA_TIME_VALUE)
                 .findUser(EDIT_USER_NAME)
                 .clickSaveDraft();
 
@@ -237,25 +233,53 @@ public class EntityBoardTest extends BaseTest {
     @Test
     public void testSortRecords() {
 
-        ALL_RECORDS_TABLE.sort(new CompareByText());
+        EXPECTED_CREATED_PENDING_RECORD = List.of(
+                STRING_INPUT_PENDING,
+                TEXT_VALUE_PENDING,
+                INT_VALUE_PENDING,
+                DECIMAL_VALUE_PENDING,
+                DATA_VALUE,
+                DATA_TIME_VALUE,
+                "", USER_NAME);
+
+        EXPECTED_CREATED_ONTRACK_RECORD = List.of(
+                STRING_INPUT_ONTRACK,
+                TEXT_VALUE_ONTRACK,
+                INT_VALUE_ONTRACK,
+                DECIMAL_VALUE_ONTRACK,
+                DATA_VALUE,
+                DATA_TIME_VALUE,
+                "", USER_NAME);
+
+        ALL_RECORDS_TABLE = Arrays.asList(EXPECTED_CREATED_PENDING_RECORD,
+                EXPECTED_CREATED_ONTRACK_RECORD);
+
+        ALL_RECORDS_TABLE.sort(Comparator.comparing(list -> list.get(1)));
 
         BoardListPage boardListPage = new MainPage(getDriver())
                 .clickBoardMenu()
                 .clickNewButton()
-                .fillFields(EXPECTED_CREATED_PENDING_RECORD)
+                .fillFields(STRING_INPUT_PENDING,
+                        TEXT_VALUE_PENDING,
+                        INT_VALUE_PENDING,
+                        DECIMAL_VALUE_PENDING,
+                        DATA_VALUE,
+                        DATA_TIME_VALUE)
                 .findUser(USER_NAME)
                 .clickSaveDraft()
                 .clickNewButton()
-                .fillFields(EXPECTED_CREATED_ONTRACK_RECORD)
+                .fillFields(STRING_INPUT_ONTRACK,
+                        TEXT_VALUE_ONTRACK,
+                        INT_VALUE_ONTRACK,
+                        DECIMAL_VALUE_ONTRACK,
+                        DATA_VALUE,
+                        DATA_TIME_VALUE)
                 .findUser(USER_NAME)
                 .clickSave()
-                .clickListButton();
+                .clickListButton()
+                .clickTextColumn();
 
-        Assert.assertEquals(boardListPage.getRowCount(), ALL_RECORDS_TABLE.size());
-
-        boardListPage.clickTextColumn();
-        Assert.assertEquals(boardListPage.getRow(0), ALL_RECORDS_TABLE.get(0));
-        Assert.assertEquals(boardListPage.getRow(1), ALL_RECORDS_TABLE.get(1));
+        Assert.assertEquals(boardListPage.getRows(), ALL_RECORDS_TABLE);
     }
 
     @Test(dependsOnMethods = "testSortRecords")
@@ -268,41 +292,68 @@ public class EntityBoardTest extends BaseTest {
                 .getTextPaginationInfo(PAGINATION_INFO_STR_1_OF_1);
 
         Assert.assertEquals(boardListPage.getRow(0), EXPECTED_CREATED_PENDING_RECORD);
+    }
 
-        boardListPage.searchInputValue("")
+    @Test(dependsOnMethods = "testSearchRecord")
+    public void testCleanSearchInputField(){
+
+        BoardListPage boardListPage = new MainPage(getDriver())
+                .clickBoardMenu()
+                .clickListButton()
+                .searchInputValue(STRING_INPUT_PENDING)
+                .searchInputValue("")
                 .getTextPaginationInfo(PAGINATION_INFO_STR_2_OF_2);
+
         Assert.assertEquals(boardListPage.getRowCount(), ALL_RECORDS_TABLE.size());
     }
 
     @Test(dependsOnMethods = "testSortRecords")
     public void testReorderRecords() {
 
-        BoardListPage boardListPage = new MainPage(getDriver())
+        BoardListPage boardListPage  = new MainPage(getDriver())
                 .clickBoardMenu()
-                .clickOrderButton();
+                .clickOrderButton()
+                .movingRecord();
 
-        Assert.assertEquals(boardListPage.getRow(0), EXPECTED_CREATED_PENDING_RECORD);
-        Assert.assertEquals(boardListPage.getRow(1), EXPECTED_CREATED_ONTRACK_RECORD);
-
-        boardListPage.getReorder(20);
 
         Assert.assertEquals(boardListPage.getRow(0), EXPECTED_CREATED_ONTRACK_RECORD);
         Assert.assertEquals(boardListPage.getRow(1), EXPECTED_CREATED_PENDING_RECORD);
+    }
 
-        boardListPage.clickToggle()
-                .getReorder(140);
+    @Test(dependsOnMethods = "testReorderRecords")
+    public void testReorderAfterToggle() {
 
-        Assert.assertEquals(boardListPage.getOrderToggleRow(0), EXPECTED_ORDERED_PENDING_RECORD);
-        Assert.assertEquals(boardListPage.getOrderToggleRow(1), EXPECTED_ORDERED_ONTRACK_RECORD);
+        BoardListPage boardListPage = new MainPage(getDriver())
+                .clickBoardMenu()
+                .clickOrderButton()
+                .clickToggleOrder()
+                .movingBlockRecord();
+
+        Assert.assertEquals(boardListPage.getOrderedRows(0), EXPECTED_ORDERED_PENDING_RECORD);
+        Assert.assertEquals(boardListPage.getOrderedRows(1), EXPECTED_ORDERED_ONTRACK_RECORD);
     }
 
     @Test
     public void testCreateNonDraftRecord() {
 
+        EXPECTED_CREATED_PENDING_RECORD = List.of(
+                STRING_INPUT_PENDING,
+                TEXT_VALUE_PENDING,
+                INT_VALUE_PENDING,
+                DECIMAL_VALUE_PENDING,
+                DATA_VALUE,
+                DATA_TIME_VALUE,
+                "", USER_NAME);
+
         BoardListPage boardListPage = new MainPage(getDriver())
                 .clickBoardMenu()
                 .clickNewButton()
-                .fillFields(EXPECTED_CREATED_PENDING_RECORD)
+                .fillFields(STRING_INPUT_PENDING,
+                        TEXT_VALUE_PENDING,
+                        INT_VALUE_PENDING,
+                        DECIMAL_VALUE_PENDING,
+                        DATA_VALUE,
+                        DATA_TIME_VALUE)
                 .findUser(USER_NAME)
                 .clickSave()
                 .clickListButton();
@@ -321,13 +372,27 @@ public class EntityBoardTest extends BaseTest {
     @Test(dependsOnMethods = "testViewNonDraftRecord")
     public void testEditNonDraftRecord() {
 
+        EXPECTED_EDITED_RECORD = List.of(
+                STRING_INPUT_ONTRACK,
+                EDIT_TEXT_VALUE,
+                EDIT_INT_VALUE,
+                EDIT_DECIMAL_VALUE,
+                EDIT_DATA_VALUE,
+                EDIT_DATA_TIME_VALUE,
+                "", EDIT_USER_NAME);
+
         BoardListPage boardListPage = new MainPage(getDriver())
                 .clickBoardMenu()
                 .clickListButton()
                 .clickActions()
                 .clickActionsEdit()
                 .clearFields()
-                .fillFields(EntityBoardTest.EXPECTED_EDITED_RECORD)
+                .fillFields(STRING_INPUT_ONTRACK,
+                        EDIT_TEXT_VALUE,
+                        EDIT_INT_VALUE,
+                        EDIT_DECIMAL_VALUE,
+                        EDIT_DATA_VALUE,
+                        EDIT_DATA_TIME_VALUE)
                 .findUser(EDIT_USER_NAME)
                 .clickSave();
 
@@ -351,7 +416,12 @@ public class EntityBoardTest extends BaseTest {
 
         boardPage
                 .clickNewButton()
-                .fillFields(EXPECTED_CREATED_PENDING_RECORD)
+                .fillFields(STRING_INPUT_PENDING,
+                        TEXT_VALUE_PENDING,
+                        INT_VALUE_PENDING,
+                        DECIMAL_VALUE_PENDING,
+                        DATA_VALUE,
+                        DATA_TIME_VALUE)
                 .findUser(USER_NAME)
                 .clickCancel();
 
@@ -361,14 +431,42 @@ public class EntityBoardTest extends BaseTest {
     @Test
     public void testDragAndDropRecords() {
 
+        EXPECTED_CREATED_PENDING_RECORD = List.of(
+                STRING_INPUT_PENDING,
+                TEXT_VALUE_PENDING,
+                INT_VALUE_PENDING,
+                DECIMAL_VALUE_PENDING,
+                DATA_VALUE,
+                DATA_TIME_VALUE,
+                "", USER_NAME);
+
+        EXPECTED_CREATED_ONTRACK_RECORD = List.of(
+                STRING_INPUT_ONTRACK,
+                TEXT_VALUE_ONTRACK,
+                INT_VALUE_ONTRACK,
+                DECIMAL_VALUE_ONTRACK,
+                DATA_VALUE,
+                DATA_TIME_VALUE,
+                "", USER_NAME);
+
         BoardPage boardPage = new MainPage(getDriver())
                 .clickBoardMenu()
                 .clickNewButton()
-                .fillFields(EXPECTED_CREATED_PENDING_RECORD)
+                .fillFields(STRING_INPUT_PENDING,
+                        TEXT_VALUE_PENDING,
+                        INT_VALUE_PENDING,
+                        DECIMAL_VALUE_PENDING,
+                        DATA_VALUE,
+                        DATA_TIME_VALUE)
                 .findUser(USER_NAME)
                 .clickSaveDraft()
                 .clickNewButton()
-                .fillFields(EXPECTED_CREATED_ONTRACK_RECORD)
+                .fillFields(STRING_INPUT_ONTRACK,
+                        TEXT_VALUE_ONTRACK,
+                        INT_VALUE_ONTRACK,
+                        DECIMAL_VALUE_ONTRACK,
+                        DATA_VALUE,
+                        DATA_TIME_VALUE)
                 .findUser(USER_NAME)
                 .clickSave();
 

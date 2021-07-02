@@ -4,7 +4,6 @@ import com.beust.jcommander.Strings;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.FindBy;
 import utils.TestUtils;
 
@@ -44,8 +43,6 @@ public abstract class BaseListMasterPage<EditPage extends BaseEditPage, ViewPage
         super(driver);
     }
 
-    protected Actions actions = new Actions(getDriver());
-
     public boolean isTableEmpty() {
         return Strings.isStringEmpty(table.getText());
     }
@@ -55,7 +52,12 @@ public abstract class BaseListMasterPage<EditPage extends BaseEditPage, ViewPage
                 .stream().map(WebElement::getText).collect(Collectors.toList());
     }
 
-    public List<String> getOrderToggleRow(int number) {
+    public List<List<String>> getRows() {
+        return rows.stream().map(row -> row.findElements(By.className("pa-list-table-th")))
+                .map(list -> list.stream().map(WebElement::getText).collect(Collectors.toList())).collect(Collectors.toList());
+    }
+
+    public List<String> getOrderedRows(int number) {
         return rows.get(number).findElements(By.className("card-view-value"))
                 .stream().map(WebElement::getText).collect(Collectors.toList());
     }
@@ -75,14 +77,6 @@ public abstract class BaseListMasterPage<EditPage extends BaseEditPage, ViewPage
     public int getTextNotificationRecycleBin(){
 
         return Integer.parseInt(notificationRecycleBinIcon.getText());
-    }
-
-    public void getReorder(Integer value) {
-        actions.moveToElement(rows.get(0))
-                .clickAndHold(rows.get(0))
-                .dragAndDropBy(rows.get(0), 0, value)
-                .build()
-                .perform();
     }
 
     protected abstract ViewPage createViewPage();

@@ -131,7 +131,7 @@ public class EntityParentTest extends BaseTest {
                 .clickToggleOrder()
                 .movingBlockRecord();
 
-        Assert.assertEquals(parentPage.getOrderToggleRow(0), VIEW_RESULT);
+        Assert.assertEquals(parentPage.getOrderedRows(0), VIEW_RESULT);
     }
 
     @Test

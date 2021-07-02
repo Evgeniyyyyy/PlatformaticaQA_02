@@ -82,10 +82,10 @@ public class BoardListPage extends BaseListMasterPage<BoardBaseEditPage, BoardVi
         return this;
     }
 
-    public void clickTextColumn() {
+    public BoardListPage clickTextColumn() {
         textColumn.click();
 
-        new BoardListPage(getDriver());
+        return this;
     }
 
     public BoardListPage getTextPaginationInfo(String value) {

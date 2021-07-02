@@ -125,7 +125,7 @@ public class EntityFieldsTest extends BaseTest {
                 .clickToggleOrder()
                 .movingBlockRecord();
 
-        Assert.assertEquals(fieldsPage.getOrderToggleRow(0), ORDER_VIEW_RESULT);
+        Assert.assertEquals(fieldsPage.getOrderedRows(0), ORDER_VIEW_RESULT);
     }
 
     @Test(dependsOnMethods = "testReorderAfterToggle")

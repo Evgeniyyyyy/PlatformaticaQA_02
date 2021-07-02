@@ -10,8 +10,6 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.testng.Assert;
 import utils.TestUtils;
 
-import java.util.List;
-
 import static utils.TestUtils.jsClick;
 
 public abstract class BoardBaseEditPage<MasterPage extends BaseMasterPage, ThisPage extends BoardBaseEditPage> extends BaseEditPage<MasterPage> {
@@ -87,7 +85,7 @@ public abstract class BoardBaseEditPage<MasterPage extends BaseMasterPage, ThisP
     }
 
     public ThisPage fillInt(String value) {
-       fieldInt.sendKeys(value);
+        fieldInt.sendKeys(value);
 
         return (ThisPage)this;
     }
@@ -123,14 +121,15 @@ public abstract class BoardBaseEditPage<MasterPage extends BaseMasterPage, ThisP
         return (ThisPage)this;
     }
 
-    public ThisPage fillFields(List<String> list) {
+    public ThisPage fillFields(String fillString, String fillText, String fillInt,
+                               String fillDecimal, String fillDate, String fillDateTime) {
 
-        fillDateTime(list.get(5));
-        fillDate(list.get(4));
-        fillText(list.get(1));
-        fillInt(list.get(2));
-        fillDecimal(list.get(3));
-        fillString(list.get(0));
+        fillDateTime(fillDateTime);
+        fillDate(fillDate);
+        fillText(fillText);
+        fillInt(fillInt);
+        fillDecimal(fillDecimal);
+        fillString(fillString);
 
         return (ThisPage)this;
     }

@@ -40,10 +40,10 @@ public class BoardPage extends BaseMasterPage<BoardEditPage> {
         return new BoardListPage(getDriver());
     }
 
-    public BoardListPage clickOrderButton() {
+    public BoardOrderPage clickOrderButton() {
         orderButton.click();
 
-        return new BoardListPage(getDriver());
+        return new BoardOrderPage(getDriver());
     }
 
     public String getTextCardBody(){
