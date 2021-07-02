@@ -2,9 +2,11 @@ package model;
 
 import model.base.BaseEditPage;
 import model.base.BaseModel;
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 import utils.TestUtils;
 
 public class ExportDestinationEditPage extends BaseEditPage<ExportDestinationPage> {
@@ -88,6 +90,14 @@ public class ExportDestinationEditPage extends BaseEditPage<ExportDestinationPag
         fieldDateTime.click();
         fieldDateTime.clear();
         fieldDateTime.sendKeys(value);
+
+        return this;
+    }
+
+    public ExportDestinationEditPage fillUser(By by) {
+        TestUtils.jsClick(getDriver(), fieldUser);
+        TestUtils.jsClick(getDriver(), getWait().until
+                (ExpectedConditions.elementToBeClickable(by)));
 
         return this;
     }
