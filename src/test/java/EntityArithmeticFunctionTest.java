@@ -54,7 +54,7 @@ public class EntityArithmeticFunctionTest extends BaseTest {
 
         ArithmeticFunctionPage arithmeticFunctionPage = new MainPage(getDriver())
                 .clickArithmeticFunctionMenu()
-                .clickEditButton(0)
+                .clickEditButton()
                 .fillForm(F1, F2)
                 .clickSave();
 

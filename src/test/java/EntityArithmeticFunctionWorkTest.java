@@ -1,7 +1,7 @@
 import base.BaseTest;
 import model.ArithmeticFunctionPage;
+import model.ArithmeticFunctionViewPage;
 import model.MainPage;
-import org.openqa.selenium.By;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -84,11 +84,11 @@ public class EntityArithmeticFunctionWorkTest extends BaseTest {
 
     @Test(dependsOnMethods = "testSaveDraftNewRecord")
     public void testViewRecord() {
-        ArithmeticFunctionPage arithmeticFunctionPage = new MainPage(getDriver())
+        ArithmeticFunctionViewPage arithmeticFunctionViewPage = new MainPage(getDriver())
                 .clickArithmeticFunctionMenu()
-                .clickViewButton();
+                .clickViewButton(0);
 
-        Assert.assertEquals(arithmeticFunctionPage.viewData(), arithmeticFunctionPage.wrapValues(CREATE_DATA));
+        Assert.assertEquals(arithmeticFunctionViewPage.getRecordInViewMode(), arithmeticFunctionViewPage.wrapValues(CREATE_DATA));
     }
 
     @Test(dependsOnMethods = "testDeleteRecord")

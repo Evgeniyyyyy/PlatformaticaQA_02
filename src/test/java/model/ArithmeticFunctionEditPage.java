@@ -1,13 +1,16 @@
 package model;
 
-import model.base.BaseModel;
+import model.base.BaseEditPage;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import utils.TestUtils;
 
-public class ArithmeticFunctionEditPage extends BaseModel {
+import java.util.ArrayList;
+import java.util.List;
+
+public class ArithmeticFunctionEditPage extends BaseEditPage<ArithmeticFunctionPage> {
 
     @FindBy(id = "f1")
     private WebElement F1_FIELD;
@@ -29,6 +32,11 @@ public class ArithmeticFunctionEditPage extends BaseModel {
 
     public ArithmeticFunctionEditPage(WebDriver driver) {
         super(driver);
+    }
+
+    @Override
+    protected ArithmeticFunctionPage createMasterPage() {
+        return new ArithmeticFunctionPage(getDriver());
     }
 
     public ArithmeticFunctionPage clickSave() {
@@ -55,10 +63,11 @@ public class ArithmeticFunctionEditPage extends BaseModel {
 
     public ArithmeticFunctionEditPage fillForm(Integer value1, Integer value2) {
         DIV.clear();
+        F1_FIELD.clear();
+        F2_FIELD.clear();
         sendKeysOneByOne(F1_FIELD, value1.toString());
         sendKeysOneByOne(F2_FIELD, value2.toString());
-
-        getWait().until(ExpectedConditions.attributeToBe(DIV, "value", String.valueOf(value1/value2)));
+        getWait().until(ExpectedConditions.attributeToBeNotEmpty(DIV, "value"));
 
         return this;
     }
@@ -75,5 +84,13 @@ public class ArithmeticFunctionEditPage extends BaseModel {
             element.sendKeys(String.valueOf(c));
             getWait().until(ExpectedConditions.attributeToBe(element, "value", String.valueOf(newString)));
         }
+    }
+
+    public static List<String> convertIntToString(List<Integer> actualElements) {
+        List<String> listValues = new ArrayList<>();
+        for (Integer element : actualElements) {
+            listValues.add(element.toString());
+        }
+        return listValues;
     }
 }
