@@ -168,6 +168,7 @@ public class EntityDefaultTest extends BaseTest {
                 .clickActionsDelete();
         Assert.assertTrue(defaultPage.isTableEmpty());
         Assert.assertEquals(defaultPage.getTextNotificationRecycleBin(), 1);
+
     }
 
     @Test(dependsOnMethods = "testDeleteRecord")
@@ -231,10 +232,11 @@ public class EntityDefaultTest extends BaseTest {
         Assert.assertEquals(defaultPage.getRowCount(), 1);
         Assert.assertEquals(defaultPage.getRow(0), DEFAULT_EXPECTED_RESULT);
         Assert.assertEquals(defaultPage.getClassIcon(), CLASS_ICON_SAVE_DRAFT);
+
     }
 
     @Test
-    public void testSortRecords() {
+    public void testSortRecordsByString() {
 
         DefaultPage defaultPage = new MainPage(getDriver())
                 .clickDefaultMenu()
@@ -263,17 +265,38 @@ public class EntityDefaultTest extends BaseTest {
         Assert.assertEquals(defaultPage.getRow(1), EXPECTED_RESULT_1);
         Assert.assertEquals(defaultPage.getRow(2), EXPECTED_RESULT_3);
 
-        defaultPage.clickTextColumn();
+    }
+
+    @Test(dependsOnMethods = "testSortRecordsByString")
+    public void testSortRecordsByText() {
+
+        DefaultPage defaultPage = new MainPage(getDriver())
+                .clickDefaultMenu()
+                .clickTextColumn();
         Assert.assertEquals(defaultPage.getRow(0), EXPECTED_RESULT_3);
         Assert.assertEquals(defaultPage.getRow(1), EXPECTED_RESULT_2);
         Assert.assertEquals(defaultPage.getRow(2), EXPECTED_RESULT_1);
 
-        defaultPage.clickIntColumn();
+    }
+
+    @Test(dependsOnMethods = "testSortRecordsByText")
+    public void testSortRecordsByInt() {
+
+        DefaultPage defaultPage = new MainPage(getDriver())
+                .clickDefaultMenu()
+                .clickIntColumn();
         Assert.assertEquals(defaultPage.getRow(0), EXPECTED_RESULT_2);
         Assert.assertEquals(defaultPage.getRow(1), EXPECTED_RESULT_1);
         Assert.assertEquals(defaultPage.getRow(2), EXPECTED_RESULT_3);
 
-        defaultPage.clickDecimalColumn();
+    }
+
+    @Test(dependsOnMethods = "testSortRecordsByInt")
+    public void testSortRecordsByDecimal() {
+
+        DefaultPage defaultPage = new MainPage(getDriver())
+                .clickDefaultMenu()
+                .clickDecimalColumn();
         Assert.assertEquals(defaultPage.getRow(0), EXPECTED_RESULT_1);
         Assert.assertEquals(defaultPage.getRow(1), EXPECTED_RESULT_3);
         Assert.assertEquals(defaultPage.getRow(2), EXPECTED_RESULT_2);
