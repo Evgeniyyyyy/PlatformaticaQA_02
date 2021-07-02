@@ -64,7 +64,7 @@ public class FieldsPage extends BaseListMasterPage<FieldsEditPage, FieldsViewPag
         return new FieldsEditPage(getDriver());
     }
 
-    public FieldsOrderPage clickOrder() {
+    public FieldsOrderPage clickOrderButton() {
         order.click();
 
         return new FieldsOrderPage(getDriver());

@@ -101,7 +101,7 @@ public class EntityFieldsTest extends BaseTest {
                 .fillDecimal(DECIMAL_VALUE)
                 .findUser(USER_NAME)
                 .clickSave()
-                .clickOrder()
+                .clickOrderButton()
                 .movingRecord();
 
         Assert.assertEquals(fieldsPage.getRow(0), EXPECTED_RESULT);
@@ -121,10 +121,11 @@ public class EntityFieldsTest extends BaseTest {
 
         FieldsPage fieldsPage = new MainPage(getDriver())
                 .clickFieldsMenu()
-                .clickOrder()
+                .clickOrderButton()
                 .clickToggleOrder()
                 .movingBlockRecord();
-                Assert.assertEquals(fieldsPage.getOrderToggleRow(0), ORDER_VIEW_RESULT);
+
+        Assert.assertEquals(fieldsPage.getOrderToggleRow(0), ORDER_VIEW_RESULT);
     }
 
     @Test(dependsOnMethods = "testReorderAfterToggle")

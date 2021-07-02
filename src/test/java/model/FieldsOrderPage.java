@@ -15,14 +15,23 @@ public class FieldsOrderPage extends BaseOrderPage<FieldsPage> {
     }
 
     @Override
+    protected FieldsEditPage createEditPage() {
+        return new FieldsEditPage(getDriver());
+    }
+
+    @Override
+    protected FieldsViewPage createViewPage() {
+        return new FieldsViewPage(getDriver());
+    }
+
+    @Override
     protected FieldsPage createMasterPage() {
         return new FieldsPage(getDriver());
     }
 
-        public FieldsOrderPage clickToggleOrder() {
+    public FieldsOrderPage clickToggleOrder() {
         toggle.click();
 
         return new FieldsOrderPage(getDriver());
     }
-
 }

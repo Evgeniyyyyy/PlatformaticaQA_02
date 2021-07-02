@@ -112,7 +112,7 @@ public class EntityParentTest extends BaseTest {
                 .fillDecimal(DECIMAL_INPUT_VALUE)
                 .findUser(USER_NAME)
                 .clickSave()
-                .clickOrder()
+                .clickOrderButton()
                 .movingRecord();
 
         Assert.assertEquals(parentPage.getRow(0), NEW_EXPECTED_RESULT);
@@ -127,7 +127,7 @@ public class EntityParentTest extends BaseTest {
 
         ParentPage parentPage = new MainPage(getDriver())
                 .clickParentMenu()
-                .clickOrder()
+                .clickOrderButton()
                 .clickToggleOrder()
                 .movingBlockRecord();
 

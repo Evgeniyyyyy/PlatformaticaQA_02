@@ -1,12 +1,11 @@
 package model.base;
 
-import model.MainPage;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.FindBy;
 
-public abstract class BaseOrderPage<MasterPage extends BaseMasterPage> extends MainPage {
+public abstract class BaseOrderPage<MasterPage extends BaseMasterPage> extends BaseListMasterPage {
 
     @FindBy(xpath = "//tbody/tr")
     private WebElement row;

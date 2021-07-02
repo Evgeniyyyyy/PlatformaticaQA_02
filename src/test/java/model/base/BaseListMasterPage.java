@@ -88,6 +88,13 @@ public abstract class BaseListMasterPage<EditPage extends BaseEditPage, ViewPage
     protected abstract ViewPage createViewPage();
     protected abstract EditPage createEditPage();
 
+    public ViewPage clickNewViewButton(int rowNumber) {
+
+        rows.get(rowNumber).click();
+
+        return createViewPage();
+    }
+
     public ViewPage clickViewButton(int rowNumber) {
 
         actionMenu.click();

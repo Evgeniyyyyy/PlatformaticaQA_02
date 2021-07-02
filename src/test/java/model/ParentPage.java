@@ -101,7 +101,7 @@ public class ParentPage extends BaseListMasterPage<ParentEditPage, ParentViewPag
         return new ParentPage(getDriver());
     }
 
-    public ParentOrderPage clickOrder() {
+    public ParentOrderPage clickOrderButton() {
         order.click();
 
         return new ParentOrderPage(getDriver());

@@ -14,7 +14,17 @@ public class DefaultOrderPage extends BaseOrderPage<DefaultPage>{
             super(driver);
         }
 
-        @Override
+    @Override
+    protected DefaultViewPage createViewPage() {
+        return new DefaultViewPage(getDriver());
+    }
+
+    @Override
+    protected DefaultEditPage createEditPage() {
+        return new DefaultEditPage(getDriver());
+    }
+
+    @Override
         protected DefaultPage createMasterPage() {
             return new DefaultPage(getDriver());
         }

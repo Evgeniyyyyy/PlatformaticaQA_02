@@ -15,6 +15,16 @@ public class ParentOrderPage extends BaseOrderPage<ParentPage> {
     }
 
     @Override
+    protected ParentEditPage createEditPage() {
+        return new ParentEditPage(getDriver());
+    }
+
+    @Override
+    protected ParentViewPage createViewPage() {
+        return new ParentViewPage(getDriver());
+    }
+
+    @Override
     protected ParentPage createMasterPage() {
         return new ParentPage(getDriver());
     }
@@ -24,5 +34,4 @@ public class ParentOrderPage extends BaseOrderPage<ParentPage> {
 
         return new ParentOrderPage(getDriver());
     }
-
 }
