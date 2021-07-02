@@ -1,9 +1,6 @@
 import base.BaseTest;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.RandomUtils;
-import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -50,10 +47,6 @@ public class EntityDefaultTest extends BaseTest {
     private static final List<String> DEFAULT_EXPECTED_RESULT = List.of(
             STRING_DEFAULT_VALUE, TEXT_DEFAULT_VALUE, INT_DEFAULT_VALUE, DECIMAL_DEFAULT_VALUE,
             DATE_DEFAULT_VALUE, DATE_TIME_DEFAULT_VALUE, EMPTY_FIELD, EMPTY_FIELD, USER_DEFAULT_NAME);
-
-    private static List<WebElement> RECORD(WebDriver driver) {
-        return List.of(driver.findElement(By.xpath("//div/span/a")));
-    }
 
     private static final List<String> EDIT_RESULT = List.of(
             EDIT_STRING_VALUE, EDIT_TEXT_VALUE, EDIT_INT_VALUE,
@@ -104,9 +97,9 @@ public class EntityDefaultTest extends BaseTest {
                 .fillDecimal(DECIMAL_INPUT_VALUE)
                 .clickSave();
 
-        Assert.assertEquals(DefaultPage.getRowCount(), 1);
-        Assert.assertEquals(DefaultPage.getRow(0), NEW_EXPECTED_RESULT);
-        Assert.assertEquals(DefaultPage.getClassIcon(), CLASS_ICON_SAVE);
+        Assert.assertEquals(defaultPage.getRowCount(), 1);
+        Assert.assertEquals(defaultPage.getRow(0), NEW_EXPECTED_RESULT);
+        Assert.assertEquals(defaultPage.getClassIcon(), CLASS_ICON_SAVE);
     }
 
     @Test(dependsOnMethods = "testCreateRecord")
@@ -116,9 +109,9 @@ public class EntityDefaultTest extends BaseTest {
                 .clickNewButton()
                 .clickCancel();
 
-        Assert.assertEquals(DefaultPage.getRowCount(), 1);
-        Assert.assertEquals(DefaultPage.getRow(0), NEW_EXPECTED_RESULT);
-        Assert.assertEquals(DefaultPage.getClassIcon(), CLASS_ICON_SAVE);
+        Assert.assertEquals(defaultPage.getRowCount(), 1);
+        Assert.assertEquals(defaultPage.getRow(0), NEW_EXPECTED_RESULT);
+        Assert.assertEquals(defaultPage.getClassIcon(), CLASS_ICON_SAVE);
 
     }
 
@@ -126,8 +119,7 @@ public class EntityDefaultTest extends BaseTest {
     public void testViewRecord() {
         DefaultViewPage defaultViewPage = new MainPage(getDriver())
             .clickDefaultMenu()
-            .clickActions()
-            .clickActionsView();
+            .clickViewButton(0);
 
         ACTUAL_LIST = defaultViewPage.getRecordInViewMode();
 
@@ -142,20 +134,19 @@ public class EntityDefaultTest extends BaseTest {
         DefaultPage defaultPage = new MainPage(getDriver())
                 .clickDefaultMenu()
                 .clickOrderButton();
-        Assert.assertEquals(DefaultPage.getRow(0), NEW_EXPECTED_RESULT);
-        Assert.assertEquals(DefaultPage.getClassIcon(), CLASS_ICON_SAVE);
+        Assert.assertEquals(defaultPage.getRow(0), NEW_EXPECTED_RESULT);
+        Assert.assertEquals(defaultPage.getClassIcon(), CLASS_ICON_SAVE);
 
         defaultPage.clickListButton();
-        Assert.assertEquals(DefaultPage.getRow(0), NEW_EXPECTED_RESULT);
-        Assert.assertEquals(DefaultPage.getClassIcon(), CLASS_ICON_SAVE);
+        Assert.assertEquals(defaultPage.getRow(0), NEW_EXPECTED_RESULT);
+        Assert.assertEquals(defaultPage.getClassIcon(), CLASS_ICON_SAVE);
     }
 
     @Test(dependsOnMethods = "testSwitchBetweenListAndOrder")
     public void testEditRecord() {
         DefaultPage defaultPage = new MainPage(getDriver())
                 .clickDefaultMenu()
-                .clickActions()
-                .clickActionsEdit()
+                .clickEditButton()
                 .fillDateTime(EDIT_DATE_TIME_VALUE)
                 .fillString(EDIT_STRING_VALUE)
                 .fillDate(EDIT_DATE_VALUE)
@@ -164,9 +155,9 @@ public class EntityDefaultTest extends BaseTest {
                 .fillDecimal(EDIT_DECIMAL_VALUE)
                 .clickSaveDraft();
 
-        Assert.assertEquals(DefaultPage.getRowCount(), 1);
-        Assert.assertEquals(DefaultPage.getRow(0), EDIT_RESULT);
-        Assert.assertEquals(DefaultPage.getClassIcon(), CLASS_ICON_SAVE_DRAFT);
+        Assert.assertEquals(defaultPage.getRowCount(), 1);
+        Assert.assertEquals(defaultPage.getRow(0), EDIT_RESULT);
+        Assert.assertEquals(defaultPage.getClassIcon(), CLASS_ICON_SAVE_DRAFT);
     }
 
     @Test(dependsOnMethods = "testEditRecord")
@@ -175,8 +166,8 @@ public class EntityDefaultTest extends BaseTest {
                 .clickDefaultMenu()
                 .clickActions()
                 .clickActionsDelete();
-        Assert.assertTrue(DefaultPage.isTableEmpty());
-        Assert.assertEquals(DefaultPage.getTextNotificationRecycleBin(), 1);
+        Assert.assertTrue(defaultPage.isTableEmpty());
+        Assert.assertEquals(defaultPage.getTextNotificationRecycleBin(), 1);
     }
 
     @Test(dependsOnMethods = "testDeleteRecord")
@@ -193,9 +184,9 @@ public class EntityDefaultTest extends BaseTest {
         DefaultPage defaultPage = new MainPage(getDriver())
                 .clickDefaultMenu();
 
-        Assert.assertEquals(DefaultPage.getRowCount(), 1);
-        Assert.assertEquals(DefaultPage.getRow(0), EDIT_RESULT);
-        Assert.assertEquals(DefaultPage.getClassIcon(), CLASS_ICON_SAVE_DRAFT);
+        Assert.assertEquals(defaultPage.getRowCount(), 1);
+        Assert.assertEquals(defaultPage.getRow(0), EDIT_RESULT);
+        Assert.assertEquals(defaultPage.getClassIcon(), CLASS_ICON_SAVE_DRAFT);
     }
 
     @Test
@@ -211,9 +202,9 @@ public class EntityDefaultTest extends BaseTest {
                 .fillDecimal(DECIMAL_INPUT_VALUE)
                 .clickSaveDraft();
 
-        Assert.assertEquals(DefaultPage.getRowCount(), 1);
-        Assert.assertEquals(DefaultPage.getRow(0), NEW_EXPECTED_RESULT);
-        Assert.assertEquals(DefaultPage.getClassIcon(), CLASS_ICON_SAVE_DRAFT);
+        Assert.assertEquals(defaultPage.getRowCount(), 1);
+        Assert.assertEquals(defaultPage.getRow(0), NEW_EXPECTED_RESULT);
+        Assert.assertEquals(defaultPage.getClassIcon(), CLASS_ICON_SAVE_DRAFT);
     }
 
     @Test
@@ -224,9 +215,9 @@ public class EntityDefaultTest extends BaseTest {
                 .clickNewButton()
                 .clickSave();
 
-        Assert.assertEquals(DefaultPage.getRowCount(), 1);
-        Assert.assertEquals(DefaultPage.getRow(0), DEFAULT_EXPECTED_RESULT);
-        Assert.assertEquals(DefaultPage.getClassIcon(), CLASS_ICON_SAVE);
+        Assert.assertEquals(defaultPage.getRowCount(), 1);
+        Assert.assertEquals(defaultPage.getRow(0), DEFAULT_EXPECTED_RESULT);
+        Assert.assertEquals(defaultPage.getClassIcon(), CLASS_ICON_SAVE);
     }
 
     @Test
@@ -237,9 +228,9 @@ public class EntityDefaultTest extends BaseTest {
                 .clickNewButton()
                 .clickSaveDraft();
 
-        Assert.assertEquals(DefaultPage.getRowCount(), 1);
-        Assert.assertEquals(DefaultPage.getRow(0), DEFAULT_EXPECTED_RESULT);
-        Assert.assertEquals(DefaultPage.getClassIcon(), CLASS_ICON_SAVE_DRAFT);
+        Assert.assertEquals(defaultPage.getRowCount(), 1);
+        Assert.assertEquals(defaultPage.getRow(0), DEFAULT_EXPECTED_RESULT);
+        Assert.assertEquals(defaultPage.getClassIcon(), CLASS_ICON_SAVE_DRAFT);
     }
 
     @Test
@@ -250,41 +241,41 @@ public class EntityDefaultTest extends BaseTest {
                 .clickNewButton()
                 .fillFields(STRING_VALUE_1,TEXT_VALUE_1,INT_VALUE_1,DECIMAL_VALUE_1)
                 .clickSave();
-        Assert.assertEquals(DefaultPage.getRowCount(), 1);
-        Assert.assertEquals(DefaultPage.getRow(0), EXPECTED_RESULT_1);
+        Assert.assertEquals(defaultPage.getRowCount(), 1);
+        Assert.assertEquals(defaultPage.getRow(0), EXPECTED_RESULT_1);
 
         defaultPage.clickDefaultMenu()
                 .clickNewButton()
                 .fillFields(STRING_VALUE_2,TEXT_VALUE_2,INT_VALUE_2,DECIMAL_VALUE_2)
                 .clickSaveDraft();
-        Assert.assertEquals(DefaultPage.getRowCount(), 2);
-        Assert.assertEquals(DefaultPage.getRow(1), EXPECTED_RESULT_2);
+        Assert.assertEquals(defaultPage.getRowCount(), 2);
+        Assert.assertEquals(defaultPage.getRow(1), EXPECTED_RESULT_2);
 
         defaultPage.clickDefaultMenu()
                 .clickNewButton()
                 .fillFields(STRING_VALUE_3,TEXT_VALUE_3,INT_VALUE_3,DECIMAL_VALUE_3)
                 .clickSave();
-        Assert.assertEquals(DefaultPage.getRowCount(), 3);
-        Assert.assertEquals(DefaultPage.getRow(2), EXPECTED_RESULT_3);
+        Assert.assertEquals(defaultPage.getRowCount(), 3);
+        Assert.assertEquals(defaultPage.getRow(2), EXPECTED_RESULT_3);
 
         defaultPage.clickStringColumn();
-        Assert.assertEquals(DefaultPage.getRow(0), EXPECTED_RESULT_2);
-        Assert.assertEquals(DefaultPage.getRow(1), EXPECTED_RESULT_1);
-        Assert.assertEquals(DefaultPage.getRow(2), EXPECTED_RESULT_3);
+        Assert.assertEquals(defaultPage.getRow(0), EXPECTED_RESULT_2);
+        Assert.assertEquals(defaultPage.getRow(1), EXPECTED_RESULT_1);
+        Assert.assertEquals(defaultPage.getRow(2), EXPECTED_RESULT_3);
 
         defaultPage.clickTextColumn();
-        Assert.assertEquals(DefaultPage.getRow(0), EXPECTED_RESULT_3);
-        Assert.assertEquals(DefaultPage.getRow(1), EXPECTED_RESULT_2);
-        Assert.assertEquals(DefaultPage.getRow(2), EXPECTED_RESULT_1);
+        Assert.assertEquals(defaultPage.getRow(0), EXPECTED_RESULT_3);
+        Assert.assertEquals(defaultPage.getRow(1), EXPECTED_RESULT_2);
+        Assert.assertEquals(defaultPage.getRow(2), EXPECTED_RESULT_1);
 
         defaultPage.clickIntColumn();
-        Assert.assertEquals(DefaultPage.getRow(0), EXPECTED_RESULT_2);
-        Assert.assertEquals(DefaultPage.getRow(1), EXPECTED_RESULT_1);
-        Assert.assertEquals(DefaultPage.getRow(2), EXPECTED_RESULT_3);
+        Assert.assertEquals(defaultPage.getRow(0), EXPECTED_RESULT_2);
+        Assert.assertEquals(defaultPage.getRow(1), EXPECTED_RESULT_1);
+        Assert.assertEquals(defaultPage.getRow(2), EXPECTED_RESULT_3);
 
         defaultPage.clickDecimalColumn();
-        Assert.assertEquals(DefaultPage.getRow(0), EXPECTED_RESULT_1);
-        Assert.assertEquals(DefaultPage.getRow(1), EXPECTED_RESULT_3);
-        Assert.assertEquals(DefaultPage.getRow(2), EXPECTED_RESULT_2);
+        Assert.assertEquals(defaultPage.getRow(0), EXPECTED_RESULT_1);
+        Assert.assertEquals(defaultPage.getRow(1), EXPECTED_RESULT_3);
+        Assert.assertEquals(defaultPage.getRow(2), EXPECTED_RESULT_2);
     }
 }

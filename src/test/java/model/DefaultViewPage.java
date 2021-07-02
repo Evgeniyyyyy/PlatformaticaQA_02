@@ -1,5 +1,6 @@
 package model;
 
+import model.base.BaseViewPage;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -7,10 +8,15 @@ import org.openqa.selenium.support.FindBy;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DefaultViewPage extends MainPage {
+public class DefaultViewPage extends BaseViewPage<DefaultPage> {
 
     public DefaultViewPage(WebDriver driver) {
         super(driver);
+    }
+
+    @Override
+    protected DefaultPage createMasterPage() {
+        return new DefaultPage(getDriver());
     }
 
     @FindBy(xpath = "//span[@class='pa-view-field']")

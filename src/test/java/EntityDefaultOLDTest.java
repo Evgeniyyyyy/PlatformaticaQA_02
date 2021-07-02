@@ -134,7 +134,7 @@ public class EntityDefaultOLDTest extends BaseTest {
         Assert.assertFalse(findElement(DATETIME_FIELD).getAttribute("value").isEmpty());
         defaultEditPage.clickCancel();
 
-        Assert.assertEquals(DefaultPage.getRowCount(), 1);
+        Assert.assertEquals(defaultPage.getRowCount(), 1);
     }
 
     @Test(dependsOnMethods = "testCancelDefaultRecord")

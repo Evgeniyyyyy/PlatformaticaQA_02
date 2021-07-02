@@ -1,13 +1,12 @@
 package model.base;
 
 import com.beust.jcommander.Strings;
-import model.FieldsEditPage;
-import model.MainPage;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.FindBy;
+import utils.TestUtils;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -28,6 +27,18 @@ public abstract class BaseListMasterPage<EditPage extends BaseEditPage, ViewPage
 
     @FindBy(xpath = "//i[text()='delete_outline']")
     private WebElement recycleBinIcon;
+
+    @FindBy(xpath = "//div[@class='dropdown pull-left']")
+    private WebElement actionMenu;
+
+    @FindBy(xpath = "//a[text()='view']")
+    private WebElement view;
+
+    @FindBy(xpath = "//a[text()='edit']")
+    private WebElement edit;
+
+    @FindBy(xpath = "//a[text()='delete']")
+    private WebElement delete;
 
     public BaseListMasterPage(WebDriver driver) {
         super(driver);
@@ -75,12 +86,20 @@ public abstract class BaseListMasterPage<EditPage extends BaseEditPage, ViewPage
     }
 
     protected abstract ViewPage createViewPage();
+    protected abstract EditPage createEditPage();
 
     public ViewPage clickViewButton(int rowNumber) {
 
-        // todo click view by number
+        actionMenu.click();
+        TestUtils.jsClick(getDriver(), view);
 
         return createViewPage();
     }
 
+    public EditPage clickEditButton() {
+        actionMenu.click();
+        TestUtils.jsClick(getDriver(), edit);
+
+        return createEditPage();
+    }
 }

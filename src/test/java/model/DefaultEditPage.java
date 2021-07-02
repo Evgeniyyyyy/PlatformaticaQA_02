@@ -1,13 +1,13 @@
 package model;
 
-import model.base.BaseModel;
+import model.base.BaseEditPage;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import utils.TestUtils;
 
-public class DefaultEditPage extends BaseModel {
+public class DefaultEditPage extends BaseEditPage<DefaultPage> {
 
     @FindBy(id = "string")
     private WebElement fieldString;
@@ -44,6 +44,11 @@ public class DefaultEditPage extends BaseModel {
 
     public DefaultEditPage(WebDriver driver) {
         super(driver);
+    }
+
+    @Override
+    protected DefaultPage createMasterPage() {
+        return new DefaultPage(getDriver());
     }
 
     public DefaultEditPage fillString(String value) {
