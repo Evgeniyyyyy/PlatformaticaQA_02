@@ -75,7 +75,7 @@ public class EntityFieldsTest extends BaseTest {
 
         FieldsPage fieldsPage = new MainPage(getDriver())
                 .clickFieldsMenu()
-                .clickEdit()
+                .clickEditButton()
                 .fillDateTime(EDIT_DATE_TIME_VALUE)
                 .fillTitle(EDIT_TITLE_VALUE)
                 .fillDate(EDIT_DATE_VALUE)

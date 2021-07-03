@@ -61,8 +61,8 @@ public class EntityParentTest extends BaseTest {
 
         ParentViewPage parentViewPage = new MainPage(getDriver())
                 .clickParentMenu()
-                .clickActions()
-                .clickActionsView();
+//                .clickActions()
+                .clickNewViewButton(0);
 
         Assert.assertEquals(parentViewPage.getRecordInViewMode(), NEW_EXPECTED_RESULT);
     }
@@ -72,8 +72,8 @@ public class EntityParentTest extends BaseTest {
 
         ParentPage parentPage = new MainPage(getDriver())
                 .clickParentMenu()
-                .clickActions()
-                .clickActionsEdit()
+//                .clickActions()
+                .clickEditButton()
                 .fillDateTime(EDIT_DATE_TIME_VALUE)
                 .fillString(EDIT_STRING_VALUE)
                 .fillDate(EDIT_DATE_VALUE)
@@ -175,7 +175,7 @@ public class EntityParentTest extends BaseTest {
 
         ParentPage parentPage = new MainPage(getDriver())
                 .clickParentMenu()
-                .clickActions()
+//                .clickActions()
                 .clickActionsDelete();
 
         Assert.assertTrue(parentPage.isTableEmpty());

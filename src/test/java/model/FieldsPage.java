@@ -10,18 +10,6 @@ import utils.TestUtils;
 
 public class FieldsPage extends BaseListMasterPage<FieldsEditPage, FieldsViewPage> {
 
-    @FindBy(xpath = "//i[text()='create_new_folder']")
-    private WebElement newButton;
-
-    @FindBy(className = "card-body")
-    private WebElement table;
-
-    @FindBy(xpath = "//div[@class='dropdown pull-left']")
-    private WebElement actionMenu;
-
-    @FindBy(xpath = "//a[text()='edit']")
-    private WebElement edit;
-
     @FindBy(xpath = "//i[text()='format_line_spacing']")
     private WebElement order;
 
@@ -33,9 +21,6 @@ public class FieldsPage extends BaseListMasterPage<FieldsEditPage, FieldsViewPag
 
     @FindBy(xpath = "//span[@class='pagination-info']")
     private WebElement text;
-
-    @FindBy(xpath = "//tbody/tr/td/i")
-    private static WebElement icon;
 
     @FindBy(xpath = "//*[contains(text(), 'besttextever')]/../../td[11]/div/button")
     private WebElement exactViewButton;
@@ -55,13 +40,6 @@ public class FieldsPage extends BaseListMasterPage<FieldsEditPage, FieldsViewPag
     @Override
     protected FieldsViewPage createViewPage() {
         return new FieldsViewPage(getDriver());
-    }
-
-    public FieldsEditPage clickEdit() {
-        actionMenu.click();
-        TestUtils.jsClick(getDriver(), edit);
-
-        return new FieldsEditPage(getDriver());
     }
 
     public FieldsOrderPage clickOrderButton() {

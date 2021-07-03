@@ -9,38 +9,14 @@ import utils.TestUtils;
 
 public class ParentPage extends BaseListMasterPage<ParentEditPage, ParentViewPage> {
 
-    @FindBy(xpath = "//i[text()='create_new_folder']")
-    private static WebElement newButton;
-
-    @FindBy(className = "card-body")
-    private static WebElement table;
-
-    @FindBy(xpath = "//tbody/tr/td/i")
-    private static WebElement icon;
-
     @FindBy(xpath = "//button/i[text()='menu']")
     private WebElement actionsButton;
-
-    @FindBy(xpath = "//a[text()='view']")
-    private WebElement actionsViewButton;
-
-    @FindBy(xpath = "//a[text()='edit']")
-    private WebElement actionsEditButton;
 
     @FindBy(xpath = "//a[text()='delete']")
     private WebElement actionsDeleteButton;
 
-    @FindBy(xpath = "//a/span[@class='notification']")
-    private static WebElement notificationRecycleBinIcon;
-
-    @FindBy(xpath = "//a[contains(@href, 'id=57')]/i[text()='list']")
-    private WebElement listButton;
-
     @FindBy(xpath = "//a[contains(@href, 'id=57')]/span/i[text()='format_line_spacing']")
     private WebElement orderButton;
-
-    @FindBy(xpath = "//i[text()='delete_outline']")
-    private WebElement recycleBinIcon;
 
     @FindBy(xpath = "//i[text()='format_line_spacing']")
     private WebElement order;
@@ -68,35 +44,10 @@ public class ParentPage extends BaseListMasterPage<ParentEditPage, ParentViewPag
         return new ParentEditPage(getDriver());
     }
 
-    public ParentPage clickActions() {
-        actionsButton.click();
-
-        return new ParentPage(getDriver());
-    }
-
-    public ParentViewPage clickActionsView() {
-        getWait().until(TestUtils.movingIsFinished(actionsViewButton));
-        actionsViewButton.click();
-
-        return new ParentViewPage(getDriver());
-    }
-
-    public ParentEditPage clickActionsEdit() {
-        getWait().until(TestUtils.movingIsFinished(actionsEditButton));
-        actionsEditButton.click();
-
-        return new ParentEditPage(getDriver());
-    }
-
     public ParentPage clickActionsDelete() {
+        actionsButton.click();
         getWait().until(TestUtils.movingIsFinished(actionsDeleteButton));
         actionsDeleteButton.click();
-
-        return new ParentPage(getDriver());
-    }
-
-    public ParentPage clickListButton() {
-        listButton.click();
 
         return new ParentPage(getDriver());
     }

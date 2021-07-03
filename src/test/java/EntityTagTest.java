@@ -87,7 +87,7 @@ public class EntityTagTest extends BaseTest{
 
         TagViewPage tagViewPage = new MainPage(getDriver())
                 .clickTagMenu()
-                .clickView();
+                .clickNewViewButton(0);
 
         Assert.assertEquals(tagViewPage.getRecordInViewMode(), EXPECTED_RESULT);
     }
@@ -129,7 +129,7 @@ public class EntityTagTest extends BaseTest{
 
         TagPage tagPage = new MainPage(getDriver())
                 .clickTagMenu()
-                .clickEdit()
+                .clickEditButton()
                 .fillDateTime(EDIT_DATE_TIME_VALUE)
                 .fillString(EDIT_STRING_VALUE)
                 .fillDate(EDIT_DATE_VALUE)
