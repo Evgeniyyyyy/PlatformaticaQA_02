@@ -10,20 +10,17 @@ import java.util.List;
 
 public class BoardPage extends BaseMasterPage<BoardEditPage> {
 
-    @FindBy(xpath = "//i[text()='create_new_folder']")
-    private WebElement newButton;
-
     @FindBy(xpath = "//a[@href='index.php?action=action_list&list_type=table&entity_id=31']")
     private WebElement listButton;
 
     @FindBy(xpath = "//i[text()='format_line_spacing']")
     private WebElement orderButton;
 
-    @FindBy(className = "card-body")
-    private WebElement table;
-
     @FindBy(xpath = "//div[@class='kanban-item']")
     private List<WebElement> colomn;
+
+    @FindBy(className = "kanban-drag")
+    private List<WebElement> boxes;
 
     public BoardPage(WebDriver driver) {
         super(driver);
@@ -46,11 +43,6 @@ public class BoardPage extends BaseMasterPage<BoardEditPage> {
         return new BoardOrderPage(getDriver());
     }
 
-    public String getTextCardBody(){
-
-        return table.getText();
-    }
-
     public String getTextPendingRecord(){
 
         return colomn.get(0).getText();
@@ -71,11 +63,19 @@ public class BoardPage extends BaseMasterPage<BoardEditPage> {
                 .perform();
     }
 
-    public void movePendingToOnTrack(){
+    public BoardPage movePendingToOnTrack(){
         moveRecord(colomn.get(0), 200,0);
+
+        return this;
     }
 
-    public void moveOnTrackToPending(){
+    public BoardPage moveOnTrackToPending(){
         moveRecord(colomn.get(1), -200,0);
+
+        return this;
+    }
+
+    public boolean isEmptyPage() {
+        return boxes.stream().filter(e -> !"".equals(e.getText())).findFirst().isEmpty();
     }
 }
