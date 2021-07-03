@@ -27,15 +27,12 @@ public class ArithmeticFunctionEditPage extends BaseEditPage<ArithmeticFunctionP
     @FindBy(id = "pa-entity-form-draft-btn")
     private WebElement saveDraftButton;
 
-    @FindBy(className = "btn-dark")
-    private WebElement cancelButton;
-
     public ArithmeticFunctionEditPage(WebDriver driver) {
         super(driver);
     }
 
     @Override
-    protected ArithmeticFunctionPage createMasterPage() {
+    protected ArithmeticFunctionPage createMasterPage(){
         return new ArithmeticFunctionPage(getDriver());
     }
 
@@ -51,12 +48,6 @@ public class ArithmeticFunctionEditPage extends BaseEditPage<ArithmeticFunctionP
 
         getWait().until(ExpectedConditions.attributeToBeNotEmpty(DIV, "value"));
         TestUtils.jsClick(getDriver(), saveDraftButton);
-
-        return new ArithmeticFunctionPage(getDriver());
-    }
-
-    public ArithmeticFunctionPage clickCancel() {
-        TestUtils.jsClick(getDriver(), cancelButton);
 
         return new ArithmeticFunctionPage(getDriver());
     }
