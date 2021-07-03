@@ -2,9 +2,6 @@ import base.BaseTest;
 
 import model.*;
 
-import org.apache.commons.lang3.RandomStringUtils;
-import org.apache.commons.lang3.RandomUtils;
-
 import org.testng.Assert;
 import org.testng.annotations.Test;
 

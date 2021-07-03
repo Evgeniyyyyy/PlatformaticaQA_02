@@ -116,7 +116,7 @@ public class ProjectUtils {
     }
 
     public static String getDoubleRandom() {
-        return String.format("%.2f", new Random().nextFloat());
+        return String.format(Locale.ROOT, "%.2f", new Random().nextFloat());
     }
 
     public static String getDate(Integer value) {
