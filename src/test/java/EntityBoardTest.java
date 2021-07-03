@@ -28,10 +28,10 @@ public class EntityBoardTest extends BaseTest {
 
     private static final String TEXT_VALUE_PENDING = getTextRandom(8);
     private static final String INT_VALUE_PENDING = getIntRandom();
-    private static final String DECIMAL_VALUE_PENDING = getRandomDecimalValue();
+    private static final String DECIMAL_VALUE_PENDING = getDoubleRandom();
     private static final String TEXT_VALUE_ONTRACK = getTextRandom(8);
     private static final String INT_VALUE_ONTRACK = getIntRandom();
-    private static final String DECIMAL_VALUE_ONTRACK = getRandomDecimalValue();
+    private static final String DECIMAL_VALUE_ONTRACK = getDoubleRandom();
     private static final String DATA_VALUE = LocalDate.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
     private static final String DATA_TIME_VALUE = LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss"));
     private static final String USER_NAME = getUser();
@@ -46,10 +46,6 @@ public class EntityBoardTest extends BaseTest {
     private static List<String> EXPECTED_EDITED_RECORD;
     private static List<String> EXPECTED_CREATED_ONTRACK_RECORD;
     private static List<List<String>> ALL_RECORDS_TABLE;
-
-    private static String getRandomDecimalValue() {
-        return RandomUtils.nextInt(0, 10000) + "." + RandomStringUtils.randomNumeric(2);
-    }
 
     @Test
     public void testCreateDraftRecord() {
