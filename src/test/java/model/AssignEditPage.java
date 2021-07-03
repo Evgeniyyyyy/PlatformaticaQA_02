@@ -1,7 +1,6 @@
 package model;
 
 import model.base.BaseEditPage;
-import model.base.BaseListMasterPage;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -37,15 +36,6 @@ public class AssignEditPage extends BaseEditPage<AssignPage> {
 
     @FindBy(id = "datetime")
     private WebElement fieldDateTime;
-
-    @FindBy(id = "pa-entity-form-save-btn")
-    private WebElement saveButton;
-
-    @FindBy(id = "pa-entity-form-draft-btn")
-    private WebElement saveDraftButton;
-
-    @FindBy(xpath = "//button[text()='Cancel']")
-    private WebElement cancelButton;
 
     @FindBy(className = "filter-option-inner-inner")
     private WebElement fieldUserName;
@@ -106,24 +96,6 @@ public class AssignEditPage extends BaseEditPage<AssignPage> {
         fillDecimal(decimal);
 
         return this;
-    }
-
-    public AssignPage clickSave() {
-        TestUtils.jsClick(getDriver(), saveButton);
-
-        return new AssignPage(getDriver());
-    }
-
-    public AssignPage clickSaveDraft() {
-        TestUtils.jsClick(getDriver(), saveDraftButton);
-
-        return new AssignPage(getDriver());
-    }
-
-    public AssignPage clickCancel() {
-        TestUtils.jsClick(getDriver(), cancelButton);
-
-        return new AssignPage(getDriver());
     }
 
     public AssignEditPage findUser(String value) {

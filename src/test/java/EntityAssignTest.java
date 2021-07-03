@@ -182,8 +182,8 @@ public class EntityAssignTest extends BaseTest {
 
         assignPage.clickToggle()
                 .getNewReorder();
-        Assert.assertEquals(AssignPage.getRows(0), EXPECTED_ORDER_RESULT_1);
-        Assert.assertEquals(AssignPage.getRows(1), EXPECTED_ORDER_RESULT_2);
+        Assert.assertEquals(assignPage.getRows(0), EXPECTED_ORDER_RESULT_1);
+        Assert.assertEquals(assignPage.getRows(1), EXPECTED_ORDER_RESULT_2);
     }
 
     @Test(dependsOnMethods = "testReorderRecords")

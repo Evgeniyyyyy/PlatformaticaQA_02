@@ -19,12 +19,6 @@ public class AssignPage extends BaseListMasterPage<AssignEditPage, AssignViewPag
         super(driver);
     }
 
-    @FindBy(xpath = "//i[text()='create_new_folder']")
-    private WebElement newButton;
-
-    @FindBy(className = "card-body")
-    private WebElement table;
-
     @FindBy(xpath = "//tbody/tr")
     private static List<WebElement> rows;
 
@@ -58,12 +52,6 @@ public class AssignPage extends BaseListMasterPage<AssignEditPage, AssignViewPag
     @FindBy(xpath = "//div[@class='dropdown pull-left']")
     private WebElement actionMenu;
 
-    @FindBy(xpath = "//a[text()='view']")
-    private WebElement view;
-
-    @FindBy(xpath = "//a[text()='edit']")
-    private WebElement edit;
-
     @FindBy(xpath = "//a[text()='delete']")
     private WebElement delete;
 
@@ -77,32 +65,9 @@ public class AssignPage extends BaseListMasterPage<AssignEditPage, AssignViewPag
         return new AssignEditPage(getDriver());
     }
 
-    public AssignEditPage clickNewButton() {
-        newButton.click();
-
-        return new AssignEditPage(getDriver());
-    }
-
-    public boolean isTableEmpty() {
-
-        return Strings.isStringEmpty(table.getText());
-    }
-
-    public static List<String> getRows(int number) {
+    public List<String> getRows(int number) {
         return rows.get(number).findElements(By.className("card-view-value"))
                 .stream().map(WebElement::getText).collect(Collectors.toList());
-    }
-
-    public int getRowCount() {
-        if (isTableEmpty()) {
-            return 0;
-        } else {
-            return rows.size();
-        }
-    }
-
-    public String getClassIcon() {
-        return icon.getAttribute("class");
     }
 
     public AssignPage searchInput(String value) {
@@ -155,20 +120,6 @@ public class AssignPage extends BaseListMasterPage<AssignEditPage, AssignViewPag
     public AssignPage getTextPaginationInfo(String value) {
         getWait().until(ExpectedConditions.textToBePresentInElement(paginationInfo, value));
         return this;
-    }
-
-    public AssignViewPage clickView() {
-        actionMenu.click();
-        TestUtils.jsClick(getDriver(), view);
-
-        return new AssignViewPage(getDriver());
-    }
-
-    public AssignEditPage clickEdit() {
-        actionMenu.click();
-        TestUtils.jsClick(getDriver(), edit);
-
-        return new AssignEditPage(getDriver());
     }
 
     public AssignPage clickDelete() {

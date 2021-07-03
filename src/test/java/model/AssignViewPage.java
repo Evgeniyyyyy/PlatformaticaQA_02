@@ -23,16 +23,5 @@ public class AssignViewPage extends BaseViewPage<AssignPage> {
     @Override
     protected AssignPage createMasterPage() {
             return new AssignPage(getDriver());
-        }
-
-    public List<String> getRecordInViewMode(){
-        List<String> listValues = new ArrayList<>();
-        for (WebElement element : viewModeRecord) {
-            listValues.add(element.getText());
-        }
-        listValues.add("");
-        listValues.add(user.getText());
-
-        return listValues;
     }
 }
