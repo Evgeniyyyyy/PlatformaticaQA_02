@@ -1,6 +1,5 @@
 import base.BaseTest;
 import model.*;
-import org.openqa.selenium.By;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 import static utils.ProjectUtils.*;
@@ -104,7 +103,7 @@ public class EntityAssignTest extends BaseTest {
     public void testViewMode() {
         AssignViewPage assignViewPage = new MainPage(getDriver())
                 .clickAssignMenu()
-                .clickView();
+                .clickViewButton(0);
 
         Assert.assertEquals(assignViewPage.getRecordInViewMode(), EXPECTED_RESULT);
     }
@@ -114,7 +113,7 @@ public class EntityAssignTest extends BaseTest {
 
         AssignPage assignPage = new MainPage(getDriver())
                 .clickAssignMenu()
-                .clickEdit()
+                .clickEditButton()
                 .fillTitle(STRING_VALUE_3)
                 .fillComments(TEXT_VALUE_3)
                 .fillInt(INT_VALUE_3)
@@ -188,7 +187,7 @@ public class EntityAssignTest extends BaseTest {
     }
 
     @Test(dependsOnMethods = "testReorderRecords")
-    public void testSearchRecord() {
+    public void testSearchRecordThird() {
         AssignPage assignPage = new MainPage(getDriver())
                 .clickAssignMenu()
                 .clickNewButton()
@@ -198,14 +197,33 @@ public class EntityAssignTest extends BaseTest {
                 .getTextPaginationInfo(INFO_STR_1_OF_1);
         Assert.assertEquals(assignPage.getRow(0), EXPECTED_RESULT_3);
 
-        assignPage.searchInput("").getTextPaginationInfo(INFO_STR_3_OF_3);
+   }
+
+    @Test(dependsOnMethods = "testSearchRecordThird")
+    public void testSearchRecordEmpty() {
+        AssignPage assignPage = new MainPage(getDriver())
+                .clickAssignMenu()
+                .searchInput("").getTextPaginationInfo(INFO_STR_3_OF_3);
         Assert.assertEquals(assignPage.getRowCount(), 3);
 
-        assignPage.searchInput(TEXT_VALUE_2).getTextPaginationInfo(INFO_STR_1_OF_1);
+    }
+
+    @Test(dependsOnMethods = "testSearchRecordEmpty")
+    public void testSearchRecordSecond() {
+        AssignPage assignPage = new MainPage(getDriver())
+                .clickAssignMenu()
+                .searchInput(TEXT_VALUE_2).getTextPaginationInfo(INFO_STR_1_OF_1);
         Assert.assertEquals(assignPage.getRow(0), EXPECTED_RESULT_2);
 
-        assignPage.searchInput("").getTextPaginationInfo(INFO_STR_3_OF_3);
-        assignPage.searchInput(INT_VALUE_1).getTextPaginationInfo(INFO_STR_1_OF_1);
+    }
+
+    @Test(dependsOnMethods = "testSearchRecordSecond")
+    public void testSearchRecordFirst() {
+        AssignPage assignPage = new MainPage(getDriver())
+                .clickAssignMenu()
+                .searchInput("")
+                .searchInput(INT_VALUE_1).getTextPaginationInfo(INFO_STR_1_OF_1);
         Assert.assertEquals(assignPage.getRow(0), EXPECTED_RESULT_1);
+
     }
 }

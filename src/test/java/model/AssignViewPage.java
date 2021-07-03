@@ -2,15 +2,37 @@ package model;
 
 import model.base.BaseViewPage;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.FindBy;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class AssignViewPage extends BaseViewPage<AssignPage> {
 
-        public AssignViewPage(WebDriver driver) {
+    @FindBy(xpath = "//span [@class = 'pa-view-field']")
+    private List<WebElement> viewModeRecord;
+
+    @FindBy(xpath = "//div[@class = 'form-group']/p")
+    private WebElement user;
+
+    public AssignViewPage(WebDriver driver) {
             super(driver);
         }
 
-        @Override
-        protected AssignPage createMasterPage() {
+    @Override
+    protected AssignPage createMasterPage() {
             return new AssignPage(getDriver());
         }
+
+    public List<String> getRecordInViewMode(){
+        List<String> listValues = new ArrayList<>();
+        for (WebElement element : viewModeRecord) {
+            listValues.add(element.getText());
+        }
+        listValues.add("");
+        listValues.add(user.getText());
+
+        return listValues;
+    }
 }
