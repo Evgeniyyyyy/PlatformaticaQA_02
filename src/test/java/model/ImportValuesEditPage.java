@@ -1,11 +1,9 @@
 package model;
 
 import model.base.BaseEditPage;
-import model.base.BaseModel;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
-import utils.TestUtils;
 
 public class ImportValuesEditPage extends BaseEditPage<ImportValuesPage> {
 
@@ -29,15 +27,6 @@ public class ImportValuesEditPage extends BaseEditPage<ImportValuesPage> {
 
     @FindBy(xpath = "//button[@data-id='user']")
     private WebElement fieldUser;
-
-    @FindBy(id = "pa-entity-form-save-btn")
-    private WebElement saveButton;
-
-    @FindBy(id = "pa-entity-form-draft-btn")
-    private WebElement saveDraftButton;
-
-    @FindBy(xpath = "//button[text()='Cancel']")
-    private WebElement cancelButton;
 
     public ImportValuesEditPage(WebDriver driver) {
         super(driver);
@@ -90,23 +79,5 @@ public class ImportValuesEditPage extends BaseEditPage<ImportValuesPage> {
         fieldDateTime.sendKeys(value);
 
         return this;
-    }
-
-    public  ImportValuesPage clickSave() {
-        TestUtils.jsClick(getDriver(), saveButton);
-
-        return new ImportValuesPage(getDriver());
-    }
-
-    public ImportValuesPage clickSaveDraft() {
-        TestUtils.jsClick(getDriver(), saveDraftButton);
-
-        return new ImportValuesPage(getDriver());
-    }
-
-    public ImportValuesPage clickCancel() {
-        TestUtils.jsClick(getDriver(), cancelButton);
-
-        return new ImportValuesPage(getDriver());
     }
 }

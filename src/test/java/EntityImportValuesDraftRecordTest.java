@@ -8,30 +8,32 @@ import java.util.List;
 
 public class EntityImportValuesDraftRecordTest extends BaseTest {
 
-    private static final String STRING_INPUT = "Some string";
-    private static final String TEXT_INPUT = "New text.";
-    private static final String INT_INPUT = "457";
-    private static final String DECIMAL_INPUT = "27.35";
-    private static final String DATE_INPUT = "01/06/2021";
-    private static final String DATETIME_INPUT = "01/06/2021 13:07:06";
-    private static final String USERNAME_INPUT = "apptester1@tester.test";
-    private static final String FILE_INPUT = "";
-    private static final String STRING_INPUT2 = "New string";
-    private static final String TEXT_INPUT2 = "Import values text.";
-    private static final String INT_INPUT2 = "12";
-    private static final String DECIMAL_INPUT2 = "0.20";
-    private static final String DATE_INPUT2 = "18/07/2021";
-    private static final String DATETIME_INPUT2 = "18/07/2021 17:07:07";
-    private static final String PENCIL_ICON = "fa fa-pencil";
+    private static final String STRING_INPUT_VALUE = "Some string";
+    private static final String TEXT_INPUT_VALUE = "New text.";
+    private static final String INT_INPUT_VALUE = "457";
+    private static final String DECIMAL_INPUT_VALUE = "27.35";
+    private static final String DATE_INPUT_VALUE = "01/06/2021";
+    private static final String DATETIME_INPUT_VALUE = "01/06/2021 13:07:06";
+    private static final String USERNAME_INPUT_VALUE = "apptester1@tester.test";
+    private static final String FILE_INPUT_VALUE = "";
+    private static final String STRING_EDIT_VALUE = "New string";
+    private static final String TEXT_EDIT_VALUE = "Import values text.";
+    private static final String INT_EDIT_VALUE = "12";
+    private static final String DECIMAL_EDIT_VALUE = "0.20";
+    private static final String DATE_EDIT_VALUE = "18/07/2021";
+    private static final String DATETIME_EDIT_VALUE = "18/07/2021 17:07:07";
+    private static final String DRAFT_RECORD_ICON = "fa fa-pencil";
     private static final String EMPTY_RECYCLE_BIN_MESSAGE = "Good job with housekeeping! Recycle bin is currently empty!";
-    private static final String SEARCH_INPUT = "Som";
-    private static final String TEXT_INFORMATION = "Showing 1 to 1 of 1 rows";
+    private static final String SEARCH_INPUT_VALUE = "Som";
+    private static final String PAGINATION_INFO_TEXT = "Showing 1 to 1 of 1 rows";
 
-    private final static List<String> EXPECTED_VALUES = Arrays.asList(STRING_INPUT, TEXT_INPUT,
-            INT_INPUT, DECIMAL_INPUT, DATE_INPUT, DATETIME_INPUT, FILE_INPUT, USERNAME_INPUT);
+    private final static List<String> EXPECTED_VALUES = Arrays.asList(
+            STRING_INPUT_VALUE, TEXT_INPUT_VALUE, INT_INPUT_VALUE, DECIMAL_INPUT_VALUE,
+            DATE_INPUT_VALUE, DATETIME_INPUT_VALUE, FILE_INPUT_VALUE, USERNAME_INPUT_VALUE);
 
-    private final static List<String> EXPECTED_VALUES2 = Arrays.asList(STRING_INPUT2, TEXT_INPUT2,
-            INT_INPUT2, DECIMAL_INPUT2, DATE_INPUT2, DATETIME_INPUT2, FILE_INPUT, USERNAME_INPUT);
+    private final static List<String> EXPECTED_EDIT_VALUES = Arrays.asList(
+            STRING_EDIT_VALUE, TEXT_EDIT_VALUE, INT_EDIT_VALUE, DECIMAL_EDIT_VALUE,
+            DATE_EDIT_VALUE, DATETIME_EDIT_VALUE, FILE_INPUT_VALUE, USERNAME_INPUT_VALUE);
 
     @Test
     public void testCreateDraftRecord() {
@@ -39,15 +41,16 @@ public class EntityImportValuesDraftRecordTest extends BaseTest {
         ImportValuesPage importValuesPage = new MainPage(getDriver())
                 .clickImportValuesMenu()
                 .clickNewButton()
-                .fillString(STRING_INPUT)
-                .fillText(TEXT_INPUT)
-                .fillInt(INT_INPUT)
-                .fillDecimal(DECIMAL_INPUT)
-                .fillDate(DATE_INPUT)
-                .fillDateTime(DATETIME_INPUT)
+                .fillString(STRING_INPUT_VALUE)
+                .fillText(TEXT_INPUT_VALUE)
+                .fillInt(INT_INPUT_VALUE)
+                .fillDecimal(DECIMAL_INPUT_VALUE)
+                .fillDate(DATE_INPUT_VALUE)
+                .fillDateTime(DATETIME_INPUT_VALUE)
                 .clickSaveDraft();
 
-        Assert.assertEquals(importValuesPage.getClassIcon(), PENCIL_ICON);
+        Assert.assertEquals(importValuesPage.getClassIcon(), DRAFT_RECORD_ICON);
+        Assert.assertEquals(importValuesPage.getRowCount(), 1);
         Assert.assertEquals(importValuesPage.getRow(0), EXPECTED_VALUES);
     }
 
@@ -57,12 +60,12 @@ public class EntityImportValuesDraftRecordTest extends BaseTest {
         ImportValuesPage importValuesPage = new MainPage(getDriver())
                 .clickImportValuesMenu()
                 .clickNewButton()
-                .fillString(STRING_INPUT)
-                .fillText(TEXT_INPUT)
-                .fillInt(INT_INPUT)
-                .fillDecimal(DECIMAL_INPUT)
-                .fillDate(DATE_INPUT)
-                .fillDateTime(DATETIME_INPUT)
+                .fillString(STRING_INPUT_VALUE)
+                .fillText(TEXT_INPUT_VALUE)
+                .fillInt(INT_INPUT_VALUE)
+                .fillDecimal(DECIMAL_INPUT_VALUE)
+                .fillDate(DATE_INPUT_VALUE)
+                .fillDateTime(DATETIME_INPUT_VALUE)
                 .clickCancel();
 
         Assert.assertTrue(importValuesPage.isTableEmpty());
@@ -86,16 +89,16 @@ public class EntityImportValuesDraftRecordTest extends BaseTest {
                 .clickImportValuesMenu()
                 .clickActions()
                 .clickActionsEdit()
-                .fillString(STRING_INPUT2)
-                .fillText(TEXT_INPUT2)
-                .fillInt(INT_INPUT2)
-                .fillDecimal(DECIMAL_INPUT2)
-                .fillDate(DATE_INPUT2)
-                .fillDateTime(DATETIME_INPUT2)
+                .fillString(STRING_EDIT_VALUE)
+                .fillText(TEXT_EDIT_VALUE)
+                .fillInt(INT_EDIT_VALUE)
+                .fillDecimal(DECIMAL_EDIT_VALUE)
+                .fillDate(DATE_EDIT_VALUE)
+                .fillDateTime(DATETIME_EDIT_VALUE)
                 .clickSaveDraft();
 
-        Assert.assertEquals(importValuesPage.getClassIcon(), PENCIL_ICON);
-        Assert.assertEquals(importValuesPage.getRow(0), EXPECTED_VALUES2);
+        Assert.assertEquals(importValuesPage.getClassIcon(), DRAFT_RECORD_ICON);
+        Assert.assertEquals(importValuesPage.getRow(0), EXPECTED_EDIT_VALUES);
     }
 
     @Test(dependsOnMethods = "testEditDraftRecord")
@@ -115,9 +118,9 @@ public class EntityImportValuesDraftRecordTest extends BaseTest {
 
         RecycleBinPage recycleBinPage = new MainPage(getDriver())
                 .clickRecycleBin()
-                .clickDeletedRecord(BoardViewPage::new, viewPage -> {
+                .clickDeletedRecord(ImportValuesViewPage::new, viewPage -> {
 
-                    Assert.assertEquals(viewPage.getRecordInViewMode(), EXPECTED_VALUES2);
+                    Assert.assertEquals(viewPage.getRecordInViewMode(), EXPECTED_EDIT_VALUES);
 
                 }).clickDeletedRecordPermanently();
 
@@ -130,26 +133,26 @@ public class EntityImportValuesDraftRecordTest extends BaseTest {
         ImportValuesPage importValuesPage = new MainPage(getDriver())
                 .clickImportValuesMenu()
                 .clickNewButton()
-                .fillString(STRING_INPUT)
-                .fillText(TEXT_INPUT)
-                .fillInt(INT_INPUT)
-                .fillDecimal(DECIMAL_INPUT)
-                .fillDate(DATE_INPUT)
-                .fillDateTime(DATETIME_INPUT)
+                .fillString(STRING_INPUT_VALUE)
+                .fillText(TEXT_INPUT_VALUE)
+                .fillInt(INT_INPUT_VALUE)
+                .fillDecimal(DECIMAL_INPUT_VALUE)
+                .fillDate(DATE_INPUT_VALUE)
+                .fillDateTime(DATETIME_INPUT_VALUE)
                 .clickSaveDraft();
 
         importValuesPage.clickNewButton()
-                .fillString(STRING_INPUT2)
-                .fillText(TEXT_INPUT2)
-                .fillInt(INT_INPUT2)
-                .fillDecimal(DECIMAL_INPUT2)
-                .fillDate(DATE_INPUT2)
-                .fillDateTime(DATETIME_INPUT2)
+                .fillString(STRING_EDIT_VALUE)
+                .fillText(TEXT_EDIT_VALUE)
+                .fillInt(INT_EDIT_VALUE)
+                .fillDecimal(DECIMAL_EDIT_VALUE)
+                .fillDate(DATE_EDIT_VALUE)
+                .fillDateTime(DATETIME_EDIT_VALUE)
                 .clickSave();
 
         importValuesPage.clickImportValuesMenu()
-                .searchInput(SEARCH_INPUT)
-                .findTextInfo(TEXT_INFORMATION);
+                .searchInput(SEARCH_INPUT_VALUE)
+                .findTextInfo(PAGINATION_INFO_TEXT);
 
         Assert.assertEquals(importValuesPage.getRowCount(), 1);
         Assert.assertEquals(importValuesPage.getRow(0), EXPECTED_VALUES);
@@ -166,6 +169,6 @@ public class EntityImportValuesDraftRecordTest extends BaseTest {
 
         importValuesPage.clickSortText();
 
-        Assert.assertEquals(importValuesPage.getRow(0), EXPECTED_VALUES2);
+        Assert.assertEquals(importValuesPage.getRow(0), EXPECTED_EDIT_VALUES);
     }
 }
