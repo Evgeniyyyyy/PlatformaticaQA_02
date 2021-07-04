@@ -1,7 +1,6 @@
 package model;
 
 import model.base.BaseEditPage;
-import model.base.BaseModel;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -31,15 +30,6 @@ public class ExportDestinationEditPage extends BaseEditPage<ExportDestinationPag
 
     @FindBy(xpath = "//button[@data-id='user']")
     private WebElement fieldUser;
-
-    @FindBy(id = "pa-entity-form-save-btn")
-    private WebElement saveButton;
-
-    @FindBy(id = "pa-entity-form-draft-btn")
-    private WebElement saveDraftButton;
-
-    @FindBy(xpath = "//button[text()='Cancel']")
-    private WebElement cancelButton;
 
     public ExportDestinationEditPage(WebDriver driver) {
         super(driver);
@@ -100,23 +90,5 @@ public class ExportDestinationEditPage extends BaseEditPage<ExportDestinationPag
                 (ExpectedConditions.elementToBeClickable(by)));
 
         return this;
-    }
-
-    public  ExportDestinationPage clickSave() {
-        TestUtils.jsClick(getDriver(), saveButton);
-
-        return new ExportDestinationPage(getDriver());
-    }
-
-    public ExportDestinationPage clickSaveDraft() {
-        TestUtils.jsClick(getDriver(), saveDraftButton);
-
-        return new ExportDestinationPage(getDriver());
-    }
-
-    public ExportDestinationPage clickCancel() {
-        TestUtils.jsClick(getDriver(), cancelButton);
-
-        return new ExportDestinationPage(getDriver());
     }
 }

@@ -1,30 +1,13 @@
 package model;
 
-import com.beust.jcommander.Strings;
 import model.base.BaseListMasterPage;
-import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import utils.TestUtils;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
 public class ExportDestinationPage extends BaseListMasterPage<ExportDestinationEditPage, ExportDestinationViewPage> {
-
-    @FindBy(xpath = "//i[text()='create_new_folder']")
-    private WebElement newButton;
-
-    @FindBy(className = "card-body")
-    private WebElement table;
-
-    @FindBy(xpath = "//tbody/tr")
-    private List<WebElement> rows;
-
-    @FindBy(xpath = "//tbody/tr/td[1]/i")
-    private static WebElement icon;
 
     @FindBy(xpath = "//button/i[text()='menu']")
     private WebElement actionsButton;
@@ -38,11 +21,11 @@ public class ExportDestinationPage extends BaseListMasterPage<ExportDestinationE
     @FindBy(xpath = "//a[text()='delete']")
     private WebElement actionsDeleteButton;
 
-    @FindBy(xpath = "//a/span[@class='notification']")
-    private static WebElement recycleBinNotification;
+    @FindBy(xpath = "//ul[@class='pa-nav-pills-small nav nav-pills nav-pills-primary']/li/a/i[text()='list']")
+    private WebElement listButton;
 
-    @FindBy(xpath = "//i[text()='delete_outline']")
-    private WebElement recycleBinIcon;
+    @FindBy(xpath = "//i[text()='format_line_spacing']")
+    private WebElement orderButton;
 
     @FindBy(xpath = "//input[@placeholder = 'Search']")
     private WebElement input;
@@ -69,11 +52,14 @@ public class ExportDestinationPage extends BaseListMasterPage<ExportDestinationE
 
     public ExportDestinationPage clickActions() {
         actionsButton.click();
+
         return new ExportDestinationPage(getDriver());
     }
+
     public ExportDestinationViewPage clickActionsView() {
         getWait().until(TestUtils.movingIsFinished(actionsViewButton));
         actionsViewButton.click();
+
         return new ExportDestinationViewPage(getDriver());
     }
 
@@ -91,9 +77,16 @@ public class ExportDestinationPage extends BaseListMasterPage<ExportDestinationE
         return new ExportDestinationPage(getDriver());
     }
 
-    public int getTextNotificationRecycleBin() {
+    public ExportDestinationPage clickListButton() {
+        listButton.click();
 
-        return Integer.parseInt(recycleBinNotification.getText());
+        return new ExportDestinationPage(getDriver());
+    }
+
+    public ExportDestinationOrderPage clickOrderButton() {
+        orderButton.click();
+
+        return new ExportDestinationOrderPage(getDriver());
     }
 
     public ExportDestinationPage searchInput(String value) {
@@ -101,6 +94,7 @@ public class ExportDestinationPage extends BaseListMasterPage<ExportDestinationE
 
         return this;
     }
+
     public ExportDestinationPage findTextInfo(String value) {
         getWait().until(ExpectedConditions.textToBePresentInElement(text, value));
 
@@ -109,26 +103,5 @@ public class ExportDestinationPage extends BaseListMasterPage<ExportDestinationE
 
     public void clickSortText() {
         sortText.click();
-    }
-
-    public boolean isTableEmpty() {
-        return Strings.isStringEmpty(table.getText());
-    }
-
-    public List<String> getRow(int number) {
-        return rows.get(number).findElements(By.className("pa-list-table-th"))
-                .stream().map(WebElement::getText).collect(Collectors.toList());
-    }
-
-    public int getRowCount() {
-        if (isTableEmpty()) {
-            return 0;
-        } else {
-            return rows.size();
-        }
-    }
-
-    public String getClassIcon() {
-        return icon.getAttribute("class");
     }
 }
