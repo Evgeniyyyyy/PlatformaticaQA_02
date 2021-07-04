@@ -39,7 +39,7 @@ public class EntityArithmeticFunction1Test extends BaseTest {
     public void testCreateArithmeticFunctions() {
         ArithmeticFunctionPage arithmeticFunctionPage = new MainPage(getDriver())
                 .clickArithmeticFunctionMenu();
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < 12; i++) {
             testCreateArithmeticFunction();
         }
         Assert.assertEquals(arithmeticFunctionPage.getRowCount(), 10);
@@ -47,17 +47,17 @@ public class EntityArithmeticFunction1Test extends BaseTest {
             Assert.assertEquals(arithmeticFunctionPage.getRow(i), convertIntToString(expectedList));
         }
     }
-//
-//    @Test(dependsOnMethods = "testCreateArithmeticFunctions")
-//        public void testArithmeticFunctionRecordsListPagination() {
-//        ArithmeticFunctionPage arithmeticFunctionPage = new MainPage(getDriver())
-//                .clickArithmeticFunctionMenu()
-//                .clickPaginationButton(2);
-//
-//        Assert.assertEquals(arithmeticFunctionPage.getCells().size(), 2);
-//        arithmeticFunctionPage.clickPaginationButton(1);
-//        arithmeticFunctionPage.clickSizeButton();
-//        arithmeticFunctionPage.clickSize25Button();
-//        Assert.assertEquals(arithmeticFunctionPage.getCells().size(), 12);
-//    }
+
+    @Test(dependsOnMethods = "testCreateArithmeticFunctions")
+        public void testArithmeticFunctionRecordsListPagination1() {
+        ArithmeticFunctionPage arithmeticFunctionPage = new MainPage(getDriver())
+                .clickArithmeticFunctionMenu()
+                .clickPaginationButton(2);
+
+        Assert.assertEquals(arithmeticFunctionPage.getCells().size(), 2);
+        arithmeticFunctionPage.clickPaginationButton(1);
+        arithmeticFunctionPage.clickSizeButton();
+        arithmeticFunctionPage.clickSize25Button();
+        Assert.assertEquals(arithmeticFunctionPage.getCells().size(), 12);
+    }
 }

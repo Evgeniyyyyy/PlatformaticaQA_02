@@ -1,6 +1,7 @@
 package model;
 
 import model.base.BaseListMasterPage;
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -34,6 +35,18 @@ public class ArithmeticFunctionPage extends BaseListMasterPage<ArithmeticFunctio
 
     @FindBy(xpath = "//span[@class='notification']/b")
     private WebElement noticeRecycleBin;
+
+    @FindBy(xpath = "//a[@aria-label='to page 2']")
+    private WebElement pagination2;
+
+    @FindBy(xpath = "//a[@aria-label='to page 1']")
+    private WebElement pagination1;
+
+    @FindBy(xpath = "//button[@class='btn btn-secondary dropdown-toggle']")
+    private WebElement size;
+
+    @FindBy(xpath = "//a[normalize-space()='25']")
+    private WebElement size25;
 
     public ArithmeticFunctionPage(WebDriver driver) {
         super(driver); }
@@ -87,5 +100,29 @@ public class ArithmeticFunctionPage extends BaseListMasterPage<ArithmeticFunctio
 
     public String getNoticeRecycleBin(){
         return noticeRecycleBin.getText();
+    }
+
+    public ArithmeticFunctionPage clickPaginationButton(int value) {
+        if (value==1){
+            TestUtils.jsClick(getDriver(), pagination1);
+        } else if (value==2) {
+            TestUtils.jsClick(getDriver(), pagination2);
+        }
+        return new ArithmeticFunctionPage(getDriver());
+    }
+
+    public List<WebElement> getCells() {
+        List<WebElement> tableRecords = getDriver().findElements(By.xpath("//div[@ class = 'card-body ']//table/tbody/tr"));
+        return tableRecords;
+    }
+
+    public ArithmeticFunctionPage clickSizeButton() {
+        size.click();
+        return new ArithmeticFunctionPage(getDriver());
+    }
+
+    public ArithmeticFunctionPage clickSize25Button() {
+        getWait().until(TestUtils.movingIsFinished(size25)).click();
+        return new ArithmeticFunctionPage(getDriver());
     }
 }
