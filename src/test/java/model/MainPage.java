@@ -68,6 +68,9 @@ public class MainPage extends BaseModel {
     @FindBy(xpath = "//p[text()= ' Export destination ']")
     private WebElement exportDestinationMenuItem;
 
+    @FindBy(xpath = "//p[text()= ' Child records loop ']")
+    private WebElement childRecordsLoopMenuItem;
+
     public MainPage(WebDriver driver) {
         super(driver);
     }
@@ -186,6 +189,12 @@ public class MainPage extends BaseModel {
         TestUtils.jsClick(getDriver(), referenceValuesMenuItem);
 
         return new ReferenceValuesPage(getDriver());
+    }
+
+    public ChildRecordsLoopPage clickChildRecordsLoopMenu() {
+        TestUtils.jsClick(getDriver(), childRecordsLoopMenuItem);
+
+        return new ChildRecordsLoopPage(getDriver());
     }
 
     public boolean isTableAvailable() {

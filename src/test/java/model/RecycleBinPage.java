@@ -32,7 +32,7 @@ public class RecycleBinPage extends MainPage{
     private List<WebElement> rows;
 
     @FindBy(className = "pagination-info")
-    private static WebElement paginationInfo;
+    private WebElement paginationInfo;
 
     @FindBy(xpath = "//tr[@data-index='0']/td[2]")
     private static WebElement entityName;
@@ -71,7 +71,7 @@ public class RecycleBinPage extends MainPage{
         return table.getText();
     }
 
-    public static String getTextPaginationInfo() {
+    public String getTextPaginationInfo() {
 
         return paginationInfo.getText();
     }
