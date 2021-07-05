@@ -7,6 +7,8 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import utils.TestUtils;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -47,6 +49,9 @@ public class ArithmeticFunctionPage extends BaseListMasterPage<ArithmeticFunctio
 
     @FindBy(xpath = "//a[normalize-space()='25']")
     private WebElement size25;
+
+    @FindBy(xpath = "//div[@ class = 'card-body ']//table/tbody/tr")
+    private List<WebElement> tableCells;
 
     public ArithmeticFunctionPage(WebDriver driver) {
         super(driver); }
@@ -112,8 +117,7 @@ public class ArithmeticFunctionPage extends BaseListMasterPage<ArithmeticFunctio
     }
 
     public List<WebElement> getCells() {
-        List<WebElement> tableRecords = getDriver().findElements(By.xpath("//div[@ class = 'card-body ']//table/tbody/tr"));
-        return tableRecords;
+        return tableCells;
     }
 
     public ArithmeticFunctionPage clickSizeButton() {

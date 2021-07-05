@@ -34,7 +34,6 @@ public class EntityArithmeticFunction1Test extends BaseTest {
                 .clickSave();
     }
 
-
     @Test
     public void testCreateArithmeticFunctions() {
         ArithmeticFunctionPage arithmeticFunctionPage = new MainPage(getDriver())
@@ -55,9 +54,16 @@ public class EntityArithmeticFunction1Test extends BaseTest {
                 .clickPaginationButton(2);
 
         Assert.assertEquals(arithmeticFunctionPage.getCells().size(), 2);
-        arithmeticFunctionPage.clickPaginationButton(1);
-        arithmeticFunctionPage.clickSizeButton();
-        arithmeticFunctionPage.clickSize25Button();
+
+    }
+
+    @Test(dependsOnMethods = "testArithmeticFunctionRecordsListPagination1")
+    public void testArithmeticFunctionRecordsListPagination2() {
+        ArithmeticFunctionPage arithmeticFunctionPage = new MainPage(getDriver())
+                .clickArithmeticFunctionMenu()
+                .clickPaginationButton(1)
+                .clickSizeButton()
+                .clickSize25Button();
         Assert.assertEquals(arithmeticFunctionPage.getCells().size(), 12);
     }
 }
