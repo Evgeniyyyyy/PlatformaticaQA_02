@@ -197,4 +197,25 @@ public class EntityExportDestinationTest extends BaseTest {
 
         Assert.assertEquals(exportDestinationOrderPage.getRow(0), EXPECTED_EDIT_VALUES);
     }
+
+    @Test(dependsOnMethods = "testReorderRecords")
+    public void testReorderAfterToggle() {
+
+        final List<String> EXPECTED_VIEW_VALUES = Arrays.asList(
+                "", STRING_INPUT_VALUE, TEXT_INPUT_VALUE, INT_INPUT_VALUE,
+                DECIMAL_INPUT_VALUE, DATE_INPUT_VALUE, DATETIME_INPUT_VALUE, USERNAME_INPUT_VALUE);
+
+        final List<String> EXPECTED_EDIT_VIEW_VALUES = Arrays.asList(
+                "", STRING_EDIT_VALUE, TEXT_EDIT_VALUE, INT_EDIT_VALUE,
+                DECIMAL_EDIT_VALUE, DATE_EDIT_VALUE, DATETIME_EDIT_VALUE, USERNAME_INPUT_VALUE);
+
+        ExportDestinationOrderPage exportDestinationOrderPage = new MainPage(getDriver())
+                .clickExportDestinationMenu()
+                .clickOrderButton()
+                .clickToggleOrder()
+                .movingBlockRecord();
+
+        Assert.assertEquals(exportDestinationOrderPage.getOrderedRows(0), EXPECTED_VIEW_VALUES);
+        Assert.assertEquals(exportDestinationOrderPage.getOrderedRows(1), EXPECTED_EDIT_VIEW_VALUES);
+    }
 }
