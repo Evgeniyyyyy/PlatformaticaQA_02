@@ -48,7 +48,7 @@ public class ChildRecordsLoopEditPage extends BaseEditPage<ChildRecordsLoopPage>
     public ChildRecordsLoopEditPage fillAmount(int numberOfRow, String value) {
         WebElement fieldAmount = getDriver().findElement(By.id("t-68-r-" + numberOfRow + "-amount"));
 
-        ProjectUtils.sendKeysOneByOne(fieldAmount, value);
+        fieldAmount.sendKeys(value);
 
         return this;
     }

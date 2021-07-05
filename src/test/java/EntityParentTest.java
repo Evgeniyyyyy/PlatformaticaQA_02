@@ -1,5 +1,6 @@
 import base.BaseTest;
 import org.testng.Assert;
+import org.testng.annotations.Ignore;
 import org.testng.annotations.Test;
 
 import java.util.*;
@@ -7,6 +8,7 @@ import model.*;
 
 import static utils.ProjectUtils.*;
 
+@Ignore
 public class EntityParentTest extends BaseTest {
 
     private static final String STRING_INPUT_VALUE = getTextRandom(20);
