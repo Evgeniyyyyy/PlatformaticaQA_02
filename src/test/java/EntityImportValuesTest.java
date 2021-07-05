@@ -6,7 +6,7 @@ import org.testng.annotations.Test;
 import java.util.Arrays;
 import java.util.List;
 
-public class EntityImportValuesDraftRecordTest extends BaseTest {
+public class EntityImportValuesTest extends BaseTest {
 
     private static final String STRING_INPUT_VALUE = "Some string";
     private static final String TEXT_INPUT_VALUE = "New text.";
@@ -152,7 +152,7 @@ public class EntityImportValuesDraftRecordTest extends BaseTest {
 
         importValuesPage.clickImportValuesMenu()
                 .searchInput(SEARCH_INPUT_VALUE)
-                .findTextInfo(PAGINATION_INFO_TEXT);
+                .getPaginationInfo(PAGINATION_INFO_TEXT);
 
         Assert.assertEquals(importValuesPage.getRowCount(), 1);
         Assert.assertEquals(importValuesPage.getRow(0), EXPECTED_VALUES);

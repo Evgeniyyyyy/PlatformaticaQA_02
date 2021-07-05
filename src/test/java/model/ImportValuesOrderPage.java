@@ -20,8 +20,8 @@ public class ImportValuesOrderPage extends BaseOrderPage<ImportValuesOrderPage> 
     }
 
     @Override
-    protected FieldsViewPage createViewPage() {
-        return new FieldsViewPage(getDriver());
+    protected ImportValuesViewPage createViewPage() {
+        return new ImportValuesViewPage(getDriver());
     }
 
     @Override

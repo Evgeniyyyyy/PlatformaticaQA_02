@@ -95,7 +95,7 @@ public class ImportValuesPage extends BaseListMasterPage<ImportValuesEditPage, I
         return this;
     }
 
-    public ImportValuesPage findTextInfo(String value) {
+    public ImportValuesPage getPaginationInfo(String value) {
         getWait().until(ExpectedConditions.textToBePresentInElement(text, value));
 
         return this;
