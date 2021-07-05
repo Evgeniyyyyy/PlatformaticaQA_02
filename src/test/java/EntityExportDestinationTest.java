@@ -1,8 +1,5 @@
 import base.BaseTest;
-import model.ExportDestinationPage;
-import model.ExportDestinationViewPage;
-import model.MainPage;
-import model.RecycleBinPage;
+import model.*;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -185,5 +182,19 @@ public class EntityExportDestinationTest extends BaseTest {
         exportDestinationPage.clickSortText();
 
         Assert.assertEquals(exportDestinationPage.getRow(0), EXPECTED_EDIT_VALUES);
+    }
+
+    @Test(dependsOnMethods = "testSortRecords")
+    public void testReorderRecords() {
+
+        ExportDestinationOrderPage exportDestinationOrderPage = new MainPage(getDriver())
+                .clickExportDestinationMenu()
+                .clickOrderButton();
+
+        Assert.assertEquals(exportDestinationOrderPage.getRow(0), EXPECTED_VALUES);
+
+                exportDestinationOrderPage.movingRecord();
+
+        Assert.assertEquals(exportDestinationOrderPage.getRow(0), EXPECTED_EDIT_VALUES);
     }
 }

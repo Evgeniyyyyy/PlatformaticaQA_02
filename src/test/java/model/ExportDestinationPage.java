@@ -33,7 +33,7 @@ public class ExportDestinationPage extends BaseListMasterPage<ExportDestinationE
     @FindBy(xpath = "//span[@class='pagination-info']")
     private WebElement text;
 
-    @FindBy(xpath = "//th[@data-field='text']/div")
+    @FindBy(xpath = "//div[text()='Text']")
     private WebElement sortText;
 
     public ExportDestinationPage(WebDriver driver) {
