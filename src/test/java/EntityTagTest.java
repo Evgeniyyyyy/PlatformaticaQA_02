@@ -77,9 +77,9 @@ public class EntityTagTest extends BaseTest{
                 .findUser(TESTER_NAME)
                 .clickSave();
 
+        Assert.assertEquals(tagPage.getClassIcon(), ICON);
         Assert.assertEquals(tagPage.getRowCount(), 1);
         Assert.assertEquals(tagPage.getRow(0), EXPECTED_RESULT);
-        Assert.assertEquals(tagPage.getClassIcon(), ICON);
     }
 
     @Test(dependsOnMethods = "testCreateRecord")
@@ -87,7 +87,7 @@ public class EntityTagTest extends BaseTest{
 
         TagViewPage tagViewPage = new MainPage(getDriver())
                 .clickTagMenu()
-                .clickNewViewButton(0);
+                .clickViewButton(0);
 
         Assert.assertEquals(tagViewPage.getRecordInViewMode(), EXPECTED_RESULT);
     }
@@ -119,9 +119,9 @@ public class EntityTagTest extends BaseTest{
                 .findUser(TESTER_NAME)
                 .clickSaveDraft();
 
+        Assert.assertEquals(tagPage.getClassIcon(), ICON_DRAFT);
         Assert.assertEquals(tagPage.getRowCount(), 1);
         Assert.assertEquals(tagPage.getRow(0), EXPECTED_RESULT);
-        Assert.assertEquals(tagPage.getClassIcon(), ICON_DRAFT);
     }
 
     @Test(dependsOnMethods = "testCreateDraftRecord")
@@ -139,8 +139,8 @@ public class EntityTagTest extends BaseTest{
                 .findUser(EDIT_TESTER_NAME)
                 .clickSave();
 
+        Assert.assertEquals(tagPage.getClassIcon(), ICON);
         Assert.assertEquals(tagPage.getRowCount(), 1);
         Assert.assertEquals(tagPage.getRow(0), EDIT_RESULT);
-        Assert.assertEquals(tagPage.getClassIcon(), ICON);
     }
 }
