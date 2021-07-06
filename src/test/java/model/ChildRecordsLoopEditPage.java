@@ -48,6 +48,7 @@ public class ChildRecordsLoopEditPage extends BaseEditPage<ChildRecordsLoopPage>
     public ChildRecordsLoopEditPage fillAmount(int numberOfRow, String value) {
         WebElement fieldAmount = getDriver().findElement(By.id("t-68-r-" + numberOfRow + "-amount"));
 
+        fieldAmount.clear();
         fieldAmount.sendKeys(value);
 
         return this;
@@ -56,8 +57,17 @@ public class ChildRecordsLoopEditPage extends BaseEditPage<ChildRecordsLoopPage>
     public ChildRecordsLoopEditPage fillItem(int numberOfRow, String value) {
         WebElement fieldItem = getDriver().findElement(By.id("t-68-r-" + numberOfRow + "-item"));
 
+        fieldItem.clear();
         ProjectUtils.sendKeysOneByOne(fieldItem, value);
 
+        return this;
+    }
+
+    public ChildRecordsLoopEditPage deleteRow(int numberOfRow){
+        WebElement deleteRecord = getDriver().findElement(
+                By.xpath("//tr[@id='row-68-" + numberOfRow + "']//div/i[contains(text(), 'clear')]"));
+
+        deleteRecord.click();
         return this;
     }
 }
