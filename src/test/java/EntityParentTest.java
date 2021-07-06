@@ -1,6 +1,5 @@
 import base.BaseTest;
 import org.testng.Assert;
-import org.testng.annotations.Ignore;
 import org.testng.annotations.Test;
 
 import java.util.*;
@@ -8,7 +7,6 @@ import model.*;
 
 import static utils.ProjectUtils.*;
 
-@Ignore
 public class EntityParentTest extends BaseTest {
 
     private static final String STRING_INPUT_VALUE = getTextRandom(20);
@@ -63,8 +61,7 @@ public class EntityParentTest extends BaseTest {
 
         ParentViewPage parentViewPage = new MainPage(getDriver())
                 .clickParentMenu()
-//                .clickActions()
-                .clickNewViewButton(0);
+                .clickViewButton(0);
 
         Assert.assertEquals(parentViewPage.getRecordInViewMode(), NEW_EXPECTED_RESULT);
     }
@@ -74,7 +71,6 @@ public class EntityParentTest extends BaseTest {
 
         ParentPage parentPage = new MainPage(getDriver())
                 .clickParentMenu()
-//                .clickActions()
                 .clickEditButton()
                 .fillDateTime(EDIT_DATE_TIME_VALUE)
                 .fillString(EDIT_STRING_VALUE)
@@ -177,7 +173,6 @@ public class EntityParentTest extends BaseTest {
 
         ParentPage parentPage = new MainPage(getDriver())
                 .clickParentMenu()
-//                .clickActions()
                 .clickActionsDelete();
 
         Assert.assertTrue(parentPage.isTableEmpty());
