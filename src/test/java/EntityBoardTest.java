@@ -80,8 +80,7 @@ public class EntityBoardTest extends BaseTest {
         BoardViewPage boardViewPage = new MainPage(getDriver())
                 .clickBoardMenu()
                 .clickListButton()
-                .clickActions()
-                .clickActionsView();
+                .clickViewButton(0);
 
         Assert.assertEquals(boardViewPage.getRecordInViewMode(), EXPECTED_CREATED_PENDING_RECORD);
     }

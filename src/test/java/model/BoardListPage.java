@@ -13,9 +13,6 @@ public class BoardListPage extends BaseListMasterPage<BoardBaseEditPage, BoardVi
     @FindBy(xpath = "//button/i[text()='menu']")
     private WebElement actionsButton;
 
-    @FindBy(xpath = "//a[text()='view']")
-    private WebElement actionsViewButton;
-
     @FindBy(xpath = "//a[text()='edit']")
     private WebElement actionsEditButton;
 
@@ -52,13 +49,6 @@ public class BoardListPage extends BaseListMasterPage<BoardBaseEditPage, BoardVi
         actionsButton.click();
 
         return new BoardListPage(getDriver());
-    }
-
-    public BoardViewPage clickActionsView() {
-        getWait().until(TestUtils.movingIsFinished(actionsViewButton));
-        actionsViewButton.click();
-
-        return new BoardViewPage(getDriver());
     }
 
     public BoardListEditPage clickActionsEdit() {
