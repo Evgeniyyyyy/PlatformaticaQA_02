@@ -1,3 +1,5 @@
+package temp;
+
 import base.BaseTest;
 import model.ImportPage;
 import model.MainPage;
@@ -17,6 +19,7 @@ import java.util.List;
 import static utils.ProjectUtils.start;
 import static utils.TestUtils.scrollClick;
 
+@Ignore
 public class EntityImportDeleteTest extends BaseTest {
 
     private static final String STRING_INPUT_VALUE = RandomStringUtils.randomAlphabetic(20);
