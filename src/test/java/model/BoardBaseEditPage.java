@@ -14,6 +14,22 @@ import static utils.TestUtils.jsClick;
 
 public abstract class BoardBaseEditPage<MasterPage extends BaseMasterPage, ThisPage extends BoardBaseEditPage> extends BaseEditPage<MasterPage> {
 
+    public enum FieldString {
+        Pending("Pending"),
+        OnTrack("On track"),
+        Done("Done");
+
+        private String value;
+
+        FieldString(String value) {
+            this.value = value;
+        }
+
+        public String getValue() {
+            return value;
+        }
+    }
+
     @FindBy(xpath = "//button[@data-id='string']")
     private WebElement fieldString;
 
@@ -55,6 +71,20 @@ public abstract class BoardBaseEditPage<MasterPage extends BaseMasterPage, ThisP
 
     public BoardBaseEditPage(WebDriver driver) {
         super(driver);
+    }
+
+    public ThisPage fillString(FieldString value) {
+
+        fieldString.click();
+
+        jsClick(getDriver(), getDriver().findElement(
+                By.xpath("//ul[@class='dropdown-menu inner show']//span[contains(.,'"+value.getValue()+"')]")));
+        getWait().until(ExpectedConditions.invisibilityOf(getDriver().findElement(
+                By.xpath("//div[@class='dropdown-menu']"))));
+
+        Assert.assertEquals(fieldString.getAttribute("title"), value.getValue());
+
+        return (ThisPage)this;
     }
 
     public ThisPage fillString(String value) {
@@ -117,6 +147,19 @@ public abstract class BoardBaseEditPage<MasterPage extends BaseMasterPage, ThisP
         fieldDateTime.click();
         fieldDateTime.clear();
         fieldDateTime.sendKeys(value);
+
+        return (ThisPage)this;
+    }
+
+    public ThisPage fillFields(FieldString fillString, String fillText, String fillInt,
+                               String fillDecimal, String fillDate, String fillDateTime) {
+
+        fillDateTime(fillDateTime);
+        fillDate(fillDate);
+        fillText(fillText);
+        fillInt(fillInt);
+        fillDecimal(fillDecimal);
+        fillString(fillString);
 
         return (ThisPage)this;
     }
