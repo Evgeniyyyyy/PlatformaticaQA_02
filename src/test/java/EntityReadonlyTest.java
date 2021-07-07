@@ -96,6 +96,20 @@ public class EntityReadonlyTest extends BaseTest {
         Assert.assertEquals(readonlyPage.getRow(0), EXPECTED_VALUES);
     }
 
+    @Test(dependsOnMethods = "testRestoreRecord")
+    public void testDeletePermanently() {
+
+        ReadonlyPage readonlyPage = new ReadonlyPage(getDriver())
+                .clickReadonlyMenu()
+                .clickActionDelete();
+
+        RecycleBinPage recycleBinPage = new MainPage(getDriver())
+                .clickRecycleBin()
+                .clickDeletedRecordPermanently();
+
+        Assert.assertEquals(recycleBinPage.getTextCardBody(),"Good job with housekeeping! Recycle bin is currently empty!");
+    }
+
     @Test
     public void testCreateDraftRecord() {
 
