@@ -150,4 +150,10 @@ public class RecycleBinPage extends MainPage{
             return rowsValues.stream().map(el -> el.getText()).collect(Collectors.toList());
         else return null;
     }
+
+    public ExportDestinationViewPage clickDeletedRecordRow(){
+        deletedRecord.click();
+
+        return new ExportDestinationViewPage(getDriver());
+    }
 }

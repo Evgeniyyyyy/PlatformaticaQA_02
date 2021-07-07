@@ -27,6 +27,7 @@ public class EntityExportDestinationTest extends BaseTest {
     private static final String SEARCH_INPUT_VALUE = "Som";
     private static final String PAGINATION_INFO_TEXT = "Showing 1 to 1 of 1 rows";
     private static final String EMPTY_RECYCLE_BIN_MESSAGE = "Good job with housekeeping! Recycle bin is currently empty!";
+    private static final String ENTITY_NAME = "Export destination";
 
     private final static List<String> EXPECTED_VALUES = Arrays.asList(
             STRING_INPUT_VALUE, TEXT_INPUT_VALUE, INT_INPUT_VALUE, DECIMAL_INPUT_VALUE,
@@ -62,6 +63,41 @@ public class EntityExportDestinationTest extends BaseTest {
                 .clickExportDestinationMenu()
                 .clickActions()
                 .clickActionsView();
+
+        Assert.assertEquals(exportDestinationViewPage.getRecordInViewMode(), EXPECTED_VALUES);
+    }
+
+    @Test(dependsOnMethods = "testViewRecord")
+    public void testCloseViewWindow() {
+
+        ExportDestinationPage exportDestinationPage = new MainPage(getDriver())
+                .clickExportDestinationMenu()
+                .clickActions()
+                .clickActionsView()
+                .closeViewWindow();
+
+        Assert.assertTrue(exportDestinationPage.getRowCount() > 0);
+    }
+
+    @Test(dependsOnMethods = "testCloseViewWindow")
+    public void testDeleteRecord() {
+
+        RecycleBinPage recycleBinPage = new MainPage(getDriver())
+                .clickExportDestinationMenu()
+                .clickActions()
+                .clickActionsDelete()
+                .clickRecycleBin();
+
+        Assert.assertEquals(recycleBinPage.getRowCount(), 1);
+        Assert.assertEquals(RecycleBinPage.getEntityName(), ENTITY_NAME);
+    }
+
+    @Test(dependsOnMethods = "testDeleteRecord")
+    public void testVerifyDeletedRecord() {
+
+        ExportDestinationViewPage exportDestinationViewPage = new MainPage(getDriver())
+                .clickRecycleBin()
+                .clickDeletedRecordRow();
 
         Assert.assertEquals(exportDestinationViewPage.getRecordInViewMode(), EXPECTED_VALUES);
     }
