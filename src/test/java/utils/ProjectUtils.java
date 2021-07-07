@@ -128,7 +128,8 @@ public class ProjectUtils {
     }
 
     public static String getUser() {
-        return "tester" + getRandom(299) + "@tester.test";
+        int numberUser = 1 + getRandom(299);
+        return "tester" +  numberUser + "@tester.test";
     }
 
     public static Integer getRandom(Integer value) {
