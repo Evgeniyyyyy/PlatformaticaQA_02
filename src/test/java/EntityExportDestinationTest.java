@@ -103,6 +103,23 @@ public class EntityExportDestinationTest extends BaseTest {
     }
 
     @Test
+    public void testCancelRecord() {
+
+        ExportDestinationPage exportDestinationPage = new MainPage(getDriver())
+                .clickExportDestinationMenu()
+                .clickNewButton()
+                .fillString(STRING_INPUT_VALUE)
+                .fillText(TEXT_INPUT_VALUE)
+                .fillInt(INT_INPUT_VALUE)
+                .fillDecimal(DECIMAL_INPUT_VALUE)
+                .fillDate(DATE_INPUT_VALUE)
+                .fillDateTime(DATETIME_INPUT_VALUE)
+                .clickCancel();
+
+        Assert.assertEquals(exportDestinationPage.getRowCount(), 0);
+    }
+
+    @Test
     public void testCreateDraftRecord() {
 
         ExportDestinationPage exportDestinationPage = new MainPage(getDriver())
