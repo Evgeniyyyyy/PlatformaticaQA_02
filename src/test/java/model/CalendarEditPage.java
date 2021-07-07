@@ -54,11 +54,31 @@ public class CalendarEditPage extends BaseModel {
         return this;
     }
 
+    public CalendarEditPage fillDate(String value) {
+        fillEditText(fieldDate, value);
+
+        return this;
+    }
+
     public CalendarEditPage fillDateTime() {
         fieldDateTime.click();
 
         return this;
     }
+
+    public CalendarEditPage fillDateTime(String value) {
+        fillEditText(fieldDateTime, value);
+        return this;
+    }
+
+    void fillEditText(WebElement webElement, String value) {
+        webElement.click();
+        webElement.clear();
+        webElement.sendKeys(value);
+    }
+
+
+
     public CalendarEditPage fillInt(String value) {
         fieldInt.sendKeys(value);
 

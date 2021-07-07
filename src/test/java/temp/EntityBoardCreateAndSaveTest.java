@@ -5,6 +5,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 import org.testng.Assert;
+import org.testng.annotations.Ignore;
 import org.testng.annotations.Test;
 import java.util.List;
 
@@ -18,6 +19,7 @@ public class EntityBoardCreateAndSaveTest extends BaseTest {
         actions.moveToElement(boardElement).click(boardElement).build().perform();
     }
 
+    @Ignore
     @Test
     public void testInputDataAndSave() {
         openMenuAndClick();

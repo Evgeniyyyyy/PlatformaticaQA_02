@@ -1,6 +1,7 @@
 package model;
 
 import com.beust.jcommander.Strings;
+import com.google.gson.JsonArray;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -27,6 +28,12 @@ public class CalendarListPage extends MainPage{
     @FindBy(xpath = "//*[contains(@class, 'btn btn-round')]")
     private WebElement actions;
 
+    @FindBy(xpath = "//div[@ class = 'card-body ']//table/tbody/tr")
+    private List<WebElement> tableRecord;
+
+    @FindBy(xpath = "//td[@class = 'pa-list-table-th']")
+    private List<WebElement> actualList;
+
     public CalendarListPage clickActionDelete (){
         TestUtils.jsClick(getDriver(), actions);
         TestUtils.jsClick(getDriver(), actionDelete);
@@ -51,6 +58,14 @@ public class CalendarListPage extends MainPage{
     public List<String> getRow(int number) {
         return rows.get(number).findElements(By.className("pa-list-table-th"))
                 .stream().map(WebElement::getText).collect(Collectors.toList());
+    }
+
+    public List<String> actualResult(){
+        return actualList.stream().map(WebElement::getText).collect(Collectors.toList());
+    }
+
+    public List<WebElement> tableRecords() {
+        return tableRecord;
     }
 
     public int getRowCount() {
