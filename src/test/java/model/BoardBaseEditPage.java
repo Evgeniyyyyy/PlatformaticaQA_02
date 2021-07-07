@@ -87,19 +87,6 @@ public abstract class BoardBaseEditPage<MasterPage extends BaseMasterPage, ThisP
         return (ThisPage)this;
     }
 
-    public ThisPage fillString(String value) {
-        fieldString.click();
-
-        jsClick(getDriver(), getDriver().findElement(
-                By.xpath("//ul[@class='dropdown-menu inner show']//span[contains(.,'"+value+"')]")));
-        getWait().until(ExpectedConditions.invisibilityOf(getDriver().findElement(
-                By.xpath("//div[@class='dropdown-menu']"))));
-
-        Assert.assertEquals(fieldString.getAttribute("title"), value);
-
-        return (ThisPage)this;
-    }
-
     public ThisPage fillText(String value) {
 
         getWait().until(ExpectedConditions.elementToBeClickable(fieldText));
@@ -151,21 +138,8 @@ public abstract class BoardBaseEditPage<MasterPage extends BaseMasterPage, ThisP
         return (ThisPage)this;
     }
 
-    public ThisPage fillFields(FieldString fillString, String fillText, String fillInt,
-                               String fillDecimal, String fillDate, String fillDateTime) {
-
-        fillDateTime(fillDateTime);
-        fillDate(fillDate);
-        fillText(fillText);
-        fillInt(fillInt);
-        fillDecimal(fillDecimal);
-        fillString(fillString);
-
-        return (ThisPage)this;
-    }
-
-    public ThisPage fillFields(String fillString, String fillText, String fillInt,
-                               String fillDecimal, String fillDate, String fillDateTime) {
+    public ThisPage fillAllFields(FieldString fillString, String fillText, String fillInt,
+                                  String fillDecimal, String fillDate, String fillDateTime) {
 
         fillDateTime(fillDateTime);
         fillDate(fillDate);

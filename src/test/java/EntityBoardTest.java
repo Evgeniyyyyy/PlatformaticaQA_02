@@ -3,6 +3,7 @@ import base.BaseTest;
 import model.*;
 
 import org.testng.Assert;
+import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
 import java.time.LocalDate;
@@ -15,8 +16,6 @@ import static utils.ProjectUtils.*;
 
 public class EntityBoardTest extends BaseTest {
 
-    private static final String STRING_INPUT_PENDING = "Pending";
-    private static final String STRING_INPUT_ONTRACK = "On track";
     private static final String DRAFT_RECORD_ICON_CLASS_NAME = "fa fa-pencil";
     private static final String NON_DRAFT_RECORD_ICON_CLASS_NAME = "fa fa-check-square-o";
     private static final String PAGINATION_INFO_STR_1_OF_1 = "Showing 1 to 1 of 1 rows";
@@ -48,7 +47,7 @@ public class EntityBoardTest extends BaseTest {
     public void testCreateDraftRecord() {
 
         EXPECTED_CREATED_PENDING_RECORD = List.of(
-                STRING_INPUT_PENDING,
+                BoardBaseEditPage.FieldString.Pending.getValue(),
                 TEXT_VALUE_PENDING,
                 INT_VALUE_PENDING,
                 DECIMAL_VALUE_PENDING,
@@ -59,7 +58,7 @@ public class EntityBoardTest extends BaseTest {
         BoardListPage boardListPage = new MainPage(getDriver())
                 .clickBoardMenu()
                 .clickNewButton()
-                .fillFields(STRING_INPUT_PENDING,
+                .fillAllFields(BoardBaseEditPage.FieldString.Pending,
                         TEXT_VALUE_PENDING,
                         INT_VALUE_PENDING,
                         DECIMAL_VALUE_PENDING,
@@ -89,7 +88,7 @@ public class EntityBoardTest extends BaseTest {
     public void testEditDraftRecord() {
 
         EXPECTED_EDITED_RECORD = List.of(
-                STRING_INPUT_ONTRACK,
+                BoardBaseEditPage.FieldString.OnTrack.getValue(),
                 EDIT_TEXT_VALUE,
                 EDIT_INT_VALUE,
                 EDIT_DECIMAL_VALUE,
@@ -103,7 +102,7 @@ public class EntityBoardTest extends BaseTest {
                 .clickActions()
                 .clickActionsEdit()
                 .clearFields()
-                .fillFields(STRING_INPUT_ONTRACK,
+                .fillAllFields(BoardBaseEditPage.FieldString.OnTrack,
                         EDIT_TEXT_VALUE,
                         EDIT_INT_VALUE,
                         EDIT_DECIMAL_VALUE,
@@ -177,7 +176,7 @@ public class EntityBoardTest extends BaseTest {
     public void testSortRecords() {
 
         EXPECTED_CREATED_PENDING_RECORD = List.of(
-                STRING_INPUT_PENDING,
+                BoardBaseEditPage.FieldString.Pending.getValue(),
                 TEXT_VALUE_PENDING,
                 INT_VALUE_PENDING,
                 DECIMAL_VALUE_PENDING,
@@ -186,7 +185,7 @@ public class EntityBoardTest extends BaseTest {
                 "", USER_NAME);
 
         EXPECTED_CREATED_ONTRACK_RECORD = List.of(
-                STRING_INPUT_ONTRACK,
+                BoardBaseEditPage.FieldString.OnTrack.getValue(),
                 TEXT_VALUE_ONTRACK,
                 INT_VALUE_ONTRACK,
                 DECIMAL_VALUE_ONTRACK,
@@ -202,7 +201,7 @@ public class EntityBoardTest extends BaseTest {
         BoardListPage boardListPage = new MainPage(getDriver())
                 .clickBoardMenu()
                 .clickNewButton()
-                .fillFields(STRING_INPUT_PENDING,
+                .fillAllFields(BoardBaseEditPage.FieldString.Pending,
                         TEXT_VALUE_PENDING,
                         INT_VALUE_PENDING,
                         DECIMAL_VALUE_PENDING,
@@ -211,7 +210,7 @@ public class EntityBoardTest extends BaseTest {
                 .findUser(USER_NAME)
                 .clickSaveDraft()
                 .clickNewButton()
-                .fillFields(STRING_INPUT_ONTRACK,
+                .fillAllFields(BoardBaseEditPage.FieldString.OnTrack,
                         TEXT_VALUE_ONTRACK,
                         INT_VALUE_ONTRACK,
                         DECIMAL_VALUE_ONTRACK,
@@ -231,7 +230,7 @@ public class EntityBoardTest extends BaseTest {
         BoardListPage boardListPage = new MainPage(getDriver())
                 .clickBoardMenu()
                 .clickListButton()
-                .searchInputValue(STRING_INPUT_PENDING)
+                .searchInputValue(BoardBaseEditPage.FieldString.Pending.getValue())
                 .getTextPaginationInfo(PAGINATION_INFO_STR_1_OF_1);
 
         Assert.assertEquals(boardListPage.getRow(0), EXPECTED_CREATED_PENDING_RECORD);
@@ -243,7 +242,7 @@ public class EntityBoardTest extends BaseTest {
         BoardListPage boardListPage = new MainPage(getDriver())
                 .clickBoardMenu()
                 .clickListButton()
-                .searchInputValue(STRING_INPUT_PENDING)
+                .searchInputValue(BoardBaseEditPage.FieldString.Pending.getValue())
                 .searchInputValue("")
                 .getTextPaginationInfo(PAGINATION_INFO_STR_2_OF_2);
 
@@ -266,7 +265,7 @@ public class EntityBoardTest extends BaseTest {
     public void testReorderAfterToggle() {
 
         final List<String> expectedOrderedPendingRecord = List.of(
-                "", STRING_INPUT_PENDING,
+                "", BoardBaseEditPage.FieldString.Pending.getValue(),
                 TEXT_VALUE_PENDING,
                 INT_VALUE_PENDING,
                 DECIMAL_VALUE_PENDING,
@@ -275,7 +274,7 @@ public class EntityBoardTest extends BaseTest {
                 USER_NAME);
 
         final List<String> expectedOrderedOntrackRecord = List.of(
-                "", STRING_INPUT_ONTRACK,
+                "", BoardBaseEditPage.FieldString.OnTrack.getValue(),
                 TEXT_VALUE_ONTRACK,
                 INT_VALUE_ONTRACK,
                 DECIMAL_VALUE_ONTRACK,
@@ -297,7 +296,7 @@ public class EntityBoardTest extends BaseTest {
     public void testCreateNonDraftRecord() {
 
         EXPECTED_CREATED_PENDING_RECORD = List.of(
-                STRING_INPUT_PENDING,
+                BoardBaseEditPage.FieldString.Pending.getValue(),
                 TEXT_VALUE_PENDING,
                 INT_VALUE_PENDING,
                 DECIMAL_VALUE_PENDING,
@@ -308,7 +307,7 @@ public class EntityBoardTest extends BaseTest {
         BoardListPage boardListPage = new MainPage(getDriver())
                 .clickBoardMenu()
                 .clickNewButton()
-                .fillFields(STRING_INPUT_PENDING,
+                .fillAllFields(BoardBaseEditPage.FieldString.Pending,
                         TEXT_VALUE_PENDING,
                         INT_VALUE_PENDING,
                         DECIMAL_VALUE_PENDING,
@@ -333,7 +332,7 @@ public class EntityBoardTest extends BaseTest {
     public void testEditNonDraftRecord() {
 
         EXPECTED_EDITED_RECORD = List.of(
-                STRING_INPUT_ONTRACK,
+                BoardBaseEditPage.FieldString.OnTrack.getValue(),
                 EDIT_TEXT_VALUE,
                 EDIT_INT_VALUE,
                 EDIT_DECIMAL_VALUE,
@@ -347,7 +346,7 @@ public class EntityBoardTest extends BaseTest {
                 .clickActions()
                 .clickActionsEdit()
                 .clearFields()
-                .fillFields(STRING_INPUT_ONTRACK,
+                .fillAllFields(BoardBaseEditPage.FieldString.OnTrack,
                         EDIT_TEXT_VALUE,
                         EDIT_INT_VALUE,
                         EDIT_DECIMAL_VALUE,
@@ -372,7 +371,7 @@ public class EntityBoardTest extends BaseTest {
         boolean isEmptyPage = new MainPage(getDriver())
                 .clickBoardMenu()
                 .clickNewButton()
-                .fillFields(STRING_INPUT_PENDING,
+                .fillAllFields(BoardBaseEditPage.FieldString.Pending,
                         TEXT_VALUE_PENDING,
                         INT_VALUE_PENDING,
                         DECIMAL_VALUE_PENDING,
@@ -389,19 +388,10 @@ public class EntityBoardTest extends BaseTest {
     public void testCreateAndCheckRecords() {
 
         EXPECTED_CREATED_PENDING_RECORD = List.of(
-                STRING_INPUT_PENDING,
+                BoardBaseEditPage.FieldString.Pending.getValue(),
                 TEXT_VALUE_PENDING,
                 INT_VALUE_PENDING,
                 DECIMAL_VALUE_PENDING,
-                DATA_VALUE,
-                DATA_TIME_VALUE,
-                "", USER_NAME);
-
-        EXPECTED_CREATED_ONTRACK_RECORD = List.of(
-                STRING_INPUT_ONTRACK,
-                TEXT_VALUE_ONTRACK,
-                INT_VALUE_ONTRACK,
-                DECIMAL_VALUE_ONTRACK,
                 DATA_VALUE,
                 DATA_TIME_VALUE,
                 "", USER_NAME);
@@ -409,19 +399,10 @@ public class EntityBoardTest extends BaseTest {
         BoardPage boardPage = new MainPage(getDriver())
                 .clickBoardMenu()
                 .clickNewButton()
-                .fillFields(STRING_INPUT_PENDING,
+                .fillAllFields(BoardBaseEditPage.FieldString.Pending,
                         TEXT_VALUE_PENDING,
                         INT_VALUE_PENDING,
                         DECIMAL_VALUE_PENDING,
-                        DATA_VALUE,
-                        DATA_TIME_VALUE)
-                .findUser(USER_NAME)
-                .clickSaveDraft()
-                .clickNewButton()
-                .fillFields(STRING_INPUT_ONTRACK,
-                        TEXT_VALUE_ONTRACK,
-                        INT_VALUE_ONTRACK,
-                        DECIMAL_VALUE_ONTRACK,
                         DATA_VALUE,
                         DATA_TIME_VALUE)
                 .findUser(USER_NAME)
@@ -429,41 +410,37 @@ public class EntityBoardTest extends BaseTest {
 
         String createdPendingRecordToString = EXPECTED_CREATED_PENDING_RECORD.stream()
                 .filter(i -> !"".equals(i)).collect(Collectors.joining(" "));
-        String createdOnTrackRecordToString = EXPECTED_CREATED_ONTRACK_RECORD.stream()
-                .filter(i -> !"".equals(i)).collect(Collectors.joining(" "));
 
         Assert.assertEquals(boardPage.getTextPendingRecord(), createdPendingRecordToString);
-        Assert.assertEquals(boardPage.getTextOnTrackRecord(), createdOnTrackRecordToString);
     }
 
-    @Test(dependsOnMethods = "testCreateAndCheckRecords")
-    public void testDragAndDropRecords() {
+    @DataProvider(name = "testData")
+    public static Object[][] getData() {
 
-        final List<String> expectedSwappedPendingRecord = List.of(
-                STRING_INPUT_ONTRACK,
-                TEXT_VALUE_PENDING,
-                INT_VALUE_PENDING,
-                DECIMAL_VALUE_PENDING,
-                DATA_VALUE,
-                DATA_TIME_VALUE,
-                "", USER_NAME);
+        return new Object[][] {
+                {BoardBaseEditPage.FieldString.Pending, BoardBaseEditPage.FieldString.OnTrack},
+                {BoardBaseEditPage.FieldString.OnTrack, BoardBaseEditPage.FieldString.Done},
+                {BoardBaseEditPage.FieldString.Done, BoardBaseEditPage.FieldString.Pending}
+        };
+    }
 
-        final List<String> expectedSwappedOntrackRecord = List.of(
-                STRING_INPUT_PENDING,
-                TEXT_VALUE_ONTRACK,
-                INT_VALUE_ONTRACK,
-                DECIMAL_VALUE_ONTRACK,
-                DATA_VALUE,
-                DATA_TIME_VALUE,
-                "", USER_NAME);
+    @Test(dataProvider = "testData")
+    public void testDragAndDropRecords(BoardBaseEditPage.FieldString fromBox, BoardBaseEditPage.FieldString toBox) {
 
         BoardListPage boardListPage = new MainPage(getDriver())
                 .clickBoardMenu()
-                .movePendingToOnTrack()
-                .moveOnTrackToPending()
+                .clickNewButton()
+                .fillAllFields(fromBox,
+                        TEXT_VALUE_PENDING,
+                        INT_VALUE_PENDING,
+                        DECIMAL_VALUE_PENDING,
+                        DATA_VALUE,
+                        DATA_TIME_VALUE)
+                .findUser(USER_NAME)
+                .clickSave()
+                .moveElement(fromBox.getValue(), toBox.getValue())
                 .clickListButton();
 
-        Assert.assertEquals(boardListPage.getRow(0), expectedSwappedPendingRecord);
-        Assert.assertEquals(boardListPage.getRow(1), expectedSwappedOntrackRecord);
+        Assert.assertEquals(boardListPage.getRow(0).get(0), toBox.getValue());
     }
 }

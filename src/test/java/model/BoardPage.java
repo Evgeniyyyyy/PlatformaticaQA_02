@@ -2,6 +2,7 @@ package model;
 
 import model.base.BaseMasterPage;
 
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
@@ -49,29 +50,16 @@ public class BoardPage extends BaseMasterPage<BoardEditPage> {
         return colomn.get(0).getText();
     }
 
-    public String getTextOnTrackRecord(){
-
-        return colomn.get(1).getText();
-    }
-
     protected Actions actions = new Actions(getDriver());
 
-    public void moveRecord(WebElement element, Integer gorizont, Integer vertical) {
-        actions.moveToElement(element)
-                .clickAndHold(element)
-                .dragAndDropBy(element, gorizont, vertical)
+    public BoardPage moveElement(String from, String to){
+        WebElement element = getDriver().findElement(By.xpath(String.format("//div[@data-id='%s']/main/div", from)));
+        WebElement toPlace = getDriver().findElement(By.xpath(String.format("//div[@data-id='%s']/main", to)));
+
+        actions
+                .dragAndDrop(element, toPlace)
                 .build()
                 .perform();
-    }
-
-    public BoardPage movePendingToOnTrack(){
-        moveRecord(colomn.get(0), 200,0);
-
-        return this;
-    }
-
-    public BoardPage moveOnTrackToPending(){
-        moveRecord(colomn.get(1), -200,0);
 
         return this;
     }
