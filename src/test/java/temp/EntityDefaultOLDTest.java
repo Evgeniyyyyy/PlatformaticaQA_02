@@ -125,7 +125,7 @@ public class EntityDefaultOLDTest extends BaseTest {
         mainPage.clickDefaultMenu();
 
         DefaultPage defaultPage = new DefaultPage(getDriver());
-        defaultPage.clickNewButton();
+        defaultPage.clickCreateRecordButton();
 
         DefaultEditPage defaultEditPage = new DefaultEditPage(getDriver());
         Assert.assertFalse(findElement(STRING_FIELD).getAttribute("value").isEmpty());

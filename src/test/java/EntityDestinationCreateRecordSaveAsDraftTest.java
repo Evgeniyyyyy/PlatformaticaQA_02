@@ -25,7 +25,7 @@ public class EntityDestinationCreateRecordSaveAsDraftTest extends BaseTest {
     public void testCreateAsDraftRecord() {
         ExportDestinationViewPage exportDestinationViewPage = new MainPage(getDriver())
                 .clickExportDestinationMenu()
-                .clickNewButton()
+                .clickCreateRecordButton()
                 .fillString(STRING_INPUT_VALUE)
                 .fillText(TEXT_INPUT_VALUE)
                 .fillInt(INT_INPUT_VALUE)

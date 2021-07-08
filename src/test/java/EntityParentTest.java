@@ -41,7 +41,7 @@ public class EntityParentTest extends BaseTest {
 
         ParentPage parentPage = new MainPage(getDriver())
                 .clickParentMenu()
-                .clickNewButton()
+                .clickCreateRecordButton()
                 .fillDateTime(DATE_TIME_VALUE)
                 .fillString(STRING_INPUT_VALUE)
                 .fillDate(DATE_VALUE)
@@ -101,7 +101,7 @@ public class EntityParentTest extends BaseTest {
 
         ParentOrderPage parentOrderPage = new MainPage(getDriver())
                 .clickParentMenu()
-                .clickNewButton()
+                .clickCreateRecordButton()
                 .fillDateTime(DATE_TIME_VALUE)
                 .fillString(STRING_INPUT_VALUE)
                 .fillDate(DATE_VALUE)
@@ -137,7 +137,7 @@ public class EntityParentTest extends BaseTest {
 
         ParentPage parentPage = new MainPage(getDriver())
                 .clickParentMenu()
-                .clickNewButton()
+                .clickCreateRecordButton()
                 .fillString(STRING_INPUT_VALUE)
                 .fillText(TEXT_INPUT_VALUE)
                 .fillInt(INT_INPUT_VALUE)
@@ -153,7 +153,7 @@ public class EntityParentTest extends BaseTest {
 
         ParentPage parentPage = new MainPage(getDriver())
                 .clickParentMenu()
-                .clickNewButton()
+                .clickCreateRecordButton()
                 .fillDateTime(DATE_TIME_VALUE)
                 .fillString(STRING_INPUT_VALUE)
                 .fillDate(DATE_VALUE)

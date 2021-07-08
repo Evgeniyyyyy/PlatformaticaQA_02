@@ -2,11 +2,8 @@ import base.BaseTest;
 import model.ArithmeticFunctionPage;
 import model.MainPage;
 import org.openqa.selenium.By;
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.testng.Assert;
 import org.testng.annotations.Test;
-import utils.TestUtils;
 
 import java.util.Arrays;
 import java.util.List;
@@ -29,7 +26,7 @@ public class EntityArithmeticFunction1Test extends BaseTest {
     public void testCreateArithmeticFunction() {
         ArithmeticFunctionPage arithmeticFunctionPage = new MainPage(getDriver())
                 .clickArithmeticFunctionMenu()
-                .clickNewButton()
+                .clickCreateRecordButton()
                 .fillForm(F1, F2)
                 .clickSave();
     }

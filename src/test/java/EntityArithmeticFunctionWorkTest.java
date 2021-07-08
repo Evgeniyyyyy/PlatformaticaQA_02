@@ -27,7 +27,7 @@ public class EntityArithmeticFunctionWorkTest extends BaseTest {
 
         ArithmeticFunctionPage arithmeticFunctionPage = new MainPage(getDriver())
                 .clickArithmeticFunctionMenu()
-                .clickNewButton()
+                .clickCreateRecordButton()
                 .fillForm(F1, F2)
                 .clickSave();
 
@@ -51,7 +51,7 @@ public class EntityArithmeticFunctionWorkTest extends BaseTest {
     public void testSaveDraftNewRecord (){
         ArithmeticFunctionPage arithmeticFunctionPage = new MainPage(getDriver())
                 .clickArithmeticFunctionMenu()
-                .clickNewButton()
+                .clickCreateRecordButton()
                 .fillForm(F1, F2)
                 .clickSaveDraft();
 
@@ -64,7 +64,7 @@ public class EntityArithmeticFunctionWorkTest extends BaseTest {
     public void testCancelNewRecord (){
         ArithmeticFunctionPage arithmeticFunctionPage = new MainPage(getDriver())
                 .clickArithmeticFunctionMenu()
-                .clickNewButton()
+                .clickCreateRecordButton()
                 .fillForm(F1, F2)
                 .clickCancel();
 

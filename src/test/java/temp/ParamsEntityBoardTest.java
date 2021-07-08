@@ -28,7 +28,7 @@ public class ParamsEntityBoardTest extends BaseTest {
         getDriver().get("https://ref2.eteam.work/index.php?action=action_list&entity_id=31&mod=2");
 
         BoardPage boardPage = new BoardPage(getDriver())
-                .clickNewButton()
+                .clickCreateRecordButton()
                 .fillString(from)
                 .fillText("1")
                 .clickSave();

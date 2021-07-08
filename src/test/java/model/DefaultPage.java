@@ -33,16 +33,16 @@ public class DefaultPage extends BaseListMasterPage<DefaultEditPage, DefaultView
     private WebElement input;
 
     @FindBy(xpath = "//th[@data-field='string']/div")
-    private static WebElement stringColumn;
+    private WebElement stringColumn;
 
     @FindBy(xpath = "//th[@data-field='text']/div")
-    private static WebElement textColumn;
+    private WebElement textColumn;
 
     @FindBy(xpath = "//th[@data-field='int']/div")
-    private static WebElement intColumn;
+    private WebElement intColumn;
 
     @FindBy(xpath = "//th[@data-field='decimal']/div")
-    private static WebElement decimalColumn;
+    private WebElement decimalColumn;
 
     public DefaultPage(WebDriver driver) {
         super(driver);

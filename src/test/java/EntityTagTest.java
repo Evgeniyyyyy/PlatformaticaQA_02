@@ -49,7 +49,7 @@ public class EntityTagTest extends BaseTest{
 
         TagPage tagPage = new MainPage(getDriver())
                 .clickTagMenu()
-                .clickNewButton()
+                .clickCreateRecordButton()
                 .fillDateTime(DATE_TIME_VALUE)
                 .fillString(STRING_VALUE)
                 .fillDate(DATE_VALUE)
@@ -67,7 +67,7 @@ public class EntityTagTest extends BaseTest{
 
         TagPage tagPage = new MainPage(getDriver())
                 .clickTagMenu()
-                .clickNewButton()
+                .clickCreateRecordButton()
                 .fillDateTime(DATE_TIME_VALUE)
                 .fillString(STRING_VALUE)
                 .fillDate(DATE_VALUE)
@@ -109,7 +109,7 @@ public class EntityTagTest extends BaseTest{
 
         TagPage tagPage = new MainPage(getDriver())
                 .clickTagMenu()
-                .clickNewButton()
+                .clickCreateRecordButton()
                 .fillDateTime(DATE_TIME_VALUE)
                 .fillString(STRING_VALUE)
                 .fillDate(DATE_VALUE)

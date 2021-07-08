@@ -20,7 +20,7 @@ public class EntityArithmeticFunctionTest extends BaseTest {
 
         ArithmeticFunctionPage arithmeticFunctionPage = new MainPage(getDriver())
                 .clickArithmeticFunctionMenu()
-                .clickNewButton()
+                .clickCreateRecordButton()
                 .fillForm(F1, F2)
                 .clickSave();
 
@@ -37,7 +37,7 @@ public class EntityArithmeticFunctionTest extends BaseTest {
 
         ArithmeticFunctionPage arithmeticFunctionPage = new MainPage(getDriver())
                 .clickArithmeticFunctionMenu()
-                .clickNewButton()
+                .clickCreateRecordButton()
                 .fillForm(F1, F2)
                 .clickSaveDraft();
 

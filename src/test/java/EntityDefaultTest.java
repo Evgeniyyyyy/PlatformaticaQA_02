@@ -23,7 +23,6 @@ public class EntityDefaultTest extends BaseTest {
     private static final String DATE_DEFAULT_VALUE = "01/01/1970";
     private static final String DATE_TIME_DEFAULT_VALUE = "01/01/1970 00:00:00";
     private static final String USER_DEFAULT_NAME = "apptester1@tester.test";
-    private static final String TESTER_NAME = "tester" + new Random().nextInt(299) + "@tester.test";
     private static final String EMPTY_FIELD = "";
     private static final String EDIT_STRING_VALUE = RandomStringUtils.randomAlphabetic(20);
     private static final String EDIT_TEXT_VALUE = RandomStringUtils.randomAlphabetic(15);
@@ -88,7 +87,7 @@ public class EntityDefaultTest extends BaseTest {
 
         DefaultPage defaultPage = new MainPage(getDriver())
                 .clickDefaultMenu()
-                .clickNewButton()
+                .clickCreateRecordButton()
                 .fillDateTime(DATE_TIME_VALUE)
                 .fillString(STRING_INPUT_VALUE)
                 .fillDate(DATE_VALUE)
@@ -106,7 +105,7 @@ public class EntityDefaultTest extends BaseTest {
     public void testCancelDefaultRecord () {
         DefaultPage defaultPage = new MainPage(getDriver())
                 .clickDefaultMenu()
-                .clickNewButton()
+                .clickCreateRecordButton()
                 .clickCancel();
 
         Assert.assertEquals(defaultPage.getRowCount(), 1);
@@ -194,7 +193,7 @@ public class EntityDefaultTest extends BaseTest {
     public void testCreateDraftRecord() {
         DefaultPage defaultPage = new MainPage(getDriver())
                 .clickDefaultMenu()
-                .clickNewButton()
+                .clickCreateRecordButton()
                 .fillDateTime(DATE_TIME_VALUE)
                 .fillString(STRING_INPUT_VALUE)
                 .fillDate(DATE_VALUE)
@@ -213,7 +212,7 @@ public class EntityDefaultTest extends BaseTest {
 
         DefaultPage defaultPage = new MainPage(getDriver())
                 .clickDefaultMenu()
-                .clickNewButton()
+                .clickCreateRecordButton()
                 .clickSave();
 
         Assert.assertEquals(defaultPage.getRowCount(), 1);
@@ -226,7 +225,7 @@ public class EntityDefaultTest extends BaseTest {
 
         DefaultPage defaultPage = new MainPage(getDriver())
                 .clickDefaultMenu()
-                .clickNewButton()
+                .clickCreateRecordButton()
                 .clickSaveDraft();
 
         Assert.assertEquals(defaultPage.getRowCount(), 1);
@@ -240,21 +239,21 @@ public class EntityDefaultTest extends BaseTest {
 
         DefaultPage defaultPage = new MainPage(getDriver())
                 .clickDefaultMenu()
-                .clickNewButton()
+                .clickCreateRecordButton()
                 .fillFields(STRING_VALUE_1,TEXT_VALUE_1,INT_VALUE_1,DECIMAL_VALUE_1)
                 .clickSave();
         Assert.assertEquals(defaultPage.getRowCount(), 1);
         Assert.assertEquals(defaultPage.getRow(0), EXPECTED_RESULT_1);
 
         defaultPage.clickDefaultMenu()
-                .clickNewButton()
+                .clickCreateRecordButton()
                 .fillFields(STRING_VALUE_2,TEXT_VALUE_2,INT_VALUE_2,DECIMAL_VALUE_2)
                 .clickSaveDraft();
         Assert.assertEquals(defaultPage.getRowCount(), 2);
         Assert.assertEquals(defaultPage.getRow(1), EXPECTED_RESULT_2);
 
         defaultPage.clickDefaultMenu()
-                .clickNewButton()
+                .clickCreateRecordButton()
                 .fillFields(STRING_VALUE_3,TEXT_VALUE_3,INT_VALUE_3,DECIMAL_VALUE_3)
                 .clickSave();
         Assert.assertEquals(defaultPage.getRowCount(), 3);

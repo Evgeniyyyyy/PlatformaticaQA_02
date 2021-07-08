@@ -55,7 +55,7 @@ public class EntityFieldsTest extends BaseTest {
 
         FieldsPage fieldsPage = new MainPage(getDriver())
                 .clickFieldsMenu()
-                .clickNewButton()
+                .clickCreateRecordButton()
                 .fillDateTime(DATE_TIME_VALUE)
                 .fillTitle(TITLE_VALUE)
                 .fillDate(DATE_VALUE)
@@ -93,7 +93,7 @@ public class EntityFieldsTest extends BaseTest {
 
         FieldsOrderPage fieldsOrderPage = new MainPage(getDriver())
                 .clickFieldsMenu()
-                .clickNewButton()
+                .clickCreateRecordButton()
                 .fillDateTime(DATE_TIME_VALUE)
                 .fillTitle(TITLE_VALUE)
                 .fillDate(DATE_VALUE)
@@ -155,7 +155,7 @@ public class EntityFieldsTest extends BaseTest {
 
         FieldsPage fieldsPage = new MainPage(getDriver())
                 .clickFieldsMenu()
-                .clickNewButton()
+                .clickCreateRecordButton()
                 .fillDateTime(EDIT_DATE_TIME_VALUE)
                 .fillTitle(EDIT_TITLE_VALUE)
                 .fillDate(EDIT_DATE_VALUE)
@@ -164,7 +164,7 @@ public class EntityFieldsTest extends BaseTest {
                 .fillDecimal(EDIT_DECIMAL_VALUE)
                 .findUser(EDIT_USER_NAME)
                 .clickSave()
-                .clickNewButton()
+                .clickCreateRecordButton()
                 .fillDateTime(DATE_TIME_VALUE)
                 .fillTitle(TITLE_VALUE)
                 .fillDate(DATE_VALUE)
@@ -184,7 +184,7 @@ public class EntityFieldsTest extends BaseTest {
 
         FieldsPage fieldsPage = new MainPage(getDriver())
                 .clickFieldsMenu()
-                .clickNewButton()
+                .clickCreateRecordButton()
                 .fillDateTime(DATE_TIME_VALUE)
                 .fillTitle(TITLE_VALUE)
                 .fillDate(DATE_VALUE)

@@ -2,10 +2,12 @@ import base.BaseTest;
 import model.*;
 import org.openqa.selenium.By;
 import org.testng.Assert;
+import org.testng.annotations.Ignore;
 import org.testng.annotations.Test;
 
 import java.util.List;
 
+@Ignore
 public class EntityReadonlyTest extends BaseTest {
 
     private static final String RECORD_ICON = "fa fa-check-square-o";
@@ -126,6 +128,7 @@ public class EntityReadonlyTest extends BaseTest {
         Assert.assertEquals(readonlyPage.getRow(0), EXPECTED_VALUES);
     }
 
+    @Ignore
     @Test(dependsOnMethods = "testCreateDraftRecord")
     public void testViewDraftRecord() {
 

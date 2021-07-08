@@ -68,7 +68,7 @@ public class EntityAssignTest extends BaseTest {
 
         AssignPage assignPage = new MainPage(getDriver())
                 .clickAssignMenu()
-                .clickNewButton()
+                .clickCreateRecordButton()
                 .fillTitle(STRING)
                 .fillComments(TEXT)
                 .fillInt(INT)
@@ -88,7 +88,7 @@ public class EntityAssignTest extends BaseTest {
 
         AssignPage assignPage = new MainPage(getDriver())
                 .clickAssignMenu()
-                .clickNewButton()
+                .clickCreateRecordButton()
                 .fillTitle(STRING)
                 .fillComments(TEXT)
                 .fillInt(INT)
@@ -130,7 +130,7 @@ public class EntityAssignTest extends BaseTest {
 
         AssignPage assignPage = new MainPage(getDriver())
                 .clickAssignMenu()
-                .clickNewButton()
+                .clickCreateRecordButton()
                 .fillTitle(STRING)
                 .fillComments(TEXT)
                 .fillInt(INT)
@@ -166,12 +166,12 @@ public class EntityAssignTest extends BaseTest {
 
         AssignPage assignPage = new MainPage(getDriver())
                 .clickAssignMenu()
-                .clickNewButton()
+                .clickCreateRecordButton()
                 .fillFields(STRING_VALUE_1, TEXT_VALUE_1, INT_VALUE_1, DECIMAL_VALUE_1)
                 .clickSave();
         Assert.assertEquals(assignPage.getRow(0), EXPECTED_RESULT_1);
 
-        assignPage.clickNewButton()
+        assignPage.clickCreateRecordButton()
                 .fillFields(STRING_VALUE_2, TEXT_VALUE_2, INT_VALUE_2, DECIMAL_VALUE_2)
                 .clickSaveDraft();
         Assert.assertEquals(assignPage.getRow(1), EXPECTED_RESULT_2);
@@ -190,7 +190,7 @@ public class EntityAssignTest extends BaseTest {
     public void testSearchRecordThird() {
         AssignPage assignPage = new MainPage(getDriver())
                 .clickAssignMenu()
-                .clickNewButton()
+                .clickCreateRecordButton()
                 .fillFields(STRING_VALUE_3, TEXT_VALUE_3, INT_VALUE_3, DECIMAL_VALUE_3)
                 .clickSave()
                 .searchInput(STRING_VALUE_3)

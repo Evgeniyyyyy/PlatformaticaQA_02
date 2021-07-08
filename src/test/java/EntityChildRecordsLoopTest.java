@@ -62,7 +62,7 @@ public class EntityChildRecordsLoopTest extends BaseTest {
 
         ChildRecordsLoopPage childRecordsLoopPage = new MainPage(getDriver())
                 .clickChildRecordsLoopMenu()
-                .clickNewButton()
+                .clickCreateRecordButton()
                 .fillStartBalance(START_BALANCE_VALUE)
                 .clickAddRowBtn()
                 .fillAmount(1, String.valueOf(VALUE_AMOUNT_FIELD1))

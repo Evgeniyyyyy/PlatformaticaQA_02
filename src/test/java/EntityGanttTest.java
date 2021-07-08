@@ -50,7 +50,7 @@ public class EntityGanttTest extends BaseTest {
     public void testCreateRecord() {
         GanttListPage ganttListPage = new MainPage(getDriver())
                 .clickGanttMenu()
-                .clickNewButton()
+                .clickCreateRecordButton()
                 .fillString(STRING_INPUT_VALUE)
                 .fillText(TEXT_INPUT_VALUE)
                 .fillInt(INT_INPUT_VALUE)
@@ -139,7 +139,7 @@ public class EntityGanttTest extends BaseTest {
 
         GanttListPage ganttListPage = new MainPage(getDriver())
                 .clickGanttMenu()
-                .clickNewButton()
+                .clickCreateRecordButton()
                 .fillString(STRING_INPUT_VALUE)
                 .fillText(TEXT_INPUT_VALUE)
                 .fillInt(INT_INPUT_VALUE)

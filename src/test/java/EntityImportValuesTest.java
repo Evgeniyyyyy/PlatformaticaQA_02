@@ -40,7 +40,7 @@ public class EntityImportValuesTest extends BaseTest {
 
         ImportValuesPage importValuesPage = new MainPage(getDriver())
                 .clickImportValuesMenu()
-                .clickNewButton()
+                .clickCreateRecordButton()
                 .fillString(STRING_INPUT_VALUE)
                 .fillText(TEXT_INPUT_VALUE)
                 .fillInt(INT_INPUT_VALUE)
@@ -59,7 +59,7 @@ public class EntityImportValuesTest extends BaseTest {
 
         ImportValuesPage importValuesPage = new MainPage(getDriver())
                 .clickImportValuesMenu()
-                .clickNewButton()
+                .clickCreateRecordButton()
                 .fillString(STRING_INPUT_VALUE)
                 .fillText(TEXT_INPUT_VALUE)
                 .fillInt(INT_INPUT_VALUE)
@@ -132,7 +132,7 @@ public class EntityImportValuesTest extends BaseTest {
 
         ImportValuesPage importValuesPage = new MainPage(getDriver())
                 .clickImportValuesMenu()
-                .clickNewButton()
+                .clickCreateRecordButton()
                 .fillString(STRING_INPUT_VALUE)
                 .fillText(TEXT_INPUT_VALUE)
                 .fillInt(INT_INPUT_VALUE)
@@ -141,7 +141,7 @@ public class EntityImportValuesTest extends BaseTest {
                 .fillDateTime(DATETIME_INPUT_VALUE)
                 .clickSaveDraft();
 
-        importValuesPage.clickNewButton()
+        importValuesPage.clickCreateRecordButton()
                 .fillString(STRING_EDIT_VALUE)
                 .fillText(TEXT_EDIT_VALUE)
                 .fillInt(INT_EDIT_VALUE)

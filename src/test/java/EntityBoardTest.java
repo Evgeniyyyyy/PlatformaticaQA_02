@@ -57,7 +57,7 @@ public class EntityBoardTest extends BaseTest {
 
         BoardListPage boardListPage = new MainPage(getDriver())
                 .clickBoardMenu()
-                .clickNewButton()
+                .clickCreateRecordButton()
                 .fillAllFields(BoardBaseEditPage.FieldString.Pending,
                         TEXT_VALUE_PENDING,
                         INT_VALUE_PENDING,
@@ -200,7 +200,7 @@ public class EntityBoardTest extends BaseTest {
 
         BoardListPage boardListPage = new MainPage(getDriver())
                 .clickBoardMenu()
-                .clickNewButton()
+                .clickCreateRecordButton()
                 .fillAllFields(BoardBaseEditPage.FieldString.Pending,
                         TEXT_VALUE_PENDING,
                         INT_VALUE_PENDING,
@@ -209,7 +209,7 @@ public class EntityBoardTest extends BaseTest {
                         DATA_TIME_VALUE)
                 .findUser(USER_NAME)
                 .clickSaveDraft()
-                .clickNewButton()
+                .clickCreateRecordButton()
                 .fillAllFields(BoardBaseEditPage.FieldString.OnTrack,
                         TEXT_VALUE_ONTRACK,
                         INT_VALUE_ONTRACK,
@@ -306,7 +306,7 @@ public class EntityBoardTest extends BaseTest {
 
         BoardListPage boardListPage = new MainPage(getDriver())
                 .clickBoardMenu()
-                .clickNewButton()
+                .clickCreateRecordButton()
                 .fillAllFields(BoardBaseEditPage.FieldString.Pending,
                         TEXT_VALUE_PENDING,
                         INT_VALUE_PENDING,
@@ -370,7 +370,7 @@ public class EntityBoardTest extends BaseTest {
 
         boolean isEmptyPage = new MainPage(getDriver())
                 .clickBoardMenu()
-                .clickNewButton()
+                .clickCreateRecordButton()
                 .fillAllFields(BoardBaseEditPage.FieldString.Pending,
                         TEXT_VALUE_PENDING,
                         INT_VALUE_PENDING,
@@ -398,7 +398,7 @@ public class EntityBoardTest extends BaseTest {
 
         BoardPage boardPage = new MainPage(getDriver())
                 .clickBoardMenu()
-                .clickNewButton()
+                .clickCreateRecordButton()
                 .fillAllFields(BoardBaseEditPage.FieldString.Pending,
                         TEXT_VALUE_PENDING,
                         INT_VALUE_PENDING,
@@ -429,7 +429,7 @@ public class EntityBoardTest extends BaseTest {
 
         BoardListPage boardListPage = new MainPage(getDriver())
                 .clickBoardMenu()
-                .clickNewButton()
+                .clickCreateRecordButton()
                 .fillAllFields(fromBox,
                         TEXT_VALUE_PENDING,
                         INT_VALUE_PENDING,

@@ -24,9 +24,6 @@ public abstract class BaseListMasterPage<EditPage extends BaseEditPage, ViewPage
     @FindBy(xpath = "//a/span[@class='notification']")
     private WebElement notificationRecycleBinIcon;
 
-    @FindBy(xpath = "//i[text()='delete_outline']")
-    private WebElement recycleBinIcon;
-
     @FindBy(xpath = "//button/i[text()='menu']")
     private WebElement actionMenu;
 

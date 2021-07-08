@@ -27,7 +27,7 @@ public class EntityArithmeticInlineTest extends BaseTest {
     public void testCreateRecord() {
         ArithmeticInlinePage arithmeticInlinePage = new MainPage(getDriver())
                 .clickArithmeticInlineMenu()
-                .clickNewButton()
+                .clickCreateRecordButton()
                 .fillForm(F1, F2)
                 .clickSave();
 

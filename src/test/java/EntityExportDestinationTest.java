@@ -42,7 +42,7 @@ public class EntityExportDestinationTest extends BaseTest {
 
         ExportDestinationPage exportDestinationPage = new MainPage(getDriver())
                 .clickExportDestinationMenu()
-                .clickNewButton()
+                .clickCreateRecordButton()
                 .fillString(STRING_INPUT_VALUE)
                 .fillText(TEXT_INPUT_VALUE)
                 .fillInt(INT_INPUT_VALUE)
@@ -107,7 +107,7 @@ public class EntityExportDestinationTest extends BaseTest {
 
         ExportDestinationPage exportDestinationPage = new MainPage(getDriver())
                 .clickExportDestinationMenu()
-                .clickNewButton()
+                .clickCreateRecordButton()
                 .fillString(STRING_INPUT_VALUE)
                 .fillText(TEXT_INPUT_VALUE)
                 .fillInt(INT_INPUT_VALUE)
@@ -124,7 +124,7 @@ public class EntityExportDestinationTest extends BaseTest {
 
         ExportDestinationPage exportDestinationPage = new MainPage(getDriver())
                 .clickExportDestinationMenu()
-                .clickNewButton()
+                .clickCreateRecordButton()
                 .fillString(STRING_INPUT_VALUE)
                 .fillText(TEXT_INPUT_VALUE)
                 .fillInt(INT_INPUT_VALUE)
@@ -197,7 +197,7 @@ public class EntityExportDestinationTest extends BaseTest {
 
         ExportDestinationPage exportDestinationPage = new MainPage(getDriver())
                 .clickExportDestinationMenu()
-                .clickNewButton()
+                .clickCreateRecordButton()
                 .fillString(STRING_INPUT_VALUE)
                 .fillText(TEXT_INPUT_VALUE)
                 .fillInt(INT_INPUT_VALUE)
@@ -206,7 +206,7 @@ public class EntityExportDestinationTest extends BaseTest {
                 .fillDateTime(DATETIME_INPUT_VALUE)
                 .clickSaveDraft();
 
-        exportDestinationPage.clickNewButton()
+        exportDestinationPage.clickCreateRecordButton()
                 .fillString(STRING_EDIT_VALUE)
                 .fillText(TEXT_EDIT_VALUE)
                 .fillInt(INT_EDIT_VALUE)
